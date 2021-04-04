@@ -121,7 +121,11 @@ export function changePage(page) {
         setPageTransition(false);
         TestUI.focusWords();
         $(".page.pageTest").addClass("active");
-        history.pushState("/", null, "/");
+        history.pushState(
+          window.location.pathname,
+          null,
+          window.location.pathname
+        );
       },
       () => {
         TestConfig.show();
