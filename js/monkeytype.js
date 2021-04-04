@@ -7934,10 +7934,9 @@ ManualRestart.set();
 UpdateConfig.loadFromCookie();
 Misc.getReleasesFromGitHub();
 $(document).ready(function () {
-  var hash = window.location.hash.slice(1);
-  RouteController.handleInitialPageClasses(hash);
+  RouteController.handleInitialPageClasses(window.location.hash);
 
-  if (hash === "") {
+  if (window.location.hash === "") {
     $("#top .config").removeClass("hidden");
   }
 
@@ -7956,10 +7955,10 @@ $(document).ready(function () {
   $("#centerContent").css("opacity", "0").removeClass("hidden").stop(true, true).animate({
     opacity: 1
   }, 250, function () {
-    if (/challenge_.+/g.test(hash)) {//do nothing
+    if (/#challenge_.+/g.test(window.location.hash)) {//do nothing
       // }
-    } else if (hash !== "") {
-      UI.changePage(hash);
+    } else if (window.location.hash !== "") {
+      UI.changePage(window.location.hash);
     }
   });
   Settings.settingsFillPromise.then(Settings.update);
@@ -7981,17 +7980,41 @@ var UI = _interopRequireWildcard(require("./ui"));
 
 var mappedRoutes = {
   "": "pageTest",
-  settings: "pageSettings",
-  about: "pageAbout",
-  verify: "pageTest"
+  "#settings": "pageSettings",
+  "#about": "pageAbout",
+  "#verify": "pageTest"
 };
 
 function handleInitialPageClasses(hash) {
-  if (hash.match(/^group_/)) hash = "settings";
+  if (hash.match(/^#group_/)) hash = "#settings";
   var el = $(".page." + mappedRoutes[hash]);
   $(el).removeClass("hidden");
   $(el).addClass("active");
 }
+
+(function (history) {
+  var pushState = history.pushState;
+
+  history.pushState = function (state) {
+    if (Funbox.active === "memory" && state !== "/") {
+      Funbox.resetMemoryTimer();
+    }
+
+    return pushState.apply(history, arguments);
+  };
+})(window.history);
+
+$(window).on("popstate", function (e) {
+  var state = e.originalEvent.state;
+
+  if (state == "" || state == "/") {
+    // show test
+    UI.changePage("test");
+  } else if (state == "about") {
+    // show about
+    UI.changePage("about");
+  }
+});
 
 },{"./funbox":13,"./ui":50,"@babel/runtime/helpers/interopRequireWildcard":60}],35:[function(require,module,exports){
 "use strict";
@@ -12415,6 +12438,7 @@ function changePage(page) {
       setPageTransition(false);
       TestUI.focusWords();
       $(".page.pageTest").addClass("active");
+      history.pushState("/", null, "/");
     }, function () {
       TestConfig.show();
     }); // restartCount = 0;
@@ -12428,6 +12452,7 @@ function changePage(page) {
     TestLogic.restart();
     swapElements(activePage, $(".page.pageAbout"), 250, function () {
       setPageTransition(false);
+      history.pushState("#about", null, "#about");
       $(".page.pageAbout").addClass("active");
     });
     TestConfig.hide();
@@ -12436,6 +12461,7 @@ function changePage(page) {
     TestLogic.restart();
     swapElements(activePage, $(".page.pageSettings"), 250, function () {
       setPageTransition(false);
+      history.pushState("#settings", null, "#settings");
       $(".page.pageSettings").addClass("active");
     });
     Settings.update();
@@ -12502,7 +12528,6 @@ $(document).on("click", "#top .logo", function (e) {
 $(document).on("click", "#top #menu .icon-button", function (e) {
   var href = $(e.currentTarget).attr("href");
   ManualRestart.set();
-  window.location = href;
   changePage(href.slice(1));
 });
 
