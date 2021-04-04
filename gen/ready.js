@@ -10,9 +10,9 @@ UpdateConfig.loadFromCookie();
 Misc.getReleasesFromGitHub();
 
 $(document).ready(() => {
-  if (Misc.getCookie("pathname") === "") Misc.setCookie("pathname", "/", 365);
-  RouteController.handleInitialPageClasses(Misc.getCookie("pathname"));
-  if (Misc.getCookie("pathname") === "/") {
+  let hash = window.location.hash.slice(1);
+  RouteController.handleInitialPageClasses(hash);
+  if (hash === "") {
     $("#top .config").removeClass("hidden");
   }
   $("body").css("transition", ".25s");
@@ -29,12 +29,11 @@ $(document).ready(() => {
     .removeClass("hidden")
     .stop(true, true)
     .animate({ opacity: 1 }, 250, () => {
-      if (/challenge_.+/g.test(Misc.getCookie("pathname"))) {
+      if (/challenge_.+/g.test(hash)) {
         //do nothing
         // }
-      } else if (Misc.getCookie("pathname") !== "/") {
-        let page = Misc.getCookie("pathname").replace("/", "");
-        UI.changePage(page);
+      } else if (hash !== "") {
+        UI.changePage(hash);
       }
     });
   Settings.settingsFillPromise.then(Settings.update);

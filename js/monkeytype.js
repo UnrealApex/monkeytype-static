@@ -7934,10 +7934,10 @@ ManualRestart.set();
 UpdateConfig.loadFromCookie();
 Misc.getReleasesFromGitHub();
 $(document).ready(function () {
-  if (Misc.getCookie("pathname") === "") Misc.setCookie("pathname", "/", 365);
-  RouteController.handleInitialPageClasses(Misc.getCookie("pathname"));
+  var hash = window.location.hash.slice(1);
+  RouteController.handleInitialPageClasses(hash);
 
-  if (Misc.getCookie("pathname") === "/") {
+  if (hash === "") {
     $("#top .config").removeClass("hidden");
   }
 
@@ -7956,11 +7956,10 @@ $(document).ready(function () {
   $("#centerContent").css("opacity", "0").removeClass("hidden").stop(true, true).animate({
     opacity: 1
   }, 250, function () {
-    if (/challenge_.+/g.test(Misc.getCookie("pathname"))) {//do nothing
+    if (/challenge_.+/g.test(hash)) {//do nothing
       // }
-    } else if (Misc.getCookie("pathname") !== "/") {
-      var page = Misc.getCookie("pathname").replace("/", "");
-      UI.changePage(page);
+    } else if (hash !== "") {
+      UI.changePage(hash);
     }
   });
   Settings.settingsFillPromise.then(Settings.update);
@@ -7981,29 +7980,18 @@ var Funbox = _interopRequireWildcard(require("./funbox"));
 var UI = _interopRequireWildcard(require("./ui"));
 
 var mappedRoutes = {
-  "/": "pageTest",
-  "/settings": "pageSettings",
-  "/about": "pageAbout",
-  "/verify": "pageTest"
+  "": "pageTest",
+  settings: "pageSettings",
+  about: "pageAbout",
+  verify: "pageTest"
 };
 
-function handleInitialPageClasses(pathname) {
-  var el = $(".page." + mappedRoutes[pathname]);
+function handleInitialPageClasses(hash) {
+  if (hash.match(/^group_/)) hash = "settings";
+  var el = $(".page." + mappedRoutes[hash]);
   $(el).removeClass("hidden");
   $(el).addClass("active");
 }
-
-$(window).on("popstate", function (e) {
-  var state = e.originalEvent.state;
-
-  if (state == "" || state == "/") {
-    // show test
-    UI.changePage("test");
-  } else if (state == "about") {
-    // show about
-    UI.changePage("about");
-  }
-});
 
 },{"./funbox":13,"./ui":50,"@babel/runtime/helpers/interopRequireWildcard":60}],35:[function(require,module,exports){
 "use strict";
@@ -12427,7 +12415,6 @@ function changePage(page) {
       setPageTransition(false);
       TestUI.focusWords();
       $(".page.pageTest").addClass("active");
-      Misc.setCookie("pathname", "/", 365);
     }, function () {
       TestConfig.show();
     }); // restartCount = 0;
@@ -12441,7 +12428,6 @@ function changePage(page) {
     TestLogic.restart();
     swapElements(activePage, $(".page.pageAbout"), 250, function () {
       setPageTransition(false);
-      Misc.setCookie("pathname", "/about", 365);
       $(".page.pageAbout").addClass("active");
     });
     TestConfig.hide();
@@ -12450,7 +12436,6 @@ function changePage(page) {
     TestLogic.restart();
     swapElements(activePage, $(".page.pageSettings"), 250, function () {
       setPageTransition(false);
-      Misc.setCookie("pathname", "/settings", 365);
       $(".page.pageSettings").addClass("active");
     });
     Settings.update();
@@ -12517,7 +12502,8 @@ $(document).on("click", "#top .logo", function (e) {
 $(document).on("click", "#top #menu .icon-button", function (e) {
   var href = $(e.currentTarget).attr("href");
   ManualRestart.set();
-  changePage(href.replace("/", ""));
+  window.location = href;
+  changePage(href.slice(1));
 });
 
 },{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":9,"./manual-restart-tracker":24,"./misc":25,"./notifications":27,"./settings":36,"./test-config":41,"./test-logic":42,"./test-stats":43,"./test-ui":45,"@babel/runtime/helpers/interopRequireWildcard":60}],51:[function(require,module,exports){
