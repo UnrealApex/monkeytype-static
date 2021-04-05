@@ -1693,6 +1693,14 @@ var defaultCommands = {
       Commandline.show();
     }
   }, {
+    id: "changeCustomBackground",
+    display: "Change custom background...",
+    defaultValue: "",
+    input: true,
+    exec: function exec(input) {
+      UpdateConfig.setCustomBackground(input);
+    }
+  }, {
     id: "changeTheme",
     display: "Change theme...",
     subgroup: true,
@@ -1970,14 +1978,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var commandLineMouseMode = false;
 
 function showInput(command, placeholder) {
+  var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
   $("#commandLineWrapper").removeClass("hidden");
   $("#commandLine").addClass("hidden");
   $("#commandInput").removeClass("hidden");
   $("#commandInput input").attr("placeholder", placeholder);
-  $("#commandInput input").val("");
+  $("#commandInput input").val(defaultValue);
   $("#commandInput input").focus();
   $("#commandInput input").attr("command", "");
   $("#commandInput input").attr("command", command);
+
+  if (defaultValue != "") {
+    $("#commandInput input").select();
+  }
 }
 
 function showFound() {
@@ -2100,7 +2113,7 @@ function trigger(command) {
     if (obj.id == command) {
       if (obj.input) {
         input = true;
-        showInput(obj.id, obj.display);
+        showInput(obj.id, obj.display, obj.defaultValue);
       } else {
         obj.exec();
 
@@ -2503,9 +2516,12 @@ exports.setKeymapLayout = setKeymapLayout;
 exports.setLayout = setLayout;
 exports.setSavedLayout = setSavedLayout;
 exports.setFontSize = setFontSize;
+exports.setCustomBackground = setCustomBackground;
+exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.apply = apply;
 exports.reset = reset;
 exports.loadFromCookie = loadFromCookie;
+exports.setConfig = setConfig;
 exports["default"] = exports.loadPromise = exports.cookieConfig = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -2543,6 +2559,8 @@ var TestLogic = _interopRequireWildcard(require("./test-logic"));
 var PaceCaret = _interopRequireWildcard(require("./pace-caret"));
 
 var UI = _interopRequireWildcard(require("./ui"));
+
+var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -2621,7 +2639,9 @@ var defaultConfig = {
   showLiveAcc: false,
   monkey: false,
   repeatQuotes: "off",
-  oppositeShiftMode: "off"
+  oppositeShiftMode: "off",
+  customBackground: "",
+  customBackgroundSize: "cover"
 };
 
 function isConfigKeyValid(name) {
@@ -2968,7 +2988,11 @@ function setSwapEscAndTab(val, nosave) {
 function setPaceCaret(val, nosave) {
   if (val == undefined) {
     val = "off";
-  } // if (config.mode === "zen" && val != "off") {
+  } // if (val == "pb" && firebase.auth().currentUser === null) {
+  //   Notifications.add("PB pace caret is unavailable without an account", 0);
+  //   return;
+  // }
+  // if (config.mode === "zen" && val != "off") {
   //   Notifications.add(`Can't use pace caret with zen mode.`, 0);
   //   val = "off";
   // }
@@ -3683,7 +3707,7 @@ function setCustomTheme(_boolean, nosave) {
 
   if (_boolean) {
     ThemeController.set("custom");
-  } else {
+  } else if (!_boolean && !nosave) {
     ThemeController.set(config.theme);
   }
 
@@ -3692,7 +3716,7 @@ function setCustomTheme(_boolean, nosave) {
 
 function setTheme(name, nosave) {
   config.theme = name;
-  setCustomTheme(false, true);
+  setCustomTheme(false, true, true);
   ThemeController.set(config.theme);
   if (!nosave) saveToCookie();
 }
@@ -3888,6 +3912,35 @@ function setFontSize(fontSize, nosave) {
   if (!nosave) saveToCookie();
 }
 
+function setCustomBackground(value, nosave) {
+  if (value == null || value == undefined) {
+    value = "";
+  }
+
+  value = value.trim();
+
+  if (/(https|http):\/\/(www\.|).+\..+\/.+(\.png|\.gif|\.jpeg|\.jpg)/gi.test(value) || value == "") {
+    config.customBackground = value;
+    CommandlineLists.defaultCommands.list.filter(function (command) {
+      return command.id == "changeCustomBackground";
+    })[0].defaultValue = value;
+    ThemeController.applyCustomBackground();
+    if (!nosave) saveToCookie();
+  } else {
+    Notifications.add("Invalid custom background URL", 0);
+  }
+}
+
+function setCustomBackgroundSize(value, nosave) {
+  if (value != "cover" && value != "contain") {
+    value = "cover";
+  }
+
+  config.customBackgroundSize = value;
+  ThemeController.applyCustomBackgroundSize();
+  if (!nosave) saveToCookie();
+}
+
 function apply(configObj) {
   if (configObj == null || configObj == undefined) {
     Notifications.add("Could not apply config", -1, 3);
@@ -3903,7 +3956,9 @@ function apply(configObj) {
   if (configObj && configObj != null && configObj != "null") {
     setTheme(configObj.theme, true);
     setCustomThemeColors(configObj.customThemeColors, true);
-    setCustomTheme(configObj.customTheme, true);
+    setCustomTheme(configObj.customTheme, true, true);
+    setCustomBackground(configObj.customBackground, true);
+    setCustomBackgroundSize(configObj.customBackgroundSize, true);
     setQuickTabMode(configObj.quickTab, true);
     setKeyTips(configObj.showKeyTips, true);
     setTimeConfig(configObj.time, true);
@@ -3999,6 +4054,10 @@ function loadFromCookie() {
   loadDone();
 }
 
+function setConfig(newConfig) {
+  config = newConfig;
+}
+
 var loadPromise = new Promise(function (v) {
   loadDone = v;
 });
@@ -4006,7 +4065,7 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./funbox":13,"./keymap":17,"./language-picker":18,"./live-acc":21,"./live-wpm":22,"./misc":25,"./notifications":27,"./out-of-focus":28,"./pace-caret":29,"./sound":39,"./test-logic":42,"./test-ui":45,"./theme-controller":47,"./timer-progress":49,"./ui":50,"@babel/runtime/helpers/asyncToGenerator":55,"@babel/runtime/helpers/defineProperty":58,"@babel/runtime/helpers/interopRequireDefault":59,"@babel/runtime/helpers/interopRequireWildcard":60,"@babel/runtime/regenerator":66}],7:[function(require,module,exports){
+},{"./commandline-lists":4,"./funbox":13,"./keymap":17,"./language-picker":18,"./live-acc":21,"./live-wpm":22,"./misc":25,"./notifications":27,"./out-of-focus":28,"./pace-caret":29,"./sound":39,"./test-logic":42,"./test-ui":45,"./theme-controller":47,"./timer-progress":49,"./ui":50,"@babel/runtime/helpers/asyncToGenerator":55,"@babel/runtime/helpers/defineProperty":58,"@babel/runtime/helpers/interopRequireDefault":59,"@babel/runtime/helpers/interopRequireWildcard":60,"@babel/runtime/regenerator":66}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -4895,26 +4954,28 @@ function handleTab(event) {
     // );
 
     return;
-  } else if ($(".pageTest").hasClass("active") && !TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden")) {
-    if (UpdateConfig["default"].quickTab) {
-      if (UpdateConfig["default"].mode == "zen" && !event.shiftKey) {//ignore
-      } else {
-        if (event.shiftKey) ManualRestart.set();
-
-        if (TestLogic.active && UpdateConfig["default"].repeatQuotes === "typing" && UpdateConfig["default"].mode === "quote") {
-          TestLogic.restart(true, false, event);
+  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden")) {
+    if ($(".pageTest").hasClass("active")) {
+      if (UpdateConfig["default"].quickTab) {
+        if (UpdateConfig["default"].mode == "zen" && !event.shiftKey) {//ignore
         } else {
-          TestLogic.restart(false, false, event);
+          if (event.shiftKey) ManualRestart.set();
+
+          if (TestLogic.active && UpdateConfig["default"].repeatQuotes === "typing" && UpdateConfig["default"].mode === "quote") {
+            TestLogic.restart(true, false, event);
+          } else {
+            TestLogic.restart(false, false, event);
+          }
+        }
+      } else {
+        if (!TestUI.resultVisible && (TestLogic.hasTab && event.shiftKey || !TestLogic.hasTab && UpdateConfig["default"].mode !== "zen" || UpdateConfig["default"].mode === "zen" && event.shiftKey)) {
+          event.preventDefault();
+          $("#restartTestButton").focus();
         }
       }
-    } else {
-      if (!TestUI.resultVisible && (TestLogic.hasTab && event.shiftKey || !TestLogic.hasTab && UpdateConfig["default"].mode !== "zen" || UpdateConfig["default"].mode === "zen" && event.shiftKey)) {
-        event.preventDefault();
-        $("#restartTestButton").focus();
-      }
+    } else if (UpdateConfig["default"].quickTab) {
+      UI.changePage("test");
     }
-  } else if (UpdateConfig["default"].quickTab) {
-    UI.changePage("test");
   }
 }
 
@@ -8279,8 +8340,9 @@ function _initGroups() {
             });
             groups.alwaysShowDecimalPlaces = new _settingsGroup["default"]("alwaysShowDecimalPlaces", UpdateConfig.setAlwaysShowDecimalPlaces);
             groups.alwaysShowCPM = new _settingsGroup["default"]("alwaysShowCPM", UpdateConfig.setAlwaysShowCPM);
+            groups.customBackgroundSize = new _settingsGroup["default"]("customBackgroundSize", UpdateConfig.setCustomBackgroundSize);
 
-          case 51:
+          case 52:
           case "end":
             return _context.stop();
         }
@@ -8354,8 +8416,9 @@ function _fillSettingsPage() {
                 SimplePopups.list.applyCustomFont.show([]);
               }).appendTo(fontsEl);
             });
+            $(".pageSettings .section.customBackgroundSize input").val(UpdateConfig["default"].customBackground);
 
-          case 21:
+          case 22:
           case "end":
             return _context2.stop();
         }
@@ -8472,6 +8535,26 @@ $(".pageSettings .sectionGroupTitle").click(function (e) {
         });
       }
     });
+  }
+});
+$(".pageSettings #resetPersonalBestsButton").on("click", function (e) {
+  SimplePopups.list.resetPersonalBests.show();
+});
+$(".pageSettings #updateAccountEmail").on("click", function (e) {
+  SimplePopups.list.updateEmail.show();
+});
+$(".pageSettings .section.customBackgroundSize .inputAndButton .save").on("click", function (e) {
+  UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
+});
+$(".pageSettings .section.customBackgroundSize .inputAndButton .cover").on("click", function (e) {
+  UpdateConfig.setCustomBackgroundSize("cover");
+});
+$(".pageSettings .section.customBackgroundSize .inputAndButton .contain").on("click", function (e) {
+  UpdateConfig.setCustomBackgroundSize("contain");
+});
+$(".pageSettings .section.customBackgroundSize .inputAndButton input").keypress(function (e) {
+  if (e.keyCode == 13) {
+    UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
   }
 });
 
@@ -11804,6 +11887,8 @@ exports.set = set;
 exports.clearPreview = clearPreview;
 exports.randomiseTheme = randomiseTheme;
 exports.clearRandom = clearRandom;
+exports.applyCustomBackground = applyCustomBackground;
+exports.applyCustomBackgroundSize = applyCustomBackgroundSize;
 exports.colorVars = void 0;
 
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
@@ -11928,6 +12013,29 @@ function randomiseTheme() {
 
 function clearRandom() {
   randomTheme = null;
+}
+
+function applyCustomBackground() {
+  $("body").css({
+    backgroundImage: "url(".concat(_config["default"].customBackground, ")"),
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundAttachment: "fixed"
+  });
+
+  if (_config["default"].customBackground === "") {
+    $("#words").removeClass("noErrorBorder");
+  } else {
+    $("#words").addClass("noErrorBorder");
+  }
+}
+
+function applyCustomBackgroundSize() {
+  if (_config["default"].customBackgroundSize != "") {
+    $("body").css({
+      backgroundSize: _config["default"].customBackgroundSize
+    });
+  }
 }
 
 },{"./chart-controller":3,"./config":6,"./misc":25,"./notifications":27,"./theme-colors":46,"./ui":50,"@babel/runtime/helpers/interopRequireDefault":59,"@babel/runtime/helpers/interopRequireWildcard":60}],48:[function(require,module,exports){
