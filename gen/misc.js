@@ -299,7 +299,7 @@ export function migrateFromCookies() {
 
       if (value) {
         window.localStorage.setItem(name, value);
-        $.removeCookie(name);
+        $.removeCookie(name, { path: "/" });
       }
     }
   );
