@@ -4036,7 +4036,7 @@ function loadFromLocalStorage() {
 
   var newConfig = window.localStorage.getItem("config");
 
-  if (newConfig !== undefined && newConfig !== "") {
+  if (newConfig !== undefined && newConfig !== null && newConfig !== "") {
     try {
       newConfig = JSON.parse(newConfig);
     } catch (e) {
