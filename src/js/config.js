@@ -25,7 +25,7 @@ export function setCookieConfig(val) {
 let loadDone;
 
 let defaultConfig = {
-  theme: "serika_dark",
+  theme: "matrix",
   customTheme: false,
   customThemeColors: [
     "#323437",
@@ -42,7 +42,7 @@ let defaultConfig = {
   showKeyTips: true,
   showLiveWpm: false,
   showTimerProgress: true,
-  smoothCaret: true,
+  smoothCaret: false,
   quickTab: false,
   punctuation: false,
   numbers: false,
@@ -57,8 +57,8 @@ let defaultConfig = {
   difficulty: "normal",
   blindMode: false,
   quickEnd: false,
-  caretStyle: "default",
-  paceCaretStyle: "default",
+  caretStyle: "block",
+  paceCaretStyle: "outline",
   flipTestColors: false,
   capsLockBackspace: false,
   layout: "default",

@@ -1189,7 +1189,7 @@ a:hover {
 #caret {
   height: 1.5rem;
   background: var(--caret-color);
-  animation-name: caretFlashSmooth;
+  animation-name: caretFlashHard;
   /* animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955); */
   animation-iteration-count: infinite;
   animation-duration: 1s;
