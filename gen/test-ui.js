@@ -245,6 +245,12 @@ export function screenshot() {
     $(".pageTest .ssWatermark").addClass("hidden");
     $(".pageTest .buttons").removeClass("hidden");
   }
+  setTimeout(() => {
+    $("#notificationCenter").removeClass("hidden");
+    $("#commandLineMobileButton").removeClass("hidden");
+    $(".pageTest .ssWatermark").addClass("hidden");
+    $(".pageTest .buttons").removeClass("hidden");
+  }, 3000);
 }
 
 export function updateWordElement(showError) {
