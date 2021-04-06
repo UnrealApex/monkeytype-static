@@ -2421,8 +2421,8 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setCookieConfig = setCookieConfig;
-exports.saveToCookie = saveToCookie;
+exports.setLocalStorageConfig = setLocalStorageConfig;
+exports.saveToLocalStorage = saveToLocalStorage;
 exports.setNumbers = setNumbers;
 exports.toggleNumbers = toggleNumbers;
 exports.setPunctuation = setPunctuation;
@@ -2520,9 +2520,9 @@ exports.setCustomBackground = setCustomBackground;
 exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.apply = apply;
 exports.reset = reset;
-exports.loadFromCookie = loadFromCookie;
+exports.loadFromLocalStorage = loadFromLocalStorage;
 exports.setConfig = setConfig;
-exports["default"] = exports.loadPromise = exports.cookieConfig = void 0;
+exports["default"] = exports.loadPromise = exports.localStorageConfig = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -2566,11 +2566,11 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-var cookieConfig = null;
-exports.cookieConfig = cookieConfig;
+var localStorageConfig = null;
+exports.localStorageConfig = localStorageConfig;
 
-function setCookieConfig(val) {
-  exports.cookieConfig = cookieConfig = val;
+function setLocalStorageConfig(val) {
+  exports.localStorageConfig = localStorageConfig = val;
 }
 
 var loadDone;
@@ -2652,13 +2652,13 @@ function isConfigKeyValid(name) {
 
 var config = _objectSpread({}, defaultConfig);
 
-function saveToCookie() {
-  return _saveToCookie.apply(this, arguments);
+function saveToLocalStorage() {
+  return _saveToLocalStorage.apply(this, arguments);
 } //numbers
 
 
-function _saveToCookie() {
-  _saveToCookie = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+function _saveToLocalStorage() {
+  _saveToLocalStorage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
     var noDbCheck,
         save,
         _args = arguments;
@@ -2675,7 +2675,7 @@ function _saveToCookie() {
             // });
             save = config;
             delete save.resultFilters;
-            Misc.setCookie("config", JSON.stringify(save), 365); // restartCount = 0;
+            window.localStorage.setItem("config", JSON.stringify(save)); // restartCount = 0;
 
           case 4:
           case "end":
@@ -2684,7 +2684,7 @@ function _saveToCookie() {
       }
     }, _callee);
   }));
-  return _saveToCookie.apply(this, arguments);
+  return _saveToLocalStorage.apply(this, arguments);
 }
 
 function setNumbers(numb, nosave) {
@@ -2700,7 +2700,7 @@ function setNumbers(numb, nosave) {
     $("#top .config .numbersMode .text-button").addClass("active");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleNumbers() {
@@ -2716,7 +2716,7 @@ function toggleNumbers() {
     $("#top .config .numbersMode .text-button").removeClass("active");
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 } //punctuation
 
 
@@ -2733,7 +2733,7 @@ function setPunctuation(punc, nosave) {
     $("#top .config .punctuationMode .text-button").addClass("active");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function togglePunctuation() {
@@ -2749,7 +2749,7 @@ function togglePunctuation() {
     $("#top .config .punctuationMode .text-button").removeClass("active");
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setMode(mode, nosave) {
@@ -2824,7 +2824,7 @@ function setMode(mode, nosave) {
 
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPlaySoundOnError(val, nosave) {
@@ -2833,7 +2833,7 @@ function setPlaySoundOnError(val, nosave) {
   }
 
   config.playSoundOnError = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPlaySoundOnClick(val, nosave) {
@@ -2843,7 +2843,7 @@ function setPlaySoundOnClick(val, nosave) {
 
   config.playSoundOnClick = val;
   if (config.playSoundOnClick !== "off") Sound.init();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function togglePlaySoundOnError() {
@@ -2863,7 +2863,7 @@ function setDifficulty(diff, nosave) {
   config.difficulty = diff;
   if (!nosave) TestLogic.restart(false, nosave);
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //set fav themes
 
 
@@ -2871,7 +2871,7 @@ function setFavThemes(themes, nosave) {
   config.favThemes = themes;
 
   if (!nosave) {
-    saveToCookie();
+    saveToLocalStorage();
   }
 } //blind mode
 
@@ -2885,7 +2885,7 @@ function toggleBlindMode() {
 
   config.blindMode = blind;
   TestUI.updateModesNotice();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setBlindMode(blind, nosave) {
@@ -2895,7 +2895,7 @@ function setBlindMode(blind, nosave) {
 
   config.blindMode = blind;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setStopOnError(soe, nosave) {
@@ -2910,13 +2910,13 @@ function setStopOnError(soe, nosave) {
   }
 
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //alwaysshowdecimal
 
 
 function toggleAlwaysShowDecimalPlaces() {
   config.alwaysShowDecimalPlaces = !config.alwaysShowDecimalPlaces;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setAlwaysShowDecimalPlaces(val, nosave) {
@@ -2925,12 +2925,12 @@ function setAlwaysShowDecimalPlaces(val, nosave) {
   }
 
   config.alwaysShowDecimalPlaces = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleAlwaysShowCPM() {
   config.alwaysShowCPM = !config.alwaysShowCPM;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setAlwaysShowCPM(val, nosave) {
@@ -2939,7 +2939,7 @@ function setAlwaysShowCPM(val, nosave) {
   }
 
   config.alwaysShowCPM = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //show out of focus warning
 
 
@@ -2950,7 +2950,7 @@ function toggleShowOutOfFocusWarning() {
     OutOfFocus.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowOutOfFocusWarning(val, nosave) {
@@ -2964,13 +2964,13 @@ function setShowOutOfFocusWarning(val, nosave) {
     OutOfFocus.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //swap esc and tab
 
 
 function toggleSwapEscAndTab() {
   config.swapEscAndTab = !config.swapEscAndTab;
-  saveToCookie();
+  saveToLocalStorage();
   UI.updateKeytips();
 }
 
@@ -2981,7 +2981,7 @@ function setSwapEscAndTab(val, nosave) {
 
   config.swapEscAndTab = val;
   UI.updateKeytips();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //pace caret
 
 
@@ -3001,7 +3001,7 @@ function setPaceCaret(val, nosave) {
   config.paceCaret = val;
   TestUI.updateModesNotice();
   PaceCaret.init(nosave);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPaceCaretCustomSpeed(val, nosave) {
@@ -3010,7 +3010,7 @@ function setPaceCaretCustomSpeed(val, nosave) {
   }
 
   config.paceCaretCustomSpeed = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //min wpm
 
 
@@ -3021,7 +3021,7 @@ function setMinWpm(minwpm, nosave) {
 
   config.minWpm = minwpm;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setMinWpmCustomSpeed(val, nosave) {
@@ -3030,7 +3030,7 @@ function setMinWpmCustomSpeed(val, nosave) {
   }
 
   config.minWpmCustomSpeed = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //min acc
 
 
@@ -3041,7 +3041,7 @@ function setMinAcc(min, nosave) {
 
   config.minAcc = min;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setMinAccCustom(val, nosave) {
@@ -3050,7 +3050,7 @@ function setMinAccCustom(val, nosave) {
   }
 
   config.minAccCustom = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //always show words history
 
 
@@ -3060,7 +3060,7 @@ function setAlwaysShowWordsHistory(val, nosave) {
   }
 
   config.alwaysShowWordsHistory = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleAlwaysShowWordsHistory() {
@@ -3071,14 +3071,14 @@ function toggleAlwaysShowWordsHistory() {
   }
 
   config.alwaysShowWordsHistory = val;
-  saveToCookie();
+  saveToLocalStorage();
 } //single list command line
 
 
 function setSingleListCommandLine(option, nosave) {
   if (!option) option = "manual";
   config.singleListCommandLine = option;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //show all lines
 
 
@@ -3091,7 +3091,7 @@ function toggleShowAllLines() {
 
   config.showAllLines = sal;
   TestLogic.restart();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowAllLines(sal, nosave) {
@@ -3102,7 +3102,7 @@ function setShowAllLines(sal, nosave) {
   config.showAllLines = sal;
 
   if (!nosave) {
-    saveToCookie();
+    saveToLocalStorage();
     TestLogic.restart();
   }
 } //quickend
@@ -3116,7 +3116,7 @@ function toggleQuickEnd() {
   }
 
   config.quickEnd = qe;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setQuickEnd(qe, nosave) {
@@ -3125,7 +3125,7 @@ function setQuickEnd(qe, nosave) {
   }
 
   config.quickEnd = qe;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setRepeatQuotes(val, nosave) {
@@ -3134,7 +3134,7 @@ function setRepeatQuotes(val, nosave) {
   }
 
   config.repeatQuotes = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //flip colors
 
 
@@ -3145,13 +3145,13 @@ function setFlipTestColors(flip, nosave) {
 
   config.flipTestColors = flip;
   TestUI.flipColors(flip);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleFlipTestColors() {
   config.flipTestColors = !config.flipTestColors;
   TestUI.flipColors(config.flipTestColors);
-  saveToCookie();
+  saveToLocalStorage();
 } //extra color
 
 
@@ -3162,13 +3162,13 @@ function setColorfulMode(extra, nosave) {
 
   config.colorfulMode = extra;
   TestUI.colorful(extra);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleColorfulMode() {
   config.colorfulMode = !config.colorfulMode;
   TestUI.colorful(config.colorfulMode);
-  saveToCookie();
+  saveToLocalStorage();
 } //strict space
 
 
@@ -3178,12 +3178,12 @@ function setStrictSpace(val, nosave) {
   }
 
   config.strictSpace = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleStrictSpace() {
   config.strictSpace = !config.strictSpace;
-  saveToCookie();
+  saveToLocalStorage();
 } //opposite shift space
 
 
@@ -3193,7 +3193,7 @@ function setOppositeShiftMode(val, nosave) {
   }
 
   config.oppositeShiftMode = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPageWidth(val, nosave) {
@@ -3211,7 +3211,7 @@ function setPageWidth(val, nosave) {
     $("#centerContent").addClass("wide" + val);
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCaretStyle(caretStyle, nosave) {
@@ -3241,7 +3241,7 @@ function setCaretStyle(caretStyle, nosave) {
     $("#caret").addClass("carrot");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPaceCaretStyle(caretStyle, nosave) {
@@ -3268,7 +3268,7 @@ function setPaceCaretStyle(caretStyle, nosave) {
     $("#paceCaret").addClass("underline");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setShowTimerProgress(timer, nosave) {
@@ -3284,7 +3284,7 @@ function setShowTimerProgress(timer, nosave) {
     TimerProgress.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleShowTimerProgress() {
@@ -3296,7 +3296,7 @@ function toggleShowTimerProgress() {
     TimerProgress.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowLiveWpm(live, nosave) {
@@ -3312,7 +3312,7 @@ function setShowLiveWpm(live, nosave) {
     LiveWpm.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleShowLiveWpm() {
@@ -3324,7 +3324,7 @@ function toggleShowLiveWpm() {
     LiveWpm.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowLiveAcc(live, nosave) {
@@ -3340,7 +3340,7 @@ function setShowLiveAcc(live, nosave) {
     LiveAcc.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleLiveAcc() {
@@ -3352,7 +3352,7 @@ function toggleLiveAcc() {
     LiveAcc.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setHighlightMode(mode, nosave) {
@@ -3366,7 +3366,7 @@ function setHighlightMode(mode, nosave) {
   }
 
   config.highlightMode = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setHideExtraLetters(val, nosave) {
@@ -3375,12 +3375,12 @@ function setHideExtraLetters(val, nosave) {
   }
 
   config.hideExtraLetters = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleHideExtraLetters() {
   config.hideExtraLetters = !config.hideExtraLetters;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setTimerStyle(style, nosave) {
@@ -3389,7 +3389,7 @@ function setTimerStyle(style, nosave) {
   }
 
   config.timerStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setTimerColor(color, nosave) {
@@ -3428,7 +3428,7 @@ function setTimerColor(color, nosave) {
     $("#miniTimerAndLiveWpm").addClass("timerText");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setTimerOpacity(opacity, nosave) {
@@ -3437,7 +3437,7 @@ function setTimerOpacity(opacity, nosave) {
   }
 
   config.timerOpacity = opacity;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //key tips
 
 
@@ -3450,7 +3450,7 @@ function setKeyTips(keyTips, nosave) {
     $("#bottom .keyTips").addClass("hidden");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleKeyTips() {
@@ -3462,7 +3462,7 @@ function toggleKeyTips() {
     $("#bottom .keyTips").addClass("hidden");
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 } //mode
 
 
@@ -3481,7 +3481,7 @@ function setTimeConfig(time, nosave) {
   }
 
   $("#top .config .time .text-button[timeConfig='" + time + "']").addClass("active");
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //quote length
 
 
@@ -3511,7 +3511,7 @@ function setQuoteLength(len, nosave, multipleMode) {
   config.quoteLength.forEach(function (ql) {
     $("#top .config .quoteLength .text-button[quoteLength='" + ql + "']").addClass("active");
   });
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setWordCount(wordCount, nosave) {
@@ -3529,13 +3529,13 @@ function setWordCount(wordCount, nosave) {
   }
 
   $("#top .config .wordCount .text-button[wordCount='" + wordCount + "']").addClass("active");
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //caret
 
 
 function setSmoothCaret(mode, nosave) {
   config.smoothCaret = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 
   if (mode) {
     $("#caret").css("animation-name", "caretFlashSmooth");
@@ -3546,7 +3546,7 @@ function setSmoothCaret(mode, nosave) {
 
 function toggleSmoothCaret() {
   config.smoothCaret = !config.smoothCaret;
-  saveToCookie();
+  saveToLocalStorage();
 
   if (config.smoothCaret) {
     $("#caret").css("animation-name", "caretFlashSmooth");
@@ -3558,23 +3558,23 @@ function toggleSmoothCaret() {
 
 function toggleStartGraphsAtZero() {
   config.startGraphsAtZero = !config.startGraphsAtZero;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setStartGraphsAtZero(mode, nosave) {
   config.startGraphsAtZero = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //linescroll
 
 
 function setSmoothLineScroll(mode, nosave) {
   config.smoothLineScroll = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleSmoothLineScroll() {
   config.smoothLineScroll = !config.smoothLineScroll;
-  saveToCookie();
+  saveToLocalStorage();
 } //quick tab
 
 
@@ -3590,7 +3590,7 @@ function setQuickTabMode(mode, nosave) {
     $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n      <key>esc</key> - command line");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleQuickTabMode() {
@@ -3611,7 +3611,7 @@ function toggleQuickTabMode() {
   console.log(config.quickTab);
   console.log("before save");
   console.log(config.quickTab);
-  saveToCookie();
+  saveToLocalStorage();
   console.log("after save");
   console.log(config.quickTab);
 }
@@ -3638,7 +3638,7 @@ function setFontFamily(font, nosave) {
 
   config.fontFamily = font;
   document.documentElement.style.setProperty("--font", '"' + font.replace(/_/g, " ") + '"');
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //freedom
 
 
@@ -3653,7 +3653,7 @@ function setFreedomMode(freedom, nosave) {
     config.confidenceMode = "off";
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleFreedomMode() {
@@ -3663,7 +3663,7 @@ function toggleFreedomMode() {
     config.confidenceMode = false;
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setConfidenceMode(cm, nosave) {
@@ -3679,7 +3679,7 @@ function setConfidenceMode(cm, nosave) {
   }
 
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleIndicateTypos() {
@@ -3690,7 +3690,7 @@ function toggleIndicateTypos() {
   }
 
   config.indicateTypos = it;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setIndicateTypos(it, nosave) {
@@ -3699,7 +3699,7 @@ function setIndicateTypos(it, nosave) {
   }
 
   config.indicateTypos = it;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomTheme(_boolean, nosave) {
@@ -3711,14 +3711,14 @@ function setCustomTheme(_boolean, nosave) {
     ThemeController.set(config.theme);
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setTheme(name, nosave) {
   config.theme = name;
   setCustomTheme(false, true, true);
   ThemeController.set(config.theme);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setRandomTheme(val, nosave) {
@@ -3731,7 +3731,7 @@ function setRandomTheme(val, nosave) {
   }
 
   config.randomTheme = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleCustomTheme(nosave) {
@@ -3743,7 +3743,7 @@ function toggleCustomTheme(nosave) {
     ThemeController.set("custom");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomThemeColors(colors, nosave) {
@@ -3752,7 +3752,7 @@ function setCustomThemeColors(colors, nosave) {
     // applyCustomThemeColors();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setLanguage(language, nosave) {
@@ -3761,7 +3761,7 @@ function setLanguage(language, nosave) {
   }
 
   config.language = language;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleMonkey(nosave) {
@@ -3773,7 +3773,7 @@ function toggleMonkey(nosave) {
     $("#monkey").addClass("hidden");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setMonkey(monkey, nosave) {
@@ -3789,7 +3789,7 @@ function setMonkey(monkey, nosave) {
     $("#monkey").addClass("hidden");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCapsLockBackspace(capsLockBackspace, nosave) {
@@ -3798,7 +3798,7 @@ function setCapsLockBackspace(capsLockBackspace, nosave) {
   }
 
   config.capsLockBackspace = capsLockBackspace;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleCapsLockBackspace() {
@@ -3814,7 +3814,7 @@ function setKeymapMode(mode, nosave) {
   $(".keymap-key").attr("style", "");
   config.keymapMode = mode;
   if (!nosave) TestLogic.restart(false, nosave);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setKeymapStyle(style, nosave) {
@@ -3835,7 +3835,7 @@ function setKeymapStyle(style, nosave) {
   }
 
   config.keymapStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setKeymapLayout(layout, nosave) {
@@ -3845,7 +3845,7 @@ function setKeymapLayout(layout, nosave) {
 
   config.keymapLayout = layout;
   Keymap.refreshKeys(layout, setKeymapLayout);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setLayout(layout, nosave) {
@@ -3860,7 +3860,7 @@ function setLayout(layout, nosave) {
     Keymap.refreshKeys(config.keymapLayout, setKeymapLayout);
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setSavedLayout(layout, nosave) {
@@ -3909,7 +3909,7 @@ function setFontSize(fontSize, nosave) {
     $("#miniTimerAndLiveWpm").addClass("size3");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomBackground(value, nosave) {
@@ -3925,7 +3925,7 @@ function setCustomBackground(value, nosave) {
       return command.id == "changeCustomBackground";
     })[0].defaultValue = value;
     ThemeController.applyCustomBackground();
-    if (!nosave) saveToCookie();
+    if (!nosave) saveToLocalStorage();
   } else {
     Notifications.add("Invalid custom background URL", 0);
   }
@@ -3938,7 +3938,7 @@ function setCustomBackgroundSize(value, nosave) {
 
   config.customBackgroundSize = value;
   ThemeController.applyCustomBackgroundSize();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function apply(configObj) {
@@ -4028,13 +4028,13 @@ function apply(configObj) {
 function reset() {
   config = _objectSpread({}, defaultConfig);
   apply();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
-function loadFromCookie() {
-  console.log("loading cookie config"); // let newConfig = $.cookie("config");
+function loadFromLocalStorage() {
+  console.log("loading localStorage config"); // let newConfig = $.cookie("config");
 
-  var newConfig = Misc.getCookie("config");
+  var newConfig = window.localStorage.getItem("config");
 
   if (newConfig !== undefined && newConfig !== "") {
     try {
@@ -4044,10 +4044,10 @@ function loadFromCookie() {
     }
 
     apply(newConfig);
-    console.log("applying cookie config");
-    exports.cookieConfig = cookieConfig = newConfig;
-    saveToCookie(true);
-    console.log("saving cookie config");
+    console.log("applying localStorage config");
+    exports.localStorageConfig = localStorageConfig = newConfig;
+    saveToLocalStorage(true);
+    console.log("saving localStorage config");
   }
 
   TestLogic.restart(false, true);
@@ -4811,7 +4811,7 @@ function hide() {
         Notifications.add("An error occured while importing settings: " + e, -1);
       }
 
-      UpdateConfig.saveToCookie();
+      UpdateConfig.saveToLocalStorage();
       Settings.update();
     }
 
@@ -6280,8 +6280,7 @@ exports.getChallengeList = getChallengeList;
 exports.showNotification = showNotification;
 exports.getCurrentLanguage = getCurrentLanguage;
 exports.getLanguage = getLanguage;
-exports.setCookie = setCookie;
-exports.getCookie = getCookie;
+exports.migrateFromCookies = migrateFromCookies;
 exports.smooth = smooth;
 exports.stdDev = stdDev;
 exports.mean = mean;
@@ -6828,31 +6827,28 @@ function _getLanguage() {
   return _getLanguage.apply(this, arguments);
 }
 
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
+function migrateFromCookies() {
+  ["resultFilters", "config", "merchbannerclosed", "activeTags"].forEach(function (name) {
+    var decodedCookie = decodeURIComponent(document.cookie).split(";");
+    var value = null;
 
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(";");
+    for (var i = 0; i < decodedCookie.length; i++) {
+      var c = decodedCookie[i];
 
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
 
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
+      if (c.indexOf(name + "=") == 0) {
+        value = c.substring(name.length + 1, c.length);
+      }
     }
 
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
+    if (value) {
+      window.localStorage.setItem(name, value);
+      $.removeCookie(name);
     }
-  }
-
-  return "";
+  });
 }
 
 function smooth(arr, windowSize) {
@@ -7992,7 +7988,8 @@ var RouteController = _interopRequireWildcard(require("./route-controller"));
 var UI = _interopRequireWildcard(require("./ui"));
 
 ManualRestart.set();
-UpdateConfig.loadFromCookie();
+Misc.migrateFromCookies();
+UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
 $(document).ready(function () {
   RouteController.handleInitialPageClasses(window.location.hash);
@@ -8007,7 +8004,7 @@ $(document).ready(function () {
     $("#restartTestButton").addClass("hidden");
   }
 
-  if (!Misc.getCookie("merchbannerclosed")) {
+  if (!window.localStorage.getItem("merchbannerclosed")) {
     $(".merchBanner").removeClass("hidden");
   } else {
     $(".merchBanner").remove();
@@ -12134,7 +12131,7 @@ function toggleFavourite(themename) {
     UpdateConfig.setFavThemes(newlist);
   }
 
-  UpdateConfig.saveToCookie();
+  UpdateConfig.saveToLocalStorage();
   refreshButtons(); // showFavouriteThemesAtTheTop();
 
   CommandlineLists.updateThemeCommands();
@@ -12595,11 +12592,11 @@ window.addEventListener("keydown", function (e) {
 });
 $(".merchBanner a").click(function (event) {
   $(".merchBanner").remove();
-  Misc.setCookie("merchbannerclosed", true, 365);
+  window.localStorage.setItem("merchbannerclosed", true);
 });
 $(".merchBanner .fas").click(function (event) {
   $(".merchBanner").remove();
-  Misc.setCookie("merchbannerclosed", true, 365);
+  window.localStorage.setItem("merchbannerclosed", true);
   Notifications.add("Won't remind you anymore. Thanks for continued support <3", 0, 5);
 });
 $(".scrollToTopButton").click(function (event) {
