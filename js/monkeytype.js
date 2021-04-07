@@ -2612,7 +2612,7 @@ var defaultConfig = {
   colorfulMode: false,
   randomTheme: "off",
   timerColor: "main",
-  timerOpacity: "0.5",
+  timerOpacity: "1",
   stopOnError: "off",
   showAllLines: false,
   keymapMode: "off",

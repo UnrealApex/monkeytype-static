@@ -15,7 +15,7 @@ function showInput(command, placeholder, defaultValue = "") {
   $("#commandInput input").focus();
   $("#commandInput input").attr("command", "");
   $("#commandInput input").attr("command", command);
-  if (defaultValue != ""){
+  if (defaultValue != "") {
     $("#commandInput input").select();
   }
 }
