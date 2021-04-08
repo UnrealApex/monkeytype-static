@@ -93,7 +93,7 @@ function toggleFavourite(themename) {
     newlist.push(themename);
     UpdateConfig.setFavThemes(newlist);
   }
-  UpdateConfig.saveToLocalStorage();
+  UpdateConfig.saveToCookie();
   refreshButtons();
   // showFavouriteThemesAtTheTop();
   CommandlineLists.updateThemeCommands();
@@ -222,7 +222,7 @@ $(".pageSettings .saveCustomThemeButton").click((e) => {
 
 $(".pageSettings #loadCustomColorsFromPreset").click((e) => {
   // previewTheme(Config.theme);
-  ThemeController.preview(Config.theme);
+  $("#currentTheme").attr("href", `themes/${Config.theme}.css`);
 
   ThemeController.colorVars.forEach((e) => {
     document.documentElement.style.setProperty(e, "");

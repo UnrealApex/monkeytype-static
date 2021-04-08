@@ -27,7 +27,7 @@ function hide() {
           -1
         );
       }
-      UpdateConfig.saveToLocalStorage();
+      UpdateConfig.saveToCookie();
       Settings.update();
     }
     $("#settingsImportWrapper")

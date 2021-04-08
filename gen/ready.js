@@ -6,8 +6,7 @@ import * as RouteController from "./route-controller";
 import * as UI from "./ui";
 
 ManualRestart.set();
-Misc.migrateFromCookies();
-UpdateConfig.loadFromLocalStorage();
+UpdateConfig.loadFromCookie();
 Misc.getReleasesFromGitHub();
 
 $(document).ready(() => {
@@ -19,7 +18,7 @@ $(document).ready(() => {
   if (Config.quickTab) {
     $("#restartTestButton").addClass("hidden");
   }
-  if (!window.localStorage.getItem("merchbannerclosed")) {
+  if (!Misc.getCookie("merchbannerclosed")) {
     $(".merchBanner").removeClass("hidden");
   } else {
     $(".merchBanner").remove();
