@@ -2608,7 +2608,7 @@ var defaultConfig = {
   savedLayout: "default",
   confidenceMode: "off",
   indicateTypos: false,
-  timerStyle: "text",
+  timerStyle: "mini",
   colorfulMode: false,
   randomTheme: "off",
   timerColor: "main",
@@ -3389,7 +3389,7 @@ function toggleHideExtraLetters() {
 
 function setTimerStyle(style, nosave) {
   if (style == null || style == undefined) {
-    style = "bar";
+    style = "mini";
   }
 
   config.timerStyle = style;
