@@ -20,14 +20,14 @@ function canBailOut() {
   return (
     (Config.mode === "custom" &&
       CustomText.isWordRandom &&
-      CustomText.word >= 5000) ||
+      (CustomText.word >= 5000 || CustomText.word == 0)) ||
     (Config.mode === "custom" &&
       !CustomText.isWordRandom &&
       !CustomText.isTimeRandom &&
       CustomText.text.length >= 5000) ||
     (Config.mode === "custom" &&
       CustomText.isTimeRandom &&
-      CustomText.time >= 3600) ||
+      (CustomText.time >= 3600 || CustomText.time == 0)) ||
     (Config.mode === "words" && Config.words >= 5000) ||
     Config.words === 0 ||
     (Config.mode === "time" && (Config.time >= 3600 || Config.time === 0)) ||
@@ -52,7 +52,8 @@ if (Object.keys(layouts).length > 0) {
       id: "changeLayout" + Misc.capitalizeFirstLetter(layout),
       display: layout.replace(/_/g, " "),
       exec: () => {
-        UpdateConfig.setSavedLayout(layout);
+        // UpdateConfig.setSavedLayout(layout);
+        UpdateConfig.setLayout(layout);
         TestLogic.restart();
       },
     });
@@ -124,7 +125,7 @@ let commandsFunbox = {
       id: "changeFunboxNone",
       display: "none",
       exec: () => {
-        if (Funbox.activate("none", null)) {
+        if (Funbox.setFunbox("none", null)) {
           TestLogic.restart();
         }
       },
@@ -138,7 +139,7 @@ Misc.getFunboxList().then((funboxes) => {
       id: "changeFunbox" + funbox.name,
       display: funbox.name.replace(/_/g, " "),
       exec: () => {
-        if (Funbox.activate(funbox.name, funbox.type)) {
+        if (Funbox.setFunbox(funbox.name, funbox.type)) {
           TestLogic.restart();
         }
       },
@@ -550,6 +551,33 @@ let commandsKeymapStyle = {
       display: "split matrix",
       exec: () => {
         UpdateConfig.setKeymapStyle("split_matrix");
+      },
+    },
+  ],
+};
+
+let commandsKeymapLegendStyle = {
+  title: "Change keymap legend style...",
+  list: [
+    {
+      id: "setKeymapLegendStyleLowercase",
+      display: "lowercase",
+      exec: () => {
+        UpdateConfig.setKeymapLegendStyle("lowercase");
+      },
+    },
+    {
+      id: "setKeymapLegendStyleUppercase",
+      display: "uppercase",
+      exec: () => {
+        UpdateConfig.setKeymapLegendStyle("uppercase");
+      },
+    },
+    {
+      id: "setKeymapLegendStyleBlank",
+      display: "blank",
+      exec: () => {
+        UpdateConfig.setKeymapLegendStyle("blank");
       },
     },
   ],
@@ -1563,6 +1591,16 @@ export let defaultCommands = {
       subgroup: true,
       exec: () => {
         current.push(commandsKeymapStyle);
+        Commandline.show();
+      },
+    },
+    {
+      id: "changeKeymapLegendStyle",
+      display: "Change keymap legend style...",
+      alias: "keyboard",
+      subgroup: true,
+      exec: () => {
+        current.push(commandsKeymapLegendStyle);
         Commandline.show();
       },
     },

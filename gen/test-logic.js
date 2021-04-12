@@ -560,6 +560,9 @@ export async function init() {
   // } else {
   TestUI.showWords();
   // }
+  if ($(".pageTest").hasClass("active")) {
+    Funbox.activate();
+  }
 }
 
 export function restart(withSameWordset = false, nosave = false, event) {
@@ -681,6 +684,7 @@ export function restart(withSameWordset = false, nosave = false, event) {
         input.reset();
         PaceCaret.init();
         TestUI.showWords();
+        Funbox.activate();
       }
       if (Config.mode === "quote") {
         setRepeated(false);
@@ -908,6 +912,7 @@ export function finish(difficultyFailed = false) {
   LiveAcc.hide();
   TimerProgress.hide();
   Keymap.hide();
+  Funbox.activate("none", null);
   let stats = TestStats.calculateStats();
   if (stats === undefined) {
     stats = {
@@ -1318,8 +1323,8 @@ export function finish(difficultyFailed = false) {
   if (Config.blindMode) {
     testType += "<br>blind";
   }
-  if (Funbox.active !== "none") {
-    testType += "<br>" + Funbox.active.replace(/_/g, " ");
+  if (Funbox.funboxSaved !== "none") {
+    testType += "<br>" + Funbox.funboxSaved.replace(/_/g, " ");
   }
   if (Config.difficulty == "expert") {
     testType += "<br>expert";
@@ -1373,7 +1378,7 @@ export function finish(difficultyFailed = false) {
     $("#result .stats .source").addClass("hidden");
   }
 
-  if (Funbox.active !== "none") {
+  if (Funbox.funboxSaved !== "none") {
     ChartController.result.options.annotation.annotations.push({
       enabled: false,
       type: "line",
@@ -1394,7 +1399,7 @@ export function finish(difficultyFailed = false) {
         cornerRadius: 3,
         position: "left",
         enabled: true,
-        content: `${Funbox.active}`,
+        content: `${Funbox.funboxSaved}`,
         yAdjust: -11,
       },
     });

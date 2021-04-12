@@ -47,9 +47,11 @@ async function initGroups() {
       if (Config.keymapMode === "off") {
         $(".pageSettings .section.keymapStyle").addClass("hidden");
         $(".pageSettings .section.keymapLayout").addClass("hidden");
+        $(".pageSettings .section.keymapLegendStyle").addClass("hidden");
       } else {
         $(".pageSettings .section.keymapStyle").removeClass("hidden");
         $(".pageSettings .section.keymapLayout").removeClass("hidden");
+        $(".pageSettings .section.keymapLegendStyle").removeClass("hidden");
       }
     }
   );
@@ -60,6 +62,10 @@ async function initGroups() {
   groups.keymapLayout = new SettingsGroup(
     "keymapLayout",
     UpdateConfig.setKeymapLayout
+  );
+  groups.keymapLegendStyle = new SettingsGroup(
+    "keymapLegendStyle",
+    UpdateConfig.setKeymapLegendStyle
   );
   groups.showKeyTips = new SettingsGroup(
     "showKeyTips",
@@ -208,7 +214,7 @@ async function initGroups() {
     "capsLockBackspace",
     UpdateConfig.setCapsLockBackspace
   );
-  groups.layout = new SettingsGroup("layout", UpdateConfig.setSavedLayout);
+  groups.layout = new SettingsGroup("layout", UpdateConfig.layout);
   groups.language = new SettingsGroup("language", UpdateConfig.setLanguage);
   groups.fontSize = new SettingsGroup("fontSize", UpdateConfig.setFontSize);
   groups.pageWidth = new SettingsGroup("pageWidth", UpdateConfig.setPageWidth);
@@ -384,7 +390,7 @@ export function hideAccountSection() {
 function setActiveFunboxButton() {
   $(`.pageSettings .section.funbox .button`).removeClass("active");
   $(
-    `.pageSettings .section.funbox .button[funbox='${Funbox.active}']`
+    `.pageSettings .section.funbox .button[funbox='${Funbox.funboxSaved}']`
   ).addClass("active");
 }
 
@@ -480,7 +486,7 @@ $(document).on(
 $(document).on("click", ".pageSettings .section.funbox .button", (e) => {
   let funbox = $(e.currentTarget).attr("funbox");
   let type = $(e.currentTarget).attr("type");
-  Funbox.activate(funbox, type);
+  Funbox.setFunbox(funbox, type);
   setActiveFunboxButton();
 });
 
@@ -524,7 +530,9 @@ $(".pageSettings .sectionGroupTitle").click((e) => {
         {
           duration: 250,
           step: function (now) {
-            $(this).css({ transform: "rotate(" + now + "deg)" });
+            $(this).css({
+              transform: "rotate(" + now + "deg)",
+            });
           },
         }
       );
@@ -538,7 +546,9 @@ $(".pageSettings .sectionGroupTitle").click((e) => {
         {
           duration: 250,
           step: function (now) {
-            $(this).css({ transform: "rotate(" + now + "deg)" });
+            $(this).css({
+              transform: "rotate(" + now + "deg)",
+            });
           },
         }
       );

@@ -453,7 +453,7 @@ var current = [];
 exports.current = current;
 
 function canBailOut() {
-  return UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && CustomText.word >= 5000 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom && CustomText.text.length >= 5000 || UpdateConfig["default"].mode === "custom" && CustomText.isTimeRandom && CustomText.time >= 3600 || UpdateConfig["default"].mode === "words" && UpdateConfig["default"].words >= 5000 || UpdateConfig["default"].words === 0 || UpdateConfig["default"].mode === "time" && (UpdateConfig["default"].time >= 3600 || UpdateConfig["default"].time === 0) || UpdateConfig["default"].mode == "zen";
+  return UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && (CustomText.word >= 5000 || CustomText.word == 0) || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom && CustomText.text.length >= 5000 || UpdateConfig["default"].mode === "custom" && CustomText.isTimeRandom && (CustomText.time >= 3600 || CustomText.time == 0) || UpdateConfig["default"].mode === "words" && UpdateConfig["default"].words >= 5000 || UpdateConfig["default"].words === 0 || UpdateConfig["default"].mode === "time" && (UpdateConfig["default"].time >= 3600 || UpdateConfig["default"].time === 0) || UpdateConfig["default"].mode == "zen";
 }
 
 var commandsLayouts = {
@@ -471,7 +471,8 @@ if (Object.keys(_layouts["default"]).length > 0) {
       id: "changeLayout" + Misc.capitalizeFirstLetter(layout),
       display: layout.replace(/_/g, " "),
       exec: function exec() {
-        UpdateConfig.setSavedLayout(layout);
+        // UpdateConfig.setSavedLayout(layout);
+        UpdateConfig.setLayout(layout);
         TestLogic.restart();
       }
     });
@@ -537,7 +538,7 @@ var commandsFunbox = {
     id: "changeFunboxNone",
     display: "none",
     exec: function exec() {
-      if (Funbox.activate("none", null)) {
+      if (Funbox.setFunbox("none", null)) {
         TestLogic.restart();
       }
     }
@@ -549,7 +550,7 @@ Misc.getFunboxList().then(function (funboxes) {
       id: "changeFunbox" + funbox.name,
       display: funbox.name.replace(/_/g, " "),
       exec: function exec() {
-        if (Funbox.activate(funbox.name, funbox.type)) {
+        if (Funbox.setFunbox(funbox.name, funbox.type)) {
           TestLogic.restart();
         }
       }
@@ -893,6 +894,28 @@ var commandsKeymapStyle = {
     display: "split matrix",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("split_matrix");
+    }
+  }]
+};
+var commandsKeymapLegendStyle = {
+  title: "Change keymap legend style...",
+  list: [{
+    id: "setKeymapLegendStyleLowercase",
+    display: "lowercase",
+    exec: function exec() {
+      UpdateConfig.setKeymapLegendStyle("lowercase");
+    }
+  }, {
+    id: "setKeymapLegendStyleUppercase",
+    display: "uppercase",
+    exec: function exec() {
+      UpdateConfig.setKeymapLegendStyle("uppercase");
+    }
+  }, {
+    id: "setKeymapLegendStyleBlank",
+    display: "blank",
+    exec: function exec() {
+      UpdateConfig.setKeymapLegendStyle("blank");
     }
   }]
 };
@@ -1766,6 +1789,15 @@ var defaultCommands = {
       Commandline.show();
     }
   }, {
+    id: "changeKeymapLegendStyle",
+    display: "Change keymap legend style...",
+    alias: "keyboard",
+    subgroup: true,
+    exec: function exec() {
+      current.push(commandsKeymapLegendStyle);
+      Commandline.show();
+    }
+  }, {
     id: "changeKeymapLayout",
     display: "Change keymap layout...",
     alias: "keyboard",
@@ -2511,10 +2543,10 @@ exports.setMonkey = setMonkey;
 exports.setCapsLockBackspace = setCapsLockBackspace;
 exports.toggleCapsLockBackspace = toggleCapsLockBackspace;
 exports.setKeymapMode = setKeymapMode;
+exports.setKeymapLegendStyle = setKeymapLegendStyle;
 exports.setKeymapStyle = setKeymapStyle;
 exports.setKeymapLayout = setKeymapLayout;
 exports.setLayout = setLayout;
-exports.setSavedLayout = setSavedLayout;
 exports.setFontSize = setFontSize;
 exports.setCustomBackground = setCustomBackground;
 exports.setCustomBackgroundSize = setCustomBackgroundSize;
@@ -2617,6 +2649,7 @@ var defaultConfig = {
   showAllLines: false,
   keymapMode: "off",
   keymapStyle: "staggered",
+  keymapLegendStyle: "lowercase",
   keymapLayout: "qwerty",
   fontFamily: "Roboto_Mono",
   smoothLineScroll: false,
@@ -2992,11 +3025,7 @@ function setSwapEscAndTab(val, nosave) {
 function setPaceCaret(val, nosave) {
   if (val == undefined) {
     val = "off";
-  } // if (val == "pb" && firebase.auth().currentUser === null) {
-  //   Notifications.add("PB pace caret is unavailable without an account", 0);
-  //   return;
-  // }
-  // if (config.mode === "zen" && val != "off") {
+  } // if (config.mode === "zen" && val != "off") {
   //   Notifications.add(`Can't use pace caret with zen mode.`, 0);
   //   val = "off";
   // }
@@ -3821,23 +3850,38 @@ function setKeymapMode(mode, nosave) {
   if (!nosave) saveToCookie();
 }
 
+function setKeymapLegendStyle(style, nosave) {
+  // Remove existing styles
+  var keymapLegendStyles = ["lowercase", "uppercase", "blank"];
+  keymapLegendStyles.forEach(function (name) {
+    $(".keymapLegendStyle").removeClass(name);
+  });
+  style = style || "lowercase"; // Mutate the keymap in the DOM, if it exists.
+  // 1. Remove everything
+
+  $(".keymap-key > .letter").css("display", "");
+  $(".keymap-key > .letter").css("text-transform", ""); // 2. Append special styles onto the DOM elements
+
+  if (style === "uppercase") {
+    $(".keymap-key > .letter").css("text-transform", "capitalize");
+  }
+
+  if (style === "blank") {
+    $(".keymap-key > .letter").css("display", "none");
+  } // Update and save to cookie for persistence
+
+
+  $(".keymapLegendStyle").addClass(style);
+  config.keymapLegendStyle = style;
+  if (!nosave) saveToCookie();
+}
+
 function setKeymapStyle(style, nosave) {
   $(".keymap").removeClass("matrix");
   $(".keymap").removeClass("split");
   $(".keymap").removeClass("split_matrix");
-
-  if (style == null || style == undefined) {
-    style = "staggered";
-  }
-
-  if (style === "matrix") {
-    $(".keymap").addClass("matrix");
-  } else if (style === "split") {
-    $(".keymap").addClass("split");
-  } else if (style === "split_matrix") {
-    $(".keymap").addClass("split_matrix");
-  }
-
+  style = style || "staggered";
+  $(".keymap").addClass(style);
   config.keymapStyle = style;
   if (!nosave) saveToCookie();
 }
@@ -3865,16 +3909,14 @@ function setLayout(layout, nosave) {
   }
 
   if (!nosave) saveToCookie();
-}
+} // export function setSavedLayout(layout, nosave) {
+//   if (layout == null || layout == undefined) {
+//     layout = "qwerty";
+//   }
+//   config.savedLayout = layout;
+//   setLayout(layout, nosave);
+// }
 
-function setSavedLayout(layout, nosave) {
-  if (layout == null || layout == undefined) {
-    layout = "qwerty";
-  }
-
-  config.savedLayout = layout;
-  setLayout(layout, nosave);
-}
 
 function setFontSize(fontSize, nosave) {
   if (fontSize == null || fontSize == undefined) {
@@ -3977,8 +4019,9 @@ function apply(configObj) {
     setQuoteLength(configObj.quoteLength, true);
     setWordCount(configObj.words, true);
     setLanguage(configObj.language, true);
-    setCapsLockBackspace(configObj.capsLockBackspace, true);
-    setSavedLayout(configObj.savedLayout, true);
+    setCapsLockBackspace(configObj.capsLockBackspace, true); // setSavedLayout(configObj.savedLayout, true);
+
+    setLayout(configObj.layout, true);
     setFontSize(configObj.fontSize, true);
     setFreedomMode(configObj.freedomMode, true);
     setCaretStyle(configObj.caretStyle, true);
@@ -3995,6 +4038,7 @@ function apply(configObj) {
     setTimerOpacity(configObj.timerOpacity, true);
     setKeymapMode(configObj.keymapMode, true);
     setKeymapStyle(configObj.keymapStyle, true);
+    setKeymapLegendStyle(configObj.keymapLegendStyle, true);
     setKeymapLayout(configObj.keymapLayout, true);
     setFontFamily(configObj.fontFamily, true);
     setSmoothCaret(configObj.smoothCaret, true);
@@ -4136,6 +4180,22 @@ function syncSliders() {
   $(".section.customBackgroundFilter .opacity input").val(filters["opacity"].value);
 }
 
+function updateNumbers() {
+  $(".section.customBackgroundFilter .blur .value").html(parseFloat(filters.blur.value).toFixed(1));
+  $(".section.customBackgroundFilter .brightness .value").html(parseFloat(filters.brightness.value).toFixed(1));
+  $(".section.customBackgroundFilter .saturate .value").html(parseFloat(filters.saturate.value).toFixed(1));
+  $(".section.customBackgroundFilter .opacity .value").html(parseFloat(filters.opacity.value).toFixed(1));
+}
+
+function loadConfig(config) {
+  filters.blur.value = config[0];
+  filters.brightness.value = config[1];
+  filters.saturate.value = config[2];
+  filters.opacity.value = config[3];
+  updateNumbers();
+  syncSliders();
+}
+
 $(".section.customBackgroundFilter .blur input").on("input", function (e) {
   filters["blur"].value = $(".section.customBackgroundFilter .blur input").val();
   updateNumbers();
@@ -4164,22 +4224,6 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   UpdateConfig.setCustomBackgroundFilter(arr, false);
   Notifications.add("Custom background filters saved", 1);
 });
-
-function loadConfig(config) {
-  filters.blur.value = config[0];
-  filters.brightness.value = config[1];
-  filters.saturate.value = config[2];
-  filters.opacity.value = config[3];
-  updateNumbers();
-  syncSliders();
-}
-
-function updateNumbers() {
-  $(".section.customBackgroundFilter .blur .value").html(parseFloat(filters.blur.value).toFixed(1));
-  $(".section.customBackgroundFilter .brightness .value").html(parseFloat(filters.brightness.value).toFixed(1));
-  $(".section.customBackgroundFilter .saturate .value").html(parseFloat(filters.saturate.value).toFixed(1));
-  $(".section.customBackgroundFilter .opacity .value").html(parseFloat(filters.opacity.value).toFixed(1));
-}
 
 },{"./config":6,"./notifications":28,"@babel/runtime/helpers/interopRequireWildcard":61}],8:[function(require,module,exports){
 "use strict";
@@ -4691,7 +4735,8 @@ exports.startMemoryTimer = startMemoryTimer;
 exports.reset = reset;
 exports.toggleScript = toggleScript;
 exports.activate = activate;
-exports.active = void 0;
+exports.setFunbox = setFunbox;
+exports.modeSaved = exports.funboxSaved = exports.active = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -4713,8 +4758,31 @@ var Settings = _interopRequireWildcard(require("./settings"));
 
 var active = "none";
 exports.active = active;
+var funboxSaved = "none";
+exports.funboxSaved = funboxSaved;
+var modeSaved = null;
+exports.modeSaved = modeSaved;
 var memoryTimer = null;
 var memoryInterval = null;
+var settingsMemory = {};
+
+function rememberSetting(settingName, value, setFunction) {
+  var _settingsMemory, _settingsMemory$setti;
+
+  (_settingsMemory$setti = (_settingsMemory = settingsMemory)[settingName]) !== null && _settingsMemory$setti !== void 0 ? _settingsMemory$setti : _settingsMemory[settingName] = {
+    value: value,
+    setFunction: setFunction
+  };
+}
+
+function loadMemory() {
+  Notifications.add("Reverting funbox settings", 0);
+  Object.keys(settingsMemory).forEach(function (setting) {
+    setting = settingsMemory[setting];
+    setting.setFunction(setting.value, true);
+  });
+  settingsMemory = {};
+}
 
 function showMemoryTimer() {
   $("#typingTest #memoryTimer").stop(true, true).animate({
@@ -4780,22 +4848,17 @@ function _activate() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            if (!(TestLogic.active || TestUI.resultVisible)) {
-              _context.next = 3;
-              break;
+            if (funbox === undefined || funbox === null) {
+              funbox = funboxSaved;
             }
 
-            Notifications.add("You can only change the funbox before starting a test.", 0);
-            return _context.abrupt("return", false);
-
-          case 3:
             if (!Misc.getCurrentLanguage().ligatures) {
-              _context.next = 8;
+              _context.next = 6;
               break;
             }
 
             if (!(funbox == "choo_choo" || funbox == "earthquake")) {
-              _context.next = 8;
+              _context.next = 6;
               break;
             }
 
@@ -4803,28 +4866,38 @@ function _activate() {
             activate("none", null);
             return _context.abrupt("return");
 
-          case 8:
+          case 6:
             $("#funBoxTheme").attr("href", "");
             $("#words").removeClass("nospace"); // if (funbox === "none") {
 
             reset();
             $("#wordsWrapper").removeClass("hidden"); // }
 
-            if (!(mode === null || mode === undefined)) {
-              _context.next = 17;
+            if (!(funbox === "none" && mode === undefined)) {
+              _context.next = 14;
               break;
             }
 
-            _context.next = 15;
+            mode = null;
+            _context.next = 19;
+            break;
+
+          case 14:
+            if (!(funbox !== "none" && mode === undefined || funbox !== "none" && mode === null)) {
+              _context.next = 19;
+              break;
+            }
+
+            _context.next = 17;
             return Misc.getFunboxList();
 
-          case 15:
+          case 17:
             list = _context.sent;
             mode = list.filter(function (f) {
               return f.name === funbox;
             })[0].type;
 
-          case 17:
+          case 19:
             ManualRestart.set();
 
             if (mode === "style") {
@@ -4834,58 +4907,67 @@ function _activate() {
               }
 
               if (funbox === "simon_says") {
+                rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
                 UpdateConfig.setKeymapMode("next");
                 Settings.groups.keymapMode.updateButton();
                 TestLogic.restart();
               }
 
               if (funbox === "read_ahead" || funbox === "read_ahead_easy" || funbox === "read_ahead_hard") {
+                rememberSetting("highlightMode", UpdateConfig["default"].highlightMode, UpdateConfig.setHighlightMode);
                 UpdateConfig.setHighlightMode("letter", true);
                 TestLogic.restart();
               }
             } else if (mode === "script") {
               if (funbox === "tts") {
                 $("#funBoxTheme").attr("href", "funbox/simon_says.css");
+                rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
                 UpdateConfig.setKeymapMode("off");
                 Settings.groups.keymapMode.updateButton();
                 TestLogic.restart();
               } else if (funbox === "layoutfluid") {
+                rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
                 UpdateConfig.setKeymapMode("next");
-                Settings.groups.keymapMode.updateButton();
-                UpdateConfig.setSavedLayout(UpdateConfig["default"].layout);
+                Settings.groups.keymapMode.updateButton(); // UpdateConfig.setSavedLayout(Config.layout);
+
+                rememberSetting("layout", UpdateConfig["default"].layout, UpdateConfig.setLayout);
                 UpdateConfig.setLayout("qwerty");
                 Settings.groups.layout.updateButton();
+                rememberSetting("keymapLayout", UpdateConfig["default"].keymapLayout, UpdateConfig.setKeymapLayout);
                 UpdateConfig.setKeymapLayout("qwerty");
                 Settings.groups.keymapLayout.updateButton();
                 TestLogic.restart();
               } else if (funbox === "memory") {
+                rememberSetting("mode", UpdateConfig["default"].mode, UpdateConfig.setMode);
                 UpdateConfig.setMode("words");
+                rememberSetting("showAllLines", UpdateConfig["default"].showAllLines, UpdateConfig.setShowAllLines);
                 UpdateConfig.setShowAllLines(true, true);
                 TestLogic.restart(false, true);
 
                 if (UpdateConfig["default"].keymapMode === "next") {
+                  rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
                   UpdateConfig.setKeymapMode("react");
                 }
               } else if (funbox === "nospace") {
                 $("#words").addClass("nospace");
+                rememberSetting("highlightMode", UpdateConfig["default"].highlightMode, UpdateConfig.setHighlightMode);
                 UpdateConfig.setHighlightMode("letter", true);
                 TestLogic.restart(false, true);
               }
 
               exports.active = active = funbox;
-            }
+            } // if (funbox !== "layoutfluid" || mode !== "script") {
+            //   if (Config.layout !== Config.savedLayout) {
+            //     UpdateConfig.setLayout(Config.savedLayout);
+            //     Settings.groups.layout.updateButton();
+            //   }
+            // }
 
-            if (funbox !== "layoutfluid" || mode !== "script") {
-              if (UpdateConfig["default"].layout !== UpdateConfig["default"].savedLayout) {
-                UpdateConfig.setLayout(UpdateConfig["default"].savedLayout);
-                Settings.groups.layout.updateButton();
-              }
-            }
 
             TestUI.updateModesNotice();
             return _context.abrupt("return", true);
 
-          case 22:
+          case 23:
           case "end":
             return _context.stop();
         }
@@ -4893,6 +4975,19 @@ function _activate() {
     }, _callee);
   }));
   return _activate.apply(this, arguments);
+}
+
+function setFunbox(funbox, mode) {
+  if (TestLogic.active || TestUI.resultVisible) {
+    Notifications.add("You can only change the funbox before starting a test.", 0);
+    return false;
+  }
+
+  if (funbox === "none") loadMemory();
+  exports.funboxSaved = funboxSaved = funbox;
+  exports.modeSaved = modeSaved = mode;
+  exports.active = active = funbox;
+  return true;
 }
 
 },{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":37,"./test-logic":43,"./test-ui":46,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],15:[function(require,module,exports){
@@ -5076,6 +5171,7 @@ function handleTab(event) {
         if (UpdateConfig["default"].mode == "zen" && !event.shiftKey) {//ignore
         } else {
           if (event.shiftKey) ManualRestart.set();
+          event.preventDefault();
 
           if (TestLogic.active && UpdateConfig["default"].repeatQuotes === "typing" && UpdateConfig["default"].mode === "quote") {
             TestLogic.restart(true, false, event);
@@ -8220,13 +8316,7 @@ var SettingsGroup = /*#__PURE__*/function () {
     (0, _classCallCheck2["default"])(this, SettingsGroup);
     this.configName = configName;
     this.configValue = _config["default"][configName];
-
-    if (this.configValue === true || this.configValue === false) {
-      this.onOff = true;
-    } else {
-      this.onOff = false;
-    }
-
+    this.onOff = typeof this.configValue === "boolean";
     this.toggleFunction = toggleFunction;
     this.setCallback = setCallback;
     this.updateCallback = updateCallback;
@@ -8275,15 +8365,8 @@ var SettingsGroup = /*#__PURE__*/function () {
       $(".pageSettings .section.".concat(this.configName, " .button")).removeClass("active");
 
       if (this.onOff) {
-        var onoffstring;
-
-        if (this.configValue) {
-          onoffstring = "on";
-        } else {
-          onoffstring = "off";
-        }
-
-        $(".pageSettings .section.".concat(this.configName, " .buttons .button.").concat(onoffstring)).addClass("active");
+        var onOffString = this.configValue ? "on" : "off";
+        $(".pageSettings .section.".concat(this.configName, " .buttons .button.").concat(onOffString)).addClass("active");
       } else {
         $(".pageSettings .section.".concat(this.configName, " .button[").concat(this.configName, "='").concat(this.configValue, "']")).addClass("active");
       }
@@ -8367,13 +8450,16 @@ function _initGroups() {
               if (UpdateConfig["default"].keymapMode === "off") {
                 $(".pageSettings .section.keymapStyle").addClass("hidden");
                 $(".pageSettings .section.keymapLayout").addClass("hidden");
+                $(".pageSettings .section.keymapLegendStyle").addClass("hidden");
               } else {
                 $(".pageSettings .section.keymapStyle").removeClass("hidden");
                 $(".pageSettings .section.keymapLayout").removeClass("hidden");
+                $(".pageSettings .section.keymapLegendStyle").removeClass("hidden");
               }
             });
             groups.keymapMatrix = new _settingsGroup["default"]("keymapStyle", UpdateConfig.setKeymapStyle);
             groups.keymapLayout = new _settingsGroup["default"]("keymapLayout", UpdateConfig.setKeymapLayout);
+            groups.keymapLegendStyle = new _settingsGroup["default"]("keymapLegendStyle", UpdateConfig.setKeymapLegendStyle);
             groups.showKeyTips = new _settingsGroup["default"]("showKeyTips", UpdateConfig.setKeyTips, null, function () {
               if (UpdateConfig["default"].showKeyTips) {
                 $(".pageSettings .tip").removeClass("hidden");
@@ -8434,7 +8520,7 @@ function _initGroups() {
             });
             groups.smoothLineScroll = new _settingsGroup["default"]("smoothLineScroll", UpdateConfig.setSmoothLineScroll);
             groups.capsLockBackspace = new _settingsGroup["default"]("capsLockBackspace", UpdateConfig.setCapsLockBackspace);
-            groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.setSavedLayout);
+            groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.layout);
             groups.language = new _settingsGroup["default"]("language", UpdateConfig.setLanguage);
             groups.fontSize = new _settingsGroup["default"]("fontSize", UpdateConfig.setFontSize);
             groups.pageWidth = new _settingsGroup["default"]("pageWidth", UpdateConfig.setPageWidth);
@@ -8458,7 +8544,7 @@ function _initGroups() {
             groups.alwaysShowCPM = new _settingsGroup["default"]("alwaysShowCPM", UpdateConfig.setAlwaysShowCPM);
             groups.customBackgroundSize = new _settingsGroup["default"]("customBackgroundSize", UpdateConfig.setCustomBackgroundSize);
 
-          case 52:
+          case 53:
           case "end":
             return _context.stop();
         }
@@ -8554,7 +8640,7 @@ function hideAccountSection() {
 
 function setActiveFunboxButton() {
   $(".pageSettings .section.funbox .button").removeClass("active");
-  $(".pageSettings .section.funbox .button[funbox='".concat(Funbox.active, "']")).addClass("active");
+  $(".pageSettings .section.funbox .button[funbox='".concat(Funbox.funboxSaved, "']")).addClass("active");
 }
 
 function update() {
@@ -8606,7 +8692,7 @@ $(document).on("click", ".pageSettings .section.languageGroups .button", functio
 $(document).on("click", ".pageSettings .section.funbox .button", function (e) {
   var funbox = $(e.currentTarget).attr("funbox");
   var type = $(e.currentTarget).attr("type");
-  Funbox.activate(funbox, type);
+  Funbox.setFunbox(funbox, type);
   setActiveFunboxButton();
 });
 $("#resetSettingsButton").click(function (e) {
@@ -9770,7 +9856,11 @@ function _init() {
 
             TestUI.showWords(); // }
 
-          case 65:
+            if ($(".pageTest").hasClass("active")) {
+              Funbox.activate();
+            }
+
+          case 66:
           case "end":
             return _context2.stop();
         }
@@ -9901,7 +9991,7 @@ function restart() {
 
           case 8:
             PaceCaret.init(nosave);
-            _context.next = 17;
+            _context.next = 18;
             break;
 
           case 11:
@@ -9911,8 +10001,9 @@ function restart() {
             input.reset();
             PaceCaret.init();
             TestUI.showWords();
+            Funbox.activate();
 
-          case 17:
+          case 18:
             if (UpdateConfig["default"].mode === "quote") {
               setRepeated(false);
             }
@@ -9982,7 +10073,7 @@ function restart() {
               // console.log(TestStats.restartCount);
             });
 
-          case 34:
+          case 35:
           case "end":
             return _context.stop();
         }
@@ -10112,6 +10203,7 @@ function finish() {
   LiveAcc.hide();
   TimerProgress.hide();
   Keymap.hide();
+  Funbox.activate("none", null);
   var stats = TestStats.calculateStats();
 
   if (stats === undefined) {
@@ -10451,8 +10543,8 @@ function finish() {
     testType += "<br>blind";
   }
 
-  if (Funbox.active !== "none") {
-    testType += "<br>" + Funbox.active.replace(/_/g, " ");
+  if (Funbox.funboxSaved !== "none") {
+    testType += "<br>" + Funbox.funboxSaved.replace(/_/g, " ");
   }
 
   if (UpdateConfig["default"].difficulty == "expert") {
@@ -10509,7 +10601,7 @@ function finish() {
     $("#result .stats .source").addClass("hidden");
   }
 
-  if (Funbox.active !== "none") {
+  if (Funbox.funboxSaved !== "none") {
     ChartController.result.options.annotation.annotations.push({
       enabled: false,
       type: "line",
@@ -10530,7 +10622,7 @@ function finish() {
         cornerRadius: 3,
         position: "left",
         enabled: true,
-        content: "".concat(Funbox.active),
+        content: "".concat(Funbox.funboxSaved),
         yAdjust: -11
       }
     });
@@ -12366,7 +12458,7 @@ $(".pageSettings .saveCustomThemeButton").click(function (e) {
   });
   UpdateConfig.setCustomThemeColors(save);
   ThemeController.set("custom");
-  Notifications.add("Custom theme colors saved", 0);
+  Notifications.add("Custom theme colors saved", 1);
 });
 $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   // previewTheme(Config.theme);
@@ -12622,6 +12714,8 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 
 var Settings = _interopRequireWildcard(require("./settings"));
 
+var Funbox = _interopRequireWildcard(require("./funbox"));
+
 var pageTransition = false;
 exports.pageTransition = pageTransition;
 
@@ -12701,6 +12795,7 @@ function changePage(page) {
     TestStats.resetIncomplete();
     ManualRestart.set();
     TestLogic.restart();
+    Funbox.activate(Funbox.funboxSaved, Funbox.modeSaved);
   } else if (page == "about") {
     setPageTransition(true);
     TestLogic.restart();
@@ -12709,6 +12804,7 @@ function changePage(page) {
       history.pushState("#about", null, "#about");
       $(".page.pageAbout").addClass("active");
     });
+    Funbox.activate("none", null);
     TestConfig.hide();
   } else if (page == "settings") {
     setPageTransition(true);
@@ -12718,6 +12814,7 @@ function changePage(page) {
       history.pushState("#settings", null, "#settings");
       $(".page.pageSettings").addClass("active");
     });
+    Funbox.activate("none", null);
     Settings.update();
     TestConfig.hide();
   }
@@ -12785,7 +12882,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":37,"./test-config":42,"./test-logic":43,"./test-stats":44,"./test-ui":46,"@babel/runtime/helpers/interopRequireWildcard":61}],52:[function(require,module,exports){
+},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":37,"./test-config":42,"./test-logic":43,"./test-stats":44,"./test-ui":46,"@babel/runtime/helpers/interopRequireWildcard":61}],52:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
