@@ -11,6 +11,7 @@ import * as TestConfig from "./test-config";
 import * as TestStats from "./test-stats";
 import * as ManualRestart from "./manual-restart-tracker";
 import * as Settings from "./settings";
+import * as Funbox from "./funbox";
 
 export let pageTransition = false;
 
@@ -136,6 +137,7 @@ export function changePage(page) {
     TestStats.resetIncomplete();
     ManualRestart.set();
     TestLogic.restart();
+    Funbox.activate(Funbox.funboxSaved, Funbox.modeSaved);
   } else if (page == "about") {
     setPageTransition(true);
     TestLogic.restart();
@@ -144,6 +146,7 @@ export function changePage(page) {
       history.pushState("#about", null, "#about");
       $(".page.pageAbout").addClass("active");
     });
+    Funbox.activate("none", null);
     TestConfig.hide();
   } else if (page == "settings") {
     setPageTransition(true);
@@ -153,6 +156,7 @@ export function changePage(page) {
       history.pushState("#settings", null, "#settings");
       $(".page.pageSettings").addClass("active");
     });
+    Funbox.activate("none", null);
     Settings.update();
     TestConfig.hide();
   }
