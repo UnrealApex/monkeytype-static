@@ -373,8 +373,8 @@ function updateColors(chart) {
   } catch (_unused3) {}
 
   try {
-    chart.options.scales.yAxes[2].ticks.minor.fontColor = ThemeColors.sub;
-    chart.options.scales.yAxes[2].scaleLabel.fontColor = ThemeColors.sub;
+    chart.options.scales.yAxes[1].ticks.minor.fontColor = ThemeColors.sub;
+    chart.options.scales.yAxes[1].scaleLabel.fontColor = ThemeColors.sub;
   } catch (_unused4) {}
 
   try {
@@ -766,6 +766,13 @@ var commandsCaretStyle = {
     visible: false,
     exec: function exec() {
       UpdateConfig.setCaretStyle("carrot");
+    }
+  }, {
+    id: "setCaretStyleBanana",
+    display: "banana",
+    visible: false,
+    exec: function exec() {
+      UpdateConfig.setCaretStyle("banana");
     }
   }]
 };
@@ -2453,8 +2460,8 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.setCookieConfig = setCookieConfig;
-exports.saveToCookie = saveToCookie;
+exports.setLocalStorageConfig = setLocalStorageConfig;
+exports.saveToLocalStorage = saveToLocalStorage;
 exports.setNumbers = setNumbers;
 exports.toggleNumbers = toggleNumbers;
 exports.setPunctuation = setPunctuation;
@@ -2553,17 +2560,15 @@ exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.setCustomBackgroundFilter = setCustomBackgroundFilter;
 exports.apply = apply;
 exports.reset = reset;
-exports.loadFromCookie = loadFromCookie;
+exports.loadFromLocalStorage = loadFromLocalStorage;
 exports.setConfig = setConfig;
-exports["default"] = exports.loadPromise = exports.cookieConfig = void 0;
+exports["default"] = exports.loadPromise = exports.localStorageConfig = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var Misc = _interopRequireWildcard(require("./misc"));
 
 var Sound = _interopRequireWildcard(require("./sound"));
 
@@ -2601,11 +2606,11 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-var cookieConfig = null;
-exports.cookieConfig = cookieConfig;
+var localStorageConfig = null;
+exports.localStorageConfig = localStorageConfig;
 
-function setCookieConfig(val) {
-  exports.cookieConfig = cookieConfig = val;
+function setLocalStorageConfig(val) {
+  exports.localStorageConfig = localStorageConfig = val;
 }
 
 var loadDone;
@@ -2637,7 +2642,6 @@ var defaultConfig = {
   flipTestColors: false,
   capsLockBackspace: false,
   layout: "default",
-  savedLayout: "default",
   confidenceMode: "off",
   indicateTypos: false,
   timerStyle: "mini",
@@ -2650,7 +2654,7 @@ var defaultConfig = {
   keymapMode: "off",
   keymapStyle: "staggered",
   keymapLegendStyle: "lowercase",
-  keymapLayout: "qwerty",
+  keymapLayout: "overrideSync",
   fontFamily: "Roboto_Mono",
   smoothLineScroll: false,
   alwaysShowDecimalPlaces: false,
@@ -2689,13 +2693,13 @@ function isConfigKeyValid(name) {
 
 var config = _objectSpread({}, defaultConfig);
 
-function saveToCookie() {
-  return _saveToCookie.apply(this, arguments);
+function saveToLocalStorage() {
+  return _saveToLocalStorage.apply(this, arguments);
 } //numbers
 
 
-function _saveToCookie() {
-  _saveToCookie = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+function _saveToLocalStorage() {
+  _saveToLocalStorage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
     var noDbCheck,
         save,
         _args = arguments;
@@ -2712,7 +2716,7 @@ function _saveToCookie() {
             // });
             save = config;
             delete save.resultFilters;
-            Misc.setCookie("config", JSON.stringify(save), 365); // restartCount = 0;
+            window.localStorage.setItem("config", JSON.stringify(save)); // restartCount = 0;
 
           case 4:
           case "end":
@@ -2721,7 +2725,7 @@ function _saveToCookie() {
       }
     }, _callee);
   }));
-  return _saveToCookie.apply(this, arguments);
+  return _saveToLocalStorage.apply(this, arguments);
 }
 
 function setNumbers(numb, nosave) {
@@ -2737,7 +2741,7 @@ function setNumbers(numb, nosave) {
     $("#top .config .numbersMode .text-button").addClass("active");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleNumbers() {
@@ -2753,7 +2757,7 @@ function toggleNumbers() {
     $("#top .config .numbersMode .text-button").removeClass("active");
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 } //punctuation
 
 
@@ -2770,7 +2774,7 @@ function setPunctuation(punc, nosave) {
     $("#top .config .punctuationMode .text-button").addClass("active");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function togglePunctuation() {
@@ -2786,7 +2790,7 @@ function togglePunctuation() {
     $("#top .config .punctuationMode .text-button").removeClass("active");
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setMode(mode, nosave) {
@@ -2861,7 +2865,7 @@ function setMode(mode, nosave) {
 
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPlaySoundOnError(val, nosave) {
@@ -2870,7 +2874,7 @@ function setPlaySoundOnError(val, nosave) {
   }
 
   config.playSoundOnError = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPlaySoundOnClick(val, nosave) {
@@ -2880,7 +2884,7 @@ function setPlaySoundOnClick(val, nosave) {
 
   config.playSoundOnClick = val;
   if (config.playSoundOnClick !== "off") Sound.init();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function togglePlaySoundOnError() {
@@ -2900,7 +2904,7 @@ function setDifficulty(diff, nosave) {
   config.difficulty = diff;
   if (!nosave) TestLogic.restart(false, nosave);
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //set fav themes
 
 
@@ -2908,7 +2912,7 @@ function setFavThemes(themes, nosave) {
   config.favThemes = themes;
 
   if (!nosave) {
-    saveToCookie();
+    saveToLocalStorage();
   }
 } //blind mode
 
@@ -2922,7 +2926,7 @@ function toggleBlindMode() {
 
   config.blindMode = blind;
   TestUI.updateModesNotice();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setBlindMode(blind, nosave) {
@@ -2932,7 +2936,7 @@ function setBlindMode(blind, nosave) {
 
   config.blindMode = blind;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setStopOnError(soe, nosave) {
@@ -2947,13 +2951,13 @@ function setStopOnError(soe, nosave) {
   }
 
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //alwaysshowdecimal
 
 
 function toggleAlwaysShowDecimalPlaces() {
   config.alwaysShowDecimalPlaces = !config.alwaysShowDecimalPlaces;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setAlwaysShowDecimalPlaces(val, nosave) {
@@ -2962,12 +2966,12 @@ function setAlwaysShowDecimalPlaces(val, nosave) {
   }
 
   config.alwaysShowDecimalPlaces = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleAlwaysShowCPM() {
   config.alwaysShowCPM = !config.alwaysShowCPM;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setAlwaysShowCPM(val, nosave) {
@@ -2976,7 +2980,7 @@ function setAlwaysShowCPM(val, nosave) {
   }
 
   config.alwaysShowCPM = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //show out of focus warning
 
 
@@ -2987,7 +2991,7 @@ function toggleShowOutOfFocusWarning() {
     OutOfFocus.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowOutOfFocusWarning(val, nosave) {
@@ -3001,13 +3005,13 @@ function setShowOutOfFocusWarning(val, nosave) {
     OutOfFocus.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //swap esc and tab
 
 
 function toggleSwapEscAndTab() {
   config.swapEscAndTab = !config.swapEscAndTab;
-  saveToCookie();
+  saveToLocalStorage();
   UI.updateKeytips();
 }
 
@@ -3018,7 +3022,7 @@ function setSwapEscAndTab(val, nosave) {
 
   config.swapEscAndTab = val;
   UI.updateKeytips();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //pace caret
 
 
@@ -3034,7 +3038,7 @@ function setPaceCaret(val, nosave) {
   config.paceCaret = val;
   TestUI.updateModesNotice();
   PaceCaret.init(nosave);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPaceCaretCustomSpeed(val, nosave) {
@@ -3043,7 +3047,7 @@ function setPaceCaretCustomSpeed(val, nosave) {
   }
 
   config.paceCaretCustomSpeed = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //min wpm
 
 
@@ -3054,7 +3058,7 @@ function setMinWpm(minwpm, nosave) {
 
   config.minWpm = minwpm;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setMinWpmCustomSpeed(val, nosave) {
@@ -3063,7 +3067,7 @@ function setMinWpmCustomSpeed(val, nosave) {
   }
 
   config.minWpmCustomSpeed = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //min acc
 
 
@@ -3074,7 +3078,7 @@ function setMinAcc(min, nosave) {
 
   config.minAcc = min;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setMinAccCustom(val, nosave) {
@@ -3083,7 +3087,7 @@ function setMinAccCustom(val, nosave) {
   }
 
   config.minAccCustom = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //always show words history
 
 
@@ -3093,7 +3097,7 @@ function setAlwaysShowWordsHistory(val, nosave) {
   }
 
   config.alwaysShowWordsHistory = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleAlwaysShowWordsHistory() {
@@ -3104,14 +3108,14 @@ function toggleAlwaysShowWordsHistory() {
   }
 
   config.alwaysShowWordsHistory = val;
-  saveToCookie();
+  saveToLocalStorage();
 } //single list command line
 
 
 function setSingleListCommandLine(option, nosave) {
   if (!option) option = "manual";
   config.singleListCommandLine = option;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //show all lines
 
 
@@ -3124,7 +3128,7 @@ function toggleShowAllLines() {
 
   config.showAllLines = sal;
   TestLogic.restart();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowAllLines(sal, nosave) {
@@ -3135,7 +3139,7 @@ function setShowAllLines(sal, nosave) {
   config.showAllLines = sal;
 
   if (!nosave) {
-    saveToCookie();
+    saveToLocalStorage();
     TestLogic.restart();
   }
 } //quickend
@@ -3149,7 +3153,7 @@ function toggleQuickEnd() {
   }
 
   config.quickEnd = qe;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setQuickEnd(qe, nosave) {
@@ -3158,7 +3162,7 @@ function setQuickEnd(qe, nosave) {
   }
 
   config.quickEnd = qe;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setRepeatQuotes(val, nosave) {
@@ -3167,7 +3171,7 @@ function setRepeatQuotes(val, nosave) {
   }
 
   config.repeatQuotes = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //flip colors
 
 
@@ -3178,13 +3182,13 @@ function setFlipTestColors(flip, nosave) {
 
   config.flipTestColors = flip;
   TestUI.flipColors(flip);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleFlipTestColors() {
   config.flipTestColors = !config.flipTestColors;
   TestUI.flipColors(config.flipTestColors);
-  saveToCookie();
+  saveToLocalStorage();
 } //extra color
 
 
@@ -3195,13 +3199,13 @@ function setColorfulMode(extra, nosave) {
 
   config.colorfulMode = extra;
   TestUI.colorful(extra);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleColorfulMode() {
   config.colorfulMode = !config.colorfulMode;
   TestUI.colorful(config.colorfulMode);
-  saveToCookie();
+  saveToLocalStorage();
 } //strict space
 
 
@@ -3211,12 +3215,12 @@ function setStrictSpace(val, nosave) {
   }
 
   config.strictSpace = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleStrictSpace() {
   config.strictSpace = !config.strictSpace;
-  saveToCookie();
+  saveToLocalStorage();
 } //opposite shift space
 
 
@@ -3226,7 +3230,7 @@ function setOppositeShiftMode(val, nosave) {
   }
 
   config.oppositeShiftMode = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPageWidth(val, nosave) {
@@ -3244,7 +3248,7 @@ function setPageWidth(val, nosave) {
     $("#centerContent").addClass("wide" + val);
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCaretStyle(caretStyle, nosave) {
@@ -3272,9 +3276,11 @@ function setCaretStyle(caretStyle, nosave) {
     $("#caret").addClass("underline");
   } else if (caretStyle == "carrot") {
     $("#caret").addClass("carrot");
+  } else if (caretStyle == "banana") {
+    $("#caret").addClass("banana");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setPaceCaretStyle(caretStyle, nosave) {
@@ -3301,7 +3307,7 @@ function setPaceCaretStyle(caretStyle, nosave) {
     $("#paceCaret").addClass("underline");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setShowTimerProgress(timer, nosave) {
@@ -3317,7 +3323,7 @@ function setShowTimerProgress(timer, nosave) {
     TimerProgress.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleShowTimerProgress() {
@@ -3329,7 +3335,7 @@ function toggleShowTimerProgress() {
     TimerProgress.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowLiveWpm(live, nosave) {
@@ -3345,7 +3351,7 @@ function setShowLiveWpm(live, nosave) {
     LiveWpm.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleShowLiveWpm() {
@@ -3357,7 +3363,7 @@ function toggleShowLiveWpm() {
     LiveWpm.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setShowLiveAcc(live, nosave) {
@@ -3373,7 +3379,7 @@ function setShowLiveAcc(live, nosave) {
     LiveAcc.hide();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleLiveAcc() {
@@ -3385,7 +3391,7 @@ function toggleLiveAcc() {
     LiveAcc.hide();
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setHighlightMode(mode, nosave) {
@@ -3399,7 +3405,7 @@ function setHighlightMode(mode, nosave) {
   }
 
   config.highlightMode = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setHideExtraLetters(val, nosave) {
@@ -3408,12 +3414,12 @@ function setHideExtraLetters(val, nosave) {
   }
 
   config.hideExtraLetters = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleHideExtraLetters() {
   config.hideExtraLetters = !config.hideExtraLetters;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setTimerStyle(style, nosave) {
@@ -3422,7 +3428,7 @@ function setTimerStyle(style, nosave) {
   }
 
   config.timerStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setTimerColor(color, nosave) {
@@ -3461,7 +3467,7 @@ function setTimerColor(color, nosave) {
     $("#miniTimerAndLiveWpm").addClass("timerText");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setTimerOpacity(opacity, nosave) {
@@ -3470,7 +3476,7 @@ function setTimerOpacity(opacity, nosave) {
   }
 
   config.timerOpacity = opacity;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //key tips
 
 
@@ -3483,7 +3489,7 @@ function setKeyTips(keyTips, nosave) {
     $("#bottom .keyTips").addClass("hidden");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleKeyTips() {
@@ -3495,7 +3501,7 @@ function toggleKeyTips() {
     $("#bottom .keyTips").addClass("hidden");
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 } //mode
 
 
@@ -3514,7 +3520,7 @@ function setTimeConfig(time, nosave) {
   }
 
   $("#top .config .time .text-button[timeConfig='" + time + "']").addClass("active");
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //quote length
 
 
@@ -3533,7 +3539,13 @@ function setQuoteLength(len, nosave, multipleMode) {
     len = parseInt(len);
 
     if (multipleMode) {
-      if (!config.quoteLength.includes(len)) config.quoteLength.push(len);
+      if (!config.quoteLength.includes(len)) {
+        config.quoteLength.push(len);
+      } else {
+        if (config.quoteLength.length > 1) config.quoteLength = config.quoteLength.filter(function (ql) {
+          return ql !== len;
+        });
+      }
     } else {
       config.quoteLength = [len];
     }
@@ -3544,7 +3556,7 @@ function setQuoteLength(len, nosave, multipleMode) {
   config.quoteLength.forEach(function (ql) {
     $("#top .config .quoteLength .text-button[quoteLength='" + ql + "']").addClass("active");
   });
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setWordCount(wordCount, nosave) {
@@ -3562,13 +3574,13 @@ function setWordCount(wordCount, nosave) {
   }
 
   $("#top .config .wordCount .text-button[wordCount='" + wordCount + "']").addClass("active");
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //caret
 
 
 function setSmoothCaret(mode, nosave) {
   config.smoothCaret = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 
   if (mode) {
     $("#caret").css("animation-name", "caretFlashSmooth");
@@ -3579,7 +3591,7 @@ function setSmoothCaret(mode, nosave) {
 
 function toggleSmoothCaret() {
   config.smoothCaret = !config.smoothCaret;
-  saveToCookie();
+  saveToLocalStorage();
 
   if (config.smoothCaret) {
     $("#caret").css("animation-name", "caretFlashSmooth");
@@ -3591,23 +3603,23 @@ function toggleSmoothCaret() {
 
 function toggleStartGraphsAtZero() {
   config.startGraphsAtZero = !config.startGraphsAtZero;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setStartGraphsAtZero(mode, nosave) {
   config.startGraphsAtZero = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //linescroll
 
 
 function setSmoothLineScroll(mode, nosave) {
   config.smoothLineScroll = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleSmoothLineScroll() {
   config.smoothLineScroll = !config.smoothLineScroll;
-  saveToCookie();
+  saveToLocalStorage();
 } //quick tab
 
 
@@ -3623,12 +3635,10 @@ function setQuickTabMode(mode, nosave) {
     $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n      <key>esc</key> - command line");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleQuickTabMode() {
-  console.log("before change");
-  console.log(config.quickTab);
   config.quickTab = !config.quickTab;
 
   if (!config.quickTab) {
@@ -3640,13 +3650,7 @@ function toggleQuickTabMode() {
     $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n      <key>esc</key> - command line");
   }
 
-  console.log("after change");
-  console.log(config.quickTab);
-  console.log("before save");
-  console.log(config.quickTab);
-  saveToCookie();
-  console.log("after save");
-  console.log(config.quickTab);
+  saveToLocalStorage();
 }
 
 function previewFontFamily(font) {
@@ -3671,7 +3675,7 @@ function setFontFamily(font, nosave) {
 
   config.fontFamily = font;
   document.documentElement.style.setProperty("--font", '"' + font.replace(/_/g, " ") + '"');
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } //freedom
 
 
@@ -3686,7 +3690,7 @@ function setFreedomMode(freedom, nosave) {
     config.confidenceMode = "off";
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleFreedomMode() {
@@ -3696,7 +3700,7 @@ function toggleFreedomMode() {
     config.confidenceMode = false;
   }
 
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setConfidenceMode(cm, nosave) {
@@ -3712,7 +3716,7 @@ function setConfidenceMode(cm, nosave) {
   }
 
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleIndicateTypos() {
@@ -3723,7 +3727,7 @@ function toggleIndicateTypos() {
   }
 
   config.indicateTypos = it;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 function setIndicateTypos(it, nosave) {
@@ -3732,7 +3736,7 @@ function setIndicateTypos(it, nosave) {
   }
 
   config.indicateTypos = it;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomTheme(_boolean, nosave) {
@@ -3744,14 +3748,14 @@ function setCustomTheme(_boolean, nosave) {
     ThemeController.set(config.theme);
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setTheme(name, nosave) {
   config.theme = name;
   setCustomTheme(false, true, true);
   ThemeController.set(config.theme);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setRandomTheme(val, nosave) {
@@ -3764,7 +3768,7 @@ function setRandomTheme(val, nosave) {
   }
 
   config.randomTheme = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleCustomTheme(nosave) {
@@ -3776,7 +3780,7 @@ function toggleCustomTheme(nosave) {
     ThemeController.set("custom");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomThemeColors(colors, nosave) {
@@ -3785,7 +3789,7 @@ function setCustomThemeColors(colors, nosave) {
     // applyCustomThemeColors();
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setLanguage(language, nosave) {
@@ -3794,7 +3798,7 @@ function setLanguage(language, nosave) {
   }
 
   config.language = language;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleMonkey(nosave) {
@@ -3806,7 +3810,7 @@ function toggleMonkey(nosave) {
     $("#monkey").addClass("hidden");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setMonkey(monkey, nosave) {
@@ -3822,7 +3826,7 @@ function setMonkey(monkey, nosave) {
     $("#monkey").addClass("hidden");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCapsLockBackspace(capsLockBackspace, nosave) {
@@ -3831,7 +3835,7 @@ function setCapsLockBackspace(capsLockBackspace, nosave) {
   }
 
   config.capsLockBackspace = capsLockBackspace;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function toggleCapsLockBackspace() {
@@ -3847,7 +3851,7 @@ function setKeymapMode(mode, nosave) {
   $(".keymap-key").attr("style", "");
   config.keymapMode = mode;
   if (!nosave) TestLogic.restart(false, nosave);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setKeymapLegendStyle(style, nosave) {
@@ -3873,7 +3877,7 @@ function setKeymapLegendStyle(style, nosave) {
 
   $(".keymapLegendStyle").addClass(style);
   config.keymapLegendStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setKeymapStyle(style, nosave) {
@@ -3883,7 +3887,7 @@ function setKeymapStyle(style, nosave) {
   style = style || "staggered";
   $(".keymap").addClass(style);
   config.keymapStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setKeymapLayout(layout, nosave) {
@@ -3893,7 +3897,7 @@ function setKeymapLayout(layout, nosave) {
 
   config.keymapLayout = layout;
   Keymap.refreshKeys(layout, setKeymapLayout);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setLayout(layout, nosave) {
@@ -3908,7 +3912,7 @@ function setLayout(layout, nosave) {
     Keymap.refreshKeys(config.keymapLayout, setKeymapLayout);
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 } // export function setSavedLayout(layout, nosave) {
 //   if (layout == null || layout == undefined) {
 //     layout = "qwerty";
@@ -3955,7 +3959,7 @@ function setFontSize(fontSize, nosave) {
     $("#miniTimerAndLiveWpm").addClass("size3");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomBackground(value, nosave) {
@@ -3971,7 +3975,7 @@ function setCustomBackground(value, nosave) {
       return command.id == "changeCustomBackground";
     })[0].defaultValue = value;
     ThemeController.applyCustomBackground();
-    if (!nosave) saveToCookie();
+    if (!nosave) saveToLocalStorage();
   } else {
     Notifications.add("Invalid custom background URL", 0);
   }
@@ -3984,14 +3988,14 @@ function setCustomBackgroundSize(value, nosave) {
 
   config.customBackgroundSize = value;
   ThemeController.applyCustomBackgroundSize();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function setCustomBackgroundFilter(array, nosave) {
   config.customBackgroundFilter = array;
   BackgroundFilter.loadConfig(config.customBackgroundFilter);
   BackgroundFilter.apply();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 function apply(configObj) {
@@ -4084,15 +4088,15 @@ function apply(configObj) {
 function reset() {
   config = _objectSpread({}, defaultConfig);
   apply();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
-function loadFromCookie() {
-  console.log("loading cookie config"); // let newConfig = $.cookie("config");
+function loadFromLocalStorage() {
+  console.log("loading localStorage config"); // let newConfig = $.cookie("config");
 
-  var newConfig = Misc.getCookie("config");
+  var newConfig = window.localStorage.getItem("config");
 
-  if (newConfig !== undefined && newConfig !== "") {
+  if (newConfig !== undefined && newConfig !== null && newConfig !== "") {
     try {
       newConfig = JSON.parse(newConfig);
     } catch (e) {
@@ -4100,10 +4104,10 @@ function loadFromCookie() {
     }
 
     apply(newConfig);
-    console.log("applying cookie config");
-    exports.cookieConfig = cookieConfig = newConfig;
-    saveToCookie(true);
-    console.log("saving cookie config");
+    console.log("applying localStorage config");
+    exports.localStorageConfig = localStorageConfig = newConfig;
+    saveToLocalStorage(true);
+    console.log("saving localStorage config");
   }
 
   TestLogic.restart(false, true);
@@ -4121,7 +4125,7 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./commandline-lists":4,"./custom-background-filter":7,"./funbox":14,"./keymap":18,"./language-picker":19,"./live-acc":22,"./live-wpm":23,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./sound":40,"./test-logic":43,"./test-ui":46,"./theme-controller":48,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/defineProperty":59,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],7:[function(require,module,exports){
+},{"./commandline-lists":4,"./custom-background-filter":7,"./funbox":14,"./keymap":18,"./language-picker":19,"./live-acc":22,"./live-wpm":23,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./sound":40,"./test-logic":43,"./test-ui":46,"./theme-controller":48,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/defineProperty":59,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -4447,7 +4451,7 @@ $("".concat(popup, " .inputs .check input")).change(function () {
 });
 $("".concat(popup, " textarea")).keypress(function (e) {
   if (e.code === "Enter" && e.ctrlKey) {
-    $("".concat(popup, " .button")).click();
+    $("".concat(popup, " .button.apply")).click();
   }
 });
 $("".concat(popup, " .randomInputFields .wordcount input")).keypress(function (e) {
@@ -5022,7 +5026,7 @@ function hide() {
         Notifications.add("An error occured while importing settings: " + e, -1);
       }
 
-      UpdateConfig.saveToCookie();
+      UpdateConfig.saveToLocalStorage();
       Settings.update();
     }
 
@@ -5463,7 +5467,9 @@ function handleAlpha(event) {
   if (/Media/.test(event.key)) return;
   if (event.ctrlKey != event.altKey && (event.ctrlKey || /Linux/.test(window.navigator.platform))) return;
   if (event.metaKey) return;
-  var originalEvent = event;
+  var originalEvent = {
+    code: event.code
+  };
   event = LayoutEmulator.updateEvent(event); //start the test
 
   if (TestLogic.input.current == "" && TestLogic.input.history.length == 0 && !TestLogic.active) {
@@ -5682,7 +5688,8 @@ $(document).keydown(function (event) {
 
   if (pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
     TestUI.focusWords();
-    wordsFocused = true; // if (Config.showOutOfFocusWarning) return;
+    wordsFocused = true;
+    if (UpdateConfig["default"].showOutOfFocusWarning) return;
   } //tab
 
 
@@ -6492,8 +6499,7 @@ exports.getChallengeList = getChallengeList;
 exports.showNotification = showNotification;
 exports.getCurrentLanguage = getCurrentLanguage;
 exports.getLanguage = getLanguage;
-exports.setCookie = setCookie;
-exports.getCookie = getCookie;
+exports.migrateFromCookies = migrateFromCookies;
 exports.smooth = smooth;
 exports.stdDev = stdDev;
 exports.mean = mean;
@@ -6515,6 +6521,7 @@ exports.objectToQueryString = objectToQueryString;
 exports.toggleFullscreen = toggleFullscreen;
 exports.getWords = getWords;
 exports.remove_non_ascii = remove_non_ascii;
+exports.escapeRegExp = escapeRegExp;
 exports.cleanTypographySymbols = cleanTypographySymbols;
 exports.isUsernameValid = isUsernameValid;
 exports.mapRange = mapRange;
@@ -7040,31 +7047,30 @@ function _getLanguage() {
   return _getLanguage.apply(this, arguments);
 }
 
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
+function migrateFromCookies() {
+  ["resultFilters", "config", "merchbannerclosed", "activeTags"].forEach(function (name) {
+    var decodedCookie = decodeURIComponent(document.cookie).split(";");
+    var value = null;
 
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(";");
+    for (var i = 0; i < decodedCookie.length; i++) {
+      var c = decodedCookie[i];
 
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
 
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
+      if (c.indexOf(name + "=") == 0) {
+        value = c.substring(name.length + 1, c.length);
+      }
     }
 
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
+    if (value) {
+      window.localStorage.setItem(name, value);
+      $.removeCookie(name, {
+        path: "/"
+      });
     }
-  }
-
-  return "";
+  });
 }
 
 function smooth(arr, windowSize) {
@@ -7348,6 +7354,10 @@ function getWords() {
 function remove_non_ascii(str) {
   if (str === null || str === "") return false;else str = str.toString();
   return str.replace(/[^\x20-\x7E]/g, "");
+}
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function cleanTypographySymbols(textToClean) {
@@ -8204,7 +8214,8 @@ var RouteController = _interopRequireWildcard(require("./route-controller"));
 var UI = _interopRequireWildcard(require("./ui"));
 
 ManualRestart.set();
-UpdateConfig.loadFromCookie();
+Misc.migrateFromCookies();
+UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
 $(document).ready(function () {
   RouteController.handleInitialPageClasses(window.location.hash);
@@ -8219,7 +8230,7 @@ $(document).ready(function () {
     $("#restartTestButton").addClass("hidden");
   }
 
-  if (!Misc.getCookie("merchbannerclosed")) {
+  if (!window.localStorage.getItem("merchbannerclosed")) {
     $(".merchBanner").removeClass("hidden");
   } else {
     $(".merchBanner").remove();
@@ -8520,7 +8531,7 @@ function _initGroups() {
             });
             groups.smoothLineScroll = new _settingsGroup["default"]("smoothLineScroll", UpdateConfig.setSmoothLineScroll);
             groups.capsLockBackspace = new _settingsGroup["default"]("capsLockBackspace", UpdateConfig.setCapsLockBackspace);
-            groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.layout);
+            groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.setLayout);
             groups.language = new _settingsGroup["default"]("language", UpdateConfig.setLanguage);
             groups.fontSize = new _settingsGroup["default"]("fontSize", UpdateConfig.setFontSize);
             groups.pageWidth = new _settingsGroup["default"]("pageWidth", UpdateConfig.setPageWidth);
@@ -9685,7 +9696,7 @@ function _init() {
                 }
               }
 
-              if (Funbox.active === "rAnDoMcAsE") {
+              if (Funbox.funboxSaved === "rAnDoMcAsE") {
                 randomcaseword = "";
 
                 for (_i2 = 0; _i2 < randomWord.length; _i2++) {
@@ -9697,17 +9708,17 @@ function _init() {
                 }
 
                 randomWord = randomcaseword;
-              } else if (Funbox.active === "gibberish") {
+              } else if (Funbox.funboxSaved === "gibberish") {
                 randomWord = Misc.getGibberish();
-              } else if (Funbox.active === "58008") {
+              } else if (Funbox.funboxSaved === "58008") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getNumbers(7);
-              } else if (Funbox.active === "specials") {
+              } else if (Funbox.funboxSaved === "specials") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getSpecials();
-              } else if (Funbox.active === "ascii") {
+              } else if (Funbox.funboxSaved === "ascii") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getASCII();
@@ -9718,8 +9729,12 @@ function _init() {
               }
 
               if (UpdateConfig["default"].numbers) {
-                if (Math.random() < 0.1) {
+                if (Math.random() < 0.1 && i !== 0 && Misc.getLastChar(previousWord) !== ".") {
                   randomWord = Misc.getNumbers(4);
+
+                  if (i == wordsBound - 1) {
+                    randomWord += ".";
+                  }
                 }
               }
 
@@ -12372,7 +12387,7 @@ function toggleFavourite(themename) {
     UpdateConfig.setFavThemes(newlist);
   }
 
-  UpdateConfig.saveToCookie();
+  UpdateConfig.saveToLocalStorage();
   refreshButtons(); // showFavouriteThemesAtTheTop();
 
   CommandlineLists.updateThemeCommands();
@@ -12692,8 +12707,6 @@ var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
-var Misc = _interopRequireWildcard(require("./misc"));
-
 var Caret = _interopRequireWildcard(require("./caret"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
@@ -12838,11 +12851,11 @@ window.addEventListener("keydown", function (e) {
 });
 $(".merchBanner a").click(function (event) {
   $(".merchBanner").remove();
-  Misc.setCookie("merchbannerclosed", true, 365);
+  window.localStorage.setItem("merchbannerclosed", true);
 });
 $(".merchBanner .fas").click(function (event) {
   $(".merchBanner").remove();
-  Misc.setCookie("merchbannerclosed", true, 365);
+  window.localStorage.setItem("merchbannerclosed", true);
   Notifications.add("Won't remind you anymore. Thanks for continued support <3", 0, 5);
 });
 $(".scrollToTopButton").click(function (event) {
@@ -12882,7 +12895,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":37,"./test-config":42,"./test-logic":43,"./test-stats":44,"./test-ui":46,"@babel/runtime/helpers/interopRequireWildcard":61}],52:[function(require,module,exports){
+},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./notifications":28,"./settings":37,"./test-config":42,"./test-logic":43,"./test-stats":44,"./test-ui":46,"@babel/runtime/helpers/interopRequireWildcard":61}],52:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
@@ -13004,12 +13017,12 @@ function _filter() {
         switch (_context3.prev = _context3.next) {
           case 0:
             filterin = $("#wordFilterPopup .wordIncludeInput").val();
-            filterin = filterin.trim();
-            filterin = filterin.replace(/ /gi, "|");
+            filterin = Misc.escapeRegExp(filterin.trim());
+            filterin = filterin.replace(/\s+/gi, "|");
             regincl = new RegExp(filterin, "i");
             filterout = $("#wordFilterPopup .wordExcludeInput").val();
-            filterout = filterout.trim();
-            filterout = filterout.replace(/ /gi, "|");
+            filterout = Misc.escapeRegExp(filterout.trim());
+            filterout = filterout.replace(/\s+/gi, "|");
             regexcl = new RegExp(filterout, "i");
             filteredWords = [];
             _context3.next = 11;

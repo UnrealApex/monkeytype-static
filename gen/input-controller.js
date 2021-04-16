@@ -457,7 +457,9 @@ function handleAlpha(event) {
     return;
   if (event.metaKey) return;
 
-  let originalEvent = event;
+  let originalEvent = {
+    code: event.code,
+  };
 
   event = LayoutEmulator.updateEvent(event);
 
@@ -752,7 +754,7 @@ $(document).keydown(function (event) {
   ) {
     TestUI.focusWords();
     wordsFocused = true;
-    // if (Config.showOutOfFocusWarning) return;
+    if (Config.showOutOfFocusWarning) return;
   }
 
   //tab

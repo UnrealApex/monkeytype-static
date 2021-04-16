@@ -1,4 +1,3 @@
-import * as Misc from "./misc";
 import * as Sound from "./sound";
 import * as TestUI from "./test-ui";
 import * as OutOfFocus from "./out-of-focus";
@@ -16,10 +15,10 @@ import * as UI from "./ui";
 import * as CommandlineLists from "./commandline-lists";
 import * as BackgroundFilter from "./custom-background-filter";
 
-export let cookieConfig = null;
+export let localStorageConfig = null;
 
-export function setCookieConfig(val) {
-  cookieConfig = val;
+export function setLocalStorageConfig(val) {
+  localStorageConfig = val;
 }
 
 let loadDone;
@@ -62,7 +61,6 @@ let defaultConfig = {
   flipTestColors: false,
   capsLockBackspace: false,
   layout: "default",
-  savedLayout: "default",
   confidenceMode: "off",
   indicateTypos: false,
   timerStyle: "mini",
@@ -75,7 +73,7 @@ let defaultConfig = {
   keymapMode: "off",
   keymapStyle: "staggered",
   keymapLegendStyle: "lowercase",
-  keymapLayout: "qwerty",
+  keymapLayout: "overrideSync",
   fontFamily: "Roboto_Mono",
   smoothLineScroll: false,
   alwaysShowDecimalPlaces: false,
@@ -116,7 +114,7 @@ let config = {
   ...defaultConfig,
 };
 
-export async function saveToCookie(noDbCheck = false) {
+export async function saveToLocalStorage(noDbCheck = false) {
   // let d = new Date();
   // d.setFullYear(d.getFullYear() + 1);
   // $.cookie("config", JSON.stringify(config), {
@@ -125,7 +123,7 @@ export async function saveToCookie(noDbCheck = false) {
   // });
   let save = config;
   delete save.resultFilters;
-  Misc.setCookie("config", JSON.stringify(save), 365);
+  window.localStorage.setItem("config", JSON.stringify(save));
   // restartCount = 0;
 }
 
@@ -140,7 +138,7 @@ export function setNumbers(numb, nosave) {
   } else {
     $("#top .config .numbersMode .text-button").addClass("active");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleNumbers() {
@@ -153,7 +151,7 @@ export function toggleNumbers() {
   } else {
     $("#top .config .numbersMode .text-button").removeClass("active");
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //punctuation
@@ -167,7 +165,7 @@ export function setPunctuation(punc, nosave) {
   } else {
     $("#top .config .punctuationMode .text-button").addClass("active");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function togglePunctuation() {
@@ -180,7 +178,7 @@ export function togglePunctuation() {
   } else {
     $("#top .config .punctuationMode .text-button").removeClass("active");
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setMode(mode, nosave) {
@@ -254,7 +252,7 @@ export function setMode(mode, nosave) {
     }
     // setPaceCaret("off", true);
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setPlaySoundOnError(val, nosave) {
@@ -262,7 +260,7 @@ export function setPlaySoundOnError(val, nosave) {
     val = false;
   }
   config.playSoundOnError = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setPlaySoundOnClick(val, nosave) {
@@ -271,7 +269,7 @@ export function setPlaySoundOnClick(val, nosave) {
   }
   config.playSoundOnClick = val;
   if (config.playSoundOnClick !== "off") Sound.init();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function togglePlaySoundOnError() {
@@ -292,14 +290,14 @@ export function setDifficulty(diff, nosave) {
   config.difficulty = diff;
   if (!nosave) TestLogic.restart(false, nosave);
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //set fav themes
 export function setFavThemes(themes, nosave) {
   config.favThemes = themes;
   if (!nosave) {
-    saveToCookie();
+    saveToLocalStorage();
   }
 }
 
@@ -311,7 +309,7 @@ export function toggleBlindMode() {
   }
   config.blindMode = blind;
   TestUI.updateModesNotice();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setBlindMode(blind, nosave) {
@@ -320,7 +318,7 @@ export function setBlindMode(blind, nosave) {
   }
   config.blindMode = blind;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setStopOnError(soe, nosave) {
@@ -332,13 +330,13 @@ export function setStopOnError(soe, nosave) {
     config.confidenceMode = "off";
   }
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //alwaysshowdecimal
 export function toggleAlwaysShowDecimalPlaces() {
   config.alwaysShowDecimalPlaces = !config.alwaysShowDecimalPlaces;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setAlwaysShowDecimalPlaces(val, nosave) {
@@ -346,12 +344,12 @@ export function setAlwaysShowDecimalPlaces(val, nosave) {
     val = false;
   }
   config.alwaysShowDecimalPlaces = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleAlwaysShowCPM() {
   config.alwaysShowCPM = !config.alwaysShowCPM;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setAlwaysShowCPM(val, nosave) {
@@ -359,7 +357,7 @@ export function setAlwaysShowCPM(val, nosave) {
     val = false;
   }
   config.alwaysShowCPM = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //show out of focus warning
@@ -368,7 +366,7 @@ export function toggleShowOutOfFocusWarning() {
   if (!config.showOutOfFocusWarning) {
     OutOfFocus.hide();
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setShowOutOfFocusWarning(val, nosave) {
@@ -379,13 +377,13 @@ export function setShowOutOfFocusWarning(val, nosave) {
   if (!config.showOutOfFocusWarning) {
     OutOfFocus.hide();
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //swap esc and tab
 export function toggleSwapEscAndTab() {
   config.swapEscAndTab = !config.swapEscAndTab;
-  saveToCookie();
+  saveToLocalStorage();
   UI.updateKeytips();
 }
 
@@ -395,7 +393,7 @@ export function setSwapEscAndTab(val, nosave) {
   }
   config.swapEscAndTab = val;
   UI.updateKeytips();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //pace caret
@@ -410,7 +408,7 @@ export function setPaceCaret(val, nosave) {
   config.paceCaret = val;
   TestUI.updateModesNotice();
   PaceCaret.init(nosave);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setPaceCaretCustomSpeed(val, nosave) {
@@ -418,7 +416,7 @@ export function setPaceCaretCustomSpeed(val, nosave) {
     val = 100;
   }
   config.paceCaretCustomSpeed = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //min wpm
@@ -428,7 +426,7 @@ export function setMinWpm(minwpm, nosave) {
   }
   config.minWpm = minwpm;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setMinWpmCustomSpeed(val, nosave) {
@@ -436,7 +434,7 @@ export function setMinWpmCustomSpeed(val, nosave) {
     val = 100;
   }
   config.minWpmCustomSpeed = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //min acc
@@ -446,7 +444,7 @@ export function setMinAcc(min, nosave) {
   }
   config.minAcc = min;
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setMinAccCustom(val, nosave) {
@@ -454,7 +452,7 @@ export function setMinAccCustom(val, nosave) {
     val = 90;
   }
   config.minAccCustom = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //always show words history
@@ -463,7 +461,7 @@ export function setAlwaysShowWordsHistory(val, nosave) {
     val = false;
   }
   config.alwaysShowWordsHistory = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleAlwaysShowWordsHistory() {
@@ -472,14 +470,14 @@ export function toggleAlwaysShowWordsHistory() {
     val = false;
   }
   config.alwaysShowWordsHistory = val;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //single list command line
 export function setSingleListCommandLine(option, nosave) {
   if (!option) option = "manual";
   config.singleListCommandLine = option;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //show all lines
@@ -490,7 +488,7 @@ export function toggleShowAllLines() {
   }
   config.showAllLines = sal;
   TestLogic.restart();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setShowAllLines(sal, nosave) {
@@ -499,7 +497,7 @@ export function setShowAllLines(sal, nosave) {
   }
   config.showAllLines = sal;
   if (!nosave) {
-    saveToCookie();
+    saveToLocalStorage();
     TestLogic.restart();
   }
 }
@@ -511,7 +509,7 @@ export function toggleQuickEnd() {
     qe = false;
   }
   config.quickEnd = qe;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setQuickEnd(qe, nosave) {
@@ -519,7 +517,7 @@ export function setQuickEnd(qe, nosave) {
     qe = false;
   }
   config.quickEnd = qe;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setRepeatQuotes(val, nosave) {
@@ -527,7 +525,7 @@ export function setRepeatQuotes(val, nosave) {
     val = "off";
   }
   config.repeatQuotes = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //flip colors
@@ -537,13 +535,13 @@ export function setFlipTestColors(flip, nosave) {
   }
   config.flipTestColors = flip;
   TestUI.flipColors(flip);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleFlipTestColors() {
   config.flipTestColors = !config.flipTestColors;
   TestUI.flipColors(config.flipTestColors);
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //extra color
@@ -553,13 +551,13 @@ export function setColorfulMode(extra, nosave) {
   }
   config.colorfulMode = extra;
   TestUI.colorful(extra);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleColorfulMode() {
   config.colorfulMode = !config.colorfulMode;
   TestUI.colorful(config.colorfulMode);
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //strict space
@@ -568,12 +566,12 @@ export function setStrictSpace(val, nosave) {
     val = false;
   }
   config.strictSpace = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleStrictSpace() {
   config.strictSpace = !config.strictSpace;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //opposite shift space
@@ -582,7 +580,7 @@ export function setOppositeShiftMode(val, nosave) {
     val = "off";
   }
   config.oppositeShiftMode = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setPageWidth(val, nosave) {
@@ -598,7 +596,7 @@ export function setPageWidth(val, nosave) {
   if (val !== "100") {
     $("#centerContent").addClass("wide" + val);
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setCaretStyle(caretStyle, nosave) {
@@ -625,8 +623,10 @@ export function setCaretStyle(caretStyle, nosave) {
     $("#caret").addClass("underline");
   } else if (caretStyle == "carrot") {
     $("#caret").addClass("carrot");
+  } else if (caretStyle == "banana") {
+    $("#caret").addClass("banana");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setPaceCaretStyle(caretStyle, nosave) {
@@ -651,7 +651,7 @@ export function setPaceCaretStyle(caretStyle, nosave) {
   } else if (caretStyle == "underline") {
     $("#paceCaret").addClass("underline");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setShowTimerProgress(timer, nosave) {
@@ -664,7 +664,7 @@ export function setShowTimerProgress(timer, nosave) {
   } else {
     TimerProgress.hide();
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleShowTimerProgress() {
@@ -674,7 +674,7 @@ export function toggleShowTimerProgress() {
   } else {
     TimerProgress.hide();
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setShowLiveWpm(live, nosave) {
@@ -687,7 +687,7 @@ export function setShowLiveWpm(live, nosave) {
   } else {
     LiveWpm.hide();
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleShowLiveWpm() {
@@ -697,7 +697,7 @@ export function toggleShowLiveWpm() {
   } else {
     LiveWpm.hide();
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setShowLiveAcc(live, nosave) {
@@ -710,7 +710,7 @@ export function setShowLiveAcc(live, nosave) {
   } else {
     LiveAcc.hide();
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleLiveAcc() {
@@ -720,7 +720,7 @@ export function toggleLiveAcc() {
   } else {
     LiveAcc.hide();
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setHighlightMode(mode, nosave) {
@@ -738,7 +738,7 @@ export function setHighlightMode(mode, nosave) {
     mode = "letter";
   }
   config.highlightMode = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setHideExtraLetters(val, nosave) {
@@ -746,12 +746,12 @@ export function setHideExtraLetters(val, nosave) {
     val = false;
   }
   config.hideExtraLetters = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleHideExtraLetters() {
   config.hideExtraLetters = !config.hideExtraLetters;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setTimerStyle(style, nosave) {
@@ -759,7 +759,7 @@ export function setTimerStyle(style, nosave) {
     style = "mini";
   }
   config.timerStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setTimerColor(color, nosave) {
@@ -801,14 +801,14 @@ export function setTimerColor(color, nosave) {
     $("#miniTimerAndLiveWpm").addClass("timerText");
   }
 
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 export function setTimerOpacity(opacity, nosave) {
   if (opacity == null || opacity == undefined) {
     opacity = 0.25;
   }
   config.timerOpacity = opacity;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //key tips
@@ -819,7 +819,7 @@ export function setKeyTips(keyTips, nosave) {
   } else {
     $("#bottom .keyTips").addClass("hidden");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleKeyTips() {
@@ -829,7 +829,7 @@ export function toggleKeyTips() {
   } else {
     $("#bottom .keyTips").addClass("hidden");
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //mode
@@ -847,7 +847,7 @@ export function setTimeConfig(time, nosave) {
   $("#top .config .time .text-button[timeConfig='" + time + "']").addClass(
     "active"
   );
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //quote length
@@ -863,7 +863,12 @@ export function setQuoteLength(len, nosave, multipleMode) {
     }
     len = parseInt(len);
     if (multipleMode) {
-      if (!config.quoteLength.includes(len)) config.quoteLength.push(len);
+      if (!config.quoteLength.includes(len)) {
+        config.quoteLength.push(len);
+      } else {
+        if (config.quoteLength.length > 1)
+          config.quoteLength = config.quoteLength.filter((ql) => ql !== len);
+      }
     } else {
       config.quoteLength = [len];
     }
@@ -875,7 +880,7 @@ export function setQuoteLength(len, nosave, multipleMode) {
       "#top .config .quoteLength .text-button[quoteLength='" + ql + "']"
     ).addClass("active");
   });
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setWordCount(wordCount, nosave) {
@@ -892,13 +897,13 @@ export function setWordCount(wordCount, nosave) {
   $(
     "#top .config .wordCount .text-button[wordCount='" + wordCount + "']"
   ).addClass("active");
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //caret
 export function setSmoothCaret(mode, nosave) {
   config.smoothCaret = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
   if (mode) {
     $("#caret").css("animation-name", "caretFlashSmooth");
   } else {
@@ -908,7 +913,7 @@ export function setSmoothCaret(mode, nosave) {
 
 export function toggleSmoothCaret() {
   config.smoothCaret = !config.smoothCaret;
-  saveToCookie();
+  saveToLocalStorage();
   if (config.smoothCaret) {
     $("#caret").css("animation-name", "caretFlashSmooth");
   } else {
@@ -919,23 +924,23 @@ export function toggleSmoothCaret() {
 //startgraphsatzero
 export function toggleStartGraphsAtZero() {
   config.startGraphsAtZero = !config.startGraphsAtZero;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setStartGraphsAtZero(mode, nosave) {
   config.startGraphsAtZero = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //linescroll
 export function setSmoothLineScroll(mode, nosave) {
   config.smoothLineScroll = mode;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleSmoothLineScroll() {
   config.smoothLineScroll = !config.smoothLineScroll;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 //quick tab
@@ -952,12 +957,10 @@ export function setQuickTabMode(mode, nosave) {
     $("#bottom .keyTips").html(`<key>tab</key> - restart test<br>
       <key>esc</key> - command line`);
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleQuickTabMode() {
-  console.log("before change");
-  console.log(config.quickTab);
   config.quickTab = !config.quickTab;
   if (!config.quickTab) {
     $("#restartTestButton").removeClass("hidden");
@@ -970,13 +973,7 @@ export function toggleQuickTabMode() {
     $("#bottom .keyTips").html(`<key>tab</key> - restart test<br>
       <key>esc</key> - command line`);
   }
-  console.log("after change");
-  console.log(config.quickTab);
-  console.log("before save");
-  console.log(config.quickTab);
-  saveToCookie();
-  console.log("after save");
-  console.log(config.quickTab);
+  saveToLocalStorage();
 }
 
 export function previewFontFamily(font) {
@@ -1014,7 +1011,7 @@ export function setFontFamily(font, nosave) {
     "--font",
     '"' + font.replace(/_/g, " ") + '"'
   );
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 //freedom
@@ -1026,7 +1023,7 @@ export function setFreedomMode(freedom, nosave) {
   if (config.freedomMode && config.confidenceMode !== "off") {
     config.confidenceMode = "off";
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleFreedomMode() {
@@ -1034,7 +1031,7 @@ export function toggleFreedomMode() {
   if (config.freedomMode && config.confidenceMode !== "off") {
     config.confidenceMode = false;
   }
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setConfidenceMode(cm, nosave) {
@@ -1048,7 +1045,7 @@ export function setConfidenceMode(cm, nosave) {
   }
 
   TestUI.updateModesNotice();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleIndicateTypos() {
@@ -1057,7 +1054,7 @@ export function toggleIndicateTypos() {
     it = false;
   }
   config.indicateTypos = it;
-  saveToCookie();
+  saveToLocalStorage();
 }
 
 export function setIndicateTypos(it, nosave) {
@@ -1065,7 +1062,7 @@ export function setIndicateTypos(it, nosave) {
     it = false;
   }
   config.indicateTypos = it;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setCustomTheme(boolean, nosave) {
@@ -1075,14 +1072,14 @@ export function setCustomTheme(boolean, nosave) {
   } else if (!boolean && !nosave) {
     ThemeController.set(config.theme);
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setTheme(name, nosave) {
   config.theme = name;
   setCustomTheme(false, true, true);
   ThemeController.set(config.theme);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setRandomTheme(val, nosave) {
@@ -1093,7 +1090,7 @@ export function setRandomTheme(val, nosave) {
     ThemeController.clearRandom();
   }
   config.randomTheme = val;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleCustomTheme(nosave) {
@@ -1104,7 +1101,7 @@ export function toggleCustomTheme(nosave) {
     setCustomTheme(true);
     ThemeController.set("custom");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setCustomThemeColors(colors, nosave) {
@@ -1113,7 +1110,7 @@ export function setCustomThemeColors(colors, nosave) {
     // ThemeController.set("custom");
     // applyCustomThemeColors();
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setLanguage(language, nosave) {
@@ -1121,7 +1118,7 @@ export function setLanguage(language, nosave) {
     language = "english";
   }
   config.language = language;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleMonkey(nosave) {
@@ -1131,7 +1128,7 @@ export function toggleMonkey(nosave) {
   } else {
     $("#monkey").addClass("hidden");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setMonkey(monkey, nosave) {
@@ -1144,7 +1141,7 @@ export function setMonkey(monkey, nosave) {
   } else {
     $("#monkey").addClass("hidden");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setCapsLockBackspace(capsLockBackspace, nosave) {
@@ -1152,7 +1149,7 @@ export function setCapsLockBackspace(capsLockBackspace, nosave) {
     capsLockBackspace = false;
   }
   config.capsLockBackspace = capsLockBackspace;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function toggleCapsLockBackspace() {
@@ -1167,7 +1164,7 @@ export function setKeymapMode(mode, nosave) {
   $(".keymap-key").attr("style", "");
   config.keymapMode = mode;
   if (!nosave) TestLogic.restart(false, nosave);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setKeymapLegendStyle(style, nosave) {
@@ -1195,7 +1192,7 @@ export function setKeymapLegendStyle(style, nosave) {
   // Update and save to cookie for persistence
   $(".keymapLegendStyle").addClass(style);
   config.keymapLegendStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setKeymapStyle(style, nosave) {
@@ -1206,7 +1203,7 @@ export function setKeymapStyle(style, nosave) {
 
   $(".keymap").addClass(style);
   config.keymapStyle = style;
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setKeymapLayout(layout, nosave) {
@@ -1215,7 +1212,7 @@ export function setKeymapLayout(layout, nosave) {
   }
   config.keymapLayout = layout;
   Keymap.refreshKeys(layout, setKeymapLayout);
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setLayout(layout, nosave) {
@@ -1227,7 +1224,7 @@ export function setLayout(layout, nosave) {
   if (config.keymapLayout === "overrideSync") {
     Keymap.refreshKeys(config.keymapLayout, setKeymapLayout);
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 // export function setSavedLayout(layout, nosave) {
@@ -1274,7 +1271,7 @@ export function setFontSize(fontSize, nosave) {
     $("#caret, #paceCaret").addClass("size3");
     $("#miniTimerAndLiveWpm").addClass("size3");
   }
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setCustomBackground(value, nosave) {
@@ -1293,7 +1290,7 @@ export function setCustomBackground(value, nosave) {
       (command) => command.id == "changeCustomBackground"
     )[0].defaultValue = value;
     ThemeController.applyCustomBackground();
-    if (!nosave) saveToCookie();
+    if (!nosave) saveToLocalStorage();
   } else {
     Notifications.add("Invalid custom background URL", 0);
   }
@@ -1305,14 +1302,14 @@ export function setCustomBackgroundSize(value, nosave) {
   }
   config.customBackgroundSize = value;
   ThemeController.applyCustomBackgroundSize();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function setCustomBackgroundFilter(array, nosave) {
   config.customBackgroundFilter = array;
   BackgroundFilter.loadConfig(config.customBackgroundFilter);
   BackgroundFilter.apply();
-  if (!nosave) saveToCookie();
+  if (!nosave) saveToLocalStorage();
 }
 
 export function apply(configObj) {
@@ -1405,24 +1402,24 @@ export function reset() {
     ...defaultConfig,
   };
   apply();
-  saveToCookie();
+  saveToLocalStorage();
 }
 
-export function loadFromCookie() {
-  console.log("loading cookie config");
+export function loadFromLocalStorage() {
+  console.log("loading localStorage config");
   // let newConfig = $.cookie("config");
-  let newConfig = Misc.getCookie("config");
-  if (newConfig !== undefined && newConfig !== "") {
+  let newConfig = window.localStorage.getItem("config");
+  if (newConfig !== undefined && newConfig !== null && newConfig !== "") {
     try {
       newConfig = JSON.parse(newConfig);
     } catch (e) {
       newConfig = {};
     }
     apply(newConfig);
-    console.log("applying cookie config");
-    cookieConfig = newConfig;
-    saveToCookie(true);
-    console.log("saving cookie config");
+    console.log("applying localStorage config");
+    localStorageConfig = newConfig;
+    saveToLocalStorage(true);
+    console.log("saving localStorage config");
   }
   TestLogic.restart(false, true);
   loadDone();
