@@ -808,6 +808,20 @@ var commandsPaceCaretStyle = {
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("underline");
     }
+  }, {
+    id: "setPaceCaretStyleCarrot",
+    display: "carrot",
+    visible: false,
+    exec: function exec() {
+      UpdateConfig.setPaceCaretStyle("carrot");
+    }
+  }, {
+    id: "setPaceCaretStyleBanana",
+    display: "banana",
+    visible: false,
+    exec: function exec() {
+      UpdateConfig.setPaceCaretStyle("banana");
+    }
   }]
 };
 var commandsPaceCaret = {
@@ -3263,6 +3277,7 @@ function setCaretStyle(caretStyle, nosave) {
   $("#caret").removeClass("outline");
   $("#caret").removeClass("block");
   $("#caret").removeClass("carrot");
+  $("#caret").removeClass("banana");
 
   if (caretStyle == "off") {
     $("#caret").addClass("off");
@@ -3294,6 +3309,8 @@ function setPaceCaretStyle(caretStyle, nosave) {
   $("#paceCaret").removeClass("underline");
   $("#paceCaret").removeClass("outline");
   $("#paceCaret").removeClass("block");
+  $("#paceCaret").removeClass("carrot");
+  $("#paceCaret").removeClass("banana");
 
   if (caretStyle == "off") {
     $("#paceCaret").addClass("off");
@@ -3305,6 +3322,10 @@ function setPaceCaretStyle(caretStyle, nosave) {
     $("#paceCaret").addClass("outline");
   } else if (caretStyle == "underline") {
     $("#paceCaret").addClass("underline");
+  } else if (caretStyle == "carrot") {
+    $("#paceCaret").addClass("carrot");
+  } else if (caretStyle == "banana") {
+    $("#paceCaret").addClass("banana");
   }
 
   if (!nosave) saveToLocalStorage();
@@ -5172,7 +5193,7 @@ function handleTab(event) {
   } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden")) {
     if ($(".pageTest").hasClass("active")) {
       if (UpdateConfig["default"].quickTab) {
-        if (UpdateConfig["default"].mode == "zen" && !event.shiftKey) {//ignore
+        if (UpdateConfig["default"].mode == "zen" && !event.shiftKey || TestLogic.hasTab && !event.shiftKey) {//ignore
         } else {
           if (event.shiftKey) ManualRestart.set();
           event.preventDefault();
@@ -6299,6 +6320,10 @@ var layouts = {
   niro: {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "wW", "uU", "dD", "pP", "jJ", "fF", "yY", "lL", ";:", "[{", "]}", "\\|", "aA", "sS", "eE", "tT", "gG", "hH", "nN", "iI", "rR", "oO", "'\"", "\\|", "zZ", "xX", "cC", "vV", "bB", "kK", "mM", ",<", ".>", "/?", " "]
+  },
+  JCUKEN: {
+    keymapShowTopRow: true,
+    keys: ["ёЁ", "1!", "2\"", "3№", "4;", "5%", "6:", "7?", "8*", "9(", "0)", "-_", "=+", "йЙ", "цЦ", "уУ", "кК", "еЕ", "нН", "гГ", "шШ", "щЩ", "зЗ", "хХ", "ъЪ", "\\/", "фФ", "ыЫ", "вВ", "аА", "пП", "рР", "оО", "лЛ", "дД", "жЖ", "эЭ", "\\|", "яЯ", "чЧ", "сС", "мМ", "иИ", "тТ", "ьЬ", "бБ", "юЮ", ".,", " "]
   }
 };
 var _default = layouts;
@@ -10499,7 +10524,7 @@ function finish() {
       keyDuration: TestStats.keypressTimings.duration.array,
       consistency: consistency,
       keyConsistency: keyConsistency,
-      funbox: Funbox.active,
+      funbox: Funbox.funboxSaved,
       bailedOut: bailout,
       chartData: chartData,
       customText: cdata
@@ -10542,7 +10567,7 @@ function finish() {
     testType += " " + UpdateConfig["default"].words;
   }
 
-  if (UpdateConfig["default"].mode != "custom" && Funbox.active !== "gibberish" && Funbox.active !== "58008") {
+  if (UpdateConfig["default"].mode != "custom" && Funbox.funboxSaved !== "gibberish" && Funbox.funboxSaved !== "ascii" && Funbox.funboxSaved !== "58008") {
     testType += "<br>" + lang;
   }
 

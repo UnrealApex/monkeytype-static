@@ -610,6 +610,7 @@ export function setCaretStyle(caretStyle, nosave) {
   $("#caret").removeClass("outline");
   $("#caret").removeClass("block");
   $("#caret").removeClass("carrot");
+  $("#caret").removeClass("banana");
 
   if (caretStyle == "off") {
     $("#caret").addClass("off");
@@ -639,6 +640,8 @@ export function setPaceCaretStyle(caretStyle, nosave) {
   $("#paceCaret").removeClass("underline");
   $("#paceCaret").removeClass("outline");
   $("#paceCaret").removeClass("block");
+  $("#paceCaret").removeClass("carrot");
+  $("#paceCaret").removeClass("banana");
 
   if (caretStyle == "off") {
     $("#paceCaret").addClass("off");
@@ -650,6 +653,10 @@ export function setPaceCaretStyle(caretStyle, nosave) {
     $("#paceCaret").addClass("outline");
   } else if (caretStyle == "underline") {
     $("#paceCaret").addClass("underline");
+  } else if (caretStyle == "carrot") {
+    $("#paceCaret").addClass("carrot");
+  } else if (caretStyle == "banana") {
+    $("#paceCaret").addClass("banana");
   }
   if (!nosave) saveToLocalStorage();
 }
