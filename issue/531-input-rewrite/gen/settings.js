@@ -272,6 +272,10 @@ async function initGroups() {
     "customBackgroundSize",
     UpdateConfig.setCustomBackgroundSize
   );
+  // groups.customLayoutfluid = new SettingsGroup(
+  //   "customLayoutfluid",
+  //   UpdateConfig.setCustomLayoutfluid
+  // );
 }
 
 async function fillSettingsPage() {
@@ -377,6 +381,10 @@ async function fillSettingsPage() {
 
   $(".pageSettings .section.customBackgroundSize input").val(
     Config.customBackground
+  );
+
+  $(".pageSettings .section.customLayoutfluid input").val(
+    Config.customLayoutfluid.replace(/#/g, " ")
   );
 }
 
@@ -582,6 +590,27 @@ $(".pageSettings .section.customBackgroundSize .inputAndButton input").keypress(
           ".pageSettings .section.customBackgroundSize .inputAndButton input"
         ).val()
       );
+    }
+  }
+);
+
+$(".pageSettings .section.customLayoutfluid .inputAndSave .save").on(
+  "click",
+  (e) => {
+    UpdateConfig.setCustomLayoutfluid(
+      $(".pageSettings .section.customLayoutfluid .inputAndSave input").val()
+    );
+    Notifications.add("Custom layoutfluid saved", 1);
+  }
+);
+
+$(".pageSettings .section.customLayoutfluid .inputAndSave .input").keypress(
+  (e) => {
+    if (e.keyCode == 13) {
+      UpdateConfig.setCustomLayoutfluid(
+        $(".pageSettings .section.customLayoutfluid .inputAndSave input").val()
+      );
+      Notifications.add("Custom layoutfluid saved", 1);
     }
   }
 );

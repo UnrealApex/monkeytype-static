@@ -27,12 +27,12 @@ $(document).keydown(function (event) {
   } catch (_unused) {}
 });
 
-},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":60}],2:[function(require,module,exports){
+},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":64}],2:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -49,6 +49,10 @@ var Misc = _interopRequireWildcard(require("./misc"));
 var _config = _interopRequireDefault(require("./config"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var caretAnimating = true;
 exports.caretAnimating = caretAnimating;
@@ -85,7 +89,7 @@ function updatePosition() {
   }
 
   var caret = $("#caret");
-  var inputLen = TestLogic.input.current.length;
+  var inputLen = TestLogic.input.currentWord.length;
   var currentLetterIndex = inputLen - 1;
 
   if (currentLetterIndex == -1) {
@@ -167,12 +171,12 @@ function show() {
   }
 }
 
-},{"./config":6,"./misc":26,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],3:[function(require,module,exports){
+},{"./config":6,"./misc":26,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],3:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -191,6 +195,10 @@ var TestStats = _interopRequireWildcard(require("./test-stats"));
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var result = new _chart["default"]($("#wpmChart"), {
   type: "line",
@@ -248,7 +256,7 @@ var result = new _chart["default"]($("#wpmChart"), {
             unique.forEach(function (wordIndex) {
               var wordEl = $($("#resultWordsHistory .words .word")[wordIndex]);
               var input = wordEl.attr("input");
-              if (input != undefined) wordEl.append("<div class=\"wordInputAfter\">".concat(input, "</div>"));
+              if (input != undefined) wordEl.append("<div class=\"wordInputAfter\">".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "</div>"));
             });
           } catch (_unused) {}
         }
@@ -403,12 +411,12 @@ function updateAllChartColors() {
   result.updateColors();
 }
 
-},{"./misc":26,"./test-stats":44,"./theme-colors":47,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/helpers/toConsumableArray":64,"chart.js":68}],4:[function(require,module,exports){
+},{"./misc":26,"./test-stats":45,"./theme-colors":48,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70,"chart.js":73}],4:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -448,6 +456,10 @@ var Funbox = _interopRequireWildcard(require("./funbox"));
 var Commandline = _interopRequireWildcard(require("./commandline"));
 
 var CustomText = _interopRequireWildcard(require("./custom-text"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var current = [];
 exports.current = current;
@@ -704,6 +716,18 @@ var commandsRandomTheme = {
     exec: function exec() {
       UpdateConfig.setRandomTheme("fav");
     }
+  }, {
+    id: "setRandomLight",
+    display: "light",
+    exec: function exec() {
+      UpdateConfig.setRandomTheme("light");
+    }
+  }, {
+    id: "setRandomDark",
+    display: "dark",
+    exec: function exec() {
+      UpdateConfig.setRandomTheme("dark");
+    }
   }]
 };
 var commandsDifficulty = {
@@ -943,6 +967,12 @@ var commandsKeymapLegendStyle = {
 var commandsHighlightMode = {
   title: "Change highlight mode...",
   list: [{
+    id: "setHighlightModeOff",
+    display: "off",
+    exec: function exec() {
+      UpdateConfig.setHighlightMode("off");
+    }
+  }, {
     id: "setHighlightModeLetter",
     display: "letter",
     exec: function exec() {
@@ -1745,6 +1775,24 @@ var defaultCommands = {
       UpdateConfig.setCustomBackground(input);
     }
   }, {
+    id: "changeCustomLayoutfluid",
+    display: "Change custom layoutfluid...",
+    defaultValue: "qwerty dvorak colemak",
+    input: true,
+    exec: function exec(input) {
+      UpdateConfig.setCustomLayoutfluid(input);
+      if (Funbox.active === "layoutfluid") TestLogic.restart(); // UpdateConfig.setLayout(
+      //   Config.customLayoutfluid
+      //     ? Config.customLayoutfluid.split("_")[0]
+      //     : "qwerty"
+      // );
+      // UpdateConfig.setKeymapLayout(
+      //   Config.customLayoutfluid
+      //     ? Config.customLayoutfluid.split("_")[0]
+      //     : "qwerty"
+      // );
+    }
+  }, {
     id: "changeTheme",
     display: "Change theme...",
     subgroup: true,
@@ -1852,10 +1900,10 @@ var defaultCommands = {
       Commandline.show();
     }
   }, {
-    id: "randomiseTheme",
+    id: "randomizeTheme",
     display: "Next random theme",
     exec: function exec() {
-      return ThemeController.randomiseTheme();
+      return ThemeController.randomizeTheme();
     }
   }, {
     id: "viewTypingPage",
@@ -1893,9 +1941,7 @@ var defaultCommands = {
         list: [{
           id: "bailOutNo",
           display: "Nevermind",
-          exec: function exec() {
-            Commandline.hide();
-          },
+          exec: function exec() {},
           available: function available() {
             return canBailOut();
           }
@@ -1999,12 +2045,12 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./commandline":5,"./config":6,"./custom-text":10,"./custom-text-popup":9,"./funbox":14,"./layouts":21,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./practise-missed":32,"./sound":40,"./test-logic":43,"./test-stats":44,"./test-ui":46,"./theme-controller":48,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],5:[function(require,module,exports){
+},{"./commandline":5,"./config":6,"./custom-text":10,"./custom-text-popup":9,"./funbox":14,"./layouts":21,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./practise-missed":32,"./sound":41,"./test-logic":44,"./test-stats":45,"./test-ui":47,"./theme-controller":49,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],5:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -2024,7 +2070,11 @@ var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var TestUI = _interopRequireWildcard(require("./test-ui"));
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -2077,8 +2127,8 @@ function showFound() {
     try {
       $.each(list.list, function (index, obj) {
         if (obj.found) {
-          if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") ThemeController.clearPreview();
-          if (!/font/gi.test(obj.id)) UpdateConfig["default"].previewFontFamily(UpdateConfig["default"].fontFamily);
+          if ((!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") && !ThemeController.randomTheme) ThemeController.clearPreview();
+          if (!/font/gi.test(obj.id)) UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily);
           obj.hover();
           return false;
         }
@@ -2146,7 +2196,10 @@ function updateSuggested() {
 function hide() {
   UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily); // applyCustomThemeColors();
 
-  ThemeController.clearPreview();
+  if (!ThemeController.randomTheme) {
+    ThemeController.clearPreview();
+  }
+
   $("#commandLineWrapper").stop(true, true).css("opacity", 1).animate({
     opacity: 0
   }, 100, function () {
@@ -2351,8 +2404,8 @@ $("#commandLineWrapper #commandLine .suggestions").on("mouseover", function (e) 
     var list = CommandlineLists.current[CommandlineLists.current.length - 1];
     $.each(list.list, function (index, obj) {
       if (obj.id == hoverId) {
-        if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") ThemeController.clearPreview();
-        if (!/font/gi.test(obj.id)) UpdateConfig["default"].previewFontFamily(UpdateConfig["default"].fontFamily);
+        if ((!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") && !ThemeController.randomTheme) ThemeController.clearPreview();
+        if (!/font/gi.test(obj.id)) UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily);
         obj.hover();
       }
     });
@@ -2448,8 +2501,8 @@ $(document).keydown(function (e) {
         var list = CommandlineLists.current[CommandlineLists.current.length - 1];
         $.each(list.list, function (index, obj) {
           if (obj.id == hoverId) {
-            if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") ThemeController.clearPreview();
-            if (!/font/gi.test(obj.id)) UpdateConfig["default"].previewFontFamily(UpdateConfig["default"].fontFamily);
+            if ((!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") && !ThemeController.randomTheme) ThemeController.clearPreview();
+            if (!/font/gi.test(obj.id)) UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily);
             obj.hover();
           }
         });
@@ -2464,12 +2517,12 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":4,"./config":6,"./focus":13,"./test-ui":46,"./theme-controller":48,"@babel/runtime/helpers/defineProperty":59,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],6:[function(require,module,exports){
+},{"./commandline-lists":4,"./config":6,"./focus":13,"./test-ui":47,"./theme-controller":49,"@babel/runtime/helpers/defineProperty":61,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],6:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -2570,11 +2623,13 @@ exports.setKeymapLayout = setKeymapLayout;
 exports.setLayout = setLayout;
 exports.setFontSize = setFontSize;
 exports.setCustomBackground = setCustomBackground;
+exports.setCustomLayoutfluid = setCustomLayoutfluid;
 exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.setCustomBackgroundFilter = setCustomBackgroundFilter;
 exports.apply = apply;
 exports.reset = reset;
 exports.loadFromLocalStorage = loadFromLocalStorage;
+exports.getConfigChanges = getConfigChanges;
 exports.setConfig = setConfig;
 exports["default"] = exports.loadPromise = exports.localStorageConfig = void 0;
 
@@ -2616,7 +2671,13 @@ var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var BackgroundFilter = _interopRequireWildcard(require("./custom-background-filter"));
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+var _layouts = _interopRequireDefault(require("./layouts"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -2696,7 +2757,8 @@ var defaultConfig = {
   oppositeShiftMode: "off",
   customBackground: "",
   customBackgroundSize: "cover",
-  customBackgroundFilter: [0, 1, 1, 1, 1]
+  customBackgroundFilter: [0, 1, 1, 1, 1],
+  customLayoutfluid: "qwerty#dvorak#colemak"
 };
 
 function isConfigKeyValid(name) {
@@ -4002,6 +4064,37 @@ function setCustomBackground(value, nosave) {
   }
 }
 
+function setCustomLayoutfluid(value, nosave) {
+  if (value == null || value == undefined) {
+    value = "qwerty#dvorak#colemak";
+  }
+
+  value = value.replace(/ /g, "#");
+  value.split("#").map(function (l) {
+    return l = l.toLowerCase();
+  }).join("#"); //validate the layouts
+
+  var allGood = true;
+  var list = Object.keys(_layouts["default"]).map(function (l) {
+    return l = l.toLowerCase();
+  });
+  value.split("#").forEach(function (customLayout) {
+    if (!list.includes(customLayout)) allGood = false;
+  });
+
+  if (!allGood) {
+    Notifications.add("One of the layouts were not found. Reverting to default", 0);
+    value = "qwerty#dvorak#colemak";
+    nosave = false;
+  }
+
+  config.customLayoutfluid = value;
+  CommandlineLists.defaultCommands.list.filter(function (command) {
+    return command.id == "changeCustomLayoutfluid";
+  })[0].defaultValue = value.replace(/#/g, " ");
+  if (!nosave) saveToLocalStorage();
+}
+
 function setCustomBackgroundSize(value, nosave) {
   if (value != "cover" && value != "contain" && value != "max") {
     value = "cover";
@@ -4035,6 +4128,7 @@ function apply(configObj) {
     setTheme(configObj.theme, true);
     setCustomThemeColors(configObj.customThemeColors, true);
     setCustomTheme(configObj.customTheme, true, true);
+    setCustomLayoutfluid(configObj.customLayoutfluid, true);
     setCustomBackground(configObj.customBackground, true);
     setCustomBackgroundSize(configObj.customBackgroundSize, true);
     setCustomBackgroundFilter(configObj.customBackgroundFilter, true);
@@ -4135,6 +4229,16 @@ function loadFromLocalStorage() {
   loadDone();
 }
 
+function getConfigChanges() {
+  var configChanges = {};
+  Object.keys(config).filter(function (key) {
+    return config[key] != defaultConfig[key];
+  }).forEach(function (key) {
+    configChanges[key] = config[key];
+  });
+  return configChanges;
+}
+
 function setConfig(newConfig) {
   config = newConfig;
 }
@@ -4146,10 +4250,10 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./commandline-lists":4,"./custom-background-filter":7,"./funbox":14,"./keymap":18,"./language-picker":19,"./live-acc":22,"./live-wpm":23,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./sound":40,"./test-logic":43,"./test-ui":46,"./theme-controller":48,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/defineProperty":59,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],7:[function(require,module,exports){
+},{"./commandline-lists":4,"./custom-background-filter":7,"./funbox":14,"./keymap":18,"./language-picker":19,"./layouts":21,"./live-acc":22,"./live-wpm":23,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./sound":41,"./test-logic":44,"./test-ui":47,"./theme-controller":49,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/defineProperty":61,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],7:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4161,6 +4265,10 @@ exports.loadConfig = loadConfig;
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var filters = {
   blur: {
@@ -4250,12 +4358,12 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   Notifications.add("Custom background filters saved", 1);
 });
 
-},{"./config":6,"./notifications":28,"@babel/runtime/helpers/interopRequireWildcard":61}],8:[function(require,module,exports){
+},{"./config":6,"./notifications":28,"@babel/runtime/helpers/typeof":70}],8:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4271,6 +4379,10 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function parseInput(input) {
   var re = /((-\s*)?\d+(\.\d+)?\s*[hms]?)/g;
@@ -4392,10 +4504,10 @@ $("#customTestDurationPopup .button").click(function () {
   apply();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/helpers/toConsumableArray":64}],9:[function(require,module,exports){
+},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70}],9:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4416,12 +4528,16 @@ var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var WordFilterPopup = _interopRequireWildcard(require("./word-filter-popup"));
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 var wrapper = "#customTextPopupWrapper";
 var popup = "#customTextPopup";
 
 function show() {
   if ($(wrapper).hasClass("hidden")) {
-    if ($("".concat(popup, " .check input")).prop("checked")) {
+    if ($("".concat(popup, " .checkbox input")).prop("checked")) {
       $("".concat(popup, " .inputs .randomInputFields")).removeClass("hidden");
     } else {
       $("".concat(popup, " .inputs .randomInputFields")).addClass("hidden");
@@ -4463,8 +4579,8 @@ $(wrapper).mousedown(function (e) {
     hide();
   }
 });
-$("".concat(popup, " .inputs .check input")).change(function () {
-  if ($("".concat(popup, " .check input")).prop("checked")) {
+$("".concat(popup, " .inputs .checkbox input")).change(function () {
+  if ($("".concat(popup, " .checkbox input")).prop("checked")) {
     $("".concat(popup, " .inputs .randomInputFields")).removeClass("hidden");
   } else {
     $("".concat(popup, " .inputs .randomInputFields")).addClass("hidden");
@@ -4505,8 +4621,8 @@ $("#customTextPopup .apply").click(function () {
   CustomText.setText(text);
   CustomText.setWord(parseInt($("#customTextPopup .wordcount input").val()));
   CustomText.setTime(parseInt($("#customTextPopup .time input").val()));
-  CustomText.setIsWordRandom($("#customTextPopup .check input").prop("checked") && !isNaN(CustomText.word));
-  CustomText.setIsTimeRandom($("#customTextPopup .check input").prop("checked") && !isNaN(CustomText.time));
+  CustomText.setIsWordRandom($("#customTextPopup .checkbox input").prop("checked") && !isNaN(CustomText.word));
+  CustomText.setIsTimeRandom($("#customTextPopup .checkbox input").prop("checked") && !isNaN(CustomText.time));
 
   if (isNaN(CustomText.word) && isNaN(CustomText.time) && (CustomText.isTimeRandom || CustomText.isWordRandom)) {
     Notifications.add("You need to specify word count or time in seconds to start a random custom test.", 0, 5);
@@ -4530,7 +4646,7 @@ $("#customTextPopup .wordfilter").click(function () {
   WordFilterPopup.show();
 });
 
-},{"./custom-text":10,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":43,"./word-filter-popup":53,"@babel/runtime/helpers/interopRequireWildcard":61}],10:[function(require,module,exports){
+},{"./custom-text":10,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":44,"./word-filter-popup":54,"@babel/runtime/helpers/typeof":70}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4576,13 +4692,17 @@ function setWord(val) {
 },{}],11:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var ThemePicker = _interopRequireWildcard(require("./theme-picker"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   if ($("#customThemeShareWrapper").hasClass("hidden")) {
@@ -4635,10 +4755,10 @@ $("#shareCustomThemeButton").click(function (e) {
   }
 });
 
-},{"./config":6,"./notifications":28,"./theme-picker":49,"@babel/runtime/helpers/interopRequireWildcard":61}],12:[function(require,module,exports){
+},{"./config":6,"./notifications":28,"./theme-picker":50,"@babel/runtime/helpers/typeof":70}],12:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4652,6 +4772,10 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   if ($("#customWordAmountPopupWrapper").hasClass("hidden")) {
@@ -4707,10 +4831,10 @@ $("#customWordAmountPopup .button").click(function () {
   apply();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":43,"@babel/runtime/helpers/interopRequireWildcard":61}],13:[function(require,module,exports){
+},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":44,"@babel/runtime/helpers/typeof":70}],13:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4718,6 +4842,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.set = set;
 
 var Caret = _interopRequireWildcard(require("./caret"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var state = false;
 
@@ -4745,12 +4873,12 @@ $(document).mousemove(function (event) {
   }
 });
 
-},{"./caret":2,"@babel/runtime/helpers/interopRequireWildcard":61}],14:[function(require,module,exports){
+},{"./caret":2,"@babel/runtime/helpers/typeof":70}],14:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4780,6 +4908,10 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var active = "none";
 exports.active = active;
@@ -4956,10 +5088,10 @@ function _activate() {
                 Settings.groups.keymapMode.updateButton(); // UpdateConfig.setSavedLayout(Config.layout);
 
                 rememberSetting("layout", UpdateConfig["default"].layout, UpdateConfig.setLayout);
-                UpdateConfig.setLayout("qwerty");
+                UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
                 Settings.groups.layout.updateButton();
                 rememberSetting("keymapLayout", UpdateConfig["default"].keymapLayout, UpdateConfig.setKeymapLayout);
-                UpdateConfig.setKeymapLayout("qwerty");
+                UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
                 Settings.groups.keymapLayout.updateButton();
                 TestLogic.restart();
               } else if (funbox === "memory") {
@@ -5015,16 +5147,20 @@ function setFunbox(funbox, mode) {
   return true;
 }
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":37,"./test-logic":43,"./test-ui":46,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],15:[function(require,module,exports){
+},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":38,"./test-logic":44,"./test-ui":47,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],15:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   if ($("#settingsImportWrapper").hasClass("hidden")) {
@@ -5071,13 +5207,13 @@ $("#settingsImportWrapper").click(function (e) {
   }
 });
 
-},{"./config":6,"./notifications":28,"./settings":37,"@babel/runtime/helpers/interopRequireWildcard":61}],16:[function(require,module,exports){
+},{"./config":6,"./notifications":28,"./settings":38,"@babel/runtime/helpers/typeof":70}],16:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 var _chart = _interopRequireDefault(require("chart.js"));
 
@@ -5105,6 +5241,10 @@ require("./input-controller");
 
 require("./ready");
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 //this file should be concatenated at the top of the legacy js files
 _chart["default"].plugins.register(_chartjsPluginTrendline["default"]);
 
@@ -5117,10 +5257,10 @@ global.simplePopups = SimplePopups.simplePopups; //these exports are just for de
 global.config = _config["default"]; // global.addnotif = Notifications.add;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caps-warning":1,"./config":6,"./custom-theme-popup":11,"./import-settings-popup":15,"./input-controller":17,"./misc":26,"./ready":34,"./simple-popups":39,"./support-popup":41,"./version-popup":52,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"chart.js":68,"chartjs-plugin-annotation":73,"chartjs-plugin-trendline":76}],17:[function(require,module,exports){
+},{"./caps-warning":1,"./config":6,"./custom-theme-popup":11,"./import-settings-popup":15,"./input-controller":17,"./misc":26,"./ready":34,"./simple-popups":40,"./support-popup":42,"./version-popup":53,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"chart.js":73,"chartjs-plugin-annotation":78,"chartjs-plugin-trendline":81}],17:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
@@ -5166,8 +5306,16 @@ var Focus = _interopRequireWildcard(require("./focus"));
 
 var ShiftTracker = _interopRequireWildcard(require("./shift-tracker"));
 
+var Replay = _interopRequireWildcard(require("./replay.js"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 var dontInsertSpace = false;
 var isCapsLockHeld = false;
+var inputWordBeforeChange = "";
+var $wordsInput = $("#wordsInput");
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -5182,13 +5330,9 @@ function handleTab(event) {
 
     area.value = area.value.substring(0, start) + "\t" + area.value.substring(end); // put caret at right position again
 
-    area.selectionStart = area.selectionEnd = start + 1; // event.preventDefault();
-    // $("#customTextPopup .textarea").val(
-    //   $("#customTextPopup .textarea").val() + "\t"
-    // );
-
+    area.selectionStart = area.selectionEnd = start + 1;
     return;
-  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden")) {
+  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden") && !$(".page.pageLogin").hasClass("active")) {
     if ($(".pageTest").hasClass("active")) {
       if (UpdateConfig["default"].quickTab) {
         if (TestUI.resultVisible || !(UpdateConfig["default"].mode == "zen" && !event.shiftKey || TestLogic.hasTab && !event.shiftKey)) {
@@ -5202,7 +5346,7 @@ function handleTab(event) {
           }
         } else {
           event.preventDefault();
-          handleAlpha("\t");
+          triggerInputWith("\t");
         }
       } else if (!TestUI.resultVisible) {
         if (TestLogic.hasTab && event.shiftKey || !TestLogic.hasTab && UpdateConfig["default"].mode !== "zen" || UpdateConfig["default"].mode === "zen" && event.shiftKey) {
@@ -5210,7 +5354,7 @@ function handleTab(event) {
           $("#restartTestButton").focus();
         } else {
           event.preventDefault();
-          handleAlpha("\t");
+          triggerInputWith("\t");
         }
       }
     } else if (UpdateConfig["default"].quickTab) {
@@ -5219,84 +5363,46 @@ function handleTab(event) {
   }
 }
 
-function handleBackspace(event) {
-  event.preventDefault();
+function setupBackspace(event) {
   if (!TestLogic.active) return;
-  $("#wordsInput").val("");
+  Sound.playClick(UpdateConfig["default"].playSoundOnClick);
+  if (TestLogic.input.currentWord.length > 0 || TestLogic.input.history.length == 0 || TestUI.currentWordElementIndex == 0) return;
 
-  if (TestLogic.input.current == "" && TestLogic.input.history.length > 0 && TestUI.currentWordElementIndex > 0) {
-    //if nothing is inputted and its not the first word
-    if (TestLogic.input.getHistory(TestLogic.words.currentIndex - 1) == TestLogic.words.get(TestLogic.words.currentIndex - 1) && !UpdateConfig["default"].freedomMode || $($(".word")[TestLogic.words.currentIndex - 1]).hasClass("hidden")) {
-      return;
-    } else {
-      if (UpdateConfig["default"].confidenceMode === "on" || UpdateConfig["default"].confidenceMode === "max") return;
-
-      if (event["ctrlKey"] || event["altKey"]) {
-        TestLogic.input.resetCurrent();
-        TestLogic.input.popHistory();
-        TestLogic.corrected.popHistory();
-      } else {
-        TestLogic.input.setCurrent(TestLogic.input.popHistory());
-        TestLogic.corrected.setCurrent(TestLogic.corrected.popHistory());
-
-        if (Funbox.active === "nospace") {
-          TestLogic.input.setCurrent(TestLogic.input.current.substring(0, TestLogic.input.current.length - 1));
-        }
-      }
-
-      TestLogic.words.decreaseCurrentIndex();
-      TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex - 1);
-      TestUI.updateActiveElement(true);
-      Funbox.toggleScript(TestLogic.words.getCurrent());
-      TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
-    }
-  } else {
-    if (UpdateConfig["default"].confidenceMode === "max") return;
-
-    if (event["ctrlKey"] || event["altKey"]) {
-      var limiter = " ";
-      if (TestLogic.input.current.lastIndexOf("-") > TestLogic.input.current.lastIndexOf(" ")) limiter = "-";
-      var split = TestLogic.input.current.replace(/ +/g, " ").split(limiter);
-
-      if (split[split.length - 1] == "") {
-        split.pop();
-      }
-
-      var addlimiter = false;
-
-      if (split.length > 1) {
-        addlimiter = true;
-      }
-
-      split.pop();
-      TestLogic.input.setCurrent(split.join(limiter));
-
-      if (addlimiter) {
-        TestLogic.input.appendCurrent(limiter);
-      }
-    } else if (event.metaKey) {
-      TestLogic.input.resetCurrent();
-    } else {
-      TestLogic.input.setCurrent(TestLogic.input.current.substring(0, TestLogic.input.current.length - 1));
-    }
-
-    TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
+  if (TestLogic.input.history[TestLogic.words.currentIndex - 1] == TestLogic.words.get(TestLogic.words.currentIndex - 1) && !UpdateConfig["default"].freedomMode || $($(".word")[TestLogic.words.currentIndex - 1]).hasClass("hidden")) {
+    event.preventDefault();
+    return;
   }
 
-  Sound.playClick(UpdateConfig["default"].playSoundOnClick);
+  if (UpdateConfig["default"].confidenceMode === "on" || UpdateConfig["default"].confidenceMode === "max") {
+    event.preventDefault();
+    return;
+  }
+
+  TestLogic.input.currentWord = TestLogic.input.popHistory();
+  TestLogic.corrected.popHistory();
+
+  if (Funbox.active !== "nospace") {
+    TestLogic.input.currentWord += " ";
+  }
+
+  TestLogic.words.decreaseCurrentIndex();
+  Replay.addReplayEvent("backWord");
+  TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex - 1);
+  TestUI.updateActiveElement(true);
+  Funbox.toggleScript(TestLogic.words.getCurrent());
 
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey(event.code, true);
   } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.currentWord.length, TestLogic.input.currentWord.length + 1).toString().toUpperCase());
   }
-
-  Caret.updatePosition();
 }
 
 function handleSpace() {
   if (!TestLogic.active) return;
-  if (TestLogic.input.current === "") return;
+  var inputWord = TestLogic.input.currentWord.slice(0, -1); // handleLastChar() will decide if it gets inserted as character on start of word or not
+
+  if (inputWord === "") return;
 
   if (UpdateConfig["default"].mode == "zen") {
     $("#words .word.active").removeClass("active");
@@ -5306,10 +5412,11 @@ function handleSpace() {
   var currentWord = TestLogic.words.getCurrent();
 
   if (Funbox.active === "layoutfluid" && UpdateConfig["default"].mode !== "time") {
-    var layouts = ["qwerty", "dvorak", "colemak"];
+    // here I need to check if Config.customLayoutFluid exists because of my scuffed solution of returning whenever value is undefined in the setCustomLayoutfluid function
+    var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
     var index = 0;
     var outof = TestLogic.words.length;
-    index = Math.floor((TestLogic.input.history.length + 1) / (outof / 3));
+    index = Math.floor((TestLogic.input.history.length + 1) / (outof / layouts.length));
 
     if (UpdateConfig["default"].layout !== layouts[index] && layouts[index] !== undefined) {
       Notifications.add("--- !!! ".concat(layouts[index], " !!! ---"), 0);
@@ -5317,32 +5424,31 @@ function handleSpace() {
 
     UpdateConfig.setLayout(layouts[index]);
     UpdateConfig.setKeymapLayout(layouts[index]);
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().substring(inputWord.length, inputWord.length + 1).toString().toUpperCase());
     Settings.groups.layout.updateButton();
   }
 
-  dontInsertSpace = true;
+  dontInsertSpace = true; //correct word or in zen mode
 
-  if (currentWord == TestLogic.input.current || UpdateConfig["default"].mode == "zen") {
-    //correct word or in zen mode
-    PaceCaret.handleSpace(true, currentWord);
-    TestStats.incrementAccuracy(true);
-    TestLogic.input.pushHistory();
+  var isWordCorrect = currentWord == inputWord || UpdateConfig["default"].mode == "zen";
+  PaceCaret.handleSpace(isWordCorrect, currentWord);
+  TestStats.incrementAccuracy(isWordCorrect);
+
+  if (isWordCorrect) {
+    Replay.addReplayEvent("submitCorrectWord");
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
     TestUI.updateActiveElement();
     Funbox.toggleScript(TestLogic.words.getCurrent());
     Caret.updatePosition();
     TestStats.incrementKeypressCount();
-    TestStats.pushKeypressWord(TestLogic.words.currentIndex); // currentKeypress.count++;
-    // currentKeypress.words.push(TestLogic.words.currentIndex);
+    TestStats.pushKeypressWord(TestLogic.words.currentIndex);
 
     if (Funbox.active !== "nospace") {
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
     }
   } else {
-    //incorrect word
-    PaceCaret.handleSpace(false, currentWord);
+    Replay.addReplayEvent("submitErrorWord");
 
     if (Funbox.active !== "nospace") {
       if (!UpdateConfig["default"].playSoundOnError || UpdateConfig["default"].blindMode) {
@@ -5352,15 +5458,14 @@ function handleSpace() {
       }
     }
 
-    TestStats.incrementAccuracy(false);
     TestStats.incrementKeypressErrors();
-    var cil = TestLogic.input.current.length;
+    var cil = inputWord.length;
 
     if (cil <= TestLogic.words.getCurrent().length) {
-      if (cil >= TestLogic.corrected.current.length) {
-        TestLogic.corrected.appendCurrent("_");
+      if (cil >= TestLogic.corrected.currentWord.length) {
+        TestLogic.corrected.currentWord += "_";
       } else {
-        TestLogic.corrected.setCurrent(TestLogic.corrected.current.substring(0, cil) + "_" + TestLogic.corrected.current.substring(cil + 1));
+        TestLogic.corrected.currentWord = TestLogic.corrected.currentWord.substring(0, cil) + "_" + TestLogic.corrected.currentWord.substring(cil + 1);
       }
     }
 
@@ -5372,7 +5477,7 @@ function handleSpace() {
       }
 
       if (UpdateConfig["default"].stopOnError == "word") {
-        TestLogic.input.appendCurrent(" ");
+        TestLogic.input.currentWord += " ";
         TestUI.updateWordElement(true);
         Caret.updatePosition();
       }
@@ -5381,29 +5486,28 @@ function handleSpace() {
     }
 
     if (UpdateConfig["default"].blindMode) $("#words .word.active letter").addClass("correct");
-    TestLogic.input.pushHistory();
     TestUI.highlightBadWord(TestUI.currentWordElementIndex, !UpdateConfig["default"].blindMode);
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
     TestUI.updateActiveElement();
     Funbox.toggleScript(TestLogic.words.getCurrent());
-    Caret.updatePosition(); // currentKeypress.count++;
-    // currentKeypress.words.push(TestLogic.words.currentIndex);
-
+    Caret.updatePosition();
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
+    TestStats.updateLastKeypress();
 
     if (UpdateConfig["default"].difficulty == "expert" || UpdateConfig["default"].difficulty == "master") {
       TestLogic.fail();
       return;
     } else if (TestLogic.words.currentIndex == TestLogic.words.length) {
       //submitted last word that is incorrect
-      TestStats.setLastSecondNotRound();
       TestLogic.finish();
       return;
     }
   }
 
+  TestLogic.input.currentWord = inputWord;
+  TestLogic.input.pushHistory();
   TestLogic.corrected.pushHistory();
 
   if (!UpdateConfig["default"].showAllLines || UpdateConfig["default"].mode == "time" || CustomText.isWordRandom && CustomText.word == 0 || CustomText.isTimeRandom) {
@@ -5427,7 +5531,7 @@ function handleSpace() {
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey("Space", true);
   } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().substring(inputWord.length, inputWord.length + 1).toString().toUpperCase());
   }
 
   if (UpdateConfig["default"].mode === "words" || UpdateConfig["default"].mode === "custom" || UpdateConfig["default"].mode === "quote" || UpdateConfig["default"].mode === "zen") {
@@ -5440,69 +5544,60 @@ function handleSpace() {
 }
 
 function isCharCorrect(_char) {
-  var thisCharCorrect;
-  var nextCharInWord;
-
-  if (UpdateConfig["default"].mode != "zen") {
-    nextCharInWord = TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1);
-  }
-
-  if (nextCharInWord == _char) {
-    thisCharCorrect = true;
-  } else {
-    thisCharCorrect = false;
-  }
-
-  if (UpdateConfig["default"].language.split("_")[0] == "russian") {
-    if ((_char === "е" || _char === "e") && nextCharInWord == "ё") {
-      _char = nextCharInWord;
-      thisCharCorrect = true;
-    }
-
-    if (_char === "ё" && (nextCharInWord == "е" || nextCharInWord === "e")) {
-      _char = nextCharInWord;
-      thisCharCorrect = true;
-    }
+  if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char) === false) {
+    return false;
   }
 
   if (UpdateConfig["default"].mode == "zen") {
-    thisCharCorrect = true;
+    return true;
   }
 
-  if (_char === "’" && nextCharInWord == "'") {
-    _char = "'";
-    thisCharCorrect = true;
+  var originalChar = TestLogic.words.getCurrent().charAt(TestLogic.input.currentWord.length - 1);
+
+  if (originalChar == _char) {
+    return true;
   }
 
-  if (_char === "'" && nextCharInWord == "’") {
-    _char = "’";
-    thisCharCorrect = true;
+  if (UpdateConfig["default"].language.split("_")[0] == "russian") {
+    if ((_char === "е" || _char === "e") && originalChar == "ё") {
+      return true;
+    }
+
+    if (_char === "ё" && (originalChar == "е" || originalChar === "e")) {
+      return true;
+    }
   }
 
-  if (_char === "”" && nextCharInWord == '"') {
-    _char = '"';
-    thisCharCorrect = true;
+  if (_char === "’" && originalChar == "'") {
+    return true;
   }
 
-  if (_char === '"' && nextCharInWord == "”") {
-    _char = "”";
-    thisCharCorrect = true;
+  if (_char === "'" && originalChar == "’") {
+    return true;
   }
 
-  if ((_char === "–" || _char === "—") && nextCharInWord == "-") {
-    _char = "-";
-    thisCharCorrect = true;
+  if (_char === "”" && originalChar == '"') {
+    return true;
   }
 
-  if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char) === false) {
-    thisCharCorrect = false;
+  if (_char === '"' && originalChar == "”") {
+    return true;
   }
 
-  return thisCharCorrect;
+  if ((_char === "–" || _char === "—") && originalChar == "-") {
+    return true;
+  }
+
+  return false;
 }
 
-function handleAlpha(_char2) {
-  $("#wordsInput").val("");
+function handleLastChar() {
+  if (TestUI.resultCalculating || TestUI.resultVisible) {
+    TestLogic.input.dropLastChar();
+    return;
+  }
+
+  var _char2 = TestLogic.input.currentWord[TestLogic.input.currentWord.length - 1];
 
   if (_char2 === "\n" && Funbox.active === "58008") {
     _char2 = " ";
@@ -5515,35 +5610,33 @@ function handleAlpha(_char2) {
     if (UpdateConfig["default"].difficulty !== "normal" || UpdateConfig["default"].strictSpace) {
       if (dontInsertSpace) {
         dontInsertSpace = false;
+        TestLogic.input.dropLastChar();
         return;
       }
     } else {
+      TestLogic.input.dropLastChar();
       return;
     }
   } //start the test
 
 
-  if (TestLogic.input.current == "" && TestLogic.input.history.length == 0 && !TestLogic.active) {
-    if (!TestLogic.startTest()) return;
-  } else {
-    if (!TestLogic.active) return;
+  if (!TestLogic.active && !TestLogic.startTest()) {
+    TestLogic.input.dropLastChar();
+    return;
   }
 
   Focus.set(true);
   Caret.stopAnimation();
   var thisCharCorrect = isCharCorrect(_char2);
+  if (!thisCharCorrect && Misc.testDiacritic(_char2)) return;
+  TestStats.incrementAccuracy(thisCharCorrect);
 
   if (!thisCharCorrect) {
-    TestStats.incrementAccuracy(false);
+    Replay.addReplayEvent("incorrectLetter", event.key);
     TestStats.incrementKeypressErrors();
     TestStats.pushMissedWord(TestLogic.words.getCurrent());
   } else {
-    TestStats.incrementAccuracy(true);
-
-    if (UpdateConfig["default"].mode == "zen") {
-      //making the input visible to the user
-      $("#words .active").append("<letter class=\"correct\">".concat(_char2, "</letter>"));
-    }
+    Replay.addReplayEvent("correctLetter", event.key);
   }
 
   if (thisCharCorrect) {
@@ -5556,35 +5649,43 @@ function handleAlpha(_char2) {
     }
   }
 
-  if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char2) === false) return; //update current corrected verison. if its empty then add the current char. if its not then replace the last character with the currently pressed one / add it
+  if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char2) === false) {
+    TestLogic.input.dropLastChar();
+    return;
+  } //update current corrected version. if its empty then add the current char. if its not then replace the last character with the currently pressed one / add it
 
-  if (TestLogic.corrected.current === "") {
-    TestLogic.corrected.setCurrent(TestLogic.input.current + _char2);
+
+  if (TestLogic.corrected.currentWord === "") {
+    TestLogic.corrected.currentWord = TestLogic.input.currentWord;
   } else {
-    var cil = TestLogic.input.current.length;
+    var cil = TestLogic.input.currentWord.length;
 
-    if (cil >= TestLogic.corrected.current.length) {
-      TestLogic.corrected.appendCurrent(_char2);
+    if (cil >= TestLogic.corrected.currentWord.length) {
+      TestLogic.corrected.currentWord += _char2;
     } else if (!thisCharCorrect) {
-      TestLogic.corrected.setCurrent(TestLogic.corrected.current.substring(0, cil) + _char2 + TestLogic.corrected.current.substring(cil + 1));
+      TestLogic.corrected.currentWord = TestLogic.corrected.currentWord.substring(0, cil) + _char2 + TestLogic.corrected.currentWord.substring(cil + 1);
     }
   }
 
   TestStats.incrementKeypressCount();
+  TestStats.updateLastKeypress();
   TestStats.pushKeypressWord(TestLogic.words.currentIndex);
 
   if (UpdateConfig["default"].stopOnError == "letter" && !thisCharCorrect) {
+    TestLogic.input.dropLastChar();
     return;
   } //update the active word top, but only once
 
 
-  if (TestLogic.input.current.length === 1 && TestLogic.words.currentIndex === 0) {
+  if (TestLogic.input.currentWord.length === 2 && TestLogic.words.currentIndex === 0) {
     TestUI.setActiveWordTop(document.querySelector("#words .active").offsetTop);
-  } //max length of the input is 20 unless in zen mode
+  } //max length of the input is 20 unless in zen mode then its 30
 
 
-  if (UpdateConfig["default"].mode == "zen" || TestLogic.input.current.length < TestLogic.words.getCurrent().length + 20) {
-    TestLogic.input.appendCurrent(_char2);
+  if (UpdateConfig["default"].mode == "zen") {
+    TestLogic.input.currentWord = TestLogic.input.currentWord.substring(0, 30);
+  } else {
+    TestLogic.input.currentWord = TestLogic.input.currentWord.substring(0, TestLogic.words.getCurrent().length + 20);
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
@@ -5596,11 +5697,8 @@ function handleAlpha(_char2) {
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey(_char2, thisCharCorrect);
   } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.currentWord.length, TestLogic.input.currentWord.length + 1).toString().toUpperCase());
   }
-
-  var activeWordTopBeforeJump = TestUI.activeWordTop;
-  TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
 
   if (UpdateConfig["default"].mode != "zen") {
     //not applicable to zen mode
@@ -5608,34 +5706,30 @@ function handleAlpha(_char2) {
     var currentWord = TestLogic.words.getCurrent();
     var lastindex = TestLogic.words.currentIndex;
 
-    if ((currentWord == TestLogic.input.current || UpdateConfig["default"].quickEnd && currentWord.length == TestLogic.input.current.length && UpdateConfig["default"].stopOnError == "off") && lastindex == TestLogic.words.length - 1) {
+    if ((currentWord == TestLogic.input.currentWord || UpdateConfig["default"].quickEnd && currentWord.length == TestLogic.input.currentWord.length && UpdateConfig["default"].stopOnError == "off") && lastindex == TestLogic.words.length - 1) {
       TestLogic.input.pushHistory();
       TestLogic.corrected.pushHistory();
-      TestStats.setLastSecondNotRound();
       TestLogic.finish();
     }
-  } //simulate space press in nospace funbox
-
-
-  if (Funbox.active === "nospace" && TestLogic.input.current.length === TestLogic.words.getCurrent().length || _char2 === "\n" && thisCharCorrect) {
-    handleSpace();
   }
 
+  var activeWordTopBeforeJump = TestUI.activeWordTop;
   var newActiveTop = document.querySelector("#words .word.active").offsetTop; //stop the word jump by slicing off the last character, update word again
 
-  if (activeWordTopBeforeJump < newActiveTop && !TestUI.lineTransition && TestLogic.input.current.length > 1) {
+  if (activeWordTopBeforeJump < newActiveTop && !TestUI.lineTransition && TestLogic.input.currentWord.length > 1) {
     if (UpdateConfig["default"].mode == "zen") {
       var currentTop = Math.floor(document.querySelectorAll("#words .word")[TestUI.currentWordElementIndex - 1].offsetTop);
       if (!UpdateConfig["default"].showAllLines) TestUI.lineJump(currentTop);
     } else {
-      TestLogic.input.setCurrent(TestLogic.input.current.slice(0, -1));
-      TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
+      TestLogic.input.dropLastChar();
     }
-  }
+  } //simulate space press in nospace funbox
 
-  Caret.updatePosition();
-  var acc = Misc.roundTo2(TestStats.calculateAccuracy());
-  LiveAcc.update(acc);
+
+  if (Funbox.active === "nospace" && TestLogic.input.currentWord.length === TestLogic.words.getCurrent().length || _char2 === "\n" && thisCharCorrect) {
+    TestLogic.input.currentWord += " ";
+    setTimeout(handleSpace, 0);
+  }
 }
 
 $(document).keyup(function (event) {
@@ -5645,15 +5739,14 @@ $(document).keyup(function (event) {
   var diff = Math.abs(TestStats.keypressTimings.duration.current - now);
 
   if (TestStats.keypressTimings.duration.current !== -1) {
-    TestStats.pushKeypressDuration(diff); // keypressStats.duration.array.push(diff);
+    TestStats.pushKeypressDuration(diff);
   }
 
-  TestStats.setKeypressDuration(now); // keypressStats.duration.current = now;
-
+  TestStats.setKeypressDuration(now);
   Monkey.stop();
 });
 $(document).keydown(function (event) {
-  if (!(event.key == " ") && !event.originalEvent.isTrusted) return;
+  if (!event.originalEvent.isTrusted) return;
 
   if (!TestUI.resultVisible) {
     TestStats.recordKeypressSpacing();
@@ -5664,7 +5757,7 @@ $(document).keydown(function (event) {
 
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
-  var wordsFocused = $("#wordsInput").is(":focus");
+  var wordsFocused = $wordsInput.is(":focus");
   var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
 
   if (pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
@@ -5689,13 +5782,16 @@ $(document).keydown(function (event) {
 
   if (TestUI.testRestarting) {
     return;
-  } //backspace
+  } // TODO: caps lock backspace
+  //const isBackspace =
+  //  event.key === "Backspace" ||
+  //  (Config.capsLockBackspace && event.key === "CapsLock");
 
 
-  var isBackspace = event.key === "Backspace" || UpdateConfig["default"].capsLockBackspace && event.key === "CapsLock";
+  var isBackspace = event.key === "Backspace";
 
   if (isBackspace && wordsFocused) {
-    handleBackspace(event);
+    setupBackspace(event);
   }
 
   if (event.key === "Enter") {
@@ -5707,59 +5803,57 @@ $(document).keydown(function (event) {
       TestLogic.setBailout(true);
       TestLogic.finish();
     }
-  }
-
-  if (["ContextMenu", "Escape", "Shift", "Control", "Meta", "Alt", "AltGraph", "CapsLock", "Backspace", "PageUp", "PageDown", "Home", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown", "OS", "Insert", "Home", "Undefined", "Control", "Fn", "FnLock", "Hyper", "NumLock", "ScrollLock", "Symbol", "SymbolLock", "Super", "Unidentified", "Process", "Delete", "KanjiMode", "Pause", "PrintScreen", "Clear", "End", undefined].includes(event.key)) {
-    TestStats.incrementKeypressMod();
   } //show dead keys
 
 
   if (event.key === "Dead") {
     Sound.playClick(UpdateConfig["default"].playSoundOnClick);
-    $(document.querySelector("#words .word.active").querySelectorAll("letter")[TestLogic.input.current.length]).toggleClass("dead");
+    $(document.querySelector("#words .word.active").querySelectorAll("letter")[TestLogic.input.currentWord.length]).toggleClass("dead");
     return;
-  } //default layout is handled in input event
+  }
 
+  if (["ContextMenu", "Escape", "Shift", "Control", "Meta", "Alt", "AltGraph", "CapsLock", "Backspace", "PageUp", "PageDown", "Home", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown", "OS", "Insert", "Home", "Undefined", "Control", "Fn", "FnLock", "Hyper", "NumLock", "ScrollLock", "Symbol", "SymbolLock", "Super", "Unidentified", "Process", "Delete", "KanjiMode", "Pause", "PrintScreen", "Clear", "End", undefined].includes(event.key)) {
+    TestStats.incrementKeypressMod();
+  }
 
-  if (UpdateConfig["default"].layout !== "default") {
+  if (UpdateConfig["default"].layout !== "default" && wordsFocused && !TestLogic.resultVisible && !TestLogic.resultCalculating) {
     var _char3 = LayoutEmulator.getCharFromEvent(event);
 
-    if (_char3) handleAlpha(_char3);
-  }
-});
-$("#wordsInput").on("input", function (event) {
-  if (TestUI.testRestarting) return; //layout emulation is handled in keypress event
-
-  if (UpdateConfig["default"].layout !== "default") {
-    event.target.value = "";
-    return;
-  }
-
-  var _char4 = event.target.value.normalize();
-
-  if (_char4.length == 0) {
-    return;
-  }
-
-  if (UpdateConfig["default"].capsLockBackspace && isCapsLockHeld) {
-    //swap case
-    _char4 = _char4 == _char4.toLowerCase() ? _char4.toUpperCase() : _char4.toLowerCase();
-  } //the regex tests against known non-combining diacritics and also the Spacing Modifier Letters unicode block
-  //this is to ignore ones that may be pre-inserted by some input systems
-
-
-  if (_char4.length > 1 || isCharCorrect(_char4) || !/[\u02B0-\u02FF`´^¨~]/.test(_char4)) {
-    _char4 = _char4.charAt(0);
-    handleAlpha(_char4);
+    if (_char3 !== null) {
+      event.preventDefault();
+      triggerInputWith(_char3);
+    }
   }
 });
 
-},{"./caret":2,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./layout-emulator":20,"./live-acc":22,"./manual-restart-tracker":25,"./misc":26,"./monkey":27,"./notifications":28,"./pace-caret":30,"./settings":37,"./shift-tracker":38,"./sound":40,"./test-logic":43,"./test-stats":44,"./test-timer":45,"./test-ui":46,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/interopRequireWildcard":61}],18:[function(require,module,exports){
+function triggerInputWith(string) {
+  $wordsInput.trigger("beforeinput");
+  TestLogic.input.currentWord += string;
+  $wordsInput.trigger("input");
+}
+
+$wordsInput.on("beforeinput", function (event) {
+  inputWordBeforeChange = event.target.value.normalize();
+});
+$wordsInput.on("input", function (event) {
+  if (TestUI.testRestarting) return; // TODO: trigger replay events correctly (clearWord, deleteLetter)
+
+  if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
+    handleLastChar();
+  }
+
+  TestUI.updateWordElement();
+  Caret.updatePosition();
+  var acc = Misc.roundTo2(TestStats.calculateAccuracy());
+  LiveAcc.update(acc);
+});
+
+},{"./caret":2,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./layout-emulator":20,"./live-acc":22,"./manual-restart-tracker":25,"./misc":26,"./monkey":27,"./notifications":28,"./pace-caret":30,"./replay.js":35,"./settings":38,"./shift-tracker":39,"./sound":41,"./test-logic":44,"./test-stats":45,"./test-timer":46,"./test-ui":47,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/typeof":70}],18:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -5779,6 +5873,10 @@ var _layouts = _interopRequireDefault(require("./layouts"));
 var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var Commandline = _interopRequireWildcard(require("./commandline"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function highlightKey(currentKey) {
   if (UpdateConfig["default"].mode === "zen") return;
@@ -6038,12 +6136,12 @@ $(document).on("click", ".keymap .r5 #KeySpace", function (e) {
   Commandline.show();
 });
 
-},{"./commandline":5,"./commandline-lists":4,"./config":6,"./layouts":21,"./theme-colors":47,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],19:[function(require,module,exports){
+},{"./commandline":5,"./commandline-lists":4,"./config":6,"./layouts":21,"./theme-colors":48,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],19:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6057,6 +6155,10 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function setActiveGroup(_x) {
   return _setActiveGroup.apply(this, arguments);
@@ -6125,12 +6227,12 @@ function _setActiveGroup() {
   return _setActiveGroup.apply(this, arguments);
 }
 
-},{"./config":6,"./misc":26,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],20:[function(require,module,exports){
+},{"./config":6,"./misc":26,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],20:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6142,6 +6244,10 @@ var _config = _interopRequireDefault(require("./config"));
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var _layouts = _interopRequireDefault(require("./layouts"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function getCharFromEvent(event) {
   function emulatedLayoutShouldShiftKey(event, newKeyPreview) {
@@ -6168,7 +6274,7 @@ function getCharFromEvent(event) {
   return _char;
 }
 
-},{"./config":6,"./layouts":21,"./misc":26,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],21:[function(require,module,exports){
+},{"./config":6,"./layouts":21,"./misc":26,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6297,6 +6403,18 @@ var layouts = {
   JCUKEN: {
     keymapShowTopRow: true,
     keys: ["ёЁ", "1!", "2\"", "3№", "4;", "5%", "6:", "7?", "8*", "9(", "0)", "-_", "=+", "йЙ", "цЦ", "уУ", "кК", "еЕ", "нН", "гГ", "шШ", "щЩ", "зЗ", "хХ", "ъЪ", "\\/", "фФ", "ыЫ", "вВ", "аА", "пП", "рР", "оО", "лЛ", "дД", "жЖ", "эЭ", "\\|", "яЯ", "чЧ", "сС", "мМ", "иИ", "тТ", "ьЬ", "бБ", "юЮ", ".,", " "]
+  },
+  ISRT: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "cC", "lL", "mM", "kK", "zZ", "fF", "uU", ",<", "'\"", "[{", "]}", "\\|", "iI", "sS", "rR", "tT", "gG", "pP", "nN", "eE", "aA", "oO", ";:", "\\|", "qQ", "vV", "wW", "dD", "jJ", "bB", "hH", "/?", ".>", "xX", " "]
+  },
+  colemak_Qix: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "=+", "[{", ";:", "lL", "cC", "mM", "kK", "jJ", "fF", "uU", "yY", "qQ", "-_", "]}", "\\|", "aA", "rR", "sS", "tT", "gG", "pP", "nN", "eE", "iI", "oO", "'\"", "\\|", "xX", "wW", "dD", "vV", "zZ", "bB", "hH", "/?", ".>", ",<", " "]
+  },
+  colemaQ: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "=+", "[{", ";:", "wW", "fF", "pP", "bB", "jJ", "lL", "uU", "yY", "qQ", "-_", "]}", "\\|", "aA", "rR", "sS", "tT", "gG", "mM", "nN", "eE", "iI", "oO", "'\"", "\\|", "xX", "cC", "dD", "kK", "zZ", "vV", "hH", "/?", ".>", ",<", " "]
   }
 };
 var _default = layouts;
@@ -6305,9 +6423,9 @@ exports["default"] = _default;
 },{}],22:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6319,6 +6437,10 @@ exports.hide = hide;
 var _config = _interopRequireDefault(require("./config"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function update(acc) {
   var number = Math.floor(acc);
@@ -6365,12 +6487,12 @@ function hide() {
   });
 }
 
-},{"./config":6,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],23:[function(require,module,exports){
+},{"./config":6,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],23:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6382,6 +6504,10 @@ exports.hide = hide;
 var _config = _interopRequireDefault(require("./config"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function update(wpm, raw) {
   // if (!TestLogic.active || !Config.showLiveWpm) {
@@ -6435,7 +6561,7 @@ function hide() {
   });
 }
 
-},{"./config":6,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],24:[function(require,module,exports){
+},{"./config":6,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6478,9 +6604,9 @@ function get() {
 },{}],26:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6505,6 +6631,7 @@ exports.getReleasesFromGitHub = getReleasesFromGitHub;
 exports.getLastChar = getLastChar;
 exports.capitalizeFirstLetter = capitalizeFirstLetter;
 exports.isASCIILetter = isASCIILetter;
+exports.testDiacritic = testDiacritic;
 exports.kogasa = kogasa;
 exports.roundTo2 = roundTo2;
 exports.findLineByLeastSquares = findLineByLeastSquares;
@@ -6525,6 +6652,7 @@ exports.isUsernameValid = isUsernameValid;
 exports.mapRange = mapRange;
 exports.canQuickRestart = canQuickRestart;
 exports.clearTimeouts = clearTimeouts;
+exports.setCharAt = setCharAt;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -6533,6 +6661,10 @@ var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var Loader = _interopRequireWildcard(require("./loader"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function hexToHSL(H) {
   // Convert hex to RGB first
@@ -7153,6 +7285,10 @@ function isASCIILetter(c) {
   return c.length === 1 && /[a-z]/i.test(c);
 }
 
+function testDiacritic(_char) {
+  return /[\u02B0-\u02FF`´^¨~]/.test(_char);
+}
+
 function kogasa(cov) {
   return 100 * (1 - Math.tanh(cov + Math.pow(cov, 3) / 3 + Math.pow(cov, 5) / 5));
 }
@@ -7378,8 +7514,8 @@ function cleanTypographySymbols(textToClean) {
     "»": ">>",
     "–": "-"
   };
-  return textToClean.replace(/[“”’‘—,…«»–]/g, function (_char) {
-    return specials[_char] || "";
+  return textToClean.replace(/[“”’‘—,…«»–]/g, function (_char2) {
+    return specials[_char2] || "";
   });
 }
 
@@ -7425,9 +7561,15 @@ function clearTimeouts(timeouts) {
     clearTimeout(to);
     to = null;
   });
+} //https://stackoverflow.com/questions/1431094/how-do-i-replace-a-character-at-a-particular-index-in-javascript
+
+
+function setCharAt(str, index, chr) {
+  if (index > str.length - 1) return str;
+  return str.substring(0, index) + chr + str.substring(index + 1);
 }
 
-},{"./loader":24,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/helpers/toConsumableArray":64,"@babel/runtime/regenerator":67}],27:[function(require,module,exports){
+},{"./loader":24,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7628,10 +7770,10 @@ function add(message, level, duration, customTitle, customIcon) {
   notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon).show());
 }
 
-},{"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60}],29:[function(require,module,exports){
+},{"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/interopRequireDefault":64}],29:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -7640,6 +7782,10 @@ exports.hide = hide;
 exports.show = show;
 
 var Misc = _interopRequireWildcard(require("./misc"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var outOfFocusTimeouts = [];
 
@@ -7656,12 +7802,12 @@ function show() {
   }, 1000));
 }
 
-},{"./misc":26,"@babel/runtime/helpers/interopRequireWildcard":61}],30:[function(require,module,exports){
+},{"./misc":26,"@babel/runtime/helpers/typeof":70}],30:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -7682,6 +7828,10 @@ var TestLogic = _interopRequireWildcard(require("./test-logic"));
 var TestUI = _interopRequireWildcard(require("./test-ui"));
 
 var _config = _interopRequireDefault(require("./config"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var settings = null;
 exports.settings = settings;
@@ -7713,6 +7863,7 @@ function _init() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            $("#paceCaret").addClass("hidden");
             mode2 = "";
 
             if (_config["default"].mode === "time") {
@@ -7730,14 +7881,14 @@ function _init() {
             }
 
             if (!(wpm < 1 || wpm == false || wpm == undefined || Number.isNaN(wpm))) {
-              _context.next = 6;
+              _context.next = 7;
               break;
             }
 
             exports.settings = settings = null;
             return _context.abrupt("return");
 
-          case 6:
+          case 7:
             characters = wpm * 5;
             cps = characters / 60; //characters per step
 
@@ -7756,7 +7907,7 @@ function _init() {
             resetCaretPosition();
             TestUI.updateModesNotice();
 
-          case 12:
+          case 13:
           case "end":
             return _context.stop();
         }
@@ -7905,7 +8056,7 @@ function start() {
   update(performance.now() + settings.spc * 1000);
 }
 
-},{"./config":6,"./test-logic":43,"./test-ui":46,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],31:[function(require,module,exports){
+},{"./config":6,"./test-logic":44,"./test-ui":47,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7927,7 +8078,7 @@ function show() {
 },{}],32:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -7945,6 +8096,10 @@ var UpdateConfig = _interopRequireWildcard(require("./config"));
 var CustomText = _interopRequireWildcard(require("./custom-text"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var before = {
   mode: null,
@@ -7971,7 +8126,7 @@ function init() {
   });
   CustomText.setText(newCustomText);
   CustomText.setIsWordRandom(true);
-  CustomText.setWord(50);
+  CustomText.setWord(Object.keys(TestStats.missedWords).length * 5);
   TestLogic.restart();
   before.mode = mode;
   before.punctuation = punctuation;
@@ -7984,12 +8139,12 @@ function resetBefore() {
   before.numbers = null;
 }
 
-},{"./config":6,"./custom-text":10,"./notifications":28,"./test-logic":43,"./test-stats":44,"@babel/runtime/helpers/interopRequireWildcard":61}],33:[function(require,module,exports){
+},{"./config":6,"./custom-text":10,"./notifications":28,"./test-logic":44,"./test-stats":45,"@babel/runtime/helpers/typeof":70}],33:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8011,6 +8166,10 @@ var _config = _interopRequireDefault(require("./config"));
 var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var selectedId = 1;
 exports.selectedId = selectedId;
@@ -8194,10 +8353,10 @@ $("#quoteSearchPopup input").keypress(function (e) {
   }
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":43,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],34:[function(require,module,exports){
+},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":44,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],34:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
 
@@ -8210,6 +8369,10 @@ var Settings = _interopRequireWildcard(require("./settings"));
 var RouteController = _interopRequireWildcard(require("./route-controller"));
 
 var UI = _interopRequireWildcard(require("./ui"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 ManualRestart.set();
 Misc.migrateFromCookies();
@@ -8246,10 +8409,308 @@ $(document).ready(function () {
   Settings.settingsFillPromise.then(Settings.update);
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./route-controller":35,"./settings":37,"./ui":51,"@babel/runtime/helpers/interopRequireWildcard":61}],35:[function(require,module,exports){
+},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./route-controller":36,"./settings":38,"./ui":52,"@babel/runtime/helpers/typeof":70}],35:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.startReplayRecording = startReplayRecording;
+exports.stopReplayRecording = stopReplayRecording;
+exports.addReplayEvent = addReplayEvent;
+exports.replayGetWordsList = replayGetWordsList;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+/*
+TODO:
+  Export replay as video
+  Export replay as typing test file?
+    .ttr file extension (stands for typing test record)
+      Should just be json, but fields should be specified by some format
+        metadata field with rules, website source, mode, name of typist
+        data field should be a list of objects, like monkeytype replay uses
+        signature or verfication field should be able to check file validity with server
+    And add ability to upload file to watch replay
+*/
+var wordsList = [];
+var replayData = [];
+var replayStartTime = 0;
+var replayRecording = true;
+var wordPos = 0;
+var curPos = 0;
+var targetWordPos = 0;
+var targetCurPos = 0;
+var timeoutList = [];
+var toggleButton = document.getElementById("playpauseReplayButton").children[0];
+
+function replayGetWordsList(wordsListFromScript) {
+  wordsList = wordsListFromScript;
+}
+
+function initializeReplayPrompt() {
+  var replayWordsElement = document.getElementById("replayWords");
+  replayWordsElement.innerHTML = "";
+  var wordCount = 0;
+  replayData.forEach(function (item, i) {
+    //trim wordsList for timed tests
+    if (item.action === "backWord") {
+      wordCount--;
+    } else if (item.action === "submitCorrectWord" || item.action === "submitErrorWord") {
+      wordCount++;
+    }
+  });
+  wordsList.forEach(function (item, i) {
+    if (i > wordCount) return;
+    var x = document.createElement("div");
+    x.className = "word";
+
+    for (i = 0; i < item.length; i++) {
+      var letter = document.createElement("LETTER");
+      letter.innerHTML = item[i];
+      x.appendChild(letter);
+    }
+
+    replayWordsElement.appendChild(x);
+  });
+}
+
+function startReplayRecording() {
+  if (!$("#resultReplay").stop(true, true).hasClass("hidden")) {
+    //hide replay display if user left it open
+    toggleReplayDisplay();
+  }
+
+  replayData = [];
+  replayStartTime = performance.now();
+  replayRecording = true;
+  targetCurPos = 0;
+  targetWordPos = 0;
+}
+
+function stopReplayRecording() {
+  replayRecording = false;
+}
+
+function addReplayEvent(action) {
+  var letter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+  if (replayRecording === false) {
+    return;
+  }
+
+  var timeDelta = performance.now() - replayStartTime;
+
+  if (action === "incorrectLetter" || action === "correctLetter") {
+    replayData.push({
+      action: action,
+      letter: letter,
+      time: timeDelta
+    });
+  } else {
+    replayData.push({
+      action: action,
+      time: timeDelta
+    });
+  }
+}
+
+function pauseReplay() {
+  timeoutList.forEach(function (item, i) {
+    clearTimeout(item);
+  });
+  timeoutList = [];
+  targetCurPos = curPos;
+  targetWordPos = wordPos;
+  toggleButton.className = "fas fa-play";
+  toggleButton.parentNode.setAttribute("aria-label", "Resume replay");
+}
+
+function loadOldReplay() {
+  var startingIndex = 0;
+  curPos = 0;
+  wordPos = 0;
+  replayData.forEach(function (item, i) {
+    if (wordPos < targetWordPos || wordPos === targetWordPos && curPos < targetCurPos) {
+      //quickly display everything up to the target
+      handleDisplayLogic(item);
+      startingIndex = i + 1;
+    }
+  });
+  return startingIndex;
+}
+
+function playReplay() {
+  curPos = 0;
+  wordPos = 0;
+  toggleButton.className = "fas fa-pause";
+  toggleButton.parentNode.setAttribute("aria-label", "Pause replay");
+  initializeReplayPrompt();
+  var startingIndex = loadOldReplay();
+  var lastTime = replayData[startingIndex].time;
+  replayData.forEach(function (item, i) {
+    if (i < startingIndex) return;
+    timeoutList.push(setTimeout(function () {
+      handleDisplayLogic(item);
+    }, item.time - lastTime));
+  });
+  timeoutList.push(setTimeout(function () {
+    //after the replay has finished, this will run
+    targetCurPos = 0;
+    targetWordPos = 0;
+    toggleButton.className = "fas fa-play";
+    toggleButton.parentNode.setAttribute("aria-label", "Start replay");
+  }, replayData[replayData.length - 1].time - lastTime));
+}
+
+function handleDisplayLogic(item) {
+  var activeWord = document.getElementById("replayWords").children[wordPos];
+
+  if (item.action === "correctLetter") {
+    activeWord.children[curPos].classList.add("correct");
+    curPos++;
+  } else if (item.action === "incorrectLetter") {
+    var myElement;
+
+    if (curPos >= activeWord.children.length) {
+      //if letter is an extra
+      myElement = document.createElement("letter");
+      myElement.classList.add("extra");
+      myElement.innerHTML = item.letter;
+      activeWord.appendChild(myElement);
+    }
+
+    myElement = activeWord.children[curPos];
+    myElement.classList.add("incorrect");
+    curPos++;
+  } else if (item.action === "deleteLetter") {
+    var _myElement = activeWord.children[curPos - 1];
+
+    if (_myElement.classList.contains("extra")) {
+      _myElement.remove();
+    } else {
+      _myElement.className = "";
+    }
+
+    curPos--;
+  } else if (item.action === "submitCorrectWord") {
+    wordPos++;
+    curPos = 0;
+  } else if (item.action === "submitErrorWord") {
+    activeWord.classList.add("error");
+    wordPos++;
+    curPos = 0;
+  } else if (item.action === "clearWord") {
+    var promptWord = document.createElement("div");
+    var wordArr = wordsList[wordPos].split("");
+    wordArr.forEach(function (letter, i) {
+      promptWord.innerHTML += "<letter>".concat(letter, "</letter>");
+    });
+    activeWord.innerHTML = promptWord.innerHTML;
+    curPos = 0;
+  } else if (item.action === "backWord") {
+    wordPos--;
+    activeWord = document.getElementById("replayWords").children[wordPos];
+    curPos = activeWord.children.length;
+
+    while (activeWord.children[curPos - 1].className === "") {
+      curPos--;
+    }
+
+    activeWord.classList.remove("error");
+  }
+}
+
+function toggleReplayDisplay() {
+  if ($("#resultReplay").stop(true, true).hasClass("hidden")) {
+    initializeReplayPrompt();
+    loadOldReplay(); //show
+
+    if (!$("#watchReplayButton").hasClass("loaded")) {
+      $("#words").html("<div class=\"preloader\"><i class=\"fas fa-fw fa-spin fa-circle-notch\"></i></div>");
+      $("#resultReplay").removeClass("hidden").css("display", "none").slideDown(250);
+    } else {
+      $("#resultReplay").removeClass("hidden").css("display", "none").slideDown(250);
+    }
+  } else {
+    //hide
+    if (toggleButton.parentNode.getAttribute("aria-label") != "Start replay") {
+      pauseReplay();
+    }
+
+    $("#resultReplay").slideUp(250, function () {
+      $("#resultReplay").addClass("hidden");
+    });
+  }
+}
+
+$(".pageTest #playpauseReplayButton").click( /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(event) {
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (toggleButton.className === "fas fa-play") {
+              playReplay();
+            } else if (toggleButton.className === "fas fa-pause") {
+              pauseReplay();
+            }
+
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}());
+$("#replayWords").click(function (event) {
+  //allows user to click on the place they want to start their replay at
+  pauseReplay();
+  var replayWords = document.querySelector("#replayWords");
+  var range;
+  var textNode;
+
+  if (document.caretPositionFromPoint) {
+    // standard
+    range = document.caretPositionFromPoint(event.pageX, event.pageY);
+    textNode = range.offsetNode;
+  } else if (document.caretRangeFromPoint) {
+    // WebKit
+    range = document.caretRangeFromPoint(event.pageX, event.pageY);
+    textNode = range.startContainer;
+  }
+
+  var words = (0, _toConsumableArray2["default"])(replayWords.children);
+  targetWordPos = words.indexOf(textNode.parentNode.parentNode);
+  var letters = (0, _toConsumableArray2["default"])(words[targetWordPos].children);
+  targetCurPos = letters.indexOf(textNode.parentNode);
+  initializeReplayPrompt();
+  loadOldReplay();
+});
+$(document).on("keypress", "#watchReplayButton", function (event) {
+  if (event.keyCode == 13) {
+    toggleReplayDisplay();
+  }
+});
+$(document.body).on("click", "#watchReplayButton", function () {
+  toggleReplayDisplay();
+});
+
+},{"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/regenerator":72}],36:[function(require,module,exports){
+"use strict";
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8259,6 +8720,10 @@ exports.handleInitialPageClasses = handleInitialPageClasses;
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
 var UI = _interopRequireWildcard(require("./ui"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var mappedRoutes = {
   "": "pageTest",
@@ -8298,7 +8763,7 @@ $(window).on("popstate", function (e) {
   }
 });
 
-},{"./funbox":14,"./ui":51,"@babel/runtime/helpers/interopRequireWildcard":61}],36:[function(require,module,exports){
+},{"./funbox":14,"./ui":52,"@babel/runtime/helpers/typeof":70}],37:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8388,12 +8853,12 @@ var SettingsGroup = /*#__PURE__*/function () {
 
 exports["default"] = SettingsGroup;
 
-},{"./config":6,"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/toConsumableArray":64}],37:[function(require,module,exports){
+},{"./config":6,"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69}],38:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8427,6 +8892,10 @@ var Funbox = _interopRequireWildcard(require("./funbox"));
 var SimplePopups = _interopRequireWildcard(require("./simple-popups"));
 
 var ThemePicker = _interopRequireWildcard(require("./theme-picker"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var groups = {};
 exports.groups = groups;
@@ -8551,7 +9020,10 @@ function _initGroups() {
             });
             groups.alwaysShowDecimalPlaces = new _settingsGroup["default"]("alwaysShowDecimalPlaces", UpdateConfig.setAlwaysShowDecimalPlaces);
             groups.alwaysShowCPM = new _settingsGroup["default"]("alwaysShowCPM", UpdateConfig.setAlwaysShowCPM);
-            groups.customBackgroundSize = new _settingsGroup["default"]("customBackgroundSize", UpdateConfig.setCustomBackgroundSize);
+            groups.customBackgroundSize = new _settingsGroup["default"]("customBackgroundSize", UpdateConfig.setCustomBackgroundSize); // groups.customLayoutfluid = new SettingsGroup(
+            //   "customLayoutfluid",
+            //   UpdateConfig.setCustomLayoutfluid
+            // );
 
           case 53:
           case "end":
@@ -8628,8 +9100,9 @@ function _fillSettingsPage() {
               }).appendTo(fontsEl);
             });
             $(".pageSettings .section.customBackgroundSize input").val(UpdateConfig["default"].customBackground);
+            $(".pageSettings .section.customLayoutfluid input").val(UpdateConfig["default"].customLayoutfluid.replace(/#/g, " "));
 
-          case 22:
+          case 23:
           case "end":
             return _context2.stop();
         }
@@ -8762,8 +9235,18 @@ $(".pageSettings .section.customBackgroundSize .inputAndButton input").keypress(
     UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
   }
 });
+$(".pageSettings .section.customLayoutfluid .inputAndSave .save").on("click", function (e) {
+  UpdateConfig.setCustomLayoutfluid($(".pageSettings .section.customLayoutfluid .inputAndSave input").val());
+  Notifications.add("Custom layoutfluid saved", 1);
+});
+$(".pageSettings .section.customLayoutfluid .inputAndSave .input").keypress(function (e) {
+  if (e.keyCode == 13) {
+    UpdateConfig.setCustomLayoutfluid($(".pageSettings .section.customLayoutfluid .inputAndSave input").val());
+    Notifications.add("Custom layoutfluid saved", 1);
+  }
+});
 
-},{"./config":6,"./funbox":14,"./language-picker":19,"./layouts":21,"./loader":24,"./misc":26,"./notifications":28,"./settings-group":36,"./simple-popups":39,"./sound":40,"./theme-picker":49,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],38:[function(require,module,exports){
+},{"./config":6,"./funbox":14,"./language-picker":19,"./layouts":21,"./loader":24,"./misc":26,"./notifications":28,"./settings-group":37,"./simple-popups":40,"./sound":41,"./theme-picker":50,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],39:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8810,12 +9293,12 @@ function isUsingOppositeShift(_char) {
   }
 }
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8831,6 +9314,10 @@ var Loader = _interopRequireWildcard(require("./loader"));
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var list = {};
 exports.list = list;
@@ -8960,7 +9447,7 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
 }, function () {});
 
-},{"./loader":24,"./notifications":28,"./settings":37,"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],40:[function(require,module,exports){
+},{"./loader":24,"./notifications":28,"./settings":38,"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],41:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8974,59 +9461,59 @@ exports.playError = playError;
 
 var _config = _interopRequireDefault(require("./config"));
 
-var errorSound = new Audio("../sound/error.wav");
+var errorSound = new Audio("/sound/error.wav");
 var clickSounds = null;
 
 function init() {
   if (clickSounds !== null) return;
   clickSounds = {
     1: [{
-      sounds: [new Audio("../sound/click1/click1_1.wav"), new Audio("../sound/click1/click1_1.wav")],
+      sounds: [new Audio("/sound/click1/click1_1.wav"), new Audio("/sound/click1/click1_1.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click1/click1_2.wav"), new Audio("../sound/click1/click1_2.wav")],
+      sounds: [new Audio("/sound/click1/click1_2.wav"), new Audio("/sound/click1/click1_2.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click1/click1_3.wav"), new Audio("../sound/click1/click1_3.wav")],
+      sounds: [new Audio("/sound/click1/click1_3.wav"), new Audio("/sound/click1/click1_3.wav")],
       counter: 0
     }],
     2: [{
-      sounds: [new Audio("../sound/click2/click2_1.wav"), new Audio("../sound/click2/click2_1.wav")],
+      sounds: [new Audio("/sound/click2/click2_1.wav"), new Audio("/sound/click2/click2_1.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click2/click2_2.wav"), new Audio("../sound/click2/click2_2.wav")],
+      sounds: [new Audio("/sound/click2/click2_2.wav"), new Audio("/sound/click2/click2_2.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click2/click2_3.wav"), new Audio("../sound/click2/click2_3.wav")],
+      sounds: [new Audio("/sound/click2/click2_3.wav"), new Audio("/sound/click2/click2_3.wav")],
       counter: 0
     }],
     3: [{
-      sounds: [new Audio("../sound/click3/click3_1.wav"), new Audio("../sound/click3/click3_1.wav")],
+      sounds: [new Audio("/sound/click3/click3_1.wav"), new Audio("/sound/click3/click3_1.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click3/click3_2.wav"), new Audio("../sound/click3/click3_2.wav")],
+      sounds: [new Audio("/sound/click3/click3_2.wav"), new Audio("/sound/click3/click3_2.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click3/click3_3.wav"), new Audio("../sound/click3/click3_3.wav")],
+      sounds: [new Audio("/sound/click3/click3_3.wav"), new Audio("/sound/click3/click3_3.wav")],
       counter: 0
     }],
     4: [{
-      sounds: [new Audio("../sound/click4/click4_1.wav"), new Audio("../sound/click4/click4_11.wav")],
+      sounds: [new Audio("/sound/click4/click4_1.wav"), new Audio("/sound/click4/click4_11.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_2.wav"), new Audio("../sound/click4/click4_22.wav")],
+      sounds: [new Audio("/sound/click4/click4_2.wav"), new Audio("/sound/click4/click4_22.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_3.wav"), new Audio("../sound/click4/click4_33.wav")],
+      sounds: [new Audio("/sound/click4/click4_3.wav"), new Audio("/sound/click4/click4_33.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_4.wav"), new Audio("../sound/click4/click4_44.wav")],
+      sounds: [new Audio("/sound/click4/click4_4.wav"), new Audio("/sound/click4/click4_44.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_5.wav"), new Audio("../sound/click4/click4_55.wav")],
+      sounds: [new Audio("/sound/click4/click4_5.wav"), new Audio("/sound/click4/click4_55.wav")],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_6.wav"), new Audio("../sound/click4/click4_66.wav")],
+      sounds: [new Audio("/sound/click4/click4_6.wav"), new Audio("/sound/click4/click4_66.wav")],
       counter: 0
     }]
   };
@@ -9049,14 +9536,18 @@ function playError() {
   errorSound.play();
 }
 
-},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":60}],41:[function(require,module,exports){
+},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":64}],42:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 var Commandline = _interopRequireWildcard(require("./commandline"));
 
 var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 $(document.body).on("click", "#supportMeButton", function () {
   $("#supportMeWrapper").css("opacity", 0).removeClass("hidden").animate({
@@ -9078,10 +9569,10 @@ $(document.body).on("click", "#supportMeWrapper a.button", function () {
   });
 });
 
-},{"./commandline":5,"./commandline-lists":4,"@babel/runtime/helpers/interopRequireWildcard":61}],42:[function(require,module,exports){
+},{"./commandline":5,"./commandline-lists":4,"@babel/runtime/helpers/typeof":70}],43:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9102,6 +9593,10 @@ var TestLogic = _interopRequireWildcard(require("./test-logic"));
 var QuoteSearchPopup = _interopRequireWildcard(require("./quote-search-popup"));
 
 var CustomTextPopup = _interopRequireWildcard(require("./custom-text-popup"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 // export function show() {
 //   $("#top .config").removeClass("hidden").css("opacity", 1);
@@ -9182,12 +9677,12 @@ $(document).on("click", "#top .config .mode .text-button", function (e) {
   TestLogic.restart();
 });
 
-},{"./config":6,"./custom-test-duration-popup":8,"./custom-text-popup":9,"./custom-word-amount-popup":12,"./manual-restart-tracker":25,"./quote-search-popup":33,"./test-logic":43,"@babel/runtime/helpers/interopRequireWildcard":61}],43:[function(require,module,exports){
+},{"./config":6,"./custom-test-duration-popup":8,"./custom-text-popup":9,"./custom-word-amount-popup":12,"./manual-restart-tracker":25,"./quote-search-popup":33,"./test-logic":44,"@babel/runtime/helpers/typeof":70}],44:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9208,11 +9703,17 @@ exports.finish = finish;
 exports.fail = fail;
 exports.bailout = exports.randomQuote = exports.hasTab = exports.isRepeated = exports.currentWordIndex = exports.corrected = exports.input = exports.words = exports.active = exports.notSignedInLastResult = void 0;
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -9268,6 +9769,16 @@ var OutOfFocus = _interopRequireWildcard(require("./out-of-focus"));
 
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
+var Replay = _interopRequireWildcard(require("./replay.js"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2["default"])(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
 var notSignedInLastResult = null;
 exports.notSignedInLastResult = notSignedInLastResult;
 
@@ -9275,15 +9786,15 @@ function setNotSignedInUid(uid) {
   notSignedInLastResult.uid = uid;
 }
 
-var Words = /*#__PURE__*/function () {
-  function Words() {
-    (0, _classCallCheck2["default"])(this, Words);
+var WordList = /*#__PURE__*/function () {
+  function WordList() {
+    (0, _classCallCheck2["default"])(this, WordList);
     this.list = [];
     this.length = 0;
     this.currentIndex = 0;
   }
 
-  (0, _createClass2["default"])(Words, [{
+  (0, _createClass2["default"])(WordList, [{
     key: "get",
     value: function get(i) {
       if (i === undefined) {
@@ -9331,50 +9842,27 @@ var Words = /*#__PURE__*/function () {
       this.currentIndex++;
     }
   }]);
-  return Words;
+  return WordList;
 }();
 
-var Input = /*#__PURE__*/function () {
-  function Input() {
-    (0, _classCallCheck2["default"])(this, Input);
-    this.current = "";
+var InputWordList = /*#__PURE__*/function () {
+  function InputWordList() {
+    (0, _classCallCheck2["default"])(this, InputWordList);
     this.history = [];
+    this.currentWord = "";
   }
 
-  (0, _createClass2["default"])(Input, [{
+  (0, _createClass2["default"])(InputWordList, [{
     key: "reset",
     value: function reset() {
-      this.current = "";
       this.history = [];
-    }
-  }, {
-    key: "resetHistory",
-    value: function resetHistory() {
-      this.history = [];
-    }
-  }, {
-    key: "setCurrent",
-    value: function setCurrent(val) {
-      this.current = val;
-      this.length = this.current.length;
-    }
-  }, {
-    key: "appendCurrent",
-    value: function appendCurrent(val) {
-      this.current += val;
-      this.length = this.current.length;
-    }
-  }, {
-    key: "resetCurrent",
-    value: function resetCurrent() {
-      this.current = "";
+      this.currentWord = "";
     }
   }, {
     key: "pushHistory",
     value: function pushHistory() {
-      this.history.push(this.current);
-      this.historyLength = this.history.length;
-      this.resetCurrent();
+      this.history.push(this.currentWord);
+      this.currentWord = "";
     }
   }, {
     key: "popHistory",
@@ -9382,74 +9870,53 @@ var Input = /*#__PURE__*/function () {
       return this.history.pop();
     }
   }, {
+    key: "getLastChar",
+    value: function getLastChar() {
+      return this.currentWord[this.currentWord.length];
+    }
+  }, {
+    key: "dropLastChar",
+    value: function dropLastChar() {
+      this.currentWord = this.currentWord.slice(0, -1);
+    }
+  }, {
     key: "getHistory",
     value: function getHistory(i) {
       return this.history[i];
     }
   }]);
-  return Input;
+  return InputWordList;
 }();
 
-var Corrected = /*#__PURE__*/function () {
-  function Corrected() {
-    (0, _classCallCheck2["default"])(this, Corrected);
-    this.current = "";
-    this.history = [];
+var InputWordListBound = /*#__PURE__*/function (_InputWordList) {
+  (0, _inherits2["default"])(InputWordListBound, _InputWordList);
+
+  var _super = _createSuper(InputWordListBound);
+
+  function InputWordListBound() {
+    (0, _classCallCheck2["default"])(this, InputWordListBound);
+    return _super.apply(this, arguments);
   }
 
-  (0, _createClass2["default"])(Corrected, [{
-    key: "setCurrent",
-    value: function setCurrent(val) {
-      this.current = val;
-    }
-  }, {
-    key: "appendCurrent",
-    value: function appendCurrent(val) {
-      this.current += val;
-    }
-  }, {
-    key: "resetCurrent",
-    value: function resetCurrent() {
-      this.current = "";
-    }
-  }, {
-    key: "resetHistory",
-    value: function resetHistory() {
-      this.history = [];
-    }
-  }, {
-    key: "reset",
-    value: function reset() {
-      this.resetCurrent();
-      this.resetHistory();
-    }
-  }, {
-    key: "getHistory",
-    value: function getHistory(i) {
-      return this.history[i];
-    }
-  }, {
-    key: "popHistory",
-    value: function popHistory() {
-      return this.history.pop();
-    }
-  }, {
-    key: "pushHistory",
-    value: function pushHistory() {
-      this.history.push(this.current);
-      this.current = "";
+  (0, _createClass2["default"])(InputWordListBound, [{
+    key: "currentWord",
+    get: function get() {
+      return $("#wordsInput").val().normalize();
+    },
+    set: function set(val) {
+      $("#wordsInput").val(val.normalize());
     }
   }]);
-  return Corrected;
-}();
+  return InputWordListBound;
+}(InputWordList);
 
 var active = false;
 exports.active = active;
-var words = new Words();
+var words = new WordList();
 exports.words = words;
-var input = new Input();
+var input = new InputWordListBound();
 exports.input = input;
-var corrected = new Corrected();
+var corrected = new InputWordList();
 exports.corrected = corrected;
 var currentWordIndex = 0;
 exports.currentWordIndex = currentWordIndex;
@@ -9485,66 +9952,75 @@ function setRandomQuote(rq) {
 function punctuateWord(previousWord, currentWord, index, maxindex) {
   var word = currentWord;
 
-  if ((index == 0 || Misc.getLastChar(previousWord) == "." || Misc.getLastChar(previousWord) == "?" || Misc.getLastChar(previousWord) == "!") && UpdateConfig["default"].language.split("_")[0] != "code") {
-    //always capitalise the first word or if there was a dot unless using a code alphabet
-    word = Misc.capitalizeFirstLetter(word);
-  } else if (Math.random() < 0.1 && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != "," && index != maxindex - 2 || index == maxindex - 1) {
-    var rand = Math.random();
-
-    if (rand <= 0.8) {
-      word += ".";
-    } else if (rand > 0.8 && rand < 0.9) {
-      if (UpdateConfig["default"].language.split("_")[0] == "french") {
-        word = "?";
-      } else {
-        word += "?";
-      }
-    } else {
-      if (UpdateConfig["default"].language.split("_")[0] == "french") {
-        word = "!";
-      } else {
-        word += "!";
+  if (Funbox.funboxSaved === "58008") {
+    if (currentWord.length > 3) {
+      if (Math.random() < 0.75) {
+        var special = ["/", "*", "-", "+"][Math.floor(Math.random() * 4)];
+        word = Misc.setCharAt(word, Math.floor(word.length / 2), special);
       }
     }
-  } else if (Math.random() < 0.01 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
-    word = "\"".concat(word, "\"");
-  } else if (Math.random() < 0.011 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
-    word = "'".concat(word, "'");
-  } else if (Math.random() < 0.012 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != ".") {
-    if (UpdateConfig["default"].language.split("_")[0] == "code") {
-      var r = Math.random();
+  } else {
+    if ((index == 0 || Misc.getLastChar(previousWord) == "." || Misc.getLastChar(previousWord) == "?" || Misc.getLastChar(previousWord) == "!") && UpdateConfig["default"].language.split("_")[0] != "code") {
+      //always capitalise the first word or if there was a dot unless using a code alphabet
+      word = Misc.capitalizeFirstLetter(word);
+    } else if (Math.random() < 0.1 && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != "," && index != maxindex - 2 || index == maxindex - 1) {
+      var rand = Math.random();
 
-      if (r < 0.25) {
+      if (rand <= 0.8) {
+        word += ".";
+      } else if (rand > 0.8 && rand < 0.9) {
+        if (UpdateConfig["default"].language.split("_")[0] == "french") {
+          word = "?";
+        } else {
+          word += "?";
+        }
+      } else {
+        if (UpdateConfig["default"].language.split("_")[0] == "french") {
+          word = "!";
+        } else {
+          word += "!";
+        }
+      }
+    } else if (Math.random() < 0.01 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
+      word = "\"".concat(word, "\"");
+    } else if (Math.random() < 0.011 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
+      word = "'".concat(word, "'");
+    } else if (Math.random() < 0.012 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != ".") {
+      if (UpdateConfig["default"].language.split("_")[0] == "code") {
+        var r = Math.random();
+
+        if (r < 0.25) {
+          word = "(".concat(word, ")");
+        } else if (r < 0.5) {
+          word = "{".concat(word, "}");
+        } else if (r < 0.75) {
+          word = "[".concat(word, "]");
+        } else {
+          word = "<".concat(word, ">");
+        }
+      } else {
         word = "(".concat(word, ")");
-      } else if (r < 0.5) {
-        word = "{".concat(word, "}");
-      } else if (r < 0.75) {
-        word = "[".concat(word, "]");
-      } else {
-        word = "<".concat(word, ">");
       }
-    } else {
-      word = "(".concat(word, ")");
+    } else if (Math.random() < 0.013) {
+      if (UpdateConfig["default"].language.split("_")[0] == "french") {
+        word = ":";
+      } else {
+        word += ":";
+      }
+    } else if (Math.random() < 0.014 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && previousWord != "-") {
+      word = "-";
+    } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";") {
+      if (UpdateConfig["default"].language.split("_")[0] == "french") {
+        word = ";";
+      } else {
+        word += ";";
+      }
+    } else if (Math.random() < 0.2 && Misc.getLastChar(previousWord) != ",") {
+      word += ",";
+    } else if (Math.random() < 0.25 && UpdateConfig["default"].language.split("_")[0] == "code") {
+      var specials = ["{", "}", "[", "]", "(", ")", ";", "=", "%", "/"];
+      word = specials[Math.floor(Math.random() * 10)];
     }
-  } else if (Math.random() < 0.013) {
-    if (UpdateConfig["default"].language.split("_")[0] == "french") {
-      word = ":";
-    } else {
-      word += ":";
-    }
-  } else if (Math.random() < 0.014 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && previousWord != "-") {
-    word = "-";
-  } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";") {
-    if (UpdateConfig["default"].language.split("_")[0] == "french") {
-      word = ";";
-    } else {
-      word += ";";
-    }
-  } else if (Math.random() < 0.2 && Misc.getLastChar(previousWord) != ",") {
-    word += ",";
-  } else if (Math.random() < 0.25 && UpdateConfig["default"].language.split("_")[0] == "code") {
-    var specials = ["{", "}", "[", "]", "(", ")", ";", "=", "%", "/"];
-    word = specials[Math.floor(Math.random() * 10)];
   }
 
   return word;
@@ -9556,6 +10032,8 @@ function startTest() {
   }
 
   setActive(true);
+  Replay.startReplayRecording();
+  Replay.replayGetWordsList(words.list);
   TestStats.resetKeypressTimings();
   TimerProgress.restart();
   TimerProgress.show();
@@ -9593,14 +10071,14 @@ function _init() {
         switch (_context2.prev = _context2.next) {
           case 0:
             setActive(false);
+            Replay.stopReplayRecording();
             words.reset();
             TestUI.setCurrentWordElementIndex(0); // accuracy = {
             //   correct: 0,
             //   incorrect: 0,
             // };
 
-            input.resetHistory();
-            input.resetCurrent();
+            input.reset();
             _context2.next = 7;
             return Misc.getLanguage(UpdateConfig["default"].language);
 
@@ -9669,7 +10147,7 @@ function _init() {
               wordsBound = 100;
             }
 
-            if (Funbox.active === "plus_one") {
+            if (Funbox.funboxSaved === "plus_one") {
               wordsBound = 2;
             }
 
@@ -9709,7 +10187,7 @@ function _init() {
               } else if (Funbox.funboxSaved === "gibberish") {
                 randomWord = Misc.getGibberish();
               } else if (Funbox.funboxSaved === "58008") {
-                UpdateConfig.setPunctuation(false, true);
+                // UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getNumbers(7);
               } else if (Funbox.funboxSaved === "specials") {
@@ -9857,8 +10335,12 @@ function _init() {
 
             if (language.ligatures) {
               $("#words").addClass("withLigatures");
+              $("#resultWordsHistory .words").addClass("withLigatures");
+              $("#resultReplay .words").addClass("withLigatures");
             } else {
               $("#words").removeClass("withLigatures");
+              $("#resultWordsHistory .words").removeClass("withLigatures");
+              $("#resultReplay .words").removeClass("withLigatures");
             } // if (Config.mode == "zen") {
             //   // Creating an empty active word element for zen mode
             //   $("#words").append('<div class="word active"></div>');
@@ -9925,8 +10407,15 @@ function restart() {
     var testSeconds = TestStats.calculateTestSeconds(performance.now());
     var afkseconds = TestStats.calculateAfkSeconds(); // incompleteTestSeconds += ;
 
-    TestStats.incrementIncompleteSeconds(testSeconds - afkseconds);
-    TestStats.incrementRestartCount(); // restartCount++;
+    var tt = testSeconds - afkseconds;
+    console.log("increasing incomplete time by ".concat(tt, "s (").concat(testSeconds, "s - ").concat(afkseconds, "s afk)"));
+    TestStats.incrementIncompleteSeconds(tt);
+    TestStats.incrementRestartCount();
+
+    if (tt > 600) {
+      Notifications.add("Your time typing just increased by ".concat(Misc.roundTo2(tt / 60), " minutes. If you think this is incorrect please contact Miodec and dont refresh the website."), -1);
+    } // restartCount++;
+
   }
 
   if (UpdateConfig["default"].mode == "zen") {
@@ -9949,6 +10438,7 @@ function restart() {
   Focus.set(false);
   Caret.hide();
   setActive(false);
+  Replay.stopReplayRecording();
   LiveWpm.hide();
   LiveAcc.hide();
   TimerProgress.hide();
@@ -9972,7 +10462,7 @@ function restart() {
 
   if (TestUI.resultVisible) {
     if (UpdateConfig["default"].randomTheme !== "off" && !UI.pageTransition && !UpdateConfig["default"].customTheme) {
-      ThemeController.randomiseTheme();
+      ThemeController.randomizeTheme();
     }
   }
 
@@ -10005,19 +10495,20 @@ function restart() {
 
           case 8:
             PaceCaret.init(nosave);
-            _context.next = 18;
+            _context.next = 19;
             break;
 
           case 11:
             setRepeated(true);
             setActive(false);
+            Replay.stopReplayRecording();
             words.resetCurrentIndex();
             input.reset();
             PaceCaret.init();
             TestUI.showWords();
             Funbox.activate();
 
-          case 18:
+          case 19:
             if (UpdateConfig["default"].mode === "quote") {
               setRepeated(false);
             }
@@ -10063,9 +10554,9 @@ function restart() {
             $(".pageTest #premidSecondsLeft").text(UpdateConfig["default"].time);
 
             if (Funbox.active === "layoutfluid") {
-              UpdateConfig.setLayout("qwerty");
-              UpdateConfig.setKeymapLayout("qwerty");
-              Keymap.highlightKey(words.getCurrent().substring(input.current.length, input.current.length + 1).toString().toUpperCase());
+              UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
+              UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
+              Keymap.highlightKey(words.getCurrent().substring(input.currentWord.length, input.currentWord.length + 1).toString().toUpperCase());
             }
 
             $("#result").addClass("hidden");
@@ -10087,7 +10578,7 @@ function restart() {
               // console.log(TestStats.restartCount);
             });
 
-          case 35:
+          case 36:
           case "end":
             return _context.stop();
         }
@@ -10117,15 +10608,15 @@ function calculateWpmAndRaw() {
     chars += input.getHistory(i).length;
   }
 
-  if (words.getCurrent() == input.current) {
-    correctWordChars += input.current.length;
+  if (words.getCurrent() == input.currentWord) {
+    correctWordChars += input.currentWord.length;
   }
 
   if (Funbox.active === "nospace") {
     spaces = 0;
   }
 
-  chars += input.current.length;
+  chars += input.currentWord.length;
   var testSeconds = TestStats.calculateTestSeconds(performance.now());
   var wpm = Math.round((correctWordChars + spaces) * (60 / testSeconds) / 5);
   var raw = Math.round((chars + spaces) * (60 / testSeconds) / 5);
@@ -10200,9 +10691,10 @@ function finish() {
   var difficultyFailed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!active) return;
 
-  if (UpdateConfig["default"].mode == "zen" && input.current.length != 0) {
+  if (UpdateConfig["default"].mode == "zen" && input.currentWord.length != 0) {
     input.pushHistory();
     corrected.pushHistory();
+    Replay.replayGetWordsList(input.history);
   }
 
   TestStats.recordKeypressSpacing();
@@ -10210,6 +10702,7 @@ function finish() {
   TestUI.setResultVisible(true);
   TestStats.setEnd(performance.now());
   setActive(false);
+  Replay.stopReplayRecording();
   Focus.set(false);
   Caret.hide();
   LiveWpm.hide();
@@ -10218,6 +10711,15 @@ function finish() {
   TimerProgress.hide();
   Keymap.hide();
   Funbox.activate("none", null);
+
+  if (Misc.roundTo2(TestStats.calculateTestSeconds()) % 1 != 0 && UpdateConfig["default"].mode !== "time") {
+    TestStats.setLastSecondNotRound();
+  }
+
+  if (UpdateConfig["default"].mode == "zen" || bailout) {
+    TestStats.removeAfkData();
+  }
+
   var stats = TestStats.calculateStats();
 
   if (stats === undefined) {
@@ -10568,11 +11070,9 @@ function finish() {
   }
 
   $("#result .stats .testType .bottom").html(testType);
-  var otherText = "";
-
-  if (UpdateConfig["default"].layout !== "default") {
-    otherText += "<br>" + UpdateConfig["default"].layout;
-  }
+  var otherText = ""; // if (Config.layout !== "default") {
+  //   otherText += "<br>" + Config.layout;
+  // }
 
   if (difficultyFailed) {
     otherText += "<br>failed";
@@ -10616,6 +11116,12 @@ function finish() {
   }
 
   if (Funbox.funboxSaved !== "none") {
+    var content = Funbox.funboxSaved;
+
+    if (Funbox.funboxSaved === "layoutfluid") {
+      content += " " + UpdateConfig["default"].customLayoutfluid.replace(/#/g, " ");
+    }
+
     ChartController.result.options.annotation.annotations.push({
       enabled: false,
       type: "line",
@@ -10636,7 +11142,7 @@ function finish() {
         cornerRadius: 3,
         position: "left",
         enabled: true,
-        content: "".concat(Funbox.funboxSaved),
+        content: "".concat(content),
         yAdjust: -11
       }
     });
@@ -10663,7 +11169,6 @@ function fail() {
   input.pushHistory();
   corrected.pushHistory();
   TestStats.pushKeypressesToHistory();
-  TestStats.setLastSecondNotRound();
   finish(true);
   var testSeconds = TestStats.calculateTestSeconds(performance.now());
   var afkseconds = TestStats.calculateAfkSeconds();
@@ -10671,12 +11176,12 @@ function fail() {
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":2,"./chart-controller":3,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./live-acc":22,"./live-wpm":23,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./pb-crown":31,"./practise-missed":32,"./quote-search-popup":33,"./shift-tracker":38,"./test-stats":44,"./test-timer":45,"./test-ui":46,"./theme-colors":47,"./theme-controller":48,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/helpers/toConsumableArray":64,"@babel/runtime/regenerator":67}],44:[function(require,module,exports){
+},{"./caret":2,"./chart-controller":3,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./live-acc":22,"./live-wpm":23,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./pb-crown":31,"./practise-missed":32,"./quote-search-popup":33,"./replay.js":35,"./shift-tracker":39,"./test-stats":45,"./test-timer":46,"./test-ui":47,"./theme-colors":48,"./theme-controller":49,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/getPrototypeOf":62,"@babel/runtime/helpers/inherits":63,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/possibleConstructorReturn":67,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -10689,6 +11194,7 @@ exports.setInvalid = setInvalid;
 exports.calculateTestSeconds = calculateTestSeconds;
 exports.setEnd = setEnd;
 exports.setStart = setStart;
+exports.updateLastKeypress = updateLastKeypress;
 exports.pushToWpmHistory = pushToWpmHistory;
 exports.pushToRawHistory = pushToRawHistory;
 exports.incrementKeypressCount = incrementKeypressCount;
@@ -10708,8 +11214,9 @@ exports.setKeypressSpacing = setKeypressSpacing;
 exports.recordKeypressSpacing = recordKeypressSpacing;
 exports.resetKeypressTimings = resetKeypressTimings;
 exports.pushMissedWord = pushMissedWord;
+exports.removeAfkData = removeAfkData;
 exports.calculateStats = calculateStats;
-exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exports.accuracy = exports.missedWords = exports.lastSecondNotRound = exports.currentKeypress = exports.keypressPerSecond = exports.rawHistory = exports.wpmHistory = exports.end = exports.start = exports.invalid = void 0;
+exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exports.accuracy = exports.missedWords = exports.lastSecondNotRound = exports.lastKeypress = exports.currentKeypress = exports.keypressPerSecond = exports.rawHistory = exports.wpmHistory = exports.end = exports.start = exports.invalid = void 0;
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
@@ -10720,6 +11227,10 @@ var Funbox = _interopRequireWildcard(require("./funbox"));
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var TestStats = _interopRequireWildcard(require("./test-stats"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var invalid = false;
 exports.invalid = invalid;
@@ -10737,13 +11248,15 @@ var currentKeypress = {
   mod: 0,
   errors: 0,
   words: []
-}; // export let errorsPerSecond = [];
+};
+exports.currentKeypress = currentKeypress;
+var lastKeypress; // export let errorsPerSecond = [];
 // export let currentError = {
 //   count: 0,
 //   words: [],
 // };
 
-exports.currentKeypress = currentKeypress;
+exports.lastKeypress = lastKeypress;
 var lastSecondNotRound = false;
 exports.lastSecondNotRound = lastSecondNotRound;
 var missedWords = {};
@@ -10825,7 +11338,13 @@ function setInvalid() {
 
 function calculateTestSeconds(now) {
   if (now === undefined) {
-    return (end - start) / 1000;
+    var endAfkSeconds = (end - lastKeypress) / 1000;
+
+    if ((_config["default"].mode == "zen" || TestLogic.bailout) && endAfkSeconds < 7) {
+      return (lastKeypress - start) / 1000;
+    } else {
+      return (end - start) / 1000;
+    }
   } else {
     return (now - start) / 1000;
   }
@@ -10837,6 +11356,10 @@ function setEnd(e) {
 
 function setStart(s) {
   exports.start = start = s;
+}
+
+function updateLastKeypress() {
+  exports.lastKeypress = lastKeypress = performance.now();
 }
 
 function pushToWpmHistory(word) {
@@ -10946,6 +11469,14 @@ function pushMissedWord(word) {
   } else {
     missedWords[word]++;
   }
+}
+
+function removeAfkData() {
+  var testSeconds = calculateTestSeconds();
+  keypressPerSecond.splice(testSeconds);
+  keypressTimings.duration.array.splice(testSeconds);
+  keypressTimings.spacing.array.splice(testSeconds);
+  wpmHistory.splice(testSeconds);
 }
 
 function countChars() {
@@ -11063,10 +11594,10 @@ function calculateStats() {
   };
 }
 
-},{"./config":6,"./funbox":14,"./misc":26,"./test-logic":43,"./test-stats":44,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],45:[function(require,module,exports){
+},{"./config":6,"./funbox":14,"./misc":26,"./test-logic":44,"./test-stats":45,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],46:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -11099,6 +11630,10 @@ var Caret = _interopRequireWildcard(require("./caret"));
 
 var Keymap = _interopRequireWildcard(require("./keymap"));
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 var time = 0;
 exports.time = time;
 var timer = null;
@@ -11128,19 +11663,22 @@ function start() {
       var acc = Misc.roundTo2(TestStats.calculateAccuracy());
 
       if (Funbox.active === "layoutfluid" && UpdateConfig["default"].mode === "time") {
-        var layouts = ["qwerty", "dvorak", "colemak"];
+        var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
+        console.log(UpdateConfig["default"].customLayoutfluid);
+        console.log(layouts);
+        var numLayouts = layouts.length;
         var index = 0;
-        index = Math.floor(time / (UpdateConfig["default"].time / 3));
+        index = Math.floor(time / (UpdateConfig["default"].time / numLayouts));
 
-        if (time == Math.floor(UpdateConfig["default"].time / 3) - 3 || time == UpdateConfig["default"].time / 3 * 2 - 3) {
+        if (time == Math.floor(UpdateConfig["default"].time / numLayouts) - 3 || time == UpdateConfig["default"].time / numLayouts * 2 - 3) {
           Notifications.add("3", 0, 1);
         }
 
-        if (time == Math.floor(UpdateConfig["default"].time / 3) - 2 || time == Math.floor(UpdateConfig["default"].time / 3) * 2 - 2) {
+        if (time == Math.floor(UpdateConfig["default"].time / numLayouts) - 2 || time == Math.floor(UpdateConfig["default"].time / numLayouts) * 2 - 2) {
           Notifications.add("2", 0, 1);
         }
 
-        if (time == Math.floor(UpdateConfig["default"].time / 3) - 1 || time == Math.floor(UpdateConfig["default"].time / 3) * 2 - 1) {
+        if (time == Math.floor(UpdateConfig["default"].time / numLayouts) - 1 || time == Math.floor(UpdateConfig["default"].time / numLayouts) * 2 - 1) {
           Notifications.add("1", 0, 1);
         }
 
@@ -11150,7 +11688,7 @@ function start() {
 
         UpdateConfig.setLayout(layouts[index]);
         UpdateConfig.setKeymapLayout(layouts[index]);
-        Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+        Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.currentWord.length, TestLogic.input.currentWord.length + 1).toString().toUpperCase());
       }
 
       TestStats.pushKeypressesToHistory();
@@ -11178,12 +11716,12 @@ function start() {
   })(TestStats.start + stepIntervalMS);
 }
 
-},{"./caret":2,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./live-wpm":23,"./misc":26,"./monkey":27,"./notifications":28,"./test-logic":43,"./test-stats":44,"./timer-progress":50,"@babel/runtime/helpers/interopRequireWildcard":61}],46:[function(require,module,exports){
+},{"./caret":2,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./live-wpm":23,"./misc":26,"./monkey":27,"./notifications":28,"./test-logic":44,"./test-stats":45,"./timer-progress":51,"@babel/runtime/helpers/typeof":70}],47:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -11241,6 +11779,12 @@ var OutOfFocus = _interopRequireWildcard(require("./out-of-focus"));
 var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
 
 var PractiseMissed = _interopRequireWildcard(require("./practise-missed"));
+
+var Misc = _interopRequireWildcard(require("./misc"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var currentWordElementIndex = 0;
 exports.currentWordElementIndex = currentWordElementIndex;
@@ -11374,7 +11918,7 @@ function showWords() {
     $(document.querySelector(".word")).remove();
   } else {
     if (UpdateConfig["default"].keymapMode === "next") {
-      Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+      Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.currentWord.length, TestLogic.input.currentWord.length + 1).toString().toUpperCase());
     }
   }
 
@@ -11475,9 +12019,9 @@ function screenshot() {
   }, 3000);
 }
 
-function updateWordElement(showError) {
-  // if (Config.mode == "zen") return;
-  var input = TestLogic.input.current;
+function updateWordElement() {
+  var showError = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : !UpdateConfig["default"].blindMode;
+  var input = TestLogic.input.currentWord;
   var wordAtIndex;
   var currentWord;
   wordAtIndex = document.querySelector("#words .word.active");
@@ -11486,105 +12030,113 @@ function updateWordElement(showError) {
   var newlineafter = false;
 
   if (UpdateConfig["default"].mode === "zen") {
-    for (var i = 0; i < TestLogic.input.current.length; i++) {
-      if (TestLogic.input.current[i] === "\t") {
+    for (var i = 0; i < TestLogic.input.currentWord.length; i++) {
+      if (TestLogic.input.currentWord[i] === "\t") {
         ret += "<letter class='tabChar correct'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
-      } else if (TestLogic.input.current[i] === "\n") {
+      } else if (TestLogic.input.currentWord[i] === "\n") {
         newlineafter = true;
         ret += "<letter class='nlChar correct'><i class=\"fas fa-angle-down\"></i></letter>";
       } else {
-        ret += "<letter class=\"correct\">" + TestLogic.input.current[i] + "</letter>";
+        ret += "<letter class=\"correct\">".concat(TestLogic.input.currentWord[i], "</letter>");
+      }
+    }
+  } else if (UpdateConfig["default"].highlightMode == "word") {
+    //only for word highlight
+    var correctSoFar = false;
+    var lastInputDead = false;
+
+    if (Misc.testDiacritic(input[input.length - 1])) {
+      lastInputDead = true;
+
+      if (currentWord.slice(0, input.length - 1) === input.slice(0, -1)) {
+        correctSoFar = true;
+      }
+    } else {
+      if (currentWord.slice(0, input.length) === input) {
+        correctSoFar = true;
+      }
+    }
+
+    var classString = correctSoFar ? "correct" : "incorrect";
+
+    if (UpdateConfig["default"].blindMode) {
+      classString = "correct";
+    } //show letters in the current word
+
+
+    for (var _i = 0; _i < currentWord.length; _i++) {
+      if (lastInputDead && _i == input.length - 1) {
+        ret += "<letter class=\"".concat(classString, " dead\">") + currentWord[_i] + "</letter>";
+      } else {
+        ret += "<letter class=\"".concat(classString, "\">") + currentWord[_i] + "</letter>";
+      }
+    } //show any extra letters if hide extra letters is disabled
+
+
+    if (TestLogic.input.currentWord.length > currentWord.length && !UpdateConfig["default"].hideExtraLetters) {
+      for (var _i2 = currentWord.length; _i2 < TestLogic.input.currentWord.length; _i2++) {
+        var letter = TestLogic.input.currentWord[_i2];
+
+        if (letter == " ") {
+          letter = "_";
+        }
+
+        ret += "<letter class=\"".concat(classString, "\">").concat(letter, "</letter>");
       }
     }
   } else {
-    if (UpdateConfig["default"].highlightMode == "word") {
-      //only for word highlight
-      var correctSoFar = false;
+    for (var _i3 = 0; _i3 < input.length; _i3++) {
+      var charCorrect = currentWord[_i3] == input[_i3];
+      var correctClass = "correct";
 
-      if (currentWord.slice(0, input.length) == input) {
-        // this is when input so far is correct
-        correctSoFar = true;
+      if (UpdateConfig["default"].highlightMode == "off") {
+        correctClass = "";
       }
 
-      var classString = correctSoFar ? "correct" : "incorrect";
+      var currentLetter = currentWord[_i3];
+      var tabChar = "";
+      var nlChar = "";
 
-      if (UpdateConfig["default"].blindMode) {
-        classString = "correct";
-      } //show letters in the current word
+      if (currentLetter === "\t") {
+        tabChar = "tabChar";
+        currentLetter = "<i class=\"fas fa-long-arrow-alt-right\"></i>";
+      } else if (currentLetter === "\n") {
+        nlChar = "nlChar";
+        currentLetter = "<i class=\"fas fa-angle-down\"></i>";
+      }
 
+      if (charCorrect) {
+        ret += "<letter class=\"".concat(correctClass, " ").concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
+      } else if (currentLetter !== undefined && _i3 == input.length - 1 && Misc.testDiacritic(input[_i3])) {
+        // TODO: handle multiple consecutive diacritics as dead keys too, since they can be stacked
+        ret += "<letter class=\"dead\">".concat(currentLetter, "</letter>");
+      } else if (!showError) {
+        if (currentLetter !== undefined) {
+          ret += "<letter class=\"".concat(correctClass, " ").concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
+        }
+      } else if (currentLetter === undefined) {
+        if (!UpdateConfig["default"].hideExtraLetters) {
+          var _letter = input[_i3];
 
-      for (var _i = 0; _i < currentWord.length; _i++) {
-        ret += "<letter class=\"".concat(classString, "\">") + currentWord[_i] + "</letter>";
-      } //show any extra letters if hide extra letters is disabled
-
-
-      if (TestLogic.input.current.length > currentWord.length && !UpdateConfig["default"].hideExtraLetters) {
-        for (var _i2 = currentWord.length; _i2 < TestLogic.input.current.length; _i2++) {
-          var letter = TestLogic.input.current[_i2];
-
-          if (letter == " ") {
-            letter = "_";
+          if (_letter == " " || _letter == "\t" || _letter == "\n") {
+            _letter = "_";
           }
 
-          ret += "<letter class=\"".concat(classString, "\">").concat(letter, "</letter>");
+          ret += "<letter class=\"incorrect extra ".concat(tabChar).concat(nlChar, "\">").concat(_letter, "</letter>");
         }
+      } else {
+        ret += "<letter class=\"incorrect ".concat(tabChar).concat(nlChar, "\">") + currentLetter + (UpdateConfig["default"].indicateTypos ? "<hint>".concat(input[_i3], "</hint>") : "") + "</letter>";
       }
-    } else {
-      for (var _i3 = 0; _i3 < input.length; _i3++) {
-        var charCorrect = void 0;
+    }
 
-        if (currentWord[_i3] == input[_i3]) {
-          charCorrect = true;
+    if (input.length < currentWord.length) {
+      for (var _i4 = input.length; _i4 < currentWord.length; _i4++) {
+        if (currentWord[_i4] === "\t") {
+          ret += "<letter class='tabChar'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
+        } else if (currentWord[_i4] === "\n") {
+          ret += "<letter class='nlChar'><i class=\"fas fa-angle-down\"></i></letter>";
         } else {
-          charCorrect = false;
-        }
-
-        var currentLetter = currentWord[_i3];
-        var tabChar = "";
-        var nlChar = "";
-
-        if (currentLetter === "\t") {
-          tabChar = "tabChar";
-          currentLetter = "<i class=\"fas fa-long-arrow-alt-right\"></i>";
-        } else if (currentLetter === "\n") {
-          nlChar = "nlChar";
-          currentLetter = "<i class=\"fas fa-angle-down\"></i>";
-        }
-
-        if (charCorrect) {
-          ret += "<letter class=\"correct ".concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
-        } else {
-          if (!showError) {
-            if (currentLetter !== undefined) {
-              ret += "<letter class=\"correct ".concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
-            }
-          } else {
-            if (currentLetter == undefined) {
-              if (!UpdateConfig["default"].hideExtraLetters) {
-                var _letter = input[_i3];
-
-                if (_letter == " " || _letter == "\t" || _letter == "\n") {
-                  _letter = "_";
-                }
-
-                ret += "<letter class=\"incorrect extra ".concat(tabChar).concat(nlChar, "\">").concat(_letter, "</letter>");
-              }
-            } else {
-              ret += "<letter class=\"incorrect ".concat(tabChar).concat(nlChar, "\">") + currentLetter + (UpdateConfig["default"].indicateTypos ? "<hint>".concat(input[_i3], "</hint>") : "") + "</letter>";
-            }
-          }
-        }
-      }
-
-      if (input.length < currentWord.length) {
-        for (var _i4 = input.length; _i4 < currentWord.length; _i4++) {
-          if (currentWord[_i4] === "\t") {
-            ret += "<letter class='tabChar'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
-          } else if (currentWord[_i4] === "\n") {
-            ret += "<letter class='nlChar'><i class=\"fas fa-angle-down\"></i></letter>";
-          } else {
-            ret += "<letter>" + currentWord[_i4] + "</letter>";
-          }
+          ret += "<letter>" + currentWord[_i4] + "</letter>";
         }
       }
     }
@@ -11733,10 +12285,14 @@ function updateModesNotice() {
 
 function arrangeCharactersRightToLeft() {
   $("#words").addClass("rightToLeftTest");
+  $("#resultWordsHistory .words").addClass("rightToLeftTest");
+  $("#resultReplay .words").addClass("rightToLeftTest");
 }
 
 function arrangeCharactersLeftToRight() {
   $("#words").removeClass("rightToLeftTest");
+  $("#resultWordsHistory .words").removeClass("rightToLeftTest");
+  $("#resultReplay .words").removeClass("rightToLeftTest");
 }
 
 function loadWordsHistory() {
@@ -11847,7 +12403,7 @@ function _loadWordsHistory() {
                     wordEl += "<letter class=\"corrected ".concat(extraCorrected, "\">") + input[_c] + "</letter>";
                   }
                 } else {
-                  if (input[_c] === TestLogic.input.current) {
+                  if (input[_c] === TestLogic.input.currentWord) {
                     wordEl += "<letter class='correct ".concat(extraCorrected, "'>") + word[_c] + "</letter>";
                   } else if (input[_c] === undefined) {
                     wordEl += "<letter>" + word[_c] + "</letter>";
@@ -11985,7 +12541,7 @@ $("#wpmChart").on("mouseleave", function (e) {
 $(document).on("mouseenter", "#resultWordsHistory .words .word", function (e) {
   if (resultVisible) {
     var input = $(e.currentTarget).attr("input");
-    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">".concat(input.replace(/\t/g, "_").replace(/\n/g, "_"), "</div>"));
+    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "</div>"));
   }
 });
 $(document).on("click", "#testModesNotice .text-button", function (event) {
@@ -12005,7 +12561,7 @@ $("#wordsInput").on("focus", function () {
     OutOfFocus.hide();
   }
 
-  Caret.show(TestLogic.input.current);
+  Caret.show(TestLogic.input.currentWord);
 });
 $("#wordsInput").on("focusout", function () {
   if (!resultVisible && UpdateConfig["default"].showOutOfFocusWarning) {
@@ -12081,7 +12637,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./manual-restart-tracker":25,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./practise-missed":32,"./test-logic":43,"./theme-colors":47,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],47:[function(require,module,exports){
+},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./practise-missed":32,"./test-logic":44,"./theme-colors":48,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],48:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12121,12 +12677,12 @@ function update() {
   exports.colorfulErrorExtra = colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
 }
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12135,11 +12691,11 @@ exports.apply = apply;
 exports.preview = preview;
 exports.set = set;
 exports.clearPreview = clearPreview;
-exports.randomiseTheme = randomiseTheme;
+exports.randomizeTheme = randomizeTheme;
 exports.clearRandom = clearRandom;
 exports.applyCustomBackground = applyCustomBackground;
 exports.applyCustomBackgroundSize = applyCustomBackgroundSize;
-exports.colorVars = void 0;
+exports.colorVars = exports.randomTheme = void 0;
 
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
@@ -12153,8 +12709,15 @@ var _config = _interopRequireDefault(require("./config"));
 
 var UI = _interopRequireWildcard(require("./ui"));
 
+var _tinycolor = _interopRequireDefault(require("tinycolor2"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 var isPreviewingTheme = false;
 var randomTheme = null;
+exports.randomTheme = randomTheme;
 var colorVars = ["--bg-color", "--main-color", "--caret-color", "--sub-color", "--text-color", "--error-color", "--error-extra-color", "--colorful-error-color", "--colorful-error-extra-color"];
 exports.colorVars = colorVars;
 
@@ -12240,19 +12803,40 @@ function set(themeName) {
 function clearPreview() {
   if (isPreviewingTheme) {
     isPreviewingTheme = false;
-    apply(_config["default"].theme);
+
+    if (_config["default"].customTheme) {
+      apply("custom");
+    } else {
+      apply(_config["default"].theme);
+    }
   }
 }
 
-function randomiseTheme() {
+function randomizeTheme() {
   var randomList;
   Misc.getThemesList().then(function (themes) {
-    randomList = themes.map(function (t) {
-      return t.name;
-    });
-    if (_config["default"].randomTheme === "fav" && _config["default"].favThemes.length > 0) randomList = _config["default"].favThemes;
+    if (_config["default"].randomTheme === "fav" && _config["default"].favThemes.length > 0) {
+      randomList = _config["default"].favThemes;
+    } else if (_config["default"].randomTheme === "light") {
+      randomList = themes.filter(function (t) {
+        return (0, _tinycolor["default"])(t.bgColor).isLight();
+      }).map(function (t) {
+        return t.name;
+      });
+    } else if (_config["default"].randomTheme === "dark") {
+      randomList = themes.filter(function (t) {
+        return (0, _tinycolor["default"])(t.bgColor).isDark();
+      }).map(function (t) {
+        return t.name;
+      });
+    } else {
+      randomList = themes.map(function (t) {
+        return t.name;
+      });
+    }
+
     var previousTheme = randomTheme;
-    randomTheme = randomList[Math.floor(Math.random() * randomList.length)];
+    exports.randomTheme = randomTheme = randomList[Math.floor(Math.random() * randomList.length)];
     preview(randomTheme);
 
     if (previousTheme != randomTheme) {
@@ -12262,7 +12846,7 @@ function randomiseTheme() {
 }
 
 function clearRandom() {
-  randomTheme = null;
+  exports.randomTheme = randomTheme = null;
 }
 
 function applyCustomBackground() {
@@ -12290,10 +12874,10 @@ function applyCustomBackgroundSize() {
   }
 }
 
-},{"./chart-controller":3,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":47,"./ui":51,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],49:[function(require,module,exports){
+},{"./chart-controller":3,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":48,"./ui":52,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"tinycolor2":84}],50:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12318,6 +12902,10 @@ var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 var ChartController = _interopRequireWildcard(require("./chart-controller"));
 
 var UI = _interopRequireWildcard(require("./ui"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function updateActiveButton() {
   $(".pageSettings .section.themes .theme").removeClass("active");
@@ -12512,12 +13100,12 @@ $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   }, 250);
 });
 
-},{"./chart-controller":3,"./commandline-lists":4,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":47,"./theme-controller":48,"./ui":51,"@babel/runtime/helpers/interopRequireWildcard":61}],50:[function(require,module,exports){
+},{"./chart-controller":3,"./commandline-lists":4,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":48,"./theme-controller":49,"./ui":52,"@babel/runtime/helpers/typeof":70}],51:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12536,6 +13124,10 @@ var Misc = _interopRequireWildcard(require("./misc"));
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var TestTimer = _interopRequireWildcard(require("./test-timer"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   var op = _config["default"].showTimerProgress ? _config["default"].timerOpacity : 0;
@@ -12688,10 +13280,10 @@ function update() {
   }
 }
 
-},{"./config":6,"./custom-text":10,"./misc":26,"./test-logic":43,"./test-timer":45,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61}],51:[function(require,module,exports){
+},{"./config":6,"./custom-text":10,"./misc":26,"./test-logic":44,"./test-timer":46,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],52:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12727,6 +13319,10 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var Settings = _interopRequireWildcard(require("./settings"));
 
 var Funbox = _interopRequireWildcard(require("./funbox"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var pageTransition = false;
 exports.pageTransition = pageTransition;
@@ -12894,7 +13490,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./notifications":28,"./settings":37,"./test-config":42,"./test-logic":43,"./test-stats":44,"./test-ui":46,"@babel/runtime/helpers/interopRequireWildcard":61}],52:[function(require,module,exports){
+},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./notifications":28,"./settings":38,"./test-config":43,"./test-logic":44,"./test-stats":45,"./test-ui":47,"@babel/runtime/helpers/typeof":70}],53:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
@@ -12910,12 +13506,12 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
   });
 });
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12927,6 +13523,10 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var initialised = false;
 
@@ -13062,12 +13662,12 @@ function _filter() {
   return _filter.apply(this, arguments);
 }
 
-function apply() {
+function apply(_x2) {
   return _apply.apply(this, arguments);
 }
 
 function _apply() {
-  _apply = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+  _apply = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(set) {
     var language, filteredWords, customText;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
@@ -13079,14 +13679,13 @@ function _apply() {
 
           case 3:
             filteredWords = _context4.sent;
-            customText = "";
-            filteredWords.forEach(function (word) {
-              customText += word + " ";
+            customText = filteredWords.join(" ");
+            $("#customTextPopup textarea").val(function (index, val) {
+              return (set ? "" : val + " ") + customText;
             });
             hide();
-            $("#customTextPopup textarea").val(customText);
 
-          case 8:
+          case 7:
           case "end":
             return _context4.stop();
         }
@@ -13108,13 +13707,14 @@ $("#wordFilterPopupWrapper .button").mousedown(function (e) {
   $("#wordFilterPopupWrapper .loadingIndicator").removeClass("hidden");
   $("#wordFilterPopupWrapper .button").addClass("hidden");
   setTimeout(function () {
-    apply();
-    $("#wordFilterPopupWrapper .loadingIndicator").addClass("hidden");
-    $("#wordFilterPopupWrapper .button").removeClass("hidden");
+    apply($(e.target).is("#set")).then(function () {
+      $("#wordFilterPopupWrapper .loadingIndicator").addClass("hidden");
+      $("#wordFilterPopupWrapper .button").removeClass("hidden");
+    });
   }, 1);
 });
 
-},{"./misc":26,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/interopRequireWildcard":61,"@babel/runtime/regenerator":67}],54:[function(require,module,exports){
+},{"./misc":26,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],55:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -13126,15 +13726,28 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-},{}],55:[function(require,module,exports){
-var arrayLikeToArray = require("./arrayLikeToArray");
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],56:[function(require,module,exports){
+var arrayLikeToArray = require("./arrayLikeToArray.js");
 
 function _arrayWithoutHoles(arr) {
   if (Array.isArray(arr)) return arrayLikeToArray(arr);
 }
 
 module.exports = _arrayWithoutHoles;
-},{"./arrayLikeToArray":54}],56:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./arrayLikeToArray.js":55}],57:[function(require,module,exports){
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+module.exports = _assertThisInitialized;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],58:[function(require,module,exports){
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -13172,7 +13785,8 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
-},{}],57:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],59:[function(require,module,exports){
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -13180,7 +13794,8 @@ function _classCallCheck(instance, Constructor) {
 }
 
 module.exports = _classCallCheck;
-},{}],58:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],60:[function(require,module,exports){
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -13198,7 +13813,8 @@ function _createClass(Constructor, protoProps, staticProps) {
 }
 
 module.exports = _createClass;
-},{}],59:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],61:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -13215,7 +13831,39 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
-},{}],60:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],62:[function(require,module,exports){
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  return _getPrototypeOf(o);
+}
+
+module.exports = _getPrototypeOf;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],63:[function(require,module,exports){
+var setPrototypeOf = require("./setPrototypeOf.js");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+
+module.exports = _inherits;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./setPrototypeOf.js":68}],64:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -13223,89 +13871,65 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-},{}],61:[function(require,module,exports){
-var _typeof = require("@babel/runtime/helpers/typeof");
-
-function _getRequireWildcardCache() {
-  if (typeof WeakMap !== "function") return null;
-  var cache = new WeakMap();
-
-  _getRequireWildcardCache = function _getRequireWildcardCache() {
-    return cache;
-  };
-
-  return cache;
-}
-
-function _interopRequireWildcard(obj) {
-  if (obj && obj.__esModule) {
-    return obj;
-  }
-
-  if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") {
-    return {
-      "default": obj
-    };
-  }
-
-  var cache = _getRequireWildcardCache();
-
-  if (cache && cache.has(obj)) {
-    return cache.get(obj);
-  }
-
-  var newObj = {};
-  var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
-
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
-
-      if (desc && (desc.get || desc.set)) {
-        Object.defineProperty(newObj, key, desc);
-      } else {
-        newObj[key] = obj[key];
-      }
-    }
-  }
-
-  newObj["default"] = obj;
-
-  if (cache) {
-    cache.set(obj, newObj);
-  }
-
-  return newObj;
-}
-
-module.exports = _interopRequireWildcard;
-},{"@babel/runtime/helpers/typeof":65}],62:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],65:[function(require,module,exports){
 function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 module.exports = _iterableToArray;
-},{}],63:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],66:[function(require,module,exports){
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableSpread;
-},{}],64:[function(require,module,exports){
-var arrayWithoutHoles = require("./arrayWithoutHoles");
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],67:[function(require,module,exports){
+var _typeof = require("@babel/runtime/helpers/typeof")["default"];
 
-var iterableToArray = require("./iterableToArray");
+var assertThisInitialized = require("./assertThisInitialized.js");
 
-var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  }
 
-var nonIterableSpread = require("./nonIterableSpread");
+  return assertThisInitialized(self);
+}
+
+module.exports = _possibleConstructorReturn;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./assertThisInitialized.js":57,"@babel/runtime/helpers/typeof":70}],68:[function(require,module,exports){
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],69:[function(require,module,exports){
+var arrayWithoutHoles = require("./arrayWithoutHoles.js");
+
+var iterableToArray = require("./iterableToArray.js");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray.js");
+
+var nonIterableSpread = require("./nonIterableSpread.js");
 
 function _toConsumableArray(arr) {
   return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
 }
 
 module.exports = _toConsumableArray;
-},{"./arrayWithoutHoles":55,"./iterableToArray":62,"./nonIterableSpread":63,"./unsupportedIterableToArray":66}],65:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./arrayWithoutHoles.js":56,"./iterableToArray.js":65,"./nonIterableSpread.js":66,"./unsupportedIterableToArray.js":71}],70:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -13313,18 +13937,23 @@ function _typeof(obj) {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
     };
+
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _typeof = function _typeof(obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
+
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _typeof(obj);
 }
 
 module.exports = _typeof;
-},{}],66:[function(require,module,exports){
-var arrayLikeToArray = require("./arrayLikeToArray");
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{}],71:[function(require,module,exports){
+var arrayLikeToArray = require("./arrayLikeToArray.js");
 
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
@@ -13336,10 +13965,11 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":54}],67:[function(require,module,exports){
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+},{"./arrayLikeToArray.js":55}],72:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":78}],68:[function(require,module,exports){
+},{"regenerator-runtime":83}],73:[function(require,module,exports){
 /*!
  * Chart.js v2.9.4
  * https://www.chartjs.org
@@ -29513,7 +30143,7 @@ return src;
 
 })));
 
-},{"moment":77}],69:[function(require,module,exports){
+},{"moment":82}],74:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 
@@ -29641,7 +30271,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./events.js":71,"./helpers.js":72}],70:[function(require,module,exports){
+},{"./events.js":76,"./helpers.js":77}],75:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	
@@ -29666,7 +30296,7 @@ module.exports = function(Chart) {
 	return AnnotationElement;
 };
 
-},{}],71:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	var helpers = require('./helpers.js')(Chart);
@@ -29776,7 +30406,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./helpers.js":72}],72:[function(require,module,exports){
+},{"./helpers.js":77}],77:[function(require,module,exports){
 function noop() {}
 
 function elements(chartInstance) {
@@ -29963,7 +30593,7 @@ module.exports = function(Chart) {
 };
 
 
-},{}],73:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 // Get the chart variable
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
@@ -30012,7 +30642,7 @@ var annotationPlugin = require('./annotation.js')(Chart);
 module.exports = annotationPlugin;
 Chart.pluginService.register(annotationPlugin);
 
-},{"./annotation.js":69,"./element.js":70,"./types/box.js":74,"./types/line.js":75,"chart.js":68}],74:[function(require,module,exports){
+},{"./annotation.js":74,"./element.js":75,"./types/box.js":79,"./types/line.js":80,"chart.js":73}],79:[function(require,module,exports){
 // Box Annotation implementation
 module.exports = function(Chart) {
 	var helpers = require('../helpers.js')(Chart);
@@ -30160,7 +30790,7 @@ module.exports = function(Chart) {
 	return BoxAnnotation;
 };
 
-},{"../helpers.js":72}],75:[function(require,module,exports){
+},{"../helpers.js":77}],80:[function(require,module,exports){
 // Line Annotation implementation
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
@@ -30429,7 +31059,7 @@ module.exports = function(Chart) {
 	return LineAnnotation;
 };
 
-},{"../helpers.js":72}],76:[function(require,module,exports){
+},{"../helpers.js":77}],81:[function(require,module,exports){
 /*!
  * chartjs-plugin-trendline.js
  * Version: 0.2.2
@@ -30577,7 +31207,7 @@ try {
     module.exports = exports = pluginTrendlineLinear;
 } catch (e) {}
 
-},{}],77:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -36249,7 +36879,7 @@ try {
 
 })));
 
-},{}],78:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -36998,5 +37628,1202 @@ try {
   // problems, please detail your unique predicament in a GitHub issue.
   Function("r", "regeneratorRuntime = r")(runtime);
 }
+
+},{}],84:[function(require,module,exports){
+// TinyColor v1.4.2
+// https://github.com/bgrins/TinyColor
+// Brian Grinstead, MIT License
+
+(function(Math) {
+
+var trimLeft = /^\s+/,
+    trimRight = /\s+$/,
+    tinyCounter = 0,
+    mathRound = Math.round,
+    mathMin = Math.min,
+    mathMax = Math.max,
+    mathRandom = Math.random;
+
+function tinycolor (color, opts) {
+
+    color = (color) ? color : '';
+    opts = opts || { };
+
+    // If input is already a tinycolor, return itself
+    if (color instanceof tinycolor) {
+       return color;
+    }
+    // If we are called as a function, call using new instead
+    if (!(this instanceof tinycolor)) {
+        return new tinycolor(color, opts);
+    }
+
+    var rgb = inputToRGB(color);
+    this._originalInput = color,
+    this._r = rgb.r,
+    this._g = rgb.g,
+    this._b = rgb.b,
+    this._a = rgb.a,
+    this._roundA = mathRound(100*this._a) / 100,
+    this._format = opts.format || rgb.format;
+    this._gradientType = opts.gradientType;
+
+    // Don't let the range of [0,255] come back in [0,1].
+    // Potentially lose a little bit of precision here, but will fix issues where
+    // .5 gets interpreted as half of the total, instead of half of 1
+    // If it was supposed to be 128, this was already taken care of by `inputToRgb`
+    if (this._r < 1) { this._r = mathRound(this._r); }
+    if (this._g < 1) { this._g = mathRound(this._g); }
+    if (this._b < 1) { this._b = mathRound(this._b); }
+
+    this._ok = rgb.ok;
+    this._tc_id = tinyCounter++;
+}
+
+tinycolor.prototype = {
+    isDark: function() {
+        return this.getBrightness() < 128;
+    },
+    isLight: function() {
+        return !this.isDark();
+    },
+    isValid: function() {
+        return this._ok;
+    },
+    getOriginalInput: function() {
+      return this._originalInput;
+    },
+    getFormat: function() {
+        return this._format;
+    },
+    getAlpha: function() {
+        return this._a;
+    },
+    getBrightness: function() {
+        //http://www.w3.org/TR/AERT#color-contrast
+        var rgb = this.toRgb();
+        return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    },
+    getLuminance: function() {
+        //http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+        var rgb = this.toRgb();
+        var RsRGB, GsRGB, BsRGB, R, G, B;
+        RsRGB = rgb.r/255;
+        GsRGB = rgb.g/255;
+        BsRGB = rgb.b/255;
+
+        if (RsRGB <= 0.03928) {R = RsRGB / 12.92;} else {R = Math.pow(((RsRGB + 0.055) / 1.055), 2.4);}
+        if (GsRGB <= 0.03928) {G = GsRGB / 12.92;} else {G = Math.pow(((GsRGB + 0.055) / 1.055), 2.4);}
+        if (BsRGB <= 0.03928) {B = BsRGB / 12.92;} else {B = Math.pow(((BsRGB + 0.055) / 1.055), 2.4);}
+        return (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
+    },
+    setAlpha: function(value) {
+        this._a = boundAlpha(value);
+        this._roundA = mathRound(100*this._a) / 100;
+        return this;
+    },
+    toHsv: function() {
+        var hsv = rgbToHsv(this._r, this._g, this._b);
+        return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this._a };
+    },
+    toHsvString: function() {
+        var hsv = rgbToHsv(this._r, this._g, this._b);
+        var h = mathRound(hsv.h * 360), s = mathRound(hsv.s * 100), v = mathRound(hsv.v * 100);
+        return (this._a == 1) ?
+          "hsv("  + h + ", " + s + "%, " + v + "%)" :
+          "hsva(" + h + ", " + s + "%, " + v + "%, "+ this._roundA + ")";
+    },
+    toHsl: function() {
+        var hsl = rgbToHsl(this._r, this._g, this._b);
+        return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this._a };
+    },
+    toHslString: function() {
+        var hsl = rgbToHsl(this._r, this._g, this._b);
+        var h = mathRound(hsl.h * 360), s = mathRound(hsl.s * 100), l = mathRound(hsl.l * 100);
+        return (this._a == 1) ?
+          "hsl("  + h + ", " + s + "%, " + l + "%)" :
+          "hsla(" + h + ", " + s + "%, " + l + "%, "+ this._roundA + ")";
+    },
+    toHex: function(allow3Char) {
+        return rgbToHex(this._r, this._g, this._b, allow3Char);
+    },
+    toHexString: function(allow3Char) {
+        return '#' + this.toHex(allow3Char);
+    },
+    toHex8: function(allow4Char) {
+        return rgbaToHex(this._r, this._g, this._b, this._a, allow4Char);
+    },
+    toHex8String: function(allow4Char) {
+        return '#' + this.toHex8(allow4Char);
+    },
+    toRgb: function() {
+        return { r: mathRound(this._r), g: mathRound(this._g), b: mathRound(this._b), a: this._a };
+    },
+    toRgbString: function() {
+        return (this._a == 1) ?
+          "rgb("  + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ")" :
+          "rgba(" + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ", " + this._roundA + ")";
+    },
+    toPercentageRgb: function() {
+        return { r: mathRound(bound01(this._r, 255) * 100) + "%", g: mathRound(bound01(this._g, 255) * 100) + "%", b: mathRound(bound01(this._b, 255) * 100) + "%", a: this._a };
+    },
+    toPercentageRgbString: function() {
+        return (this._a == 1) ?
+          "rgb("  + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%)" :
+          "rgba(" + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%, " + this._roundA + ")";
+    },
+    toName: function() {
+        if (this._a === 0) {
+            return "transparent";
+        }
+
+        if (this._a < 1) {
+            return false;
+        }
+
+        return hexNames[rgbToHex(this._r, this._g, this._b, true)] || false;
+    },
+    toFilter: function(secondColor) {
+        var hex8String = '#' + rgbaToArgbHex(this._r, this._g, this._b, this._a);
+        var secondHex8String = hex8String;
+        var gradientType = this._gradientType ? "GradientType = 1, " : "";
+
+        if (secondColor) {
+            var s = tinycolor(secondColor);
+            secondHex8String = '#' + rgbaToArgbHex(s._r, s._g, s._b, s._a);
+        }
+
+        return "progid:DXImageTransform.Microsoft.gradient("+gradientType+"startColorstr="+hex8String+",endColorstr="+secondHex8String+")";
+    },
+    toString: function(format) {
+        var formatSet = !!format;
+        format = format || this._format;
+
+        var formattedString = false;
+        var hasAlpha = this._a < 1 && this._a >= 0;
+        var needsAlphaFormat = !formatSet && hasAlpha && (format === "hex" || format === "hex6" || format === "hex3" || format === "hex4" || format === "hex8" || format === "name");
+
+        if (needsAlphaFormat) {
+            // Special case for "transparent", all other non-alpha formats
+            // will return rgba when there is transparency.
+            if (format === "name" && this._a === 0) {
+                return this.toName();
+            }
+            return this.toRgbString();
+        }
+        if (format === "rgb") {
+            formattedString = this.toRgbString();
+        }
+        if (format === "prgb") {
+            formattedString = this.toPercentageRgbString();
+        }
+        if (format === "hex" || format === "hex6") {
+            formattedString = this.toHexString();
+        }
+        if (format === "hex3") {
+            formattedString = this.toHexString(true);
+        }
+        if (format === "hex4") {
+            formattedString = this.toHex8String(true);
+        }
+        if (format === "hex8") {
+            formattedString = this.toHex8String();
+        }
+        if (format === "name") {
+            formattedString = this.toName();
+        }
+        if (format === "hsl") {
+            formattedString = this.toHslString();
+        }
+        if (format === "hsv") {
+            formattedString = this.toHsvString();
+        }
+
+        return formattedString || this.toHexString();
+    },
+    clone: function() {
+        return tinycolor(this.toString());
+    },
+
+    _applyModification: function(fn, args) {
+        var color = fn.apply(null, [this].concat([].slice.call(args)));
+        this._r = color._r;
+        this._g = color._g;
+        this._b = color._b;
+        this.setAlpha(color._a);
+        return this;
+    },
+    lighten: function() {
+        return this._applyModification(lighten, arguments);
+    },
+    brighten: function() {
+        return this._applyModification(brighten, arguments);
+    },
+    darken: function() {
+        return this._applyModification(darken, arguments);
+    },
+    desaturate: function() {
+        return this._applyModification(desaturate, arguments);
+    },
+    saturate: function() {
+        return this._applyModification(saturate, arguments);
+    },
+    greyscale: function() {
+        return this._applyModification(greyscale, arguments);
+    },
+    spin: function() {
+        return this._applyModification(spin, arguments);
+    },
+
+    _applyCombination: function(fn, args) {
+        return fn.apply(null, [this].concat([].slice.call(args)));
+    },
+    analogous: function() {
+        return this._applyCombination(analogous, arguments);
+    },
+    complement: function() {
+        return this._applyCombination(complement, arguments);
+    },
+    monochromatic: function() {
+        return this._applyCombination(monochromatic, arguments);
+    },
+    splitcomplement: function() {
+        return this._applyCombination(splitcomplement, arguments);
+    },
+    triad: function() {
+        return this._applyCombination(triad, arguments);
+    },
+    tetrad: function() {
+        return this._applyCombination(tetrad, arguments);
+    }
+};
+
+// If input is an object, force 1 into "1.0" to handle ratios properly
+// String input requires "1.0" as input, so 1 will be treated as 1
+tinycolor.fromRatio = function(color, opts) {
+    if (typeof color == "object") {
+        var newColor = {};
+        for (var i in color) {
+            if (color.hasOwnProperty(i)) {
+                if (i === "a") {
+                    newColor[i] = color[i];
+                }
+                else {
+                    newColor[i] = convertToPercentage(color[i]);
+                }
+            }
+        }
+        color = newColor;
+    }
+
+    return tinycolor(color, opts);
+};
+
+// Given a string or object, convert that input to RGB
+// Possible string inputs:
+//
+//     "red"
+//     "#f00" or "f00"
+//     "#ff0000" or "ff0000"
+//     "#ff000000" or "ff000000"
+//     "rgb 255 0 0" or "rgb (255, 0, 0)"
+//     "rgb 1.0 0 0" or "rgb (1, 0, 0)"
+//     "rgba (255, 0, 0, 1)" or "rgba 255, 0, 0, 1"
+//     "rgba (1.0, 0, 0, 1)" or "rgba 1.0, 0, 0, 1"
+//     "hsl(0, 100%, 50%)" or "hsl 0 100% 50%"
+//     "hsla(0, 100%, 50%, 1)" or "hsla 0 100% 50%, 1"
+//     "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
+//
+function inputToRGB(color) {
+
+    var rgb = { r: 0, g: 0, b: 0 };
+    var a = 1;
+    var s = null;
+    var v = null;
+    var l = null;
+    var ok = false;
+    var format = false;
+
+    if (typeof color == "string") {
+        color = stringInputToObject(color);
+    }
+
+    if (typeof color == "object") {
+        if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
+            rgb = rgbToRgb(color.r, color.g, color.b);
+            ok = true;
+            format = String(color.r).substr(-1) === "%" ? "prgb" : "rgb";
+        }
+        else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
+            s = convertToPercentage(color.s);
+            v = convertToPercentage(color.v);
+            rgb = hsvToRgb(color.h, s, v);
+            ok = true;
+            format = "hsv";
+        }
+        else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
+            s = convertToPercentage(color.s);
+            l = convertToPercentage(color.l);
+            rgb = hslToRgb(color.h, s, l);
+            ok = true;
+            format = "hsl";
+        }
+
+        if (color.hasOwnProperty("a")) {
+            a = color.a;
+        }
+    }
+
+    a = boundAlpha(a);
+
+    return {
+        ok: ok,
+        format: color.format || format,
+        r: mathMin(255, mathMax(rgb.r, 0)),
+        g: mathMin(255, mathMax(rgb.g, 0)),
+        b: mathMin(255, mathMax(rgb.b, 0)),
+        a: a
+    };
+}
+
+
+// Conversion Functions
+// --------------------
+
+// `rgbToHsl`, `rgbToHsv`, `hslToRgb`, `hsvToRgb` modified from:
+// <http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript>
+
+// `rgbToRgb`
+// Handle bounds / percentage checking to conform to CSS color spec
+// <http://www.w3.org/TR/css3-color/>
+// *Assumes:* r, g, b in [0, 255] or [0, 1]
+// *Returns:* { r, g, b } in [0, 255]
+function rgbToRgb(r, g, b){
+    return {
+        r: bound01(r, 255) * 255,
+        g: bound01(g, 255) * 255,
+        b: bound01(b, 255) * 255
+    };
+}
+
+// `rgbToHsl`
+// Converts an RGB color value to HSL.
+// *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
+// *Returns:* { h, s, l } in [0,1]
+function rgbToHsl(r, g, b) {
+
+    r = bound01(r, 255);
+    g = bound01(g, 255);
+    b = bound01(b, 255);
+
+    var max = mathMax(r, g, b), min = mathMin(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min) {
+        h = s = 0; // achromatic
+    }
+    else {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+
+        h /= 6;
+    }
+
+    return { h: h, s: s, l: l };
+}
+
+// `hslToRgb`
+// Converts an HSL color value to RGB.
+// *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
+// *Returns:* { r, g, b } in the set [0, 255]
+function hslToRgb(h, s, l) {
+    var r, g, b;
+
+    h = bound01(h, 360);
+    s = bound01(s, 100);
+    l = bound01(l, 100);
+
+    function hue2rgb(p, q, t) {
+        if(t < 0) t += 1;
+        if(t > 1) t -= 1;
+        if(t < 1/6) return p + (q - p) * 6 * t;
+        if(t < 1/2) return q;
+        if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    }
+
+    if(s === 0) {
+        r = g = b = l; // achromatic
+    }
+    else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return { r: r * 255, g: g * 255, b: b * 255 };
+}
+
+// `rgbToHsv`
+// Converts an RGB color value to HSV
+// *Assumes:* r, g, and b are contained in the set [0, 255] or [0, 1]
+// *Returns:* { h, s, v } in [0,1]
+function rgbToHsv(r, g, b) {
+
+    r = bound01(r, 255);
+    g = bound01(g, 255);
+    b = bound01(b, 255);
+
+    var max = mathMax(r, g, b), min = mathMin(r, g, b);
+    var h, s, v = max;
+
+    var d = max - min;
+    s = max === 0 ? 0 : d / max;
+
+    if(max == min) {
+        h = 0; // achromatic
+    }
+    else {
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    return { h: h, s: s, v: v };
+}
+
+// `hsvToRgb`
+// Converts an HSV color value to RGB.
+// *Assumes:* h is contained in [0, 1] or [0, 360] and s and v are contained in [0, 1] or [0, 100]
+// *Returns:* { r, g, b } in the set [0, 255]
+ function hsvToRgb(h, s, v) {
+
+    h = bound01(h, 360) * 6;
+    s = bound01(s, 100);
+    v = bound01(v, 100);
+
+    var i = Math.floor(h),
+        f = h - i,
+        p = v * (1 - s),
+        q = v * (1 - f * s),
+        t = v * (1 - (1 - f) * s),
+        mod = i % 6,
+        r = [v, q, p, p, t, v][mod],
+        g = [t, v, v, q, p, p][mod],
+        b = [p, p, t, v, v, q][mod];
+
+    return { r: r * 255, g: g * 255, b: b * 255 };
+}
+
+// `rgbToHex`
+// Converts an RGB color to hex
+// Assumes r, g, and b are contained in the set [0, 255]
+// Returns a 3 or 6 character hex
+function rgbToHex(r, g, b, allow3Char) {
+
+    var hex = [
+        pad2(mathRound(r).toString(16)),
+        pad2(mathRound(g).toString(16)),
+        pad2(mathRound(b).toString(16))
+    ];
+
+    // Return a 3 character hex if possible
+    if (allow3Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1)) {
+        return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0);
+    }
+
+    return hex.join("");
+}
+
+// `rgbaToHex`
+// Converts an RGBA color plus alpha transparency to hex
+// Assumes r, g, b are contained in the set [0, 255] and
+// a in [0, 1]. Returns a 4 or 8 character rgba hex
+function rgbaToHex(r, g, b, a, allow4Char) {
+
+    var hex = [
+        pad2(mathRound(r).toString(16)),
+        pad2(mathRound(g).toString(16)),
+        pad2(mathRound(b).toString(16)),
+        pad2(convertDecimalToHex(a))
+    ];
+
+    // Return a 4 character hex if possible
+    if (allow4Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1) && hex[3].charAt(0) == hex[3].charAt(1)) {
+        return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0) + hex[3].charAt(0);
+    }
+
+    return hex.join("");
+}
+
+// `rgbaToArgbHex`
+// Converts an RGBA color to an ARGB Hex8 string
+// Rarely used, but required for "toFilter()"
+function rgbaToArgbHex(r, g, b, a) {
+
+    var hex = [
+        pad2(convertDecimalToHex(a)),
+        pad2(mathRound(r).toString(16)),
+        pad2(mathRound(g).toString(16)),
+        pad2(mathRound(b).toString(16))
+    ];
+
+    return hex.join("");
+}
+
+// `equals`
+// Can be called with any tinycolor input
+tinycolor.equals = function (color1, color2) {
+    if (!color1 || !color2) { return false; }
+    return tinycolor(color1).toRgbString() == tinycolor(color2).toRgbString();
+};
+
+tinycolor.random = function() {
+    return tinycolor.fromRatio({
+        r: mathRandom(),
+        g: mathRandom(),
+        b: mathRandom()
+    });
+};
+
+
+// Modification Functions
+// ----------------------
+// Thanks to less.js for some of the basics here
+// <https://github.com/cloudhead/less.js/blob/master/lib/less/functions.js>
+
+function desaturate(color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.s -= amount / 100;
+    hsl.s = clamp01(hsl.s);
+    return tinycolor(hsl);
+}
+
+function saturate(color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.s += amount / 100;
+    hsl.s = clamp01(hsl.s);
+    return tinycolor(hsl);
+}
+
+function greyscale(color) {
+    return tinycolor(color).desaturate(100);
+}
+
+function lighten (color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.l += amount / 100;
+    hsl.l = clamp01(hsl.l);
+    return tinycolor(hsl);
+}
+
+function brighten(color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var rgb = tinycolor(color).toRgb();
+    rgb.r = mathMax(0, mathMin(255, rgb.r - mathRound(255 * - (amount / 100))));
+    rgb.g = mathMax(0, mathMin(255, rgb.g - mathRound(255 * - (amount / 100))));
+    rgb.b = mathMax(0, mathMin(255, rgb.b - mathRound(255 * - (amount / 100))));
+    return tinycolor(rgb);
+}
+
+function darken (color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.l -= amount / 100;
+    hsl.l = clamp01(hsl.l);
+    return tinycolor(hsl);
+}
+
+// Spin takes a positive or negative amount within [-360, 360] indicating the change of hue.
+// Values outside of this range will be wrapped into this range.
+function spin(color, amount) {
+    var hsl = tinycolor(color).toHsl();
+    var hue = (hsl.h + amount) % 360;
+    hsl.h = hue < 0 ? 360 + hue : hue;
+    return tinycolor(hsl);
+}
+
+// Combination Functions
+// ---------------------
+// Thanks to jQuery xColor for some of the ideas behind these
+// <https://github.com/infusion/jQuery-xcolor/blob/master/jquery.xcolor.js>
+
+function complement(color) {
+    var hsl = tinycolor(color).toHsl();
+    hsl.h = (hsl.h + 180) % 360;
+    return tinycolor(hsl);
+}
+
+function triad(color) {
+    var hsl = tinycolor(color).toHsl();
+    var h = hsl.h;
+    return [
+        tinycolor(color),
+        tinycolor({ h: (h + 120) % 360, s: hsl.s, l: hsl.l }),
+        tinycolor({ h: (h + 240) % 360, s: hsl.s, l: hsl.l })
+    ];
+}
+
+function tetrad(color) {
+    var hsl = tinycolor(color).toHsl();
+    var h = hsl.h;
+    return [
+        tinycolor(color),
+        tinycolor({ h: (h + 90) % 360, s: hsl.s, l: hsl.l }),
+        tinycolor({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }),
+        tinycolor({ h: (h + 270) % 360, s: hsl.s, l: hsl.l })
+    ];
+}
+
+function splitcomplement(color) {
+    var hsl = tinycolor(color).toHsl();
+    var h = hsl.h;
+    return [
+        tinycolor(color),
+        tinycolor({ h: (h + 72) % 360, s: hsl.s, l: hsl.l}),
+        tinycolor({ h: (h + 216) % 360, s: hsl.s, l: hsl.l})
+    ];
+}
+
+function analogous(color, results, slices) {
+    results = results || 6;
+    slices = slices || 30;
+
+    var hsl = tinycolor(color).toHsl();
+    var part = 360 / slices;
+    var ret = [tinycolor(color)];
+
+    for (hsl.h = ((hsl.h - (part * results >> 1)) + 720) % 360; --results; ) {
+        hsl.h = (hsl.h + part) % 360;
+        ret.push(tinycolor(hsl));
+    }
+    return ret;
+}
+
+function monochromatic(color, results) {
+    results = results || 6;
+    var hsv = tinycolor(color).toHsv();
+    var h = hsv.h, s = hsv.s, v = hsv.v;
+    var ret = [];
+    var modification = 1 / results;
+
+    while (results--) {
+        ret.push(tinycolor({ h: h, s: s, v: v}));
+        v = (v + modification) % 1;
+    }
+
+    return ret;
+}
+
+// Utility Functions
+// ---------------------
+
+tinycolor.mix = function(color1, color2, amount) {
+    amount = (amount === 0) ? 0 : (amount || 50);
+
+    var rgb1 = tinycolor(color1).toRgb();
+    var rgb2 = tinycolor(color2).toRgb();
+
+    var p = amount / 100;
+
+    var rgba = {
+        r: ((rgb2.r - rgb1.r) * p) + rgb1.r,
+        g: ((rgb2.g - rgb1.g) * p) + rgb1.g,
+        b: ((rgb2.b - rgb1.b) * p) + rgb1.b,
+        a: ((rgb2.a - rgb1.a) * p) + rgb1.a
+    };
+
+    return tinycolor(rgba);
+};
+
+
+// Readability Functions
+// ---------------------
+// <http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef (WCAG Version 2)
+
+// `contrast`
+// Analyze the 2 colors and returns the color contrast defined by (WCAG Version 2)
+tinycolor.readability = function(color1, color2) {
+    var c1 = tinycolor(color1);
+    var c2 = tinycolor(color2);
+    return (Math.max(c1.getLuminance(),c2.getLuminance())+0.05) / (Math.min(c1.getLuminance(),c2.getLuminance())+0.05);
+};
+
+// `isReadable`
+// Ensure that foreground and background color combinations meet WCAG2 guidelines.
+// The third argument is an optional Object.
+//      the 'level' property states 'AA' or 'AAA' - if missing or invalid, it defaults to 'AA';
+//      the 'size' property states 'large' or 'small' - if missing or invalid, it defaults to 'small'.
+// If the entire object is absent, isReadable defaults to {level:"AA",size:"small"}.
+
+// *Example*
+//    tinycolor.isReadable("#000", "#111") => false
+//    tinycolor.isReadable("#000", "#111",{level:"AA",size:"large"}) => false
+tinycolor.isReadable = function(color1, color2, wcag2) {
+    var readability = tinycolor.readability(color1, color2);
+    var wcag2Parms, out;
+
+    out = false;
+
+    wcag2Parms = validateWCAG2Parms(wcag2);
+    switch (wcag2Parms.level + wcag2Parms.size) {
+        case "AAsmall":
+        case "AAAlarge":
+            out = readability >= 4.5;
+            break;
+        case "AAlarge":
+            out = readability >= 3;
+            break;
+        case "AAAsmall":
+            out = readability >= 7;
+            break;
+    }
+    return out;
+
+};
+
+// `mostReadable`
+// Given a base color and a list of possible foreground or background
+// colors for that base, returns the most readable color.
+// Optionally returns Black or White if the most readable color is unreadable.
+// *Example*
+//    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:false}).toHexString(); // "#112255"
+//    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:true}).toHexString();  // "#ffffff"
+//    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"large"}).toHexString(); // "#faf3f3"
+//    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"small"}).toHexString(); // "#ffffff"
+tinycolor.mostReadable = function(baseColor, colorList, args) {
+    var bestColor = null;
+    var bestScore = 0;
+    var readability;
+    var includeFallbackColors, level, size ;
+    args = args || {};
+    includeFallbackColors = args.includeFallbackColors ;
+    level = args.level;
+    size = args.size;
+
+    for (var i= 0; i < colorList.length ; i++) {
+        readability = tinycolor.readability(baseColor, colorList[i]);
+        if (readability > bestScore) {
+            bestScore = readability;
+            bestColor = tinycolor(colorList[i]);
+        }
+    }
+
+    if (tinycolor.isReadable(baseColor, bestColor, {"level":level,"size":size}) || !includeFallbackColors) {
+        return bestColor;
+    }
+    else {
+        args.includeFallbackColors=false;
+        return tinycolor.mostReadable(baseColor,["#fff", "#000"],args);
+    }
+};
+
+
+// Big List of Colors
+// ------------------
+// <http://www.w3.org/TR/css3-color/#svg-color>
+var names = tinycolor.names = {
+    aliceblue: "f0f8ff",
+    antiquewhite: "faebd7",
+    aqua: "0ff",
+    aquamarine: "7fffd4",
+    azure: "f0ffff",
+    beige: "f5f5dc",
+    bisque: "ffe4c4",
+    black: "000",
+    blanchedalmond: "ffebcd",
+    blue: "00f",
+    blueviolet: "8a2be2",
+    brown: "a52a2a",
+    burlywood: "deb887",
+    burntsienna: "ea7e5d",
+    cadetblue: "5f9ea0",
+    chartreuse: "7fff00",
+    chocolate: "d2691e",
+    coral: "ff7f50",
+    cornflowerblue: "6495ed",
+    cornsilk: "fff8dc",
+    crimson: "dc143c",
+    cyan: "0ff",
+    darkblue: "00008b",
+    darkcyan: "008b8b",
+    darkgoldenrod: "b8860b",
+    darkgray: "a9a9a9",
+    darkgreen: "006400",
+    darkgrey: "a9a9a9",
+    darkkhaki: "bdb76b",
+    darkmagenta: "8b008b",
+    darkolivegreen: "556b2f",
+    darkorange: "ff8c00",
+    darkorchid: "9932cc",
+    darkred: "8b0000",
+    darksalmon: "e9967a",
+    darkseagreen: "8fbc8f",
+    darkslateblue: "483d8b",
+    darkslategray: "2f4f4f",
+    darkslategrey: "2f4f4f",
+    darkturquoise: "00ced1",
+    darkviolet: "9400d3",
+    deeppink: "ff1493",
+    deepskyblue: "00bfff",
+    dimgray: "696969",
+    dimgrey: "696969",
+    dodgerblue: "1e90ff",
+    firebrick: "b22222",
+    floralwhite: "fffaf0",
+    forestgreen: "228b22",
+    fuchsia: "f0f",
+    gainsboro: "dcdcdc",
+    ghostwhite: "f8f8ff",
+    gold: "ffd700",
+    goldenrod: "daa520",
+    gray: "808080",
+    green: "008000",
+    greenyellow: "adff2f",
+    grey: "808080",
+    honeydew: "f0fff0",
+    hotpink: "ff69b4",
+    indianred: "cd5c5c",
+    indigo: "4b0082",
+    ivory: "fffff0",
+    khaki: "f0e68c",
+    lavender: "e6e6fa",
+    lavenderblush: "fff0f5",
+    lawngreen: "7cfc00",
+    lemonchiffon: "fffacd",
+    lightblue: "add8e6",
+    lightcoral: "f08080",
+    lightcyan: "e0ffff",
+    lightgoldenrodyellow: "fafad2",
+    lightgray: "d3d3d3",
+    lightgreen: "90ee90",
+    lightgrey: "d3d3d3",
+    lightpink: "ffb6c1",
+    lightsalmon: "ffa07a",
+    lightseagreen: "20b2aa",
+    lightskyblue: "87cefa",
+    lightslategray: "789",
+    lightslategrey: "789",
+    lightsteelblue: "b0c4de",
+    lightyellow: "ffffe0",
+    lime: "0f0",
+    limegreen: "32cd32",
+    linen: "faf0e6",
+    magenta: "f0f",
+    maroon: "800000",
+    mediumaquamarine: "66cdaa",
+    mediumblue: "0000cd",
+    mediumorchid: "ba55d3",
+    mediumpurple: "9370db",
+    mediumseagreen: "3cb371",
+    mediumslateblue: "7b68ee",
+    mediumspringgreen: "00fa9a",
+    mediumturquoise: "48d1cc",
+    mediumvioletred: "c71585",
+    midnightblue: "191970",
+    mintcream: "f5fffa",
+    mistyrose: "ffe4e1",
+    moccasin: "ffe4b5",
+    navajowhite: "ffdead",
+    navy: "000080",
+    oldlace: "fdf5e6",
+    olive: "808000",
+    olivedrab: "6b8e23",
+    orange: "ffa500",
+    orangered: "ff4500",
+    orchid: "da70d6",
+    palegoldenrod: "eee8aa",
+    palegreen: "98fb98",
+    paleturquoise: "afeeee",
+    palevioletred: "db7093",
+    papayawhip: "ffefd5",
+    peachpuff: "ffdab9",
+    peru: "cd853f",
+    pink: "ffc0cb",
+    plum: "dda0dd",
+    powderblue: "b0e0e6",
+    purple: "800080",
+    rebeccapurple: "663399",
+    red: "f00",
+    rosybrown: "bc8f8f",
+    royalblue: "4169e1",
+    saddlebrown: "8b4513",
+    salmon: "fa8072",
+    sandybrown: "f4a460",
+    seagreen: "2e8b57",
+    seashell: "fff5ee",
+    sienna: "a0522d",
+    silver: "c0c0c0",
+    skyblue: "87ceeb",
+    slateblue: "6a5acd",
+    slategray: "708090",
+    slategrey: "708090",
+    snow: "fffafa",
+    springgreen: "00ff7f",
+    steelblue: "4682b4",
+    tan: "d2b48c",
+    teal: "008080",
+    thistle: "d8bfd8",
+    tomato: "ff6347",
+    turquoise: "40e0d0",
+    violet: "ee82ee",
+    wheat: "f5deb3",
+    white: "fff",
+    whitesmoke: "f5f5f5",
+    yellow: "ff0",
+    yellowgreen: "9acd32"
+};
+
+// Make it easy to access colors via `hexNames[hex]`
+var hexNames = tinycolor.hexNames = flip(names);
+
+
+// Utilities
+// ---------
+
+// `{ 'name1': 'val1' }` becomes `{ 'val1': 'name1' }`
+function flip(o) {
+    var flipped = { };
+    for (var i in o) {
+        if (o.hasOwnProperty(i)) {
+            flipped[o[i]] = i;
+        }
+    }
+    return flipped;
+}
+
+// Return a valid alpha value [0,1] with all invalid values being set to 1
+function boundAlpha(a) {
+    a = parseFloat(a);
+
+    if (isNaN(a) || a < 0 || a > 1) {
+        a = 1;
+    }
+
+    return a;
+}
+
+// Take input from [0, n] and return it as [0, 1]
+function bound01(n, max) {
+    if (isOnePointZero(n)) { n = "100%"; }
+
+    var processPercent = isPercentage(n);
+    n = mathMin(max, mathMax(0, parseFloat(n)));
+
+    // Automatically convert percentage into number
+    if (processPercent) {
+        n = parseInt(n * max, 10) / 100;
+    }
+
+    // Handle floating point rounding errors
+    if ((Math.abs(n - max) < 0.000001)) {
+        return 1;
+    }
+
+    // Convert into [0, 1] range if it isn't already
+    return (n % max) / parseFloat(max);
+}
+
+// Force a number between 0 and 1
+function clamp01(val) {
+    return mathMin(1, mathMax(0, val));
+}
+
+// Parse a base-16 hex value into a base-10 integer
+function parseIntFromHex(val) {
+    return parseInt(val, 16);
+}
+
+// Need to handle 1.0 as 100%, since once it is a number, there is no difference between it and 1
+// <http://stackoverflow.com/questions/7422072/javascript-how-to-detect-number-as-a-decimal-including-1-0>
+function isOnePointZero(n) {
+    return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
+}
+
+// Check to see if string passed in is a percentage
+function isPercentage(n) {
+    return typeof n === "string" && n.indexOf('%') != -1;
+}
+
+// Force a hex value to have 2 characters
+function pad2(c) {
+    return c.length == 1 ? '0' + c : '' + c;
+}
+
+// Replace a decimal with it's percentage value
+function convertToPercentage(n) {
+    if (n <= 1) {
+        n = (n * 100) + "%";
+    }
+
+    return n;
+}
+
+// Converts a decimal to a hex value
+function convertDecimalToHex(d) {
+    return Math.round(parseFloat(d) * 255).toString(16);
+}
+// Converts a hex value to a decimal
+function convertHexToDecimal(h) {
+    return (parseIntFromHex(h) / 255);
+}
+
+var matchers = (function() {
+
+    // <http://www.w3.org/TR/css3-values/#integers>
+    var CSS_INTEGER = "[-\\+]?\\d+%?";
+
+    // <http://www.w3.org/TR/css3-values/#number-value>
+    var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
+
+    // Allow positive/negative integer/number.  Don't capture the either/or, just the entire outcome.
+    var CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
+
+    // Actual matching.
+    // Parentheses and commas are optional, but not required.
+    // Whitespace can take the place of commas or opening paren
+    var PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+    var PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+
+    return {
+        CSS_UNIT: new RegExp(CSS_UNIT),
+        rgb: new RegExp("rgb" + PERMISSIVE_MATCH3),
+        rgba: new RegExp("rgba" + PERMISSIVE_MATCH4),
+        hsl: new RegExp("hsl" + PERMISSIVE_MATCH3),
+        hsla: new RegExp("hsla" + PERMISSIVE_MATCH4),
+        hsv: new RegExp("hsv" + PERMISSIVE_MATCH3),
+        hsva: new RegExp("hsva" + PERMISSIVE_MATCH4),
+        hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+        hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+        hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+        hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
+    };
+})();
+
+// `isValidCSSUnit`
+// Take in a single string / number and check to see if it looks like a CSS unit
+// (see `matchers` above for definition).
+function isValidCSSUnit(color) {
+    return !!matchers.CSS_UNIT.exec(color);
+}
+
+// `stringInputToObject`
+// Permissive string parsing.  Take in a number of formats, and output an object
+// based on detected format.  Returns `{ r, g, b }` or `{ h, s, l }` or `{ h, s, v}`
+function stringInputToObject(color) {
+
+    color = color.replace(trimLeft,'').replace(trimRight, '').toLowerCase();
+    var named = false;
+    if (names[color]) {
+        color = names[color];
+        named = true;
+    }
+    else if (color == 'transparent') {
+        return { r: 0, g: 0, b: 0, a: 0, format: "name" };
+    }
+
+    // Try to match string input using regular expressions.
+    // Keep most of the number bounding out of this function - don't worry about [0,1] or [0,100] or [0,360]
+    // Just return an object and let the conversion functions handle that.
+    // This way the result will be the same whether the tinycolor is initialized with string or object.
+    var match;
+    if ((match = matchers.rgb.exec(color))) {
+        return { r: match[1], g: match[2], b: match[3] };
+    }
+    if ((match = matchers.rgba.exec(color))) {
+        return { r: match[1], g: match[2], b: match[3], a: match[4] };
+    }
+    if ((match = matchers.hsl.exec(color))) {
+        return { h: match[1], s: match[2], l: match[3] };
+    }
+    if ((match = matchers.hsla.exec(color))) {
+        return { h: match[1], s: match[2], l: match[3], a: match[4] };
+    }
+    if ((match = matchers.hsv.exec(color))) {
+        return { h: match[1], s: match[2], v: match[3] };
+    }
+    if ((match = matchers.hsva.exec(color))) {
+        return { h: match[1], s: match[2], v: match[3], a: match[4] };
+    }
+    if ((match = matchers.hex8.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1]),
+            g: parseIntFromHex(match[2]),
+            b: parseIntFromHex(match[3]),
+            a: convertHexToDecimal(match[4]),
+            format: named ? "name" : "hex8"
+        };
+    }
+    if ((match = matchers.hex6.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1]),
+            g: parseIntFromHex(match[2]),
+            b: parseIntFromHex(match[3]),
+            format: named ? "name" : "hex"
+        };
+    }
+    if ((match = matchers.hex4.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1] + '' + match[1]),
+            g: parseIntFromHex(match[2] + '' + match[2]),
+            b: parseIntFromHex(match[3] + '' + match[3]),
+            a: convertHexToDecimal(match[4] + '' + match[4]),
+            format: named ? "name" : "hex8"
+        };
+    }
+    if ((match = matchers.hex3.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1] + '' + match[1]),
+            g: parseIntFromHex(match[2] + '' + match[2]),
+            b: parseIntFromHex(match[3] + '' + match[3]),
+            format: named ? "name" : "hex"
+        };
+    }
+
+    return false;
+}
+
+function validateWCAG2Parms(parms) {
+    // return valid WCAG2 parms for isReadable.
+    // If input parms are invalid, return {"level":"AA", "size":"small"}
+    var level, size;
+    parms = parms || {"level":"AA", "size":"small"};
+    level = (parms.level || "AA").toUpperCase();
+    size = (parms.size || "small").toLowerCase();
+    if (level !== "AA" && level !== "AAA") {
+        level = "AA";
+    }
+    if (size !== "small" && size !== "large") {
+        size = "small";
+    }
+    return {"level":level, "size":size};
+}
+
+// Node: Export function
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = tinycolor;
+}
+// AMD/requirejs: Define the module
+else if (typeof define === 'function' && define.amd) {
+    define(function () {return tinycolor;});
+}
+// Browser: Expose to window
+else {
+    window.tinycolor = tinycolor;
+}
+
+})(Math);
 
 },{}]},{},[16]);

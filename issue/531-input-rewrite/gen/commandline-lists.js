@@ -322,6 +322,20 @@ let commandsRandomTheme = {
         UpdateConfig.setRandomTheme("fav");
       },
     },
+    {
+      id: "setRandomLight",
+      display: "light",
+      exec: () => {
+        UpdateConfig.setRandomTheme("light");
+      },
+    },
+    {
+      id: "setRandomDark",
+      display: "dark",
+      exec: () => {
+        UpdateConfig.setRandomTheme("dark");
+      },
+    },
   ],
 };
 
@@ -610,6 +624,13 @@ let commandsKeymapLegendStyle = {
 let commandsHighlightMode = {
   title: "Change highlight mode...",
   list: [
+    {
+      id: "setHighlightModeOff",
+      display: "off",
+      exec: () => {
+        UpdateConfig.setHighlightMode("off");
+      },
+    },
     {
       id: "setHighlightModeLetter",
       display: "letter",
@@ -1546,6 +1567,26 @@ export let defaultCommands = {
       },
     },
     {
+      id: "changeCustomLayoutfluid",
+      display: "Change custom layoutfluid...",
+      defaultValue: "qwerty dvorak colemak",
+      input: true,
+      exec: (input) => {
+        UpdateConfig.setCustomLayoutfluid(input);
+        if (Funbox.active === "layoutfluid") TestLogic.restart();
+        // UpdateConfig.setLayout(
+        //   Config.customLayoutfluid
+        //     ? Config.customLayoutfluid.split("_")[0]
+        //     : "qwerty"
+        // );
+        // UpdateConfig.setKeymapLayout(
+        //   Config.customLayoutfluid
+        //     ? Config.customLayoutfluid.split("_")[0]
+        //     : "qwerty"
+        // );
+      },
+    },
+    {
       id: "changeTheme",
       display: "Change theme...",
       subgroup: true,
@@ -1666,9 +1707,9 @@ export let defaultCommands = {
       },
     },
     {
-      id: "randomiseTheme",
+      id: "randomizeTheme",
       display: "Next random theme",
-      exec: () => ThemeController.randomiseTheme(),
+      exec: () => ThemeController.randomizeTheme(),
     },
     {
       id: "viewTypingPage",
@@ -1705,9 +1746,7 @@ export let defaultCommands = {
             {
               id: "bailOutNo",
               display: "Nevermind",
-              exec: () => {
-                Commandline.hide();
-              },
+              exec: () => {},
               available: () => {
                 return canBailOut();
               },

@@ -15,7 +15,7 @@ function showInput(command, placeholder, defaultValue = "") {
   $("#commandInput input").focus();
   $("#commandInput input").attr("command", "");
   $("#commandInput input").attr("command", command);
-  if (defaultValue != ""){
+  if (defaultValue != "") {
     $("#commandInput input").select();
   }
 }
@@ -45,10 +45,13 @@ function showFound() {
     try {
       $.each(list.list, (index, obj) => {
         if (obj.found) {
-          if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme")
+          if (
+            (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") &&
+            !ThemeController.randomTheme
+          )
             ThemeController.clearPreview();
           if (!/font/gi.test(obj.id))
-            Config.previewFontFamily(Config.fontFamily);
+            UpdateConfig.previewFontFamily(Config.fontFamily);
           obj.hover();
           return false;
         }
@@ -117,7 +120,9 @@ function updateSuggested() {
 function hide() {
   UpdateConfig.previewFontFamily(Config.fontFamily);
   // applyCustomThemeColors();
-  ThemeController.clearPreview();
+  if (!ThemeController.randomTheme) {
+    ThemeController.clearPreview();
+  }
   $("#commandLineWrapper")
     .stop(true, true)
     .css("opacity", 1)
@@ -346,9 +351,13 @@ $("#commandLineWrapper #commandLine .suggestions").on("mouseover", (e) => {
     let list = CommandlineLists.current[CommandlineLists.current.length - 1];
     $.each(list.list, (index, obj) => {
       if (obj.id == hoverId) {
-        if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme")
+        if (
+          (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") &&
+          !ThemeController.randomTheme
+        )
           ThemeController.clearPreview();
-        if (!/font/gi.test(obj.id)) Config.previewFontFamily(Config.fontFamily);
+        if (!/font/gi.test(obj.id))
+          UpdateConfig.previewFontFamily(Config.fontFamily);
         obj.hover();
       }
     });
@@ -467,10 +476,13 @@ $(document).keydown((e) => {
           CommandlineLists.current[CommandlineLists.current.length - 1];
         $.each(list.list, (index, obj) => {
           if (obj.id == hoverId) {
-            if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme")
+            if (
+              (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") &&
+              !ThemeController.randomTheme
+            )
               ThemeController.clearPreview();
             if (!/font/gi.test(obj.id))
-              Config.previewFontFamily(Config.fontFamily);
+              UpdateConfig.previewFontFamily(Config.fontFamily);
             obj.hover();
           }
         });
