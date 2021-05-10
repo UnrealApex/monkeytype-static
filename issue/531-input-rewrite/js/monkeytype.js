@@ -5315,7 +5315,6 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 var dontInsertSpace = false;
 var isCapsLockHeld = false;
 var inputWordBeforeChange = "";
-var $wordsInput = $("#wordsInput");
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -5757,7 +5756,7 @@ $(document).keydown(function (event) {
 
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
-  var wordsFocused = $wordsInput.is(":focus");
+  var wordsFocused = $("#wordsInput").is(":focus");
   var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
 
   if (pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
@@ -5827,15 +5826,15 @@ $(document).keydown(function (event) {
 });
 
 function triggerInputWith(string) {
-  $wordsInput.trigger("beforeinput");
+  $("#wordsInput").trigger("beforeinput");
   TestLogic.input.currentWord += string;
-  $wordsInput.trigger("input");
+  $("#wordsInput").trigger("input");
 }
 
-$wordsInput.on("beforeinput", function (event) {
+$("#wordsInput").on("beforeinput", function (event) {
   inputWordBeforeChange = event.target.value.normalize();
 });
-$wordsInput.on("input", function (event) {
+$("#wordsInput").on("input", function (event) {
   if (TestUI.testRestarting) return; // TODO: trigger replay events correctly (clearWord, deleteLetter)
 
   if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
