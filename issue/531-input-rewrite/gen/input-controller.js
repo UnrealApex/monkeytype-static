@@ -23,7 +23,7 @@ import * as ShiftTracker from "./shift-tracker";
 import * as Replay from "./replay.js";
 
 let dontInsertSpace = false;
-let inputWordBeforeChange = "";
+let inputValueBeforeChange = " ";
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -94,13 +94,12 @@ function handleTab(event) {
   }
 }
 
-function setupBackspace(event) {
+function backspaceToPrevious() {
   if (!TestLogic.active) return;
 
   Sound.playClick(Config.playSoundOnClick);
 
   if (
-    TestLogic.input.currentWord.length > 0 ||
     TestLogic.input.history.length == 0 ||
     TestUI.currentWordElementIndex == 0
   )
@@ -112,20 +111,18 @@ function setupBackspace(event) {
       !Config.freedomMode) ||
     $($(".word")[TestLogic.words.currentIndex - 1]).hasClass("hidden")
   ) {
-    event.preventDefault();
     return;
   }
 
   if (Config.confidenceMode === "on" || Config.confidenceMode === "max") {
-    event.preventDefault();
     return;
   }
 
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
-  if (Funbox.active !== "nospace") {
-    TestLogic.input.currentWord += " ";
+  if (Funbox.active === "nospace") {
+    TestLogic.input.currentWord = TestLogic.input.currentWord.slice(0, -1);
   }
 
   TestLogic.words.decreaseCurrentIndex();
@@ -133,9 +130,7 @@ function setupBackspace(event) {
   TestUI.updateActiveElement(true);
   Funbox.toggleScript(TestLogic.words.getCurrent());
 
-  if (Config.keymapMode === "react") {
-    Keymap.flashKey(event.code, true);
-  } else if (Config.keymapMode === "next" && Config.mode !== "zen") {
+  if (Config.keymapMode === "next" && Config.mode !== "zen") {
     Keymap.highlightKey(
       TestLogic.words
         .getCurrent()
@@ -591,8 +586,13 @@ $(document).keydown(function (event) {
   }
 
   //blocking firefox from going back in history with backspace
-  if (event.key === "Backspace" && wordsFocused) {
-    if (event.target.disabled || event.target.readOnly) {
+  if (event.key === "Backspace") {
+    let t = /INPUT|SELECT|TEXTAREA/i;
+    if (
+      !t.test(event.target.tagName) ||
+      event.target.disabled ||
+      event.target.readOnly
+    ) {
       event.preventDefault();
     }
   }
@@ -613,8 +613,10 @@ $("#wordsInput").keydown(function (event) {
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
 
-  if (event.key === "Backspace") {
-    setupBackspace(event);
+  if (event.key === "Backspace" && TestLogic.input.currentWord.length === 0) {
+    backspaceToPrevious();
+    Replay.addReplayEvent("backWord");
+    TestLogic.input.currentWord += " ";
   }
 
   if (event.key === "Enter") {
@@ -718,7 +720,10 @@ function triggerInputWith(string) {
   $("#wordsInput").trigger("input");
 }
 
-$("#wordsInput").on("keyup keydown", function (event) {
+$("#wordsInput").on("beforeinput", function (event) {
+  inputValueBeforeChange = event.target.value.normalize();
+
+  // force caret at end of input
   if (
     this.selectionStart !== event.target.value.length ||
     this.selectionEnd !== event.target.value.length
@@ -727,22 +732,25 @@ $("#wordsInput").on("keyup keydown", function (event) {
   }
 });
 
-$("#wordsInput").on("beforeinput", function (event) {
-  inputWordBeforeChange = event.target.value.normalize();
-});
-
 $("#wordsInput").on("input", function (event) {
   if (TestUI.testRestarting) return;
 
-  if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
+  if (event.target.value.length >= inputValueBeforeChange.length) {
     handleLastChar();
-  } else if (inputWordBeforeChange.length > 0) {
-    for (
-      let i = 0;
-      i < inputWordBeforeChange.length - TestLogic.input.currentWord.length;
-      i++
-    ) {
-      Replay.addReplayEvent("deleteLetter");
+  } else {
+    if (event.target.value === "") {
+      // fallback for when no Backspace keydown event (mobile)
+      event.target.value = " ";
+      backspaceToPrevious();
+      Replay.addReplayEvent("backWord");
+    } else {
+      for (
+        let i = 0;
+        i < inputValueBeforeChange.length - event.target.value.length;
+        i++
+      ) {
+        Replay.addReplayEvent("deleteLetter");
+      }
     }
   }
 
@@ -751,6 +759,4 @@ $("#wordsInput").on("input", function (event) {
 
   let acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc);
-
-  inputWordBeforeChange = "";
 });

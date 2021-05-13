@@ -5286,7 +5286,7 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var dontInsertSpace = false;
-var inputWordBeforeChange = "";
+var inputValueBeforeChange = " ";
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -5334,26 +5334,24 @@ function handleTab(event) {
   }
 }
 
-function setupBackspace(event) {
+function backspaceToPrevious() {
   if (!TestLogic.active) return;
   Sound.playClick(UpdateConfig["default"].playSoundOnClick);
-  if (TestLogic.input.currentWord.length > 0 || TestLogic.input.history.length == 0 || TestUI.currentWordElementIndex == 0) return;
+  if (TestLogic.input.history.length == 0 || TestUI.currentWordElementIndex == 0) return;
 
   if (TestLogic.input.history[TestLogic.words.currentIndex - 1] == TestLogic.words.get(TestLogic.words.currentIndex - 1) && !UpdateConfig["default"].freedomMode || $($(".word")[TestLogic.words.currentIndex - 1]).hasClass("hidden")) {
-    event.preventDefault();
     return;
   }
 
   if (UpdateConfig["default"].confidenceMode === "on" || UpdateConfig["default"].confidenceMode === "max") {
-    event.preventDefault();
     return;
   }
 
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
-  if (Funbox.active !== "nospace") {
-    TestLogic.input.currentWord += " ";
+  if (Funbox.active === "nospace") {
+    TestLogic.input.currentWord = TestLogic.input.currentWord.slice(0, -1);
   }
 
   TestLogic.words.decreaseCurrentIndex();
@@ -5361,9 +5359,7 @@ function setupBackspace(event) {
   TestUI.updateActiveElement(true);
   Funbox.toggleScript(TestLogic.words.getCurrent());
 
-  if (UpdateConfig["default"].keymapMode === "react") {
-    Keymap.flashKey(event.code, true);
-  } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
+  if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
     Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.currentWord.length, TestLogic.input.currentWord.length + 1).toString().toUpperCase());
   }
 }
@@ -5724,8 +5720,10 @@ $(document).keydown(function (event) {
   } //blocking firefox from going back in history with backspace
 
 
-  if (event.key === "Backspace" && wordsFocused) {
-    if (event.target.disabled || event.target.readOnly) {
+  if (event.key === "Backspace") {
+    var t = /INPUT|SELECT|TEXTAREA/i;
+
+    if (!t.test(event.target.tagName) || event.target.disabled || event.target.readOnly) {
       event.preventDefault();
     }
   }
@@ -5744,8 +5742,10 @@ $("#wordsInput").keydown(function (event) {
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
 
-  if (event.key === "Backspace") {
-    setupBackspace(event);
+  if (event.key === "Backspace" && TestLogic.input.currentWord.length === 0) {
+    backspaceToPrevious();
+    Replay.addReplayEvent("backWord");
+    TestLogic.input.currentWord += " ";
   }
 
   if (event.key === "Enter") {
@@ -5803,22 +5803,28 @@ function triggerInputWith(string) {
   $("#wordsInput").trigger("input");
 }
 
-$("#wordsInput").on("keyup keydown", function (event) {
+$("#wordsInput").on("beforeinput", function (event) {
+  inputValueBeforeChange = event.target.value.normalize(); // force caret at end of input
+
   if (this.selectionStart !== event.target.value.length || this.selectionEnd !== event.target.value.length) {
     this.selectionStart = this.selectionEnd = event.target.value.length;
   }
 });
-$("#wordsInput").on("beforeinput", function (event) {
-  inputWordBeforeChange = event.target.value.normalize();
-});
 $("#wordsInput").on("input", function (event) {
   if (TestUI.testRestarting) return;
 
-  if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
+  if (event.target.value.length >= inputValueBeforeChange.length) {
     handleLastChar();
-  } else if (inputWordBeforeChange.length > 0) {
-    for (var i = 0; i < inputWordBeforeChange.length - TestLogic.input.currentWord.length; i++) {
-      Replay.addReplayEvent("deleteLetter");
+  } else {
+    if (event.target.value === "") {
+      // fallback for when no Backspace keydown event (mobile)
+      event.target.value = " ";
+      backspaceToPrevious();
+      Replay.addReplayEvent("backWord");
+    } else {
+      for (var i = 0; i < inputValueBeforeChange.length - event.target.value.length; i++) {
+        Replay.addReplayEvent("deleteLetter");
+      }
     }
   }
 
@@ -5826,7 +5832,6 @@ $("#wordsInput").on("input", function (event) {
   Caret.updatePosition();
   var acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc);
-  inputWordBeforeChange = "";
 });
 
 },{"./caret":2,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./layout-emulator":20,"./live-acc":22,"./manual-restart-tracker":25,"./misc":26,"./monkey":27,"./notifications":28,"./pace-caret":30,"./replay.js":35,"./settings":38,"./shift-tracker":39,"./sound":41,"./test-logic":44,"./test-stats":45,"./test-timer":46,"./test-ui":47,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/typeof":70}],18:[function(require,module,exports){
@@ -8570,27 +8575,15 @@ function handleDisplayLogic(item) {
     myElement.classList.add("incorrect");
     curPos++;
   } else if (item.action === "deleteLetter") {
-    if (curPos === 0) {
-      wordPos--;
-      activeWord = document.getElementById("replayWords").children[wordPos];
-      curPos = activeWord.children.length;
+    var _myElement = activeWord.children[curPos - 1];
 
-      while (activeWord.children[curPos - 1].className === "") {
-        curPos--;
-      }
-
-      activeWord.classList.remove("error");
+    if (_myElement.classList.contains("extra")) {
+      _myElement.remove();
     } else {
-      var _myElement = activeWord.children[curPos - 1];
-
-      if (_myElement.classList.contains("extra")) {
-        _myElement.remove();
-      } else {
-        _myElement.className = "";
-      }
-
-      curPos--;
+      _myElement.className = "";
     }
+
+    curPos--;
   } else if (item.action === "submitCorrectWord") {
     wordPos++;
     curPos = 0;
@@ -8598,6 +8591,16 @@ function handleDisplayLogic(item) {
     activeWord.classList.add("error");
     wordPos++;
     curPos = 0;
+  } else if (item.action === "backWord") {
+    wordPos--;
+    activeWord = document.getElementById("replayWords").children[wordPos];
+    curPos = activeWord.children.length;
+
+    while (activeWord.children[curPos - 1].className === "") {
+      curPos--;
+    }
+
+    activeWord.classList.remove("error");
   }
 }
 
@@ -9874,10 +9877,10 @@ var InputWordListBound = /*#__PURE__*/function (_InputWordList) {
   (0, _createClass2["default"])(InputWordListBound, [{
     key: "currentWord",
     get: function get() {
-      return $("#wordsInput").val().normalize();
+      return $("#wordsInput").val().normalize().slice(1);
     },
     set: function set(val) {
-      $("#wordsInput").val(val.normalize());
+      $("#wordsInput").val(" " + val.normalize());
     }
   }]);
   return InputWordListBound;
