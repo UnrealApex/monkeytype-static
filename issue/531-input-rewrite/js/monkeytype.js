@@ -4571,7 +4571,7 @@ $("".concat(popup, " .randomInputFields .time input")).keypress(function (e) {
   $("".concat(popup, " .randomInputFields .wordcount input")).val("");
 });
 $("#customTextPopup .apply").click(function () {
-  var text = $("#customTextPopup textarea").val();
+  var text = $("#customTextPopup textarea").val().normalize();
   text = text.trim(); // text = text.replace(/[\r]/gm, " ");
 
   text = text.replace(/\\\\t/gm, "\t");
@@ -5741,6 +5741,7 @@ $("#wordsInput").keydown(function (event) {
   Monkey.type();
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
+  TestStats.setKeypressNotAfk();
 
   if (event.key === "Backspace" && TestLogic.input.currentWord.length === 0) {
     backspaceToPrevious();
@@ -5764,10 +5765,6 @@ $("#wordsInput").keydown(function (event) {
     Sound.playClick(UpdateConfig["default"].playSoundOnClick);
     $(document.querySelector("#words .word.active").querySelectorAll("letter")[TestLogic.input.currentWord.length]).toggleClass("dead");
     return;
-  }
-
-  if (["ContextMenu", "Escape", "Shift", "Control", "Meta", "Alt", "AltGraph", "CapsLock", "Backspace", "PageUp", "PageDown", "Home", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown", "OS", "Insert", "Home", "Undefined", "Control", "Fn", "FnLock", "Hyper", "NumLock", "ScrollLock", "Symbol", "SymbolLock", "Super", "Unidentified", "Process", "Delete", "KanjiMode", "Pause", "PrintScreen", "Clear", "End", undefined].includes(event.key)) {
-    TestStats.incrementKeypressMod();
   }
 
   if (UpdateConfig["default"].layout !== "default") {
@@ -5803,26 +5800,27 @@ function triggerInputWith(string) {
   $("#wordsInput").trigger("input");
 }
 
-$("#wordsInput").on("beforeinput", function (event) {
+$("#wordsInput").on("keyup beforeinput", function (event) {
   inputValueBeforeChange = event.target.value.normalize(); // force caret at end of input
 
-  if (this.selectionStart !== event.target.value.length || this.selectionEnd !== event.target.value.length) {
-    this.selectionStart = this.selectionEnd = event.target.value.length;
+  if (event.target.selectionStart !== event.target.value.length || event.target.selectionEnd !== event.target.value.length) {
+    event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
   }
 });
 $("#wordsInput").on("input", function (event) {
   if (TestUI.testRestarting) return;
+  var inputValue = event.target.value.normalize();
 
-  if (event.target.value.length >= inputValueBeforeChange.length) {
+  if (inputValue.length >= inputValueBeforeChange.length) {
     handleLastChar();
   } else {
-    if (event.target.value === "") {
+    if (inputValue === "") {
       // fallback for when no Backspace keydown event (mobile)
       event.target.value = " ";
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
     } else {
-      for (var i = 0; i < inputValueBeforeChange.length - event.target.value.length; i++) {
+      for (var i = 0; i < inputValueBeforeChange.length - inputValue.length; i++) {
         Replay.addReplayEvent("deleteLetter");
       }
     }
@@ -11176,7 +11174,7 @@ exports.updateLastKeypress = updateLastKeypress;
 exports.pushToWpmHistory = pushToWpmHistory;
 exports.pushToRawHistory = pushToRawHistory;
 exports.incrementKeypressCount = incrementKeypressCount;
-exports.incrementKeypressMod = incrementKeypressMod;
+exports.setKeypressNotAfk = setKeypressNotAfk;
 exports.incrementKeypressErrors = incrementKeypressErrors;
 exports.pushKeypressWord = pushKeypressWord;
 exports.pushKeypressesToHistory = pushKeypressesToHistory;
@@ -11223,9 +11221,9 @@ var keypressPerSecond = [];
 exports.keypressPerSecond = keypressPerSecond;
 var currentKeypress = {
   count: 0,
-  mod: 0,
   errors: 0,
-  words: []
+  words: [],
+  afk: true
 };
 exports.currentKeypress = currentKeypress;
 var lastKeypress; // export let errorsPerSecond = [];
@@ -11265,9 +11263,9 @@ function restart() {
   exports.keypressPerSecond = keypressPerSecond = [];
   exports.currentKeypress = currentKeypress = {
     count: 0,
-    mod: 0,
     errors: 0,
-    words: []
+    words: [],
+    afk: true
   }; // errorsPerSecond = [];
   // currentError = {
   //   count: 0,
@@ -11352,8 +11350,8 @@ function incrementKeypressCount() {
   currentKeypress.count++;
 }
 
-function incrementKeypressMod() {
-  currentKeypress.mod++;
+function setKeypressNotAfk() {
+  currentKeypress.afk = false;
 }
 
 function incrementKeypressErrors() {
@@ -11368,15 +11366,15 @@ function pushKeypressesToHistory() {
   keypressPerSecond.push(currentKeypress);
   exports.currentKeypress = currentKeypress = {
     count: 0,
-    mod: 0,
     errors: 0,
-    words: []
+    words: [],
+    afk: true
   };
 }
 
 function calculateAfkSeconds() {
   return keypressPerSecond.filter(function (x) {
-    return x.count == 0 && x.mod == 0;
+    return x.afk;
   }).length;
 }
 

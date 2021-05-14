@@ -612,6 +612,7 @@ $("#wordsInput").keydown(function (event) {
 
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
+  TestStats.setKeypressNotAfk();
 
   if (event.key === "Backspace" && TestLogic.input.currentWord.length === 0) {
     backspaceToPrevious();
@@ -642,51 +643,6 @@ $("#wordsInput").keydown(function (event) {
       ]
     ).toggleClass("dead");
     return;
-  }
-
-  if (
-    [
-      "ContextMenu",
-      "Escape",
-      "Shift",
-      "Control",
-      "Meta",
-      "Alt",
-      "AltGraph",
-      "CapsLock",
-      "Backspace",
-      "PageUp",
-      "PageDown",
-      "Home",
-      "ArrowUp",
-      "ArrowLeft",
-      "ArrowRight",
-      "ArrowDown",
-      "OS",
-      "Insert",
-      "Home",
-      "Undefined",
-      "Control",
-      "Fn",
-      "FnLock",
-      "Hyper",
-      "NumLock",
-      "ScrollLock",
-      "Symbol",
-      "SymbolLock",
-      "Super",
-      "Unidentified",
-      "Process",
-      "Delete",
-      "KanjiMode",
-      "Pause",
-      "PrintScreen",
-      "Clear",
-      "End",
-      undefined,
-    ].includes(event.key)
-  ) {
-    TestStats.incrementKeypressMod();
   }
 
   if (Config.layout !== "default") {
@@ -720,25 +676,28 @@ function triggerInputWith(string) {
   $("#wordsInput").trigger("input");
 }
 
-$("#wordsInput").on("beforeinput", function (event) {
+$("#wordsInput").on("keyup beforeinput", function (event) {
   inputValueBeforeChange = event.target.value.normalize();
 
   // force caret at end of input
   if (
-    this.selectionStart !== event.target.value.length ||
-    this.selectionEnd !== event.target.value.length
+    event.target.selectionStart !== event.target.value.length ||
+    event.target.selectionEnd !== event.target.value.length
   ) {
-    this.selectionStart = this.selectionEnd = event.target.value.length;
+    event.target.selectionStart = event.target.selectionEnd =
+      event.target.value.length;
   }
 });
 
 $("#wordsInput").on("input", function (event) {
   if (TestUI.testRestarting) return;
 
-  if (event.target.value.length >= inputValueBeforeChange.length) {
+  let inputValue = event.target.value.normalize();
+
+  if (inputValue.length >= inputValueBeforeChange.length) {
     handleLastChar();
   } else {
-    if (event.target.value === "") {
+    if (inputValue === "") {
       // fallback for when no Backspace keydown event (mobile)
       event.target.value = " ";
       backspaceToPrevious();
@@ -746,7 +705,7 @@ $("#wordsInput").on("input", function (event) {
     } else {
       for (
         let i = 0;
-        i < inputValueBeforeChange.length - event.target.value.length;
+        i < inputValueBeforeChange.length - inputValue.length;
         i++
       ) {
         Replay.addReplayEvent("deleteLetter");
