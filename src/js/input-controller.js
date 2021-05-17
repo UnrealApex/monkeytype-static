@@ -407,7 +407,7 @@ function handleLastChar() {
 
   let thisCharCorrect = isCharCorrect(char);
 
-  if (!thisCharCorrect && Misc.testDiacritic(char)) return;
+  if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) return;
 
   TestStats.incrementAccuracy(thisCharCorrect);
 
@@ -645,7 +645,10 @@ $(document).keydown(function (event) {
   }
 
   //show dead keys
-  if (event.key === "Dead") {
+  if (
+    event.key === "Dead" &&
+    !Misc.trailingComposeChars.test(TestLogic.input.currentWord)
+  ) {
     Sound.playClick(Config.playSoundOnClick);
     $(
       document.querySelector("#words .word.active").querySelectorAll("letter")[
