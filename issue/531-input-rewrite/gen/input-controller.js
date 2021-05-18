@@ -118,6 +118,8 @@ function backspaceToPrevious() {
     return;
   }
 
+  TestUI.updateWordElement();
+
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
@@ -408,7 +410,7 @@ function handleLastChar() {
 
   let thisCharCorrect = isCharCorrect(char);
 
-  if (!thisCharCorrect && Misc.testDiacritic(char)) return;
+  if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) return;
 
   TestStats.incrementAccuracy(thisCharCorrect);
 
@@ -635,7 +637,10 @@ $("#wordsInput").keydown(function (event) {
   }
 
   //show dead keys
-  if (event.key === "Dead") {
+  if (
+    event.key === "Dead" &&
+    !Misc.trailingComposeChars.test(TestLogic.input.currentWord)
+  ) {
     Sound.playClick(Config.playSoundOnClick);
     $(
       document.querySelector("#words .word.active").querySelectorAll("letter")[
@@ -676,17 +681,8 @@ function triggerInputWith(string) {
   $("#wordsInput").trigger("input");
 }
 
-$("#wordsInput").on("keyup beforeinput", function (event) {
+$("#wordsInput").on("beforeinput", function (event) {
   inputValueBeforeChange = event.target.value.normalize();
-
-  // force caret at end of input
-  if (
-    event.target.selectionStart !== event.target.value.length ||
-    event.target.selectionEnd !== event.target.value.length
-  ) {
-    event.target.selectionStart = event.target.selectionEnd =
-      event.target.value.length;
-  }
 });
 
 $("#wordsInput").on("input", function (event) {
@@ -694,7 +690,11 @@ $("#wordsInput").on("input", function (event) {
 
   let inputValue = event.target.value.normalize();
 
-  if (inputValue.length >= inputValueBeforeChange.length) {
+  // if characters inserted or replaced
+  if (
+    inputValue.length >= inputValueBeforeChange.length ||
+    inputValue !== inputValueBeforeChange.slice(0, inputValue.length)
+  ) {
     handleLastChar();
   } else {
     if (inputValue === "") {
@@ -703,6 +703,7 @@ $("#wordsInput").on("input", function (event) {
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
     } else {
+      // TODO: this is broken
       for (
         let i = 0;
         i < inputValueBeforeChange.length - inputValue.length;
@@ -718,4 +719,13 @@ $("#wordsInput").on("input", function (event) {
 
   let acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc);
+
+  // force caret at end of input
+  if (
+    event.target.selectionStart !== event.target.value.length ||
+    event.target.selectionEnd !== event.target.value.length
+  ) {
+    event.target.selectionStart = event.target.selectionEnd =
+      event.target.value.length;
+  }
 });

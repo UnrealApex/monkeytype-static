@@ -801,6 +801,7 @@
                   >
                     <i class="fas fa-play"></i>
                   </span>
+                  <p id="replayStopwatch">0s</p>
                 </div>
                 <div id="wordsWrapper">
                   <div id="replayWords" class="words"></div>
@@ -854,7 +855,7 @@
                   <i class="fas fa-fw fa-backward"></i>
                 </div>
                 <div
-                  id="copyResultToClipboardButton"
+                  id="saveScreenshotButton"
                   aria-label="Save screenshot"
                   data-balloon-pos="down"
                   tabindex="0"
@@ -1888,7 +1889,9 @@
               <div class="section paceCaret" section="">
                 <h1>pace caret</h1>
                 <div class="text">
-                  Displays a second caret that moves at constant speed.
+                  Displays a second caret that moves at constant speed. The
+                  repeat option enables a pace caret when a test is repeated
+                  that will have the wpm of the previous test.
                 </div>
                 <div class="buttons">
                   <div
@@ -1917,6 +1920,14 @@
                   </div>
                   <div
                     class="button"
+                    paceCaret="repeat"
+                    tabindex="0"
+                    onclick="this.blur();"
+                  >
+                    repeat
+                  </div>
+                  <div
+                    class="button"
                     paceCaret="custom"
                     tabindex="0"
                     onclick="this.blur();"
@@ -1931,6 +1942,22 @@
                     min="0"
                     value=""
                   />
+                </div>
+              </div>
+              <div class="section repeatedPace" section="">
+                <h1>repeated pace</h1>
+                <div class="text">
+                  When repeating a test, a pace caret will automatically be
+                  enabled for one test with the speed of your previous test. It
+                  does not override the pace caret if it's already enabled.
+                </div>
+                <div class="buttons">
+                  <div class="button off" tabindex="0" onclick="this.blur();">
+                    off
+                  </div>
+                  <div class="button on" tabindex="0" onclick="this.blur();">
+                    on
+                  </div>
                 </div>
               </div>
               <div class="section paceCaretStyle" section="">

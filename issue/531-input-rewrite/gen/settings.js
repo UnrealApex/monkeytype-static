@@ -186,6 +186,10 @@ async function initGroups() {
       }
     }
   );
+  groups.repeatedPace = new SettingsGroup(
+    "repeatedPace",
+    UpdateConfig.setRepeatedPace
+  );
   groups.minWpm = new SettingsGroup("minWpm", UpdateConfig.setMinWpm, () => {
     if (Config.minWpm === "custom") {
       $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass(

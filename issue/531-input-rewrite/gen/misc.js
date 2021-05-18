@@ -385,10 +385,6 @@ export function isASCIILetter(c) {
   return c.length === 1 && /[a-z]/i.test(c);
 }
 
-export function testDiacritic(char) {
-  return /[\u02B0-\u02FF`´^¨~]/.test(char);
-}
-
 export function kogasa(cov) {
   return (
     100 * (1 - Math.tanh(cov + Math.pow(cov, 3) / 3 + Math.pow(cov, 5) / 5))
@@ -693,3 +689,5 @@ export function setCharAt(str, index, chr) {
   if (index > str.length - 1) return str;
   return str.substring(0, index) + chr + str.substring(index + 1);
 }
+
+export const trailingComposeChars = /[\u02B0-\u02FF`´^¨~]+$|⎄.*$/;
