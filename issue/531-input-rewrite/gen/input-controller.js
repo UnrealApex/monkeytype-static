@@ -191,7 +191,6 @@ function handleSpace() {
   PaceCaret.handleSpace(isWordCorrect, currentWord);
   TestStats.incrementAccuracy(isWordCorrect);
   if (isWordCorrect) {
-    Replay.addReplayEvent("submitCorrectWord");
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
     TestUI.updateActiveElement();
@@ -202,8 +201,8 @@ function handleSpace() {
     if (Funbox.active !== "nospace") {
       Sound.playClick(Config.playSoundOnClick);
     }
+    Replay.addReplayEvent("submitCorrectWord");
   } else {
-    Replay.addReplayEvent("submitErrorWord");
     if (Funbox.active !== "nospace") {
       if (!Config.playSoundOnError || Config.blindMode) {
         Sound.playClick(Config.playSoundOnClick);
@@ -254,6 +253,7 @@ function handleSpace() {
       TestLogic.finish();
       return;
     }
+    Replay.addReplayEvent("submitErrorWord");
   }
 
   TestLogic.input.currentWord = inputWord;
@@ -415,11 +415,8 @@ function handleLastChar() {
   TestStats.incrementAccuracy(thisCharCorrect);
 
   if (!thisCharCorrect) {
-    Replay.addReplayEvent("incorrectLetter", char);
     TestStats.incrementKeypressErrors();
     TestStats.pushMissedWord(TestLogic.words.getCurrent());
-  } else {
-    Replay.addReplayEvent("correctLetter", char);
   }
 
   if (thisCharCorrect) {
@@ -463,6 +460,11 @@ function handleLastChar() {
     TestLogic.input.dropLastChar();
     return;
   }
+
+  Replay.addReplayEvent(
+    thisCharCorrect ? "correctLetter" : "incorrectLetter",
+    char
+  );
 
   //update the active word top, but only once
   if (
@@ -522,6 +524,7 @@ function handleLastChar() {
   }
 
   let activeWordTopBeforeJump = TestUI.activeWordTop;
+  TestUI.updateWordElement();
   let newActiveTop = document.querySelector("#words .word.active").offsetTop;
   //stop the word jump by slicing off the last character, update word again
   if (
@@ -538,6 +541,7 @@ function handleLastChar() {
       if (!Config.showAllLines) TestUI.lineJump(currentTop);
     } else {
       TestLogic.input.dropLastChar();
+      TestUI.updateWordElement();
     }
   }
 
@@ -703,18 +707,14 @@ $("#wordsInput").on("input", function (event) {
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
     } else {
-      // TODO: this is broken
-      for (
-        let i = 0;
-        i < inputValueBeforeChange.length - inputValue.length;
-        i++
-      ) {
-        Replay.addReplayEvent("deleteLetter");
-      }
+      TestUI.updateWordElement();
+      Replay.addReplayEvent(
+        "setWordLetterIndex",
+        TestLogic.input.currentWord.length
+      );
     }
   }
 
-  TestUI.updateWordElement();
   Caret.updatePosition();
 
   let acc = Misc.roundTo2(TestStats.calculateAccuracy());

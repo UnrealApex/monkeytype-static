@@ -5165,7 +5165,7 @@ function _activate() {
 }
 
 function setFunbox(funbox, mode) {
-  if (TestLogic.active || TestUI.resultVisible) {
+  if (TestLogic.active) {
     Notifications.add("You can only change the funbox before starting a test.", 0);
     return false;
   }
@@ -5459,7 +5459,6 @@ function handleSpace() {
   TestStats.incrementAccuracy(isWordCorrect);
 
   if (isWordCorrect) {
-    Replay.addReplayEvent("submitCorrectWord");
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
     TestUI.updateActiveElement();
@@ -5471,9 +5470,9 @@ function handleSpace() {
     if (Funbox.active !== "nospace") {
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
     }
-  } else {
-    Replay.addReplayEvent("submitErrorWord");
 
+    Replay.addReplayEvent("submitCorrectWord");
+  } else {
     if (Funbox.active !== "nospace") {
       if (!UpdateConfig["default"].playSoundOnError || UpdateConfig["default"].blindMode) {
         Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -5528,6 +5527,8 @@ function handleSpace() {
       TestLogic.finish();
       return;
     }
+
+    Replay.addReplayEvent("submitErrorWord");
   }
 
   TestLogic.input.currentWord = inputWord;
@@ -5656,11 +5657,8 @@ function handleLastChar() {
   TestStats.incrementAccuracy(thisCharCorrect);
 
   if (!thisCharCorrect) {
-    Replay.addReplayEvent("incorrectLetter", _char2);
     TestStats.incrementKeypressErrors();
     TestStats.pushMissedWord(TestLogic.words.getCurrent());
-  } else {
-    Replay.addReplayEvent("correctLetter", _char2);
   }
 
   if (thisCharCorrect) {
@@ -5698,8 +5696,9 @@ function handleLastChar() {
   if (UpdateConfig["default"].stopOnError == "letter" && !thisCharCorrect) {
     TestLogic.input.dropLastChar();
     return;
-  } //update the active word top, but only once
+  }
 
+  Replay.addReplayEvent(thisCharCorrect ? "correctLetter" : "incorrectLetter", _char2); //update the active word top, but only once
 
   if (TestLogic.input.currentWord.length === 2 && TestLogic.words.currentIndex === 0) {
     TestUI.setActiveWordTop(document.querySelector("#words .active").offsetTop);
@@ -5738,6 +5737,7 @@ function handleLastChar() {
   }
 
   var activeWordTopBeforeJump = TestUI.activeWordTop;
+  TestUI.updateWordElement();
   var newActiveTop = document.querySelector("#words .word.active").offsetTop; //stop the word jump by slicing off the last character, update word again
 
   if (activeWordTopBeforeJump < newActiveTop && !TestUI.lineTransition && TestLogic.input.currentWord.length > 1) {
@@ -5746,6 +5746,7 @@ function handleLastChar() {
       if (!UpdateConfig["default"].showAllLines) TestUI.lineJump(currentTop);
     } else {
       TestLogic.input.dropLastChar();
+      TestUI.updateWordElement();
     }
   } //simulate space press in nospace funbox
 
@@ -5874,14 +5875,11 @@ $("#wordsInput").on("input", function (event) {
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
     } else {
-      // TODO: this is broken
-      for (var i = 0; i < inputValueBeforeChange.length - inputValue.length; i++) {
-        Replay.addReplayEvent("deleteLetter");
-      }
+      TestUI.updateWordElement();
+      Replay.addReplayEvent("setWordLetterIndex", TestLogic.input.currentWord.length);
     }
   }
 
-  TestUI.updateWordElement();
   Caret.updatePosition();
   var acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc); // force caret at end of input
@@ -8554,23 +8552,25 @@ function handleDisplayLogic(item) {
       //if letter is an extra
       myElement = document.createElement("letter");
       myElement.classList.add("extra");
-      myElement.innerHTML = item.letter;
+      myElement.innerHTML = item.value;
       activeWord.appendChild(myElement);
     }
 
     myElement = activeWord.children[curPos];
     myElement.classList.add("incorrect");
     curPos++;
-  } else if (item.action === "deleteLetter") {
-    var _myElement = activeWord.children[curPos - 1];
+  } else if (item.action === "setWordLetterIndex") {
+    curPos = item.value; // remove all letters from cursor to end of word
 
-    if (_myElement.classList.contains("extra")) {
-      _myElement.remove();
-    } else {
-      _myElement.className = "";
+    for (var i = curPos; i < activeWord.children.length; i++) {
+      var _myElement = activeWord.children[i];
+
+      if (_myElement.classList.contains("extra")) {
+        _myElement.remove();
+      } else {
+        _myElement.className = "";
+      }
     }
-
-    curPos--;
   } else if (item.action === "submitCorrectWord") {
     wordPos++;
     curPos = 0;
@@ -8648,27 +8648,17 @@ function stopReplayRecording() {
   replayRecording = false;
 }
 
-function addReplayEvent(action) {
-  var letter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-
-  if (replayRecording === false) {
+function addReplayEvent(action, value) {
+  if (!replayRecording) {
     return;
   }
 
   var timeDelta = performance.now() - replayStartTime;
-
-  if (action === "incorrectLetter" || action === "correctLetter") {
-    replayData.push({
-      action: action,
-      letter: letter,
-      time: timeDelta
-    });
-  } else {
-    replayData.push({
-      action: action,
-      time: timeDelta
-    });
-  }
+  replayData.push({
+    action: action,
+    value: value,
+    time: timeDelta
+  });
 }
 
 function playReplay() {
@@ -9217,6 +9207,34 @@ function update() {
   }
 }
 
+function toggleSettingsGroup(groupName) {
+  $(".pageSettings .settingsGroup.".concat(groupName)).stop(true, true).slideToggle(250).toggleClass("slideup");
+
+  if ($(".pageSettings .settingsGroup.".concat(groupName)).hasClass("slideup")) {
+    $(".pageSettings .sectionGroupTitle[group=".concat(groupName, "] .fas")).stop(true, true).animate({
+      deg: -90
+    }, {
+      duration: 250,
+      step: function step(now) {
+        $(this).css({
+          transform: "rotate(" + now + "deg)"
+        });
+      }
+    });
+  } else {
+    $(".pageSettings .sectionGroupTitle[group=".concat(groupName, "] .fas")).stop(true, true).animate({
+      deg: 0
+    }, {
+      duration: 250,
+      step: function step(now) {
+        $(this).css({
+          transform: "rotate(" + now + "deg)"
+        });
+      }
+    });
+  }
+}
+
 $(document).on("focusout", ".pageSettings .section.paceCaret input.customPaceCaretSpeed", function (e) {
   UpdateConfig.setPaceCaretCustomSpeed(parseInt($(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val()));
 });
@@ -9254,32 +9272,7 @@ $("#exportSettingsButton").click(function (e) {
   });
 });
 $(".pageSettings .sectionGroupTitle").click(function (e) {
-  var group = $(e.currentTarget).attr("group");
-  $(".pageSettings .settingsGroup.".concat(group)).stop(true, true).slideToggle(250).toggleClass("slideup");
-
-  if ($(".pageSettings .settingsGroup.".concat(group)).hasClass("slideup")) {
-    $(".pageSettings .sectionGroupTitle[group=".concat(group, "] .fas")).stop(true, true).animate({
-      deg: -90
-    }, {
-      duration: 250,
-      step: function step(now) {
-        $(this).css({
-          transform: "rotate(" + now + "deg)"
-        });
-      }
-    });
-  } else {
-    $(".pageSettings .sectionGroupTitle[group=".concat(group, "] .fas")).stop(true, true).animate({
-      deg: 0
-    }, {
-      duration: 250,
-      step: function step(now) {
-        $(this).css({
-          transform: "rotate(" + now + "deg)"
-        });
-      }
-    });
-  }
+  toggleSettingsGroup($(e.currentTarget).attr("group"));
 });
 $(".pageSettings #resetPersonalBestsButton").on("click", function (e) {
   SimplePopups.list.resetPersonalBests.show();
@@ -9304,6 +9297,11 @@ $(".pageSettings .section.customLayoutfluid .inputAndSave .input").keypress(func
     UpdateConfig.setCustomLayoutfluid($(".pageSettings .section.customLayoutfluid .inputAndSave input").val());
     Notifications.add("Custom layoutfluid saved", 1);
   }
+});
+$(".quickNav .links a").on("click", function (e) {
+  var settingsGroup = e.target.innerText;
+  var isOpen = $(".pageSettings .settingsGroup.".concat(settingsGroup)).hasClass("slideup");
+  isOpen && toggleSettingsGroup(settingsGroup);
 });
 
 },{"./config":6,"./funbox":14,"./language-picker":19,"./layouts":21,"./loader":24,"./misc":26,"./notifications":28,"./settings-group":37,"./simple-popups":40,"./sound":41,"./theme-picker":50,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],39:[function(require,module,exports){
