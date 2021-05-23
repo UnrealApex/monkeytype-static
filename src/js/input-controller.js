@@ -775,7 +775,7 @@ $("#wordsInput").on("input", function (event) {
       event.target.value = " ";
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
-    } else {
+    } else if (!Misc.trailingComposeChars.test(inputValue)) {
       TestUI.updateWordElement();
       Replay.addReplayEvent(
         "setWordLetterIndex",
