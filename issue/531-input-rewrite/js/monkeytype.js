@@ -2186,11 +2186,7 @@ function updateSuggested() {
         var escaped = obj2.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
         var re = new RegExp("\\b" + escaped, "g");
         var res = obj.display.toLowerCase().match(re);
-        var res2 = null;
-
-        if (obj.alias !== undefined) {
-          res2 = obj.alias.toLowerCase().match(re);
-        }
+        var res2 = obj.alias !== undefined ? obj.alias.toLowerCase().match(re) : null;
 
         if (res != null && res.length > 0 || res2 != null && res2.length > 0) {
           foundcount++;
@@ -2199,7 +2195,7 @@ function updateSuggested() {
         }
       });
 
-      if (foundcount > 0) {
+      if (foundcount > inputVal.length - 1) {
         obj.found = true;
       } else {
         obj.found = false;
@@ -5874,7 +5870,7 @@ $("#wordsInput").on("input", function (event) {
       event.target.value = " ";
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
-    } else {
+    } else if (!Misc.trailingComposeChars.test(inputValue)) {
       TestUI.updateWordElement();
       Replay.addReplayEvent("setWordLetterIndex", TestLogic.input.currentWord.length);
     }
@@ -6459,6 +6455,10 @@ var layouts = {
   colemaQ: {
     keymapShowTopRow: true,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "=+", "[{", ";:", "wW", "fF", "pP", "bB", "jJ", "lL", "uU", "yY", "qQ", "-_", "]}", "\\|", "aA", "rR", "sS", "tT", "gG", "mM", "nN", "eE", "iI", "oO", "'\"", "\\|", "xX", "cC", "dD", "kK", "zZ", "vV", "hH", "/?", ".>", ",<", " "]
+  },
+  engram: {
+    keymapShowTopRow: true,
+    keys: ["[{", "1|", "2=", "3~", "4+", "5<", "6>", "7^", "8&", "9%", "0*", "]}", "/\\", "bB", "yY", "oO", "uU", "'(", "\")", "lL", "dD", "wW", "vV", "zZ", "#$", "@`", "cC", "iI", "eE", "aA", ",;", ".:", "hH", "tT", "sS", "nN", "qQ", "\\|", "gG", "xX", "jJ", "kK", "-_", "?!", "rR", "mM", "fF", "pP", " "]
   }
 };
 var _default = layouts;
@@ -10480,13 +10480,18 @@ function _init() {
             // } else {
 
 
-            TestUI.showWords(); // }
-
-            if ($(".pageTest").hasClass("active")) {
-              Funbox.activate();
+            if (!$(".pageTest").hasClass("active")) {
+              _context2.next = 67;
+              break;
             }
 
-          case 66:
+            _context2.next = 67;
+            return Funbox.activate();
+
+          case 67:
+            TestUI.showWords(); // }
+
+          case 68:
           case "end":
             return _context2.stop();
         }
@@ -10628,7 +10633,7 @@ function restart() {
 
           case 9:
             PaceCaret.init(nosave);
-            _context.next = 21;
+            _context.next = 22;
             break;
 
           case 12:
@@ -10638,11 +10643,14 @@ function restart() {
             Replay.stopReplayRecording();
             words.resetCurrentIndex();
             input.reset();
+            _context.next = 20;
+            return Funbox.activate();
+
+          case 20:
             TestUI.showWords();
-            Funbox.activate();
             PaceCaret.init();
 
-          case 21:
+          case 22:
             if (UpdateConfig["default"].mode === "quote") {
               setRepeated(false);
             }
@@ -10712,7 +10720,7 @@ function restart() {
               // console.log(TestStats.restartCount);
             });
 
-          case 38:
+          case 39:
           case "end":
             return _context.stop();
         }
