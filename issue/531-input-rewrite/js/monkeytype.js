@@ -5755,9 +5755,9 @@ function handleLastChar() {
 
 $(document).keydown(function (event) {
   //autofocus
+  var wordsFocused = $("#wordsInput").is(":focus");
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
-  var wordsFocused = $("#wordsInput").is(":focus");
   var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
 
   if (pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
@@ -5765,7 +5765,8 @@ $(document).keydown(function (event) {
 
     if (UpdateConfig["default"].showOutOfFocusWarning) {
       event.preventDefault();
-      event.stopImmediatePropagation();
+    } else {
+      wordsFocused = true;
     }
   } //tab
 
@@ -5782,14 +5783,10 @@ $(document).keydown(function (event) {
       event.preventDefault();
     }
   }
-});
-$("#wordsInput").keydown(function (event) {
-  if (!event.originalEvent.isTrusted) {
-    event.preventDefault();
-    return;
-  }
 
-  if (TestUI.testRestarting) {
+  if (!wordsFocused) return;
+
+  if (!event.originalEvent.isTrusted || TestUI.testRestarting) {
     event.preventDefault();
     return;
   }
@@ -5860,7 +5857,6 @@ $("#wordsInput").on("beforeinput", function (event) {
   inputValueBeforeChange = event.target.value.normalize();
 });
 $("#wordsInput").on("input", function (event) {
-  if (TestUI.testRestarting) return;
   var inputValue = event.target.value.normalize(); // if characters inserted or replaced
 
   if (inputValue.length >= inputValueBeforeChange.length || inputValue !== inputValueBeforeChange.slice(0, inputValue.length)) {
