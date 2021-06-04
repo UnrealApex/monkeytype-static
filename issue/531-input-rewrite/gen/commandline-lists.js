@@ -482,6 +482,7 @@ let commandsPaceCaret = {
       display: "off",
       exec: () => {
         UpdateConfig.setPaceCaret("off");
+        TestLogic.restart();
       },
     },
     {
@@ -489,6 +490,7 @@ let commandsPaceCaret = {
       display: "pb",
       exec: () => {
         UpdateConfig.setPaceCaret("pb");
+        TestLogic.restart();
       },
     },
     {
@@ -496,6 +498,7 @@ let commandsPaceCaret = {
       display: "average",
       exec: () => {
         UpdateConfig.setPaceCaret("average");
+        TestLogic.restart();
       },
     },
     {
@@ -505,6 +508,7 @@ let commandsPaceCaret = {
       exec: (input) => {
         UpdateConfig.setPaceCaretCustomSpeed(input);
         UpdateConfig.setPaceCaret("custom");
+        TestLogic.restart();
       },
     },
   ],
@@ -1176,6 +1180,37 @@ let commandsCopyWordsToClipboard = {
   ],
 };
 
+let commandsMonkeyPowerLevel = {
+  title: "Power mode...",
+  list: [
+    {
+      id: "monkeyPowerLevelOff",
+      display: "off",
+      exec: () => UpdateConfig.setMonkeyPowerLevel("off"),
+    },
+    {
+      id: "monkeyPowerLevel1",
+      display: "1",
+      exec: () => UpdateConfig.setMonkeyPowerLevel("1"),
+    },
+    {
+      id: "monkeyPowerLevel2",
+      display: "2",
+      exec: () => UpdateConfig.setMonkeyPowerLevel("2"),
+    },
+    {
+      id: "monkeyPowerLevel3",
+      display: "3",
+      exec: () => UpdateConfig.setMonkeyPowerLevel("3"),
+    },
+    {
+      id: "monkeyPowerLevel4",
+      display: "4",
+      exec: () => UpdateConfig.setMonkeyPowerLevel("4"),
+    },
+  ],
+};
+
 export let defaultCommands = {
   title: "",
   list: [
@@ -1660,7 +1695,7 @@ export let defaultCommands = {
       input: true,
       exec: (input) => {
         UpdateConfig.setCustomLayoutfluid(input);
-        if (Funbox.active === "layoutfluid") TestLogic.restart();
+        if (Config.funbox === "layoutfluid") TestLogic.restart();
         // UpdateConfig.setLayout(
         //   Config.customLayoutfluid
         //     ? Config.customLayoutfluid.split("_")[0]
@@ -1864,6 +1899,16 @@ export let defaultCommands = {
       input: true,
       defaultValue: "",
       exec: (input) => {},
+    },
+    {
+      id: "monkeyPower",
+      display: "Power mode...",
+      alias: "powermode",
+      subgroup: true,
+      exec: () => {
+        current.push(commandsMonkeyPowerLevel);
+        Commandline.show();
+      },
     },
   ],
 };

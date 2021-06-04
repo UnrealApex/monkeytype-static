@@ -136,7 +136,7 @@ export function changePage(page) {
     TestStats.resetIncomplete();
     ManualRestart.set();
     TestLogic.restart();
-    Funbox.activate(Funbox.funboxSaved, Funbox.modeSaved);
+    Funbox.activate(Config.funbox);
   } else if (page == "about") {
     setPageTransition(true);
     TestLogic.restart();
@@ -145,7 +145,7 @@ export function changePage(page) {
       history.pushState("#about", null, "#about");
       $(".page.pageAbout").addClass("active");
     });
-    Funbox.activate("none", null);
+    Funbox.activate("none");
     TestConfig.hide();
   } else if (page == "settings") {
     setPageTransition(true);
@@ -155,7 +155,7 @@ export function changePage(page) {
       history.pushState("#settings", null, "#settings");
       $(".page.pageSettings").addClass("active");
     });
-    Funbox.activate("none", null);
+    Funbox.activate("none");
     Settings.update();
     TestConfig.hide();
   }

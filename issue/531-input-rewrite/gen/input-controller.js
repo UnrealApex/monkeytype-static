@@ -21,6 +21,7 @@ import * as TestTimer from "./test-timer";
 import * as Focus from "./focus";
 import * as ShiftTracker from "./shift-tracker";
 import * as Replay from "./replay.js";
+import * as MonkeyPower from "./monkey-power";
 
 let dontInsertSpace = false;
 let inputValueBeforeChange = " ";
@@ -123,7 +124,7 @@ function backspaceToPrevious() {
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
-  if (Funbox.active === "nospace") {
+  if (Config.funbox === "nospace") {
     TestLogic.input.currentWord = TestLogic.input.currentWord.slice(0, -1);
   }
 
@@ -160,7 +161,7 @@ function handleSpace() {
   }
 
   let currentWord = TestLogic.words.getCurrent();
-  if (Funbox.active === "layoutfluid" && Config.mode !== "time") {
+  if (Config.funbox === "layoutfluid" && Config.mode !== "time") {
     // here I need to check if Config.customLayoutFluid exists because of my scuffed solution of returning whenever value is undefined in the setCustomLayoutfluid function
     const layouts = Config.customLayoutfluid
       ? Config.customLayoutfluid.split("#")
@@ -188,6 +189,7 @@ function handleSpace() {
 
   //correct word or in zen mode
   const isWordCorrect = currentWord == inputWord || Config.mode == "zen";
+  MonkeyPower.addPower(isWordCorrect, true);
   PaceCaret.handleSpace(isWordCorrect, currentWord);
   TestStats.incrementAccuracy(isWordCorrect);
   if (isWordCorrect) {
@@ -198,12 +200,12 @@ function handleSpace() {
     Caret.updatePosition();
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
-    if (Funbox.active !== "nospace") {
+    if (Config.funbox !== "nospace") {
       Sound.playClick(Config.playSoundOnClick);
     }
     Replay.addReplayEvent("submitCorrectWord");
   } else {
-    if (Funbox.active !== "nospace") {
+    if (Config.funbox !== "nospace") {
       if (!Config.playSoundOnError || Config.blindMode) {
         Sound.playClick(Config.playSoundOnClick);
       } else {
@@ -378,7 +380,7 @@ function handleLastChar() {
   let char =
     TestLogic.input.currentWord[TestLogic.input.currentWord.length - 1];
 
-  if (char === "\n" && Funbox.active === "58008") {
+  if (char === "\n" && Config.funbox === "58008") {
     char = " ";
   }
 
@@ -412,6 +414,7 @@ function handleLastChar() {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) return;
 
+  MonkeyPower.addPower(thisCharCorrect);
   TestStats.incrementAccuracy(thisCharCorrect);
 
   if (!thisCharCorrect) {
@@ -547,7 +550,7 @@ function handleLastChar() {
 
   //simulate space press in nospace funbox
   if (
-    (Funbox.active === "nospace" &&
+    (Config.funbox === "nospace" &&
       TestLogic.input.currentWord.length ===
         TestLogic.words.getCurrent().length) ||
     (char === "\n" && thisCharCorrect)

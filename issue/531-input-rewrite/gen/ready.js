@@ -4,6 +4,7 @@ import * as Misc from "./misc";
 import * as Settings from "./settings";
 import * as RouteController from "./route-controller";
 import * as UI from "./ui";
+import * as MonkeyPower from "./monkey-power";
 
 ManualRestart.set();
 Misc.migrateFromCookies();
@@ -15,7 +16,7 @@ $(document).ready(() => {
   if (window.location.hash === "") {
     $("#top .config").removeClass("hidden");
   }
-  $("body").css("transition", ".25s");
+  $("body").css("transition", "all .25s, transform .05s");
   if (Config.quickTab) {
     $("#restartTestButton").addClass("hidden");
   }
@@ -37,4 +38,5 @@ $(document).ready(() => {
       }
     });
   Settings.settingsFillPromise.then(Settings.update);
+  MonkeyPower.init();
 });

@@ -390,15 +390,10 @@ async function fillSettingsPage() {
 
 export let settingsFillPromise = fillSettingsPage();
 
-export function hideAccountSection() {
-  $(`.sectionGroupTitle[group='account']`).addClass("hidden");
-  $(`.settingsGroup.account`).addClass("hidden");
-}
-
 function setActiveFunboxButton() {
   $(`.pageSettings .section.funbox .button`).removeClass("active");
   $(
-    `.pageSettings .section.funbox .button[funbox='${Funbox.funboxSaved}']`
+    `.pageSettings .section.funbox .button[funbox='${Config.funbox}']`
   ).addClass("active");
 }
 
@@ -568,10 +563,6 @@ $(".pageSettings .sectionGroupTitle").click((e) => {
 
 $(".pageSettings #resetPersonalBestsButton").on("click", (e) => {
   SimplePopups.list.resetPersonalBests.show();
-});
-
-$(".pageSettings #updateAccountEmail").on("click", (e) => {
-  SimplePopups.list.updateEmail.show();
 });
 
 $(".pageSettings .section.customBackgroundSize .inputAndButton .save").on(

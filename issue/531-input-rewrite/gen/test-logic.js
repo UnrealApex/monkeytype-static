@@ -24,6 +24,7 @@ import * as TestTimer from "./test-timer";
 import * as OutOfFocus from "./out-of-focus";
 import * as ThemeColors from "./theme-colors";
 import * as Replay from "./replay.js";
+import * as MonkeyPower from "./monkey-power";
 
 export let notSignedInLastResult = null;
 
@@ -127,6 +128,7 @@ export let bailout = false;
 
 export function setActive(tf) {
   active = tf;
+  if (!tf) MonkeyPower.reset();
 }
 
 export function setRepeated(tf) {
@@ -152,7 +154,7 @@ export function setRandomQuote(rq) {
 export function punctuateWord(previousWord, currentWord, index, maxindex) {
   let word = currentWord;
 
-  if (Funbox.funboxSaved === "58008") {
+  if (Config.funbox === "58008") {
     if (currentWord.length > 3) {
       if (Math.random() < 0.75) {
         let special = ["/", "*", "-", "+"][Math.floor(Math.random() * 4)];
@@ -279,7 +281,7 @@ export function startTest() {
   TimerProgress.update(TestTimer.time);
   TestTimer.clear();
 
-  if (Funbox.active === "memory") {
+  if (Config.funbox === "memory") {
     Funbox.resetMemoryTimer();
     $("#wordsWrapper").addClass("hidden");
   }
@@ -375,7 +377,7 @@ export async function init() {
     if (Config.mode === "words" && Config.words === 0) {
       wordsBound = 100;
     }
-    if (Funbox.funboxSaved === "plus_one") {
+    if (Config.funbox === "plus_one") {
       wordsBound = 2;
     }
     let wordset = language.words;
@@ -404,7 +406,7 @@ export async function init() {
         }
       }
 
-      if (Funbox.funboxSaved === "rAnDoMcAsE") {
+      if (Config.funbox === "rAnDoMcAsE") {
         let randomcaseword = "";
         for (let i = 0; i < randomWord.length; i++) {
           if (i % 2 != 0) {
@@ -414,17 +416,17 @@ export async function init() {
           }
         }
         randomWord = randomcaseword;
-      } else if (Funbox.funboxSaved === "gibberish") {
+      } else if (Config.funbox === "gibberish") {
         randomWord = Misc.getGibberish();
-      } else if (Funbox.funboxSaved === "58008") {
+      } else if (Config.funbox === "58008") {
         // UpdateConfig.setPunctuation(false, true);
         UpdateConfig.setNumbers(false, true);
         randomWord = Misc.getNumbers(7);
-      } else if (Funbox.funboxSaved === "specials") {
+      } else if (Config.funbox === "specials") {
         UpdateConfig.setPunctuation(false, true);
         UpdateConfig.setNumbers(false, true);
         randomWord = Misc.getSpecials();
-      } else if (Funbox.funboxSaved === "ascii") {
+      } else if (Config.funbox === "ascii") {
         UpdateConfig.setPunctuation(false, true);
         UpdateConfig.setNumbers(false, true);
         randomWord = Misc.getASCII();
@@ -555,7 +557,6 @@ export async function init() {
   }
   TestUI.showWords();
   // }
-
 }
 
 export function restart(
@@ -602,9 +603,10 @@ export function restart(
   if (active) {
     TestStats.pushKeypressesToHistory();
     let testSeconds = TestStats.calculateTestSeconds(performance.now());
-    let afkseconds = TestStats.calculateAfkSeconds();
+    let afkseconds = TestStats.calculateAfkSeconds(testSeconds);
     // incompleteTestSeconds += ;
     let tt = testSeconds - afkseconds;
+    if (tt < 0) tt = 0;
     console.log(
       `increasing incomplete time by ${tt}s (${testSeconds}s - ${afkseconds}s afk)`
     );
@@ -718,7 +720,7 @@ export function restart(
       document.querySelector("#liveWpm").innerHTML = "0";
       document.querySelector("#liveAcc").innerHTML = "100%";
 
-      if (Funbox.active === "memory") {
+      if (Config.funbox === "memory") {
         Funbox.startMemoryTimer();
         if (Config.keymapMode === "next") {
           UpdateConfig.setKeymapMode("react");
@@ -736,15 +738,15 @@ export function restart(
         mode2 = randomQuote.id;
       }
       let fbtext = "";
-      if (Funbox.active !== "none") {
-        fbtext = " " + Funbox.active;
+      if (Config.funbox !== "none") {
+        fbtext = " " + Config.funbox;
       }
       $(".pageTest #premidTestMode").text(
         `${Config.mode} ${mode2} ${Config.language}${fbtext}`
       );
       $(".pageTest #premidSecondsLeft").text(Config.time);
 
-      if (Funbox.active === "layoutfluid") {
+      if (Config.funbox === "layoutfluid") {
         UpdateConfig.setLayout(
           Config.customLayoutfluid
             ? Config.customLayoutfluid.split("#")[0]
@@ -818,7 +820,7 @@ export function calculateWpmAndRaw() {
   if (words.getCurrent() == input.currentWord) {
     correctWordChars += input.currentWord.length;
   }
-  if (Funbox.active === "nospace") {
+  if (Config.funbox === "nospace") {
     spaces = 0;
   }
   chars += input.currentWord.length;
@@ -833,7 +835,7 @@ export function calculateWpmAndRaw() {
 
 export function addWord() {
   let bound = 100;
-  if (Funbox.active === "plus_one") bound = 1;
+  if (Config.funbox === "plus_one") bound = 1;
   if (
     words.length - input.history.length > bound ||
     (Config.mode === "words" &&
@@ -886,7 +888,7 @@ export function addWord() {
     }
   }
 
-  if (Funbox.active === "rAnDoMcAsE") {
+  if (Config.funbox === "rAnDoMcAsE") {
     let randomcaseword = "";
     for (let i = 0; i < randomWord.length; i++) {
       if (i % 2 != 0) {
@@ -896,13 +898,13 @@ export function addWord() {
       }
     }
     randomWord = randomcaseword;
-  } else if (Funbox.active === "gibberish") {
+  } else if (Config.funbox === "gibberish") {
     randomWord = Misc.getGibberish();
-  } else if (Funbox.active === "58008") {
+  } else if (Config.funbox === "58008") {
     randomWord = Misc.getNumbers(7);
-  } else if (Funbox.active === "specials") {
+  } else if (Config.funbox === "specials") {
     randomWord = Misc.getSpecials();
-  } else if (Funbox.active === "ascii") {
+  } else if (Config.funbox === "ascii") {
     randomWord = Misc.getASCII();
   }
 
@@ -977,7 +979,7 @@ export function finish(difficultyFailed = false) {
   lastTestWpm = stats.wpm;
 
   let testtime = stats.time;
-  let afkseconds = TestStats.calculateAfkSeconds();
+  let afkseconds = TestStats.calculateAfkSeconds(testtime);
   let afkSecondsPercent = Misc.roundTo2((afkseconds / testtime) * 100);
 
   ChartController.result.options.annotation.annotations = [];
@@ -1307,7 +1309,7 @@ export function finish(difficultyFailed = false) {
       keyDuration: TestStats.keypressTimings.duration.array,
       consistency: consistency,
       keyConsistency: keyConsistency,
-      funbox: Funbox.funboxSaved,
+      funbox: Config.funbox,
       bailedOut: bailout,
       chartData: chartData,
       customText: cdata,
@@ -1352,9 +1354,9 @@ export function finish(difficultyFailed = false) {
   }
   if (
     Config.mode != "custom" &&
-    Funbox.funboxSaved !== "gibberish" &&
-    Funbox.funboxSaved !== "ascii" &&
-    Funbox.funboxSaved !== "58008"
+    Config.funbox !== "gibberish" &&
+    Config.funbox !== "ascii" &&
+    Config.funbox !== "58008"
   ) {
     testType += "<br>" + lang;
   }
@@ -1367,8 +1369,8 @@ export function finish(difficultyFailed = false) {
   if (Config.blindMode) {
     testType += "<br>blind";
   }
-  if (Funbox.funboxSaved !== "none") {
-    testType += "<br>" + Funbox.funboxSaved.replace(/_/g, " ");
+  if (Config.funbox !== "none") {
+    testType += "<br>" + Config.funbox.replace(/_/g, " ");
   }
   if (Config.difficulty == "expert") {
     testType += "<br>expert";
@@ -1422,9 +1424,9 @@ export function finish(difficultyFailed = false) {
     $("#result .stats .source").addClass("hidden");
   }
 
-  if (Funbox.funboxSaved !== "none") {
-    let content = Funbox.funboxSaved;
-    if (Funbox.funboxSaved === "layoutfluid") {
+  if (Config.funbox !== "none") {
+    let content = Config.funbox;
+    if (Config.funbox === "layoutfluid") {
       content += " " + Config.customLayoutfluid.replace(/#/g, " ");
     }
     ChartController.result.options.annotation.annotations.push({
@@ -1475,7 +1477,9 @@ export function fail() {
   TestStats.pushKeypressesToHistory();
   finish(true);
   let testSeconds = TestStats.calculateTestSeconds(performance.now());
-  let afkseconds = TestStats.calculateAfkSeconds();
-  TestStats.incrementIncompleteSeconds(testSeconds - afkseconds);
+  let afkseconds = TestStats.calculateAfkSeconds(testSeconds);
+  let tt = testSeconds - afkseconds;
+  if (tt < 0) tt = 0;
+  TestStats.incrementIncompleteSeconds(tt);
   TestStats.incrementRestartCount();
 }

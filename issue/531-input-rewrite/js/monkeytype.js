@@ -1,6 +1,24 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+var CommandlineLists = _interopRequireWildcard(require("./commandline-lists.js"));
+
+var Commandline = _interopRequireWildcard(require("./commandline.js"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+$(".supportButtons .button.ads").click(function (e) {
+  CommandlineLists.pushCurrent(CommandlineLists.commandsEnableAds);
+  Commandline.show();
+});
+
+},{"./commandline-lists.js":5,"./commandline.js":6,"@babel/runtime/helpers/typeof":72}],2:[function(require,module,exports){
+"use strict";
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _config = _interopRequireDefault(require("./config"));
@@ -27,7 +45,7 @@ $(document).keydown(function (event) {
   } catch (_unused) {}
 });
 
-},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":64}],2:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":66}],3:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -172,7 +190,7 @@ function show() {
   }
 }
 
-},{"./config":6,"./misc":26,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],3:[function(require,module,exports){
+},{"./config":7,"./misc":27,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],4:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -412,7 +430,7 @@ function updateAllChartColors() {
   result.updateColors();
 }
 
-},{"./misc":26,"./test-stats":45,"./theme-colors":48,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70,"chart.js":73}],4:[function(require,module,exports){
+},{"./misc":27,"./test-stats":47,"./theme-colors":50,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"chart.js":75}],5:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -852,18 +870,21 @@ var commandsPaceCaret = {
     display: "off",
     exec: function exec() {
       UpdateConfig.setPaceCaret("off");
+      TestLogic.restart();
     }
   }, {
     id: "setPaceCaretPb",
     display: "pb",
     exec: function exec() {
       UpdateConfig.setPaceCaret("pb");
+      TestLogic.restart();
     }
   }, {
     id: "setPaceCaretAverage",
     display: "average",
     exec: function exec() {
       UpdateConfig.setPaceCaret("average");
+      TestLogic.restart();
     }
   }, {
     id: "setPaceCaretCustom",
@@ -872,6 +893,7 @@ var commandsPaceCaret = {
     exec: function exec(input) {
       UpdateConfig.setPaceCaretCustomSpeed(input);
       UpdateConfig.setPaceCaret("custom");
+      TestLogic.restart();
     }
   }]
 };
@@ -1435,6 +1457,40 @@ var commandsCopyWordsToClipboard = {
     }
   }]
 };
+var commandsMonkeyPowerLevel = {
+  title: "Power mode...",
+  list: [{
+    id: "monkeyPowerLevelOff",
+    display: "off",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("off");
+    }
+  }, {
+    id: "monkeyPowerLevel1",
+    display: "1",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("1");
+    }
+  }, {
+    id: "monkeyPowerLevel2",
+    display: "2",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("2");
+    }
+  }, {
+    id: "monkeyPowerLevel3",
+    display: "3",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("3");
+    }
+  }, {
+    id: "monkeyPowerLevel4",
+    display: "4",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("4");
+    }
+  }]
+};
 var defaultCommands = {
   title: "",
   list: [{
@@ -1861,7 +1917,7 @@ var defaultCommands = {
     input: true,
     exec: function exec(input) {
       UpdateConfig.setCustomLayoutfluid(input);
-      if (Funbox.active === "layoutfluid") TestLogic.restart(); // UpdateConfig.setLayout(
+      if (UpdateConfig["default"].funbox === "layoutfluid") TestLogic.restart(); // UpdateConfig.setLayout(
       //   Config.customLayoutfluid
       //     ? Config.customLayoutfluid.split("_")[0]
       //     : "qwerty"
@@ -2045,6 +2101,15 @@ var defaultCommands = {
     input: true,
     defaultValue: "",
     exec: function exec(input) {}
+  }, {
+    id: "monkeyPower",
+    display: "Power mode...",
+    alias: "powermode",
+    subgroup: true,
+    exec: function exec() {
+      current.push(commandsMonkeyPowerLevel);
+      Commandline.show();
+    }
   }]
 };
 exports.defaultCommands = defaultCommands;
@@ -2062,7 +2127,7 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./commandline":5,"./config":6,"./custom-text":10,"./custom-text-popup":9,"./funbox":14,"./layouts":21,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./practise-missed":32,"./settings":38,"./sound":41,"./test-logic":44,"./test-stats":45,"./test-ui":47,"./theme-controller":49,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],5:[function(require,module,exports){
+},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./practise-missed":34,"./settings":40,"./sound":43,"./test-logic":46,"./test-stats":47,"./test-ui":49,"./theme-controller":51,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],6:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2530,7 +2595,7 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":4,"./config":6,"./focus":13,"./test-ui":47,"./theme-controller":49,"@babel/runtime/helpers/defineProperty":61,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],6:[function(require,module,exports){
+},{"./commandline-lists":5,"./config":7,"./focus":14,"./test-ui":49,"./theme-controller":51,"@babel/runtime/helpers/defineProperty":63,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2552,6 +2617,7 @@ exports.setPlaySoundOnClick = setPlaySoundOnClick;
 exports.togglePlaySoundOnError = togglePlaySoundOnError;
 exports.setDifficulty = setDifficulty;
 exports.setFavThemes = setFavThemes;
+exports.setFunbox = setFunbox;
 exports.toggleBlindMode = toggleBlindMode;
 exports.setBlindMode = setBlindMode;
 exports.setStopOnError = setStopOnError;
@@ -2639,6 +2705,7 @@ exports.setCustomBackground = setCustomBackground;
 exports.setCustomLayoutfluid = setCustomLayoutfluid;
 exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.setCustomBackgroundFilter = setCustomBackgroundFilter;
+exports.setMonkeyPowerLevel = setMonkeyPowerLevel;
 exports.apply = apply;
 exports.reset = reset;
 exports.loadFromLocalStorage = loadFromLocalStorage;
@@ -2729,6 +2796,7 @@ var defaultConfig = {
   paceCaretStyle: "default",
   flipTestColors: false,
   layout: "default",
+  funbox: "none",
   confidenceMode: "off",
   indicateTypos: false,
   timerStyle: "mini",
@@ -2771,7 +2839,8 @@ var defaultConfig = {
   customBackground: "",
   customBackgroundSize: "cover",
   customBackgroundFilter: [0, 1, 1, 1, 1],
-  customLayoutfluid: "qwerty#dvorak#colemak"
+  customLayoutfluid: "qwerty#dvorak#colemak",
+  monkeyPowerLevel: "off"
 };
 
 function isConfigKeyValid(name) {
@@ -2890,7 +2959,7 @@ function togglePunctuation() {
 function setMode(mode, nosave) {
   if (TestUI.testRestarting) return;
 
-  if (mode !== "words" && Funbox.active === "memory") {
+  if (mode !== "words" && config.funbox === "memory") {
     Notifications.add("Memory funbox can only be used with words mode.", 0);
     return;
   }
@@ -2918,8 +2987,8 @@ function setMode(mode, nosave) {
     $("#top .config .numbersMode").removeClass("hidden");
     $("#top .config .quoteLength").addClass("hidden");
   } else if (config.mode == "custom") {
-    if (Funbox.active === "58008" || Funbox.active === "gibberish" || Funbox.active === "ascii") {
-      Funbox.setAcitve("none");
+    if (config.funbox === "58008" || config.funbox === "gibberish" || config.funbox === "ascii") {
+      Funbox.setActive("none");
       TestUI.updateModesNotice();
     }
 
@@ -3004,6 +3073,14 @@ function setDifficulty(diff, nosave) {
 
 function setFavThemes(themes, nosave) {
   config.favThemes = themes;
+
+  if (!nosave) {
+    saveToLocalStorage();
+  }
+}
+
+function setFunbox(funbox, nosave) {
+  config.funbox = funbox ? funbox : "none";
 
   if (!nosave) {
     saveToLocalStorage();
@@ -3515,7 +3592,7 @@ function toggleLiveAcc() {
 }
 
 function setHighlightMode(mode, nosave) {
-  if (mode === "word" && (Funbox.active === "nospace" || Funbox.active === "read_ahead" || Funbox.active === "read_ahead_easy" || Funbox.active === "read_ahead_hard")) {
+  if (mode === "word" && (config.funbox === "nospace" || config.funbox === "read_ahead" || config.funbox === "read_ahead_easy" || config.funbox === "read_ahead_hard")) {
     Notifications.add("Can't use word highlight with this funbox", 0);
     return;
   }
@@ -4138,6 +4215,12 @@ function setCustomBackgroundFilter(array, nosave) {
   if (!nosave) saveToLocalStorage();
 }
 
+function setMonkeyPowerLevel(level, nosave) {
+  if (!["off", "1", "2", "3", "4"].includes(level)) level = "off";
+  config.monkeyPowerLevel = level;
+  if (!nosave) saveToLocalStorage();
+}
+
 function apply(configObj) {
   if (configObj == null || configObj == undefined) {
     Notifications.add("Could not apply config", -1, 3);
@@ -4197,6 +4280,7 @@ function apply(configObj) {
     setPlaySoundOnClick(configObj.playSoundOnClick, true);
     setStopOnError(configObj.stopOnError, true);
     setFavThemes(configObj.favThemes, true);
+    setFunbox(configObj.funbox, true);
     setRandomTheme(configObj.randomTheme, true);
     setShowAllLines(configObj.showAllLines, true);
     setSwapEscAndTab(configObj.swapEscAndTab, true);
@@ -4220,6 +4304,7 @@ function apply(configObj) {
     setMode(configObj.mode, true);
     setMonkey(configObj.monkey, true);
     setRepeatQuotes(configObj.repeatQuotes, true);
+    setMonkeyPowerLevel(configObj.monkeyPowerLevel, true);
     LanguagePicker.setActiveGroup();
   }
 
@@ -4276,7 +4361,7 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./commandline-lists":4,"./custom-background-filter":7,"./funbox":14,"./keymap":18,"./language-picker":19,"./layouts":21,"./live-acc":22,"./live-wpm":23,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./sound":41,"./test-logic":44,"./test-ui":47,"./theme-controller":49,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/defineProperty":61,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],7:[function(require,module,exports){
+},{"./commandline-lists":5,"./custom-background-filter":8,"./funbox":15,"./keymap":19,"./language-picker":20,"./layouts":22,"./live-acc":23,"./live-wpm":24,"./notifications":30,"./out-of-focus":31,"./pace-caret":32,"./sound":43,"./test-logic":46,"./test-ui":49,"./theme-controller":51,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/defineProperty":63,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],8:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4384,7 +4469,7 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   Notifications.add("Custom background filters saved", 1);
 });
 
-},{"./config":6,"./notifications":28,"@babel/runtime/helpers/typeof":70}],8:[function(require,module,exports){
+},{"./config":7,"./notifications":30,"@babel/runtime/helpers/typeof":72}],9:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -4530,7 +4615,7 @@ $("#customTestDurationPopup .button").click(function () {
   apply();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70}],9:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":26,"./notifications":30,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72}],10:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4672,7 +4757,7 @@ $("#customTextPopup .wordfilter").click(function () {
   WordFilterPopup.show();
 });
 
-},{"./custom-text":10,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":44,"./word-filter-popup":54,"@babel/runtime/helpers/typeof":70}],10:[function(require,module,exports){
+},{"./custom-text":11,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./test-logic":46,"./word-filter-popup":56,"@babel/runtime/helpers/typeof":72}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4715,7 +4800,7 @@ function setWord(val) {
   exports.word = word = val;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4781,7 +4866,7 @@ $("#shareCustomThemeButton").click(function (e) {
   }
 });
 
-},{"./config":6,"./notifications":28,"./theme-picker":50,"@babel/runtime/helpers/typeof":70}],12:[function(require,module,exports){
+},{"./config":7,"./notifications":30,"./theme-picker":52,"@babel/runtime/helpers/typeof":72}],13:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4857,7 +4942,7 @@ $("#customWordAmountPopup .button").click(function () {
   apply();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":44,"@babel/runtime/helpers/typeof":70}],13:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":26,"./notifications":30,"./test-logic":46,"@babel/runtime/helpers/typeof":72}],14:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4899,7 +4984,7 @@ $(document).mousemove(function (event) {
   }
 });
 
-},{"./caret":2,"@babel/runtime/helpers/typeof":70}],14:[function(require,module,exports){
+},{"./caret":3,"@babel/runtime/helpers/typeof":72}],15:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -4915,7 +5000,6 @@ exports.reset = reset;
 exports.toggleScript = toggleScript;
 exports.activate = activate;
 exports.setFunbox = setFunbox;
-exports.modeSaved = exports.funboxSaved = exports.active = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -4939,12 +5023,7 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-var active = "none";
-exports.active = active;
-var funboxSaved = "none";
-exports.funboxSaved = funboxSaved;
 var modeSaved = null;
-exports.modeSaved = modeSaved;
 var memoryTimer = null;
 var memoryInterval = null;
 var settingsMemory = {};
@@ -5006,13 +5085,13 @@ function startMemoryTimer() {
 }
 
 function reset() {
-  exports.active = active = "none";
   resetMemoryTimer();
 }
 
 function toggleScript() {
-  if (active === "tts") {
+  if (UpdateConfig["default"].funbox === "tts") {
     var msg = new SpeechSynthesisUtterance();
+    console.log("Speaking");
     msg.text = arguments.length <= 0 ? undefined : arguments[0];
     msg.lang = "en-US";
     window.speechSynthesis.cancel();
@@ -5020,28 +5099,30 @@ function toggleScript() {
   }
 }
 
-function activate(_x, _x2) {
+function activate(_x) {
   return _activate.apply(this, arguments);
 }
 
 function _activate() {
-  _activate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(funbox, mode) {
-    var list;
+  _activate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(funbox) {
+    var mode, list;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            mode = modeSaved;
+
             if (funbox === undefined || funbox === null) {
-              funbox = funboxSaved;
+              funbox = UpdateConfig["default"].funbox;
             }
 
             if (!Misc.getCurrentLanguage().ligatures) {
-              _context.next = 6;
+              _context.next = 7;
               break;
             }
 
             if (!(funbox == "choo_choo" || funbox == "earthquake")) {
-              _context.next = 6;
+              _context.next = 7;
               break;
             }
 
@@ -5049,7 +5130,7 @@ function _activate() {
             activate("none", null);
             return _context.abrupt("return");
 
-          case 6:
+          case 7:
             $("#funBoxTheme").attr("href", "");
             $("#words").removeClass("nospace"); // if (funbox === "none") {
 
@@ -5057,37 +5138,34 @@ function _activate() {
             $("#wordsWrapper").removeClass("hidden"); // }
 
             if (!(funbox === "none" && mode === undefined)) {
-              _context.next = 14;
+              _context.next = 15;
               break;
             }
 
             mode = null;
-            _context.next = 19;
+            _context.next = 20;
             break;
 
-          case 14:
+          case 15:
             if (!(funbox !== "none" && mode === undefined || funbox !== "none" && mode === null)) {
-              _context.next = 19;
+              _context.next = 20;
               break;
             }
 
-            _context.next = 17;
+            _context.next = 18;
             return Misc.getFunboxList();
 
-          case 17:
+          case 18:
             list = _context.sent;
             mode = list.filter(function (f) {
               return f.name === funbox;
             })[0].type;
 
-          case 19:
+          case 20:
             ManualRestart.set();
 
             if (mode === "style") {
-              if (funbox != undefined) {
-                $("#funBoxTheme").attr("href", "funbox/".concat(funbox, ".css"));
-                exports.active = active = funbox;
-              }
+              if (funbox != undefined) $("#funBoxTheme").attr("href", "funbox/".concat(funbox, ".css"));
 
               if (funbox === "simon_says") {
                 rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
@@ -5137,8 +5215,6 @@ function _activate() {
                 UpdateConfig.setHighlightMode("letter", true);
                 TestLogic.restart(false, true);
               }
-
-              exports.active = active = funbox;
             } // if (funbox !== "layoutfluid" || mode !== "script") {
             //   if (Config.layout !== Config.savedLayout) {
             //     UpdateConfig.setLayout(Config.savedLayout);
@@ -5150,7 +5226,7 @@ function _activate() {
             TestUI.updateModesNotice();
             return _context.abrupt("return", true);
 
-          case 23:
+          case 24:
           case "end":
             return _context.stop();
         }
@@ -5161,19 +5237,13 @@ function _activate() {
 }
 
 function setFunbox(funbox, mode) {
-  if (TestLogic.active) {
-    Notifications.add("You can only change the funbox before starting a test.", 0);
-    return false;
-  }
-
   if (funbox === "none") loadMemory();
-  exports.funboxSaved = funboxSaved = funbox;
-  exports.modeSaved = modeSaved = mode;
-  exports.active = active = funbox;
+  modeSaved = mode;
+  UpdateConfig.setFunbox(funbox);
   return true;
 }
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":38,"./test-logic":44,"./test-ui":47,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],15:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./settings":40,"./test-logic":46,"./test-ui":49,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],16:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -5233,7 +5303,7 @@ $("#settingsImportWrapper").click(function (e) {
   }
 });
 
-},{"./config":6,"./notifications":28,"./settings":38,"@babel/runtime/helpers/typeof":70}],16:[function(require,module,exports){
+},{"./config":7,"./notifications":30,"./settings":40,"@babel/runtime/helpers/typeof":72}],17:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
@@ -5267,6 +5337,8 @@ require("./input-controller");
 
 require("./ready");
 
+require("./about-page");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -5283,7 +5355,7 @@ global.simplePopups = SimplePopups.simplePopups; //these exports are just for de
 global.config = _config["default"]; // global.addnotif = Notifications.add;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caps-warning":1,"./config":6,"./custom-theme-popup":11,"./import-settings-popup":15,"./input-controller":17,"./misc":26,"./ready":34,"./simple-popups":40,"./support-popup":42,"./version-popup":53,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"chart.js":73,"chartjs-plugin-annotation":78,"chartjs-plugin-trendline":81}],17:[function(require,module,exports){
+},{"./about-page":1,"./caps-warning":2,"./config":7,"./custom-theme-popup":12,"./import-settings-popup":16,"./input-controller":18,"./misc":27,"./ready":36,"./simple-popups":42,"./support-popup":44,"./version-popup":55,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"chart.js":75,"chartjs-plugin-annotation":80,"chartjs-plugin-trendline":83}],18:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -5333,6 +5405,8 @@ var Focus = _interopRequireWildcard(require("./focus"));
 var ShiftTracker = _interopRequireWildcard(require("./shift-tracker"));
 
 var Replay = _interopRequireWildcard(require("./replay.js"));
+
+var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -5404,7 +5478,7 @@ function backspaceToPrevious() {
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
-  if (Funbox.active === "nospace") {
+  if (UpdateConfig["default"].funbox === "nospace") {
     TestLogic.input.currentWord = TestLogic.input.currentWord.slice(0, -1);
   }
 
@@ -5431,7 +5505,7 @@ function handleSpace() {
 
   var currentWord = TestLogic.words.getCurrent();
 
-  if (Funbox.active === "layoutfluid" && UpdateConfig["default"].mode !== "time") {
+  if (UpdateConfig["default"].funbox === "layoutfluid" && UpdateConfig["default"].mode !== "time") {
     // here I need to check if Config.customLayoutFluid exists because of my scuffed solution of returning whenever value is undefined in the setCustomLayoutfluid function
     var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
     var index = 0;
@@ -5451,6 +5525,7 @@ function handleSpace() {
   dontInsertSpace = true; //correct word or in zen mode
 
   var isWordCorrect = currentWord == inputWord || UpdateConfig["default"].mode == "zen";
+  MonkeyPower.addPower(isWordCorrect, true);
   PaceCaret.handleSpace(isWordCorrect, currentWord);
   TestStats.incrementAccuracy(isWordCorrect);
 
@@ -5463,13 +5538,13 @@ function handleSpace() {
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
 
-    if (Funbox.active !== "nospace") {
+    if (UpdateConfig["default"].funbox !== "nospace") {
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
     }
 
     Replay.addReplayEvent("submitCorrectWord");
   } else {
-    if (Funbox.active !== "nospace") {
+    if (UpdateConfig["default"].funbox !== "nospace") {
       if (!UpdateConfig["default"].playSoundOnError || UpdateConfig["default"].blindMode) {
         Sound.playClick(UpdateConfig["default"].playSoundOnClick);
       } else {
@@ -5620,7 +5695,7 @@ function handleLastChar() {
 
   var _char2 = TestLogic.input.currentWord[TestLogic.input.currentWord.length - 1];
 
-  if (_char2 === "\n" && Funbox.active === "58008") {
+  if (_char2 === "\n" && UpdateConfig["default"].funbox === "58008") {
     _char2 = " ";
   }
 
@@ -5650,6 +5725,7 @@ function handleLastChar() {
   Caret.stopAnimation();
   var thisCharCorrect = isCharCorrect(_char2);
   if (!thisCharCorrect && Misc.trailingComposeChars.test(_char2)) return;
+  MonkeyPower.addPower(thisCharCorrect);
   TestStats.incrementAccuracy(thisCharCorrect);
 
   if (!thisCharCorrect) {
@@ -5747,7 +5823,7 @@ function handleLastChar() {
   } //simulate space press in nospace funbox
 
 
-  if (Funbox.active === "nospace" && TestLogic.input.currentWord.length === TestLogic.words.getCurrent().length || _char2 === "\n" && thisCharCorrect) {
+  if (UpdateConfig["default"].funbox === "nospace" && TestLogic.input.currentWord.length === TestLogic.words.getCurrent().length || _char2 === "\n" && thisCharCorrect) {
     TestLogic.input.currentWord += " ";
     setTimeout(handleSpace, 0);
   }
@@ -5882,7 +5958,7 @@ $("#wordsInput").on("input", function (event) {
   }
 });
 
-},{"./caret":2,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./layout-emulator":20,"./live-acc":22,"./manual-restart-tracker":25,"./misc":26,"./monkey":27,"./notifications":28,"./pace-caret":30,"./replay.js":35,"./settings":38,"./shift-tracker":39,"./sound":41,"./test-logic":44,"./test-stats":45,"./test-timer":46,"./test-ui":47,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/typeof":70}],18:[function(require,module,exports){
+},{"./caret":3,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./layout-emulator":21,"./live-acc":23,"./manual-restart-tracker":26,"./misc":27,"./monkey":29,"./monkey-power":28,"./notifications":30,"./pace-caret":32,"./replay.js":37,"./settings":40,"./shift-tracker":41,"./sound":43,"./test-logic":46,"./test-stats":47,"./test-timer":48,"./test-ui":49,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/typeof":72}],19:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6170,7 +6246,7 @@ $(document).on("click", ".keymap .r5 #KeySpace", function (e) {
   Commandline.show();
 });
 
-},{"./commandline":5,"./commandline-lists":4,"./config":6,"./layouts":21,"./theme-colors":48,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],19:[function(require,module,exports){
+},{"./commandline":6,"./commandline-lists":5,"./config":7,"./layouts":22,"./theme-colors":50,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],20:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6261,7 +6337,7 @@ function _setActiveGroup() {
   return _setActiveGroup.apply(this, arguments);
 }
 
-},{"./config":6,"./misc":26,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],20:[function(require,module,exports){
+},{"./config":7,"./misc":27,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],21:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6307,7 +6383,7 @@ function getCharFromEvent(event) {
   return _char;
 }
 
-},{"./config":6,"./layouts":21,"./misc":26,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],21:[function(require,module,exports){
+},{"./config":7,"./layouts":22,"./misc":27,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6461,7 +6537,7 @@ var layouts = {
 var _default = layouts;
 exports["default"] = _default;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6528,7 +6604,7 @@ function hide() {
   });
 }
 
-},{"./config":6,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],23:[function(require,module,exports){
+},{"./config":7,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],24:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6602,7 +6678,7 @@ function hide() {
   });
 }
 
-},{"./config":6,"./test-logic":44,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],24:[function(require,module,exports){
+},{"./config":7,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],25:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6619,7 +6695,7 @@ function hide() {
   $("#backgroundLoader").stop(true, true).fadeOut(125);
 }
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6642,12 +6718,12 @@ function get() {
   return state;
 }
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _typeof3 = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6697,6 +6773,8 @@ exports.trailingComposeChars = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
@@ -6705,7 +6783,7 @@ var Loader = _interopRequireWildcard(require("./loader"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof3(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function hexToHSL(H) {
   // Convert hex to RGB first
@@ -7604,12 +7682,239 @@ function clearTimeouts(timeouts) {
 function setCharAt(str, index, chr) {
   if (index > str.length - 1) return str;
   return str.substring(0, index) + chr + str.substring(index + 1);
+} //https://www.reddit.com/r/learnjavascript/comments/8ohug3/how_to_recursively_count_keys_in_an_object/e03fytn/
+
+
+function countAllKeys(obj) {
+  if ((0, _typeof2["default"])(obj) !== "object" || obj === null) {
+    return 0;
+  }
+
+  var keys = Object.keys(obj);
+  var sum = keys.length;
+  keys.forEach(function (key) {
+    return sum += countAllKeys(obj[key]);
+  });
+  return sum;
 }
 
 var trailingComposeChars = /[\u02B0-\u02FF`´^¨~]+$|⎄.*$/;
 exports.trailingComposeChars = trailingComposeChars;
 
-},{"./loader":24,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],27:[function(require,module,exports){
+},{"./loader":25,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],28:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.init = init;
+exports.reset = reset;
+exports.addPower = addPower;
+
+var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
+
+var UI = _interopRequireWildcard(require("./ui"));
+
+var _config = _interopRequireDefault(require("./config"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+/**
+ * @typedef {{ x: number, y: number }} vec2
+ * @typedef {vec2 & { prev: vec2, vel: vec2, alpha: number, color: string }} Particle
+ * @typedef {{ particles: Particle[], caret: any, canvas: HTMLCanvasElement, context2d: CanvasRenderingContext2D, rendering: boolean, lastFrame: number, deltaTime: number, resetTimeOut: number }} CTX
+ */
+
+/**
+ * @type {CTX} ctx
+ */
+var ctx = {
+  particles: [],
+  rendering: false
+};
+var gravity = 1000;
+var drag = 0.05;
+var particleSize = 4;
+var particleFade = 0.6;
+var particleInitVel = 1500;
+var particleBounceMod = 0.3;
+var particleCreateCount = [6, 3];
+var shakeAmount = 10;
+
+function createCanvas() {
+  var canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:fixed;top:0;left:0;pointer-events:none;z-index:999999";
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  window.addEventListener("resize", function () {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+  });
+  document.body.appendChild(canvas);
+  return canvas;
+}
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {string} color
+ * @returns {Particle}
+ */
+
+
+function createParticle(x, y, color) {
+  return {
+    x: x,
+    y: y,
+    color: color,
+    alpha: 1,
+    prev: {
+      x: x,
+      y: y
+    },
+    vel: {
+      x: particleInitVel - Math.random() * particleInitVel * 2,
+      y: particleInitVel - Math.random() * particleInitVel * 2
+    }
+  };
+}
+/**
+ * @param {Particle} particle
+ */
+
+
+function updateParticle(particle) {
+  particle.prev.x = particle.x;
+  particle.prev.y = particle.y; // Update pos
+
+  particle.x += particle.vel.x * ctx.deltaTime;
+  particle.y += particle.vel.y * ctx.deltaTime;
+
+  if (particle.x > ctx.canvas.width) {
+    particle.vel.x *= -particleBounceMod;
+    particle.x = ctx.canvas.width - (particle.x - ctx.canvas.width) * particleBounceMod;
+  } else if (particle.x < 0) {
+    particle.vel.x *= -particleBounceMod;
+    particle.x *= -particleBounceMod;
+  }
+
+  if (particle.y > ctx.canvas.height) {
+    particle.vel.y *= -particleBounceMod;
+    particle.y = ctx.canvas.height - (particle.y - ctx.canvas.height) * particleBounceMod;
+  } else if (particle.y < 0) {
+    particle.vel.y *= -1;
+    particle.y *= -1;
+  }
+
+  particle.vel.y += gravity * ctx.deltaTime;
+  particle.vel.x *= 1 - drag * ctx.deltaTime;
+  particle.alpha *= 1 - particleFade * ctx.deltaTime;
+}
+
+function init() {
+  ctx.caret = $("#caret");
+  ctx.canvas = createCanvas();
+  ctx.context2d = ctx.canvas.getContext("2d");
+}
+
+function render() {
+  ctx.rendering = true;
+  var time = Date.now();
+  ctx.deltaTime = (time - ctx.lastFrame) / 1000;
+  ctx.lastFrame = time;
+  ctx.context2d.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  var keep = [];
+
+  for (var i = 0; i < ctx.particles.length; i++) {
+    var particle = ctx.particles[i];
+    if (particle.alpha < 0.1) continue;
+    updateParticle(particle);
+    ctx.context2d.globalAlpha = particle.alpha;
+    ctx.context2d.strokeStyle = particle.color;
+    ctx.context2d.lineWidth = particleSize;
+    ctx.context2d.beginPath();
+    ctx.context2d.moveTo(Math.round(particle.prev.x), Math.round(particle.prev.y));
+    ctx.context2d.lineTo(Math.round(particle.x), Math.round(particle.y));
+    ctx.context2d.stroke();
+    keep.push(particle);
+  }
+
+  ctx.particles = keep;
+
+  if (ctx.particles.length) {
+    requestAnimationFrame(render);
+  } else {
+    ctx.context2d.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.rendering = false;
+  }
+}
+
+function reset() {
+  var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!ctx.resetTimeOut) return;
+  delete ctx.resetTimeOut;
+  clearTimeout(ctx.resetTimeOut);
+  var body = $(document.body);
+  body.css("transition", "all .25s, transform 0.8s");
+  body.css("transform", "translate(0,0)");
+  setTimeout(function () {
+    body.css("transition", "all .25s, transform .05s");
+    $("html").css("overflow", "inherit");
+    $("html").css("overflow-y", "scroll");
+  }, immediate || UI.pageTransition ? 0 : 1000);
+}
+
+function startRender() {
+  if (!ctx.rendering) {
+    ctx.lastFrame = Date.now();
+    render();
+  }
+}
+
+function randomColor() {
+  var r = Math.floor(Math.random() * 256).toString(16);
+  var g = Math.floor(Math.random() * 256).toString(16);
+  var b = Math.floor(Math.random() * 256).toString(16);
+  return "#".concat(r).concat(g).concat(b);
+}
+/**
+ * @param {boolean} good Good power or not?
+ */
+
+
+function addPower() {
+  var good = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (!TestLogic.active || _config["default"].monkeyPowerLevel === "off") return; // Shake
+
+  if (["3", "4"].includes(_config["default"].monkeyPowerLevel)) {
+    $("html").css("overflow", "hidden");
+    var shake = [Math.round(shakeAmount - Math.random() * shakeAmount), Math.round(shakeAmount - Math.random() * shakeAmount)];
+    $(document.body).css("transform", "translate(".concat(shake[0], "px, ").concat(shake[1], "px)"));
+    if (ctx.resetTimeOut) clearTimeout(ctx.resetTimeOut);
+    ctx.resetTimeOut = setTimeout(reset, 2000);
+  } // Sparks
+
+
+  var offset = ctx.caret.offset();
+  var coords = [offset.left, offset.top + ctx.caret.height()];
+
+  for (var i = Math.round((particleCreateCount[0] + Math.random() * particleCreateCount[1]) * (extra ? 2 : 1)); i > 0; i--) {
+    var color = ["2", "4"].includes(_config["default"].monkeyPowerLevel) ? randomColor() : good ? ThemeColors.caret : ThemeColors.error;
+    ctx.particles.push(createParticle.apply(void 0, coords.concat([color])));
+  }
+
+  startRender();
+}
+
+},{"./config":7,"./test-logic":46,"./theme-colors":50,"./ui":54,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7687,7 +7992,7 @@ function stop() {
   update();
 }
 
-},{"./misc":26}],28:[function(require,module,exports){
+},{"./misc":27}],30:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -7810,7 +8115,7 @@ function add(message, level, duration, customTitle, customIcon) {
   notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon).show());
 }
 
-},{"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/interopRequireDefault":64}],29:[function(require,module,exports){
+},{"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/interopRequireDefault":66}],31:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -7842,7 +8147,7 @@ function show() {
   }, 1000));
 }
 
-},{"./misc":26,"@babel/runtime/helpers/typeof":70}],30:[function(require,module,exports){
+},{"./misc":27,"@babel/runtime/helpers/typeof":72}],32:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8094,7 +8399,7 @@ function start() {
   update(performance.now() + settings.spc * 1000);
 }
 
-},{"./config":6,"./test-logic":44,"./test-ui":47,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],31:[function(require,module,exports){
+},{"./config":7,"./test-logic":46,"./test-ui":49,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8113,7 +8418,7 @@ function show() {
   }, 250, "easeOutCubic");
 }
 
-},{}],32:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -8177,7 +8482,7 @@ function resetBefore() {
   before.numbers = null;
 }
 
-},{"./config":6,"./custom-text":10,"./notifications":28,"./test-logic":44,"./test-stats":45,"@babel/runtime/helpers/typeof":70}],33:[function(require,module,exports){
+},{"./config":7,"./custom-text":11,"./notifications":30,"./test-logic":46,"./test-stats":47,"@babel/runtime/helpers/typeof":72}],35:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8391,7 +8696,7 @@ $("#quoteSearchPopup input").keypress(function (e) {
   }
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":44,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],34:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./test-logic":46,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],36:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -8408,6 +8713,8 @@ var RouteController = _interopRequireWildcard(require("./route-controller"));
 
 var UI = _interopRequireWildcard(require("./ui"));
 
+var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -8423,7 +8730,7 @@ $(document).ready(function () {
     $("#top .config").removeClass("hidden");
   }
 
-  $("body").css("transition", ".25s");
+  $("body").css("transition", "all .25s, transform .05s");
 
   if (UpdateConfig["default"].quickTab) {
     $("#restartTestButton").addClass("hidden");
@@ -8445,9 +8752,10 @@ $(document).ready(function () {
     }
   });
   Settings.settingsFillPromise.then(Settings.update);
+  MonkeyPower.init();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./route-controller":36,"./settings":38,"./ui":52,"@babel/runtime/helpers/typeof":70}],35:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":26,"./misc":27,"./monkey-power":28,"./route-controller":38,"./settings":40,"./ui":54,"@babel/runtime/helpers/typeof":72}],37:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8754,8 +9062,10 @@ $(document.body).on("click", "#watchReplayButton", function () {
   toggleReplayDisplay();
 });
 
-},{"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/regenerator":72}],36:[function(require,module,exports){
+},{"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],38:[function(require,module,exports){
 "use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _typeof = require("@babel/runtime/helpers/typeof");
 
@@ -8767,6 +9077,8 @@ exports.handleInitialPageClasses = handleInitialPageClasses;
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
 var UI = _interopRequireWildcard(require("./ui"));
+
+var _config = _interopRequireDefault(require("./config"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -8790,7 +9102,7 @@ function handleInitialPageClasses(hash) {
   var pushState = history.pushState;
 
   history.pushState = function (state) {
-    if (Funbox.active === "memory" && state !== "/") {
+    if (_config["default"].funbox === "memory" && state !== "/") {
       Funbox.resetMemoryTimer();
     }
 
@@ -8810,7 +9122,7 @@ $(window).on("popstate", function (e) {
   }
 });
 
-},{"./funbox":14,"./ui":52,"@babel/runtime/helpers/typeof":70}],37:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./ui":54,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],39:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8900,7 +9212,7 @@ var SettingsGroup = /*#__PURE__*/function () {
 
 exports["default"] = SettingsGroup;
 
-},{"./config":6,"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/toConsumableArray":69}],38:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71}],40:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8910,7 +9222,6 @@ var _typeof = require("@babel/runtime/helpers/typeof");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.hideAccountSection = hideAccountSection;
 exports.update = update;
 exports.settingsFillPromise = exports.groups = void 0;
 
@@ -9162,14 +9473,9 @@ function _fillSettingsPage() {
 var settingsFillPromise = fillSettingsPage();
 exports.settingsFillPromise = settingsFillPromise;
 
-function hideAccountSection() {
-  $(".sectionGroupTitle[group='account']").addClass("hidden");
-  $(".settingsGroup.account").addClass("hidden");
-}
-
 function setActiveFunboxButton() {
   $(".pageSettings .section.funbox .button").removeClass("active");
-  $(".pageSettings .section.funbox .button[funbox='".concat(Funbox.funboxSaved, "']")).addClass("active");
+  $(".pageSettings .section.funbox .button[funbox='".concat(UpdateConfig["default"].funbox, "']")).addClass("active");
 }
 
 function update() {
@@ -9274,9 +9580,6 @@ $(".pageSettings .sectionGroupTitle").click(function (e) {
 $(".pageSettings #resetPersonalBestsButton").on("click", function (e) {
   SimplePopups.list.resetPersonalBests.show();
 });
-$(".pageSettings #updateAccountEmail").on("click", function (e) {
-  SimplePopups.list.updateEmail.show();
-});
 $(".pageSettings .section.customBackgroundSize .inputAndButton .save").on("click", function (e) {
   UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
 });
@@ -9301,7 +9604,7 @@ $(".quickNav .links a").on("click", function (e) {
   isOpen && toggleSettingsGroup(settingsGroup);
 });
 
-},{"./config":6,"./funbox":14,"./language-picker":19,"./layouts":21,"./loader":24,"./misc":26,"./notifications":28,"./settings-group":37,"./simple-popups":40,"./sound":41,"./theme-picker":50,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],39:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./language-picker":20,"./layouts":22,"./loader":25,"./misc":27,"./notifications":30,"./settings-group":39,"./simple-popups":42,"./sound":43,"./theme-picker":52,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],41:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9348,7 +9651,7 @@ function isUsingOppositeShift(_char) {
   }
 }
 
-},{}],40:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9502,7 +9805,7 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
 }, function () {});
 
-},{"./loader":24,"./notifications":28,"./settings":38,"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],41:[function(require,module,exports){
+},{"./loader":25,"./notifications":30,"./settings":40,"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],43:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9655,7 +9958,7 @@ function playError() {
   errorSound.play();
 }
 
-},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":64,"howler":82}],42:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":66,"howler":84}],44:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -9688,7 +9991,7 @@ $(document.body).on("click", "#supportMeWrapper a.button", function () {
   });
 });
 
-},{"./commandline":5,"./commandline-lists":4,"@babel/runtime/helpers/typeof":70}],43:[function(require,module,exports){
+},{"./commandline":6,"./commandline-lists":5,"@babel/runtime/helpers/typeof":72}],45:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -9796,7 +10099,7 @@ $(document).on("click", "#top .config .mode .text-button", function (e) {
   TestLogic.restart();
 });
 
-},{"./config":6,"./custom-test-duration-popup":8,"./custom-text-popup":9,"./custom-word-amount-popup":12,"./manual-restart-tracker":25,"./quote-search-popup":33,"./test-logic":44,"@babel/runtime/helpers/typeof":70}],44:[function(require,module,exports){
+},{"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./manual-restart-tracker":26,"./quote-search-popup":35,"./test-logic":46,"@babel/runtime/helpers/typeof":72}],46:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9890,6 +10193,8 @@ var OutOfFocus = _interopRequireWildcard(require("./out-of-focus"));
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
 var Replay = _interopRequireWildcard(require("./replay.js"));
+
+var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -10055,6 +10360,7 @@ exports.bailout = bailout;
 
 function setActive(tf) {
   exports.active = active = tf;
+  if (!tf) MonkeyPower.reset();
 }
 
 function setRepeated(tf) {
@@ -10080,7 +10386,7 @@ function setRandomQuote(rq) {
 function punctuateWord(previousWord, currentWord, index, maxindex) {
   var word = currentWord;
 
-  if (Funbox.funboxSaved === "58008") {
+  if (UpdateConfig["default"].funbox === "58008") {
     if (currentWord.length > 3) {
       if (Math.random() < 0.75) {
         var special = ["/", "*", "-", "+"][Math.floor(Math.random() * 4)];
@@ -10171,7 +10477,7 @@ function startTest() {
   TimerProgress.update(TestTimer.time);
   TestTimer.clear();
 
-  if (Funbox.active === "memory") {
+  if (UpdateConfig["default"].funbox === "memory") {
     Funbox.resetMemoryTimer();
     $("#wordsWrapper").addClass("hidden");
   }
@@ -10275,7 +10581,7 @@ function _init() {
               wordsBound = 100;
             }
 
-            if (Funbox.funboxSaved === "plus_one") {
+            if (UpdateConfig["default"].funbox === "plus_one") {
               wordsBound = 2;
             }
 
@@ -10300,7 +10606,7 @@ function _init() {
                 }
               }
 
-              if (Funbox.funboxSaved === "rAnDoMcAsE") {
+              if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
                 randomcaseword = "";
 
                 for (_i2 = 0; _i2 < randomWord.length; _i2++) {
@@ -10312,17 +10618,17 @@ function _init() {
                 }
 
                 randomWord = randomcaseword;
-              } else if (Funbox.funboxSaved === "gibberish") {
+              } else if (UpdateConfig["default"].funbox === "gibberish") {
                 randomWord = Misc.getGibberish();
-              } else if (Funbox.funboxSaved === "58008") {
+              } else if (UpdateConfig["default"].funbox === "58008") {
                 // UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getNumbers(7);
-              } else if (Funbox.funboxSaved === "specials") {
+              } else if (UpdateConfig["default"].funbox === "specials") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getSpecials();
-              } else if (Funbox.funboxSaved === "ascii") {
+              } else if (UpdateConfig["default"].funbox === "ascii") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getASCII();
@@ -10539,9 +10845,10 @@ function restart() {
   if (active) {
     TestStats.pushKeypressesToHistory();
     var testSeconds = TestStats.calculateTestSeconds(performance.now());
-    var afkseconds = TestStats.calculateAfkSeconds(); // incompleteTestSeconds += ;
+    var afkseconds = TestStats.calculateAfkSeconds(testSeconds); // incompleteTestSeconds += ;
 
     var tt = testSeconds - afkseconds;
+    if (tt < 0) tt = 0;
     console.log("increasing incomplete time by ".concat(tt, "s (").concat(testSeconds, "s - ").concat(afkseconds, "s afk)"));
     TestStats.incrementIncompleteSeconds(tt);
     TestStats.incrementRestartCount();
@@ -10663,7 +10970,7 @@ function restart() {
             document.querySelector("#liveWpm").innerHTML = "0";
             document.querySelector("#liveAcc").innerHTML = "100%";
 
-            if (Funbox.active === "memory") {
+            if (UpdateConfig["default"].funbox === "memory") {
               Funbox.startMemoryTimer();
 
               if (UpdateConfig["default"].keymapMode === "next") {
@@ -10685,14 +10992,14 @@ function restart() {
 
             fbtext = "";
 
-            if (Funbox.active !== "none") {
-              fbtext = " " + Funbox.active;
+            if (UpdateConfig["default"].funbox !== "none") {
+              fbtext = " " + UpdateConfig["default"].funbox;
             }
 
             $(".pageTest #premidTestMode").text("".concat(UpdateConfig["default"].mode, " ").concat(mode2, " ").concat(UpdateConfig["default"].language).concat(fbtext));
             $(".pageTest #premidSecondsLeft").text(UpdateConfig["default"].time);
 
-            if (Funbox.active === "layoutfluid") {
+            if (UpdateConfig["default"].funbox === "layoutfluid") {
               UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
               UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
               Keymap.highlightKey(words.getCurrent().substring(input.currentWord.length, input.currentWord.length + 1).toString().toUpperCase());
@@ -10751,7 +11058,7 @@ function calculateWpmAndRaw() {
     correctWordChars += input.currentWord.length;
   }
 
-  if (Funbox.active === "nospace") {
+  if (UpdateConfig["default"].funbox === "nospace") {
     spaces = 0;
   }
 
@@ -10767,7 +11074,7 @@ function calculateWpmAndRaw() {
 
 function addWord() {
   var bound = 100;
-  if (Funbox.active === "plus_one") bound = 1;
+  if (UpdateConfig["default"].funbox === "plus_one") bound = 1;
   if (words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length) return;
   var language = UpdateConfig["default"].mode !== "custom" ? Misc.getCurrentLanguage() : {
     //borrow the direction of the current language
@@ -10790,7 +11097,7 @@ function addWord() {
     }
   }
 
-  if (Funbox.active === "rAnDoMcAsE") {
+  if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
     var randomcaseword = "";
 
     for (var i = 0; i < randomWord.length; i++) {
@@ -10802,13 +11109,13 @@ function addWord() {
     }
 
     randomWord = randomcaseword;
-  } else if (Funbox.active === "gibberish") {
+  } else if (UpdateConfig["default"].funbox === "gibberish") {
     randomWord = Misc.getGibberish();
-  } else if (Funbox.active === "58008") {
+  } else if (UpdateConfig["default"].funbox === "58008") {
     randomWord = Misc.getNumbers(7);
-  } else if (Funbox.active === "specials") {
+  } else if (UpdateConfig["default"].funbox === "specials") {
     randomWord = Misc.getSpecials();
-  } else if (Funbox.active === "ascii") {
+  } else if (UpdateConfig["default"].funbox === "ascii") {
     randomWord = Misc.getASCII();
   }
 
@@ -10885,7 +11192,7 @@ function finish() {
   TestTimer.clear();
   exports.lastTestWpm = lastTestWpm = stats.wpm;
   var testtime = stats.time;
-  var afkseconds = TestStats.calculateAfkSeconds();
+  var afkseconds = TestStats.calculateAfkSeconds(testtime);
   var afkSecondsPercent = Misc.roundTo2(afkseconds / testtime * 100);
   ChartController.result.options.annotation.annotations = [];
   $("#result #resultWordsHistory").addClass("hidden");
@@ -11140,7 +11447,7 @@ function finish() {
       keyDuration: TestStats.keypressTimings.duration.array,
       consistency: consistency,
       keyConsistency: keyConsistency,
-      funbox: Funbox.funboxSaved,
+      funbox: UpdateConfig["default"].funbox,
       bailedOut: bailout,
       chartData: chartData,
       customText: cdata
@@ -11183,7 +11490,7 @@ function finish() {
     testType += " " + UpdateConfig["default"].words;
   }
 
-  if (UpdateConfig["default"].mode != "custom" && Funbox.funboxSaved !== "gibberish" && Funbox.funboxSaved !== "ascii" && Funbox.funboxSaved !== "58008") {
+  if (UpdateConfig["default"].mode != "custom" && UpdateConfig["default"].funbox !== "gibberish" && UpdateConfig["default"].funbox !== "ascii" && UpdateConfig["default"].funbox !== "58008") {
     testType += "<br>" + lang;
   }
 
@@ -11199,8 +11506,8 @@ function finish() {
     testType += "<br>blind";
   }
 
-  if (Funbox.funboxSaved !== "none") {
-    testType += "<br>" + Funbox.funboxSaved.replace(/_/g, " ");
+  if (UpdateConfig["default"].funbox !== "none") {
+    testType += "<br>" + UpdateConfig["default"].funbox.replace(/_/g, " ");
   }
 
   if (UpdateConfig["default"].difficulty == "expert") {
@@ -11255,10 +11562,10 @@ function finish() {
     $("#result .stats .source").addClass("hidden");
   }
 
-  if (Funbox.funboxSaved !== "none") {
-    var content = Funbox.funboxSaved;
+  if (UpdateConfig["default"].funbox !== "none") {
+    var content = UpdateConfig["default"].funbox;
 
-    if (Funbox.funboxSaved === "layoutfluid") {
+    if (UpdateConfig["default"].funbox === "layoutfluid") {
       content += " " + UpdateConfig["default"].customLayoutfluid.replace(/#/g, " ");
     }
 
@@ -11313,12 +11620,14 @@ function fail() {
   TestStats.pushKeypressesToHistory();
   finish(true);
   var testSeconds = TestStats.calculateTestSeconds(performance.now());
-  var afkseconds = TestStats.calculateAfkSeconds();
-  TestStats.incrementIncompleteSeconds(testSeconds - afkseconds);
+  var afkseconds = TestStats.calculateAfkSeconds(testSeconds);
+  var tt = testSeconds - afkseconds;
+  if (tt < 0) tt = 0;
+  TestStats.incrementIncompleteSeconds(tt);
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":2,"./chart-controller":3,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./live-acc":22,"./live-wpm":23,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./pb-crown":31,"./practise-missed":32,"./quote-search-popup":33,"./replay.js":35,"./shift-tracker":39,"./test-stats":45,"./test-timer":46,"./test-ui":47,"./theme-colors":48,"./theme-controller":49,"./timer-progress":51,"./ui":52,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/classCallCheck":59,"@babel/runtime/helpers/createClass":60,"@babel/runtime/helpers/getPrototypeOf":62,"@babel/runtime/helpers/inherits":63,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/possibleConstructorReturn":67,"@babel/runtime/helpers/toConsumableArray":69,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],45:[function(require,module,exports){
+},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-wpm":24,"./manual-restart-tracker":26,"./misc":27,"./monkey-power":28,"./notifications":30,"./out-of-focus":31,"./pace-caret":32,"./pb-crown":33,"./practise-missed":34,"./quote-search-popup":35,"./replay.js":37,"./shift-tracker":41,"./test-stats":47,"./test-timer":48,"./test-ui":49,"./theme-colors":50,"./theme-controller":51,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/getPrototypeOf":64,"@babel/runtime/helpers/inherits":65,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/possibleConstructorReturn":69,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],47:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -11538,10 +11847,21 @@ function pushKeypressesToHistory() {
   };
 }
 
-function calculateAfkSeconds() {
-  return keypressPerSecond.filter(function (x) {
+function calculateAfkSeconds(testSeconds) {
+  var extraAfk = 0;
+
+  if (testSeconds !== undefined) {
+    extraAfk = Math.ceil(testSeconds) - keypressPerSecond.length;
+    console.log("-- extra afk debug");
+    console.log("should be " + Math.ceil(testSeconds));
+    console.log(keypressPerSecond.length);
+    console.log("gonna add extra ".concat(extraAfk, " seconds of afk because of no keypress data"));
+  }
+
+  var ret = keypressPerSecond.filter(function (x) {
     return x.afk;
   }).length;
+  return ret + extraAfk;
 }
 
 function setLastSecondNotRound() {
@@ -11699,7 +12019,7 @@ function countChars() {
     }
   }
 
-  if (Funbox.active === "nospace") {
+  if (_config["default"].funbox === "nospace") {
     spaces = 0;
     correctspaces = 0;
   }
@@ -11736,7 +12056,7 @@ function calculateStats() {
   };
 }
 
-},{"./config":6,"./funbox":14,"./misc":26,"./test-logic":44,"./test-stats":45,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],46:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./misc":27,"./test-logic":46,"./test-stats":47,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],48:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -11804,7 +12124,7 @@ function start() {
       Monkey.updateFastOpacity(wpmAndRaw.wpm);
       var acc = Misc.roundTo2(TestStats.calculateAccuracy());
 
-      if (Funbox.active === "layoutfluid" && UpdateConfig["default"].mode === "time") {
+      if (UpdateConfig["default"].funbox === "layoutfluid" && UpdateConfig["default"].mode === "time") {
         var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
         console.log(UpdateConfig["default"].customLayoutfluid);
         console.log(layouts);
@@ -11835,7 +12155,7 @@ function start() {
 
       TestStats.pushKeypressesToHistory();
 
-      if (UpdateConfig["default"].minWpm === "custom" && wpmAndRaw.wpm < parseInt(UpdateConfig["default"].minWpmCustomSpeed) && TestLogic.words.currentIndex > 3 || UpdateConfig["default"].minAcc === "custom" && acc < parseInt(UpdateConfig["default"].minAccCustom)) {
+      if (UpdateConfig["default"].minWpm === "custom" && wpmAndRaw.wpm < parseInt(UpdateConfig["default"].minWpmCustomSpeed) && TestLogic.words.currentIndex > 3 || UpdateConfig["default"].minAcc === "custom" && acc < parseInt(UpdateConfig["default"].minAccCustom) && TestLogic.words.currentIndex > 3) {
         clearTimeout(timer);
         TestLogic.fail();
         return;
@@ -11858,7 +12178,7 @@ function start() {
   })(TestStats.start + stepIntervalMS);
 }
 
-},{"./caret":2,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./live-wpm":23,"./misc":26,"./monkey":27,"./notifications":28,"./test-logic":44,"./test-stats":45,"./timer-progress":51,"@babel/runtime/helpers/typeof":70}],47:[function(require,module,exports){
+},{"./caret":3,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./live-wpm":24,"./misc":27,"./monkey":29,"./notifications":30,"./test-logic":46,"./test-stats":47,"./timer-progress":53,"@babel/runtime/helpers/typeof":72}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -12368,8 +12688,8 @@ function updateModesNotice() {
     $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsMinAcc\"><i class=\"fas fa-bomb\"></i>min ".concat(UpdateConfig["default"].minAccCustom, "% acc</div>"));
   }
 
-  if (Funbox.active !== "none") {
-    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsFunbox\"><i class=\"fas fa-gamepad\"></i>".concat(Funbox.active.replace(/_/g, " "), "</div>"));
+  if (UpdateConfig["default"].funbox !== "none") {
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsFunbox\"><i class=\"fas fa-gamepad\"></i>".concat(UpdateConfig["default"].funbox.replace(/_/g, " "), "</div>"));
   }
 
   if (UpdateConfig["default"].confidenceMode === "on") {
@@ -12755,7 +13075,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./practise-missed":32,"./replay":35,"./test-logic":44,"./theme-colors":48,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],48:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./out-of-focus":31,"./pace-caret":32,"./practise-missed":34,"./replay":37,"./test-logic":46,"./theme-colors":50,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],50:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12795,7 +13115,7 @@ function update() {
   exports.colorfulErrorExtra = colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
 }
 
-},{}],49:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -12992,7 +13312,7 @@ function applyCustomBackgroundSize() {
   }
 }
 
-},{"./chart-controller":3,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":48,"./ui":52,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"tinycolor2":85}],50:[function(require,module,exports){
+},{"./chart-controller":4,"./config":7,"./misc":27,"./notifications":30,"./theme-colors":50,"./ui":54,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"tinycolor2":87}],52:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -13218,7 +13538,7 @@ $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   }, 250);
 });
 
-},{"./chart-controller":3,"./commandline-lists":4,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":48,"./theme-controller":49,"./ui":52,"@babel/runtime/helpers/typeof":70}],51:[function(require,module,exports){
+},{"./chart-controller":4,"./commandline-lists":5,"./config":7,"./misc":27,"./notifications":30,"./theme-colors":50,"./theme-controller":51,"./ui":54,"@babel/runtime/helpers/typeof":72}],53:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13398,7 +13718,7 @@ function update() {
   }
 }
 
-},{"./config":6,"./custom-text":10,"./misc":26,"./test-logic":44,"./test-timer":46,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70}],52:[function(require,module,exports){
+},{"./config":7,"./custom-text":11,"./misc":27,"./test-logic":46,"./test-timer":48,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],54:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -13521,7 +13841,7 @@ function changePage(page) {
     TestStats.resetIncomplete();
     ManualRestart.set();
     TestLogic.restart();
-    Funbox.activate(Funbox.funboxSaved, Funbox.modeSaved);
+    Funbox.activate(UpdateConfig["default"].funbox);
   } else if (page == "about") {
     setPageTransition(true);
     TestLogic.restart();
@@ -13530,7 +13850,7 @@ function changePage(page) {
       history.pushState("#about", null, "#about");
       $(".page.pageAbout").addClass("active");
     });
-    Funbox.activate("none", null);
+    Funbox.activate("none");
     TestConfig.hide();
   } else if (page == "settings") {
     setPageTransition(true);
@@ -13540,7 +13860,7 @@ function changePage(page) {
       history.pushState("#settings", null, "#settings");
       $(".page.pageSettings").addClass("active");
     });
-    Funbox.activate("none", null);
+    Funbox.activate("none");
     Settings.update();
     TestConfig.hide();
   }
@@ -13608,7 +13928,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./notifications":28,"./settings":38,"./test-config":43,"./test-logic":44,"./test-stats":45,"./test-ui":47,"@babel/runtime/helpers/typeof":70}],53:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./manual-restart-tracker":26,"./notifications":30,"./settings":40,"./test-config":45,"./test-logic":46,"./test-stats":47,"./test-ui":49,"@babel/runtime/helpers/typeof":72}],55:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
@@ -13624,7 +13944,7 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
   });
 });
 
-},{}],54:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13832,7 +14152,7 @@ $("#wordFilterPopupWrapper .button").mousedown(function (e) {
   }, 1);
 });
 
-},{"./misc":26,"@babel/runtime/helpers/asyncToGenerator":58,"@babel/runtime/helpers/interopRequireDefault":64,"@babel/runtime/helpers/typeof":70,"@babel/runtime/regenerator":72}],55:[function(require,module,exports){
+},{"./misc":27,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],57:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -13845,7 +14165,7 @@ function _arrayLikeToArray(arr, len) {
 
 module.exports = _arrayLikeToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],56:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray.js");
 
 function _arrayWithoutHoles(arr) {
@@ -13854,7 +14174,7 @@ function _arrayWithoutHoles(arr) {
 
 module.exports = _arrayWithoutHoles;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayLikeToArray.js":55}],57:[function(require,module,exports){
+},{"./arrayLikeToArray.js":57}],59:[function(require,module,exports){
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -13865,7 +14185,7 @@ function _assertThisInitialized(self) {
 
 module.exports = _assertThisInitialized;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],58:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -13904,7 +14224,7 @@ function _asyncToGenerator(fn) {
 
 module.exports = _asyncToGenerator;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],59:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -13913,7 +14233,7 @@ function _classCallCheck(instance, Constructor) {
 
 module.exports = _classCallCheck;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],60:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -13932,7 +14252,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 
 module.exports = _createClass;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],61:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -13950,7 +14270,7 @@ function _defineProperty(obj, key, value) {
 
 module.exports = _defineProperty;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],62:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 function _getPrototypeOf(o) {
   module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
     return o.__proto__ || Object.getPrototypeOf(o);
@@ -13961,7 +14281,7 @@ function _getPrototypeOf(o) {
 
 module.exports = _getPrototypeOf;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],63:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 var setPrototypeOf = require("./setPrototypeOf.js");
 
 function _inherits(subClass, superClass) {
@@ -13981,7 +14301,7 @@ function _inherits(subClass, superClass) {
 
 module.exports = _inherits;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./setPrototypeOf.js":68}],64:[function(require,module,exports){
+},{"./setPrototypeOf.js":70}],66:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -13990,21 +14310,21 @@ function _interopRequireDefault(obj) {
 
 module.exports = _interopRequireDefault;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],65:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 function _iterableToArray(iter) {
   if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 module.exports = _iterableToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],66:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableSpread;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],67:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 var _typeof = require("@babel/runtime/helpers/typeof")["default"];
 
 var assertThisInitialized = require("./assertThisInitialized.js");
@@ -14019,7 +14339,7 @@ function _possibleConstructorReturn(self, call) {
 
 module.exports = _possibleConstructorReturn;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./assertThisInitialized.js":57,"@babel/runtime/helpers/typeof":70}],68:[function(require,module,exports){
+},{"./assertThisInitialized.js":59,"@babel/runtime/helpers/typeof":72}],70:[function(require,module,exports){
 function _setPrototypeOf(o, p) {
   module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
     o.__proto__ = p;
@@ -14032,7 +14352,7 @@ function _setPrototypeOf(o, p) {
 
 module.exports = _setPrototypeOf;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],69:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 var arrayWithoutHoles = require("./arrayWithoutHoles.js");
 
 var iterableToArray = require("./iterableToArray.js");
@@ -14047,7 +14367,7 @@ function _toConsumableArray(arr) {
 
 module.exports = _toConsumableArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayWithoutHoles.js":56,"./iterableToArray.js":65,"./nonIterableSpread.js":66,"./unsupportedIterableToArray.js":71}],70:[function(require,module,exports){
+},{"./arrayWithoutHoles.js":58,"./iterableToArray.js":67,"./nonIterableSpread.js":68,"./unsupportedIterableToArray.js":73}],72:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -14070,7 +14390,7 @@ function _typeof(obj) {
 
 module.exports = _typeof;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],71:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray.js");
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -14084,10 +14404,10 @@ function _unsupportedIterableToArray(o, minLen) {
 
 module.exports = _unsupportedIterableToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayLikeToArray.js":55}],72:[function(require,module,exports){
+},{"./arrayLikeToArray.js":57}],74:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":84}],73:[function(require,module,exports){
+},{"regenerator-runtime":86}],75:[function(require,module,exports){
 /*!
  * Chart.js v2.9.4
  * https://www.chartjs.org
@@ -30261,7 +30581,7 @@ return src;
 
 })));
 
-},{"moment":83}],74:[function(require,module,exports){
+},{"moment":85}],76:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 
@@ -30389,7 +30709,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./events.js":76,"./helpers.js":77}],75:[function(require,module,exports){
+},{"./events.js":78,"./helpers.js":79}],77:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	
@@ -30414,7 +30734,7 @@ module.exports = function(Chart) {
 	return AnnotationElement;
 };
 
-},{}],76:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	var helpers = require('./helpers.js')(Chart);
@@ -30524,7 +30844,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./helpers.js":77}],77:[function(require,module,exports){
+},{"./helpers.js":79}],79:[function(require,module,exports){
 function noop() {}
 
 function elements(chartInstance) {
@@ -30711,7 +31031,7 @@ module.exports = function(Chart) {
 };
 
 
-},{}],78:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 // Get the chart variable
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
@@ -30760,7 +31080,7 @@ var annotationPlugin = require('./annotation.js')(Chart);
 module.exports = annotationPlugin;
 Chart.pluginService.register(annotationPlugin);
 
-},{"./annotation.js":74,"./element.js":75,"./types/box.js":79,"./types/line.js":80,"chart.js":73}],79:[function(require,module,exports){
+},{"./annotation.js":76,"./element.js":77,"./types/box.js":81,"./types/line.js":82,"chart.js":75}],81:[function(require,module,exports){
 // Box Annotation implementation
 module.exports = function(Chart) {
 	var helpers = require('../helpers.js')(Chart);
@@ -30908,7 +31228,7 @@ module.exports = function(Chart) {
 	return BoxAnnotation;
 };
 
-},{"../helpers.js":77}],80:[function(require,module,exports){
+},{"../helpers.js":79}],82:[function(require,module,exports){
 // Line Annotation implementation
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
@@ -31177,7 +31497,7 @@ module.exports = function(Chart) {
 	return LineAnnotation;
 };
 
-},{"../helpers.js":77}],81:[function(require,module,exports){
+},{"../helpers.js":79}],83:[function(require,module,exports){
 /*!
  * chartjs-plugin-trendline.js
  * Version: 0.2.2
@@ -31325,7 +31645,7 @@ try {
     module.exports = exports = pluginTrendlineLinear;
 } catch (e) {}
 
-},{}],82:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 (function (global){(function (){
 /*!
  *  howler.js v2.2.1
@@ -34554,7 +34874,7 @@ try {
 })();
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],83:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -40226,7 +40546,7 @@ try {
 
 })));
 
-},{}],84:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -40976,7 +41296,7 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],85:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 // TinyColor v1.4.2
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
@@ -42173,4 +42493,4 @@ else {
 
 })(Math);
 
-},{}]},{},[16]);
+},{}]},{},[17]);
