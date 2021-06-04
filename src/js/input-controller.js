@@ -760,3 +760,8 @@ $("#wordsInput").on("input", function (event) {
     }
   }, 0);
 });
+
+$("#wordsInput").focus(function (event) {
+  event.target.selectionStart = event.target.selectionEnd =
+    event.target.value.length;
+});
