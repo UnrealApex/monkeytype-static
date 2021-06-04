@@ -5957,6 +5957,9 @@ $("#wordsInput").on("input", function (event) {
     event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
   }
 });
+$("#wordsInput").focus(function (event) {
+  event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
+});
 
 },{"./caret":3,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./layout-emulator":21,"./live-acc":23,"./manual-restart-tracker":26,"./misc":27,"./monkey":29,"./monkey-power":28,"./notifications":30,"./pace-caret":32,"./replay.js":37,"./settings":40,"./shift-tracker":41,"./sound":43,"./test-logic":46,"./test-stats":47,"./test-timer":48,"./test-ui":49,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/typeof":72}],19:[function(require,module,exports){
 "use strict";
