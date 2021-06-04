@@ -755,3 +755,8 @@ $("#wordsInput").on("input", function (event) {
 
   inputWordBeforeChange = "";
 });
+
+$("#wordsInput").focus(function (event) {
+  event.target.selectionStart = event.target.selectionEnd =
+    event.target.value.length;
+});
