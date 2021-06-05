@@ -5724,7 +5724,12 @@ function handleLastChar() {
   Focus.set(true);
   Caret.stopAnimation();
   var thisCharCorrect = isCharCorrect(_char2);
-  if (!thisCharCorrect && Misc.trailingComposeChars.test(_char2)) return;
+
+  if (!thisCharCorrect && Misc.trailingComposeChars.test(_char2)) {
+    TestUI.updateWordElement();
+    return;
+  }
+
   MonkeyPower.addPower(thisCharCorrect);
   TestStats.incrementAccuracy(thisCharCorrect);
 
@@ -5952,10 +5957,14 @@ $("#wordsInput").on("input", function (event) {
   Caret.updatePosition();
   var acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc); // force caret at end of input
+  // doing it on next cycle because Chromium on Android won't let me edit
+  // the selection inside the input event
 
-  if (event.target.selectionStart !== event.target.value.length || event.target.selectionEnd !== event.target.value.length) {
-    event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
-  }
+  setTimeout(function () {
+    if (event.target.selectionStart !== event.target.value.length && (!Misc.trailingComposeChars.test(event.target.value) || event.target.selectionStart < event.target.value.search(Misc.trailingComposeChars))) {
+      event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
+    }
+  }, 0);
 });
 $("#wordsInput").focus(function (event) {
   event.target.selectionStart = event.target.selectionEnd = event.target.value.length;

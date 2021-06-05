@@ -412,7 +412,10 @@ function handleLastChar() {
 
   let thisCharCorrect = isCharCorrect(char);
 
-  if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) return;
+  if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) {
+    TestUI.updateWordElement();
+    return;
+  }
 
   MonkeyPower.addPower(thisCharCorrect);
   TestStats.incrementAccuracy(thisCharCorrect);
@@ -719,13 +722,19 @@ $("#wordsInput").on("input", function (event) {
   LiveAcc.update(acc);
 
   // force caret at end of input
-  if (
-    event.target.selectionStart !== event.target.value.length ||
-    event.target.selectionEnd !== event.target.value.length
-  ) {
-    event.target.selectionStart = event.target.selectionEnd =
-      event.target.value.length;
-  }
+  // doing it on next cycle because Chromium on Android won't let me edit
+  // the selection inside the input event
+  setTimeout(() => {
+    if (
+      event.target.selectionStart !== event.target.value.length &&
+      (!Misc.trailingComposeChars.test(event.target.value) ||
+        event.target.selectionStart <
+          event.target.value.search(Misc.trailingComposeChars))
+    ) {
+      event.target.selectionStart = event.target.selectionEnd =
+        event.target.value.length;
+    }
+  }, 0);
 });
 
 $("#wordsInput").focus(function (event) {
