@@ -5250,9 +5250,15 @@ function getCSS() {
 
 function apply() {
   var filterCSS = getCSS();
-  $(".customBackground").css({
-    filter: filterCSS
-  });
+  var css = {
+    filter: filterCSS,
+    width: "calc(100% + ".concat(filters.blur.value * 4, "rem)"),
+    height: "calc(100% + ".concat(filters.blur.value * 4, "rem)"),
+    left: "-".concat(filters.blur.value * 2, "rem"),
+    top: "-".concat(filters.blur.value * 2, "rem"),
+    position: "absolute"
+  };
+  $(".customBackground img").css(css);
 }
 
 function syncSliders() {
@@ -12604,13 +12610,10 @@ function finish() {
     $("#result .stats .time .bottom .afk").text(afkSecondsPercent + "% afk");
   }
 
-  var ttseconds = testtime - afkseconds;
-
   if (!difficultyFailed) {
-    ttseconds += TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds);
+    TodayTracker.addSeconds(testtime + (TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds)) - afkseconds);
   }
 
-  TodayTracker.addSeconds(ttseconds);
   $("#result .stats .time .bottom .timeToday").text(TodayTracker.getString());
   $("#result .stats .key .bottom").text(testtime + "s");
   $("#words").removeClass("blurred");
@@ -14786,26 +14789,29 @@ function clearRandom() {
 }
 
 function applyCustomBackground() {
-  $(".customBackground").css({
-    backgroundImage: "url(".concat(_config["default"].customBackground, ")"),
-    backgroundAttachment: "fixed"
-  });
-
+  // $(".customBackground").css({
+  //   backgroundImage: `url(${Config.customBackground})`,
+  //   backgroundAttachment: "fixed",
+  // });
   if (_config["default"].customBackground === "") {
     $("#words").removeClass("noErrorBorder");
+    $(".customBackground img").remove();
   } else {
     $("#words").addClass("noErrorBorder");
+    $(".customBackground").html("<img src=\"".concat(_config["default"].customBackground, "\"></img>"));
   }
 }
 
 function applyCustomBackgroundSize() {
   if (_config["default"].customBackgroundSize == "max") {
-    $(".customBackground").css({
-      backgroundSize: "100% 100%"
+    $(".customBackground img").css({
+      // width: "calc(100%)",
+      // height: "calc(100%)",
+      objectFit: ""
     });
   } else if (_config["default"].customBackgroundSize != "") {
-    $(".customBackground").css({
-      backgroundSize: _config["default"].customBackgroundSize
+    $(".customBackground img").css({
+      objectFit: _config["default"].customBackgroundSize
     });
   }
 }
