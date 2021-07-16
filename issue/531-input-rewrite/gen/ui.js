@@ -105,6 +105,7 @@ export function swapElements(
 }
 
 export function changePage(page) {
+  console.log("change");
   if (pageTransition) {
     return;
   }

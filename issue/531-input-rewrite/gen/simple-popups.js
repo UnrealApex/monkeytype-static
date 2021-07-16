@@ -1,6 +1,7 @@
 import * as Loader from "./loader";
 import * as Notifications from "./notifications";
 import * as Settings from "./settings";
+import * as UpdateConfig from "./config";
 
 export let list = {};
 class SimplePopup {
@@ -55,14 +56,20 @@ class SimplePopup {
       if (this.type === "number") {
         this.inputs.forEach((input) => {
           el.find(".inputs").append(`
-        <input type="number" min="1" val="${input.initVal}" placeholder="${input.placeholder}" required>
+        <input type="number" min="1" val="${input.initVal}" placeholder="${input.placeholder}" required autocomplete="off">
         `);
         });
       } else if (this.type === "text") {
         this.inputs.forEach((input) => {
-          el.find(".inputs").append(`
-        <input type="text" val="${input.initVal}" placeholder="${input.placeholder}" required>
-        `);
+          if (input.type) {
+            el.find(".inputs").append(`
+            <input type="${input.type}" val="${input.initVal}" placeholder="${input.placeholder}" required autocomplete="off">
+            `);
+          } else {
+            el.find(".inputs").append(`
+            <input type="text" val="${input.initVal}" placeholder="${input.placeholder}" required autocomplete="off">
+            `);
+          }
         });
       }
       el.find(".inputs").removeClass("hidden");
@@ -104,7 +111,7 @@ class SimplePopup {
   }
 }
 
-$("#simplePopupWrapper").click((e) => {
+$("#simplePopupWrapper").mousedown((e) => {
   if ($(e.target).attr("id") === "simplePopupWrapper") {
     $("#simplePopupWrapper")
       .stop(true, true)

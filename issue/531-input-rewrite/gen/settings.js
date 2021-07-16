@@ -33,6 +33,10 @@ async function initGroups() {
     "showLiveAcc",
     UpdateConfig.setShowLiveAcc
   );
+  groups.showLiveBurst = new SettingsGroup(
+    "showLiveBurst",
+    UpdateConfig.setShowLiveBurst
+  );
   groups.showTimerProgress = new SettingsGroup(
     "showTimerProgress",
     UpdateConfig.setShowTimerProgress
@@ -171,45 +175,14 @@ async function initGroups() {
     "showAllLines",
     UpdateConfig.setShowAllLines
   );
-  groups.paceCaret = new SettingsGroup(
-    "paceCaret",
-    UpdateConfig.setPaceCaret,
-    () => {
-      if (Config.paceCaret === "custom") {
-        $(
-          ".pageSettings .section.paceCaret input.customPaceCaretSpeed"
-        ).removeClass("hidden");
-      } else {
-        $(
-          ".pageSettings .section.paceCaret input.customPaceCaretSpeed"
-        ).addClass("hidden");
-      }
-    }
-  );
+  groups.paceCaret = new SettingsGroup("paceCaret", UpdateConfig.setPaceCaret);
   groups.repeatedPace = new SettingsGroup(
     "repeatedPace",
     UpdateConfig.setRepeatedPace
   );
-  groups.minWpm = new SettingsGroup("minWpm", UpdateConfig.setMinWpm, () => {
-    if (Config.minWpm === "custom") {
-      $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass(
-        "hidden"
-      );
-    } else {
-      $(".pageSettings .section.minWpm input.customMinWpmSpeed").addClass(
-        "hidden"
-      );
-    }
-  });
-  groups.minAcc = new SettingsGroup("minAcc", UpdateConfig.setMinAcc, () => {
-    if (Config.minAcc === "custom") {
-      $(".pageSettings .section.minAcc input.customMinAcc").removeClass(
-        "hidden"
-      );
-    } else {
-      $(".pageSettings .section.minAcc input.customMinAcc").addClass("hidden");
-    }
-  });
+  groups.minWpm = new SettingsGroup("minWpm", UpdateConfig.setMinWpm);
+  groups.minAcc = new SettingsGroup("minAcc", UpdateConfig.setMinAcc);
+  groups.minBurst = new SettingsGroup("minBurst", UpdateConfig.setMinBurst);
   groups.smoothLineScroll = new SettingsGroup(
     "smoothLineScroll",
     UpdateConfig.setSmoothLineScroll
@@ -408,40 +381,18 @@ export function update() {
   ThemePicker.setCustomInputs();
   ThemePicker.refreshButtons();
 
-  if (Config.paceCaret === "custom") {
-    $(
-      ".pageSettings .section.paceCaret input.customPaceCaretSpeed"
-    ).removeClass("hidden");
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val(
-      Config.paceCaretCustomSpeed
-    );
-  } else {
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").addClass(
-      "hidden"
-    );
-  }
-
-  if (Config.minWpm === "custom") {
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass(
-      "hidden"
-    );
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").val(
-      Config.minWpmCustomSpeed
-    );
-  } else {
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").addClass(
-      "hidden"
-    );
-  }
-
-  if (Config.minAcc === "custom") {
-    $(".pageSettings .section.minAcc input.customMinAcc").removeClass("hidden");
-    $(".pageSettings .section.minAcc input.customMinAcc").val(
-      Config.minAccCustom
-    );
-  } else {
-    $(".pageSettings .section.minAcc input.customMinAcc").addClass("hidden");
-  }
+  $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val(
+    Config.paceCaretCustomSpeed
+  );
+  $(".pageSettings .section.minWpm input.customMinWpmSpeed").val(
+    Config.minWpmCustomSpeed
+  );
+  $(".pageSettings .section.minAcc input.customMinAcc").val(
+    Config.minAccCustom
+  );
+  $(".pageSettings .section.minBurst input.customMinBurst").val(
+    Config.minBurstCustomSpeed
+  );
 }
 
 function toggleSettingsGroup(groupName) {
@@ -497,6 +448,18 @@ $(document).on(
 );
 
 $(document).on(
+  "click",
+  ".pageSettings .section.paceCaret .button.save",
+  (e) => {
+    UpdateConfig.setMinBurstCustomSpeed(
+      parseInt(
+        $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val()
+      )
+    );
+  }
+);
+
+$(document).on(
   "focusout",
   ".pageSettings .section.minWpm input.customMinWpmSpeed",
   (e) => {
@@ -505,6 +468,12 @@ $(document).on(
     );
   }
 );
+
+$(document).on("click", ".pageSettings .section.minWpm .button.save", (e) => {
+  UpdateConfig.setMinBurstCustomSpeed(
+    parseInt($(".pageSettings .section.minWpm input.customMinWpmSpeed").val())
+  );
+});
 
 $(document).on(
   "focusout",
@@ -515,6 +484,28 @@ $(document).on(
     );
   }
 );
+
+$(document).on("click", ".pageSettings .section.minAcc .button.save", (e) => {
+  UpdateConfig.setMinBurstCustomSpeed(
+    parseInt($(".pageSettings .section.minAcc input.customMinAcc").val())
+  );
+});
+
+$(document).on(
+  "focusout",
+  ".pageSettings .section.minBurst input.customMinBurst",
+  (e) => {
+    UpdateConfig.setMinBurstCustomSpeed(
+      parseInt($(".pageSettings .section.minBurst input.customMinBurst").val())
+    );
+  }
+);
+
+$(document).on("click", ".pageSettings .section.minBurst .button.save", (e) => {
+  UpdateConfig.setMinBurstCustomSpeed(
+    parseInt($(".pageSettings .section.minBurst input.customMinBurst").val())
+  );
+});
 
 $(document).on(
   "click",
@@ -534,12 +525,7 @@ $(document).on("click", ".pageSettings .section.funbox .button", (e) => {
 });
 
 $("#resetSettingsButton").click((e) => {
-  if (confirm("Press OK to confirm.")) {
-    UpdateConfig.reset();
-    setTimeout(() => {
-      location.reload();
-    }, 1000);
-  }
+  SimplePopups.list.resetSettings.show();
 });
 
 $("#exportSettingsButton").click((e) => {
@@ -565,23 +551,21 @@ $(".pageSettings #resetPersonalBestsButton").on("click", (e) => {
   SimplePopups.list.resetPersonalBests.show();
 });
 
-$(".pageSettings .section.customBackgroundSize .inputAndButton .save").on(
+$(".pageSettings .section.customBackgroundSize .inputAndSave .save").on(
   "click",
   (e) => {
     UpdateConfig.setCustomBackground(
-      $(
-        ".pageSettings .section.customBackgroundSize .inputAndButton input"
-      ).val()
+      $(".pageSettings .section.customBackgroundSize .inputAndSave input").val()
     );
   }
 );
 
-$(".pageSettings .section.customBackgroundSize .inputAndButton input").keypress(
+$(".pageSettings .section.customBackgroundSize .inputAndSave input").keypress(
   (e) => {
     if (e.keyCode == 13) {
       UpdateConfig.setCustomBackground(
         $(
-          ".pageSettings .section.customBackgroundSize .inputAndButton input"
+          ".pageSettings .section.customBackgroundSize .inputAndSave input"
         ).val()
       );
     }

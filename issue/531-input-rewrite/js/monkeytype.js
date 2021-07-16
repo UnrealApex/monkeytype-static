@@ -16,7 +16,7 @@ $(".supportButtons .button.ads").click(function (e) {
   Commandline.show();
 });
 
-},{"./commandline-lists.js":5,"./commandline.js":6,"@babel/runtime/helpers/typeof":72}],2:[function(require,module,exports){
+},{"./commandline-lists.js":5,"./commandline.js":6,"@babel/runtime/helpers/typeof":76}],2:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -45,7 +45,7 @@ $(document).keydown(function (event) {
   } catch (_unused) {}
 });
 
-},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":66}],3:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":70}],3:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -61,6 +61,10 @@ exports.hide = hide;
 exports.updatePosition = updatePosition;
 exports.show = show;
 exports.caretAnimating = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
 
@@ -100,86 +104,132 @@ function hide() {
 }
 
 function updatePosition() {
-  if ($("#wordsWrapper").hasClass("hidden")) return;
+  return _updatePosition.apply(this, arguments);
+}
 
-  if ($("#caret").hasClass("off")) {
-    return;
-  }
+function _updatePosition() {
+  _updatePosition = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    var caret, inputLen, currentLetterIndex, activeWordEmpty, currentWordNodeList, currentLetter, currentLanguage, isLanguageLeftToRight, currentLetterPosLeft, currentLetterPosTop, letterHeight, newTop, newLeft, smoothlinescroll, browserHeight, middlePos, contentHeight;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!$("#wordsWrapper").hasClass("hidden")) {
+              _context.next = 2;
+              break;
+            }
 
-  var caret = $("#caret");
-  var inputLen = TestLogic.input.currentWord.length;
-  inputLen = Misc.trailingComposeChars.test(TestLogic.input.currentWord) ? TestLogic.input.currentWord.search(Misc.trailingComposeChars) + 1 : inputLen;
-  var currentLetterIndex = inputLen - 1;
+            return _context.abrupt("return");
 
-  if (currentLetterIndex == -1) {
-    currentLetterIndex = 0;
-  }
+          case 2:
+            if (!$("#caret").hasClass("off")) {
+              _context.next = 4;
+              break;
+            }
 
-  try {
-    //insert temporary character so the caret will work in zen mode
-    var activeWordEmpty = $("#words .active").children().length == 0;
+            return _context.abrupt("return");
 
-    if (activeWordEmpty) {
-      $("#words .active").append('<letter style="opacity: 0;">_</letter>');
-    }
+          case 4:
+            caret = $("#caret");
+            inputLen = TestLogic.input.currentWord.length;
+            inputLen = Misc.trailingComposeChars.test(TestLogic.input.currentWord) ? TestLogic.input.currentWord.search(Misc.trailingComposeChars) + 1 : inputLen;
+            currentLetterIndex = inputLen - 1;
 
-    var currentWordNodeList = document.querySelector("#words .active").querySelectorAll("letter");
-    var currentLetter = currentWordNodeList[currentLetterIndex];
+            if (currentLetterIndex == -1) {
+              currentLetterIndex = 0;
+            }
 
-    if (inputLen > currentWordNodeList.length) {
-      currentLetter = currentWordNodeList[currentWordNodeList.length - 1];
-    }
+            _context.prev = 9;
+            //insert temporary character so the caret will work in zen mode
+            activeWordEmpty = $("#words .active").children().length == 0;
 
-    if (_config["default"].mode != "zen" && $(currentLetter).length == 0) return;
-    var isLanguageLeftToRight = Misc.getCurrentLanguage().leftToRight;
-    var currentLetterPosLeft = isLanguageLeftToRight ? currentLetter.offsetLeft : currentLetter.offsetLeft + $(currentLetter).width();
-    var currentLetterPosTop = currentLetter.offsetTop;
-    var letterHeight = $(currentLetter).height();
-    var newTop = 0;
-    var newLeft = 0;
-    newTop = currentLetterPosTop - Math.round(letterHeight / 5);
+            if (activeWordEmpty) {
+              $("#words .active").append('<letter style="opacity: 0;">_</letter>');
+            }
 
-    if (inputLen == 0) {
-      newLeft = isLanguageLeftToRight ? currentLetterPosLeft - caret.width() / 2 : currentLetterPosLeft + caret.width() / 2;
-    } else {
-      newLeft = isLanguageLeftToRight ? currentLetterPosLeft + $(currentLetter).width() - caret.width() / 2 : currentLetterPosLeft - $(currentLetter).width() + caret.width() / 2;
-    }
+            currentWordNodeList = document.querySelector("#words .active").querySelectorAll("letter");
+            currentLetter = currentWordNodeList[currentLetterIndex];
 
-    var smoothlinescroll = $("#words .smoothScroller").height();
-    if (smoothlinescroll === undefined) smoothlinescroll = 0;
+            if (inputLen > currentWordNodeList.length) {
+              currentLetter = currentWordNodeList[currentWordNodeList.length - 1];
+            }
 
-    if (_config["default"].smoothCaret) {
-      caret.stop(true, false).animate({
-        top: newTop - smoothlinescroll,
-        left: newLeft
-      }, 100);
-    } else {
-      caret.stop(true, true).animate({
-        top: newTop - smoothlinescroll,
-        left: newLeft
-      }, 0);
-    }
+            if (!(_config["default"].mode != "zen" && $(currentLetter).length == 0)) {
+              _context.next = 17;
+              break;
+            }
 
-    if (_config["default"].showAllLines) {
-      var browserHeight = window.innerHeight;
-      var middlePos = browserHeight / 2 - $("#caret").outerHeight() / 2;
-      var contentHeight = document.body.scrollHeight;
+            return _context.abrupt("return");
 
-      if (newTop >= middlePos && contentHeight > browserHeight) {
-        window.scrollTo({
-          left: 0,
-          top: newTop - middlePos,
-          behavior: "smooth"
-        });
+          case 17:
+            _context.next = 19;
+            return Misc.getCurrentLanguage();
+
+          case 19:
+            currentLanguage = _context.sent;
+            isLanguageLeftToRight = currentLanguage.leftToRight;
+            currentLetterPosLeft = isLanguageLeftToRight ? currentLetter.offsetLeft : currentLetter.offsetLeft + $(currentLetter).width();
+            currentLetterPosTop = currentLetter.offsetTop;
+            letterHeight = $(currentLetter).height();
+            newTop = 0;
+            newLeft = 0;
+            newTop = currentLetterPosTop - Math.round(letterHeight / 5);
+
+            if (inputLen == 0) {
+              newLeft = isLanguageLeftToRight ? currentLetterPosLeft - caret.width() / 2 : currentLetterPosLeft + caret.width() / 2;
+            } else {
+              newLeft = isLanguageLeftToRight ? currentLetterPosLeft + $(currentLetter).width() - caret.width() / 2 : currentLetterPosLeft - $(currentLetter).width() + caret.width() / 2;
+            }
+
+            smoothlinescroll = $("#words .smoothScroller").height();
+            if (smoothlinescroll === undefined) smoothlinescroll = 0;
+
+            if (_config["default"].smoothCaret) {
+              caret.stop(true, false).animate({
+                top: newTop - smoothlinescroll,
+                left: newLeft
+              }, 100);
+            } else {
+              caret.stop(true, true).animate({
+                top: newTop - smoothlinescroll,
+                left: newLeft
+              }, 0);
+            }
+
+            if (_config["default"].showAllLines) {
+              browserHeight = window.innerHeight;
+              middlePos = browserHeight / 2 - $("#caret").outerHeight() / 2;
+              contentHeight = document.body.scrollHeight;
+
+              if (newTop >= middlePos && contentHeight > browserHeight) {
+                window.scrollTo({
+                  left: 0,
+                  top: newTop - middlePos,
+                  behavior: "smooth"
+                });
+              }
+            }
+
+            if (activeWordEmpty) {
+              $("#words .active").children().remove();
+            }
+
+            _context.next = 38;
+            break;
+
+          case 35:
+            _context.prev = 35;
+            _context.t0 = _context["catch"](9);
+            console.log("could not move caret: " + _context.t0.message);
+
+          case 38:
+          case "end":
+            return _context.stop();
+        }
       }
-    }
-
-    if (activeWordEmpty) {
-      $("#words .active").children().remove();
-    }
-  } catch (e) {
-    console.log("could not move caret: " + e.message);
-  }
+    }, _callee, null, [[9, 35]]);
+  }));
+  return _updatePosition.apply(this, arguments);
 }
 
 function show() {
@@ -190,7 +240,7 @@ function show() {
   }
 }
 
-},{"./config":7,"./misc":27,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],4:[function(require,module,exports){
+},{"./config":7,"./misc":28,"./test-logic":48,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],4:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -430,7 +480,7 @@ function updateAllChartColors() {
   result.updateColors();
 }
 
-},{"./misc":27,"./test-stats":47,"./theme-colors":50,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"chart.js":75}],5:[function(require,module,exports){
+},{"./misc":28,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/toConsumableArray":75,"@babel/runtime/helpers/typeof":76,"chart.js":79}],5:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -490,7 +540,8 @@ function canBailOut() {
 }
 
 var commandsLayouts = {
-  title: "Change layout...",
+  title: "Layout...",
+  configKey: "layout",
   list: [{
     id: "couldnotload",
     display: "Could not load the layouts list :("
@@ -503,6 +554,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
     commandsLayouts.list.push({
       id: "changeLayout" + Misc.capitalizeFirstLetter(layout),
       display: layout.replace(/_/g, " "),
+      configValue: layout,
       exec: function exec() {
         // UpdateConfig.setSavedLayout(layout);
         UpdateConfig.setLayout(layout);
@@ -514,6 +566,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
 
 var commandsKeymapLayouts = {
   title: "Change keymap layout...",
+  configKey: "keymapLayout",
   list: [{
     id: "couldnotload",
     display: "Could not load the layouts list :("
@@ -526,6 +579,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
   commandsKeymapLayouts.list.push({
     id: "changeKeymapLayoutOverrideSync",
     display: "override sync",
+    configValue: "overrideSync",
     exec: function exec() {
       UpdateConfig.setKeymapLayout("overrideSync");
       TestLogic.restart();
@@ -536,6 +590,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
       commandsKeymapLayouts.list.push({
         id: "changeKeymapLayout" + Misc.capitalizeFirstLetter(layout),
         display: layout.replace(/_/g, " "),
+        configValue: layout,
         exec: function exec() {
           UpdateConfig.setKeymapLayout(layout);
           TestLogic.restart();
@@ -546,7 +601,8 @@ if (Object.keys(_layouts["default"]).length > 0) {
 }
 
 var commandsLanguages = {
-  title: "Change language...",
+  title: "Language...",
+  configKey: "language",
   list: [{
     id: "couldnotload",
     display: "Could not load the languages list :("
@@ -558,6 +614,7 @@ Misc.getLanguageList().then(function (languages) {
     commandsLanguages.list.push({
       id: "changeLanguage" + Misc.capitalizeFirstLetter(language),
       display: language.replace(/_/g, " "),
+      configValue: language,
       exec: function exec() {
         UpdateConfig.setLanguage(language);
         TestLogic.restart();
@@ -566,10 +623,12 @@ Misc.getLanguageList().then(function (languages) {
   });
 });
 var commandsFunbox = {
-  title: "Change funbox...",
+  title: "Funbox...",
+  configKey: "funbox",
   list: [{
     id: "changeFunboxNone",
     display: "none",
+    configValue: "none",
     exec: function exec() {
       if (Funbox.setFunbox("none", null)) {
         TestLogic.restart();
@@ -582,6 +641,7 @@ Misc.getFunboxList().then(function (funboxes) {
     commandsFunbox.list.push({
       id: "changeFunbox" + funbox.name,
       display: funbox.name.replace(/_/g, " "),
+      configValue: funbox.name,
       exec: function exec() {
         if (Funbox.setFunbox(funbox.name, funbox.type)) {
           TestLogic.restart();
@@ -591,7 +651,8 @@ Misc.getFunboxList().then(function (funboxes) {
   });
 });
 var commandsFonts = {
-  title: "Change font...",
+  title: "Font family...",
+  configKey: "fontFamily",
   list: []
 };
 Misc.getFontsList().then(function (fonts) {
@@ -599,6 +660,7 @@ Misc.getFontsList().then(function (fonts) {
     commandsFonts.list.push({
       id: "changeFont" + font.name.replace(/ /g, "_"),
       display: font.display !== undefined ? font.display : font.name,
+      configValue: font.name,
       hover: function hover() {
         UpdateConfig.previewFontFamily(font.name);
       },
@@ -620,76 +682,510 @@ Misc.getFontsList().then(function (fonts) {
   });
 });
 var commandsRepeatQuotes = {
-  title: "Change repeat quotes...",
+  title: "Repeat quotes...",
+  configKey: "repeatQuotes",
   list: [{
     id: "setRepeatQuotesOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setRepeatQuotes("off");
     }
   }, {
     id: "setRepeatQuotesTyping",
     display: "typing",
+    configValue: "typing",
     exec: function exec() {
       UpdateConfig.setRepeatQuotes("typing");
     }
   }]
 };
+var commandsLiveWpm = {
+  title: "Live WPM...",
+  configKey: "showLiveWpm",
+  list: [{
+    id: "setLiveWpmOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowLiveWpm(false);
+    }
+  }, {
+    id: "setLiveWpmOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowLiveWpm(true);
+    }
+  }]
+};
+var commandsLiveAcc = {
+  title: "Live accuracy...",
+  configKey: "showLiveAcc",
+  list: [{
+    id: "setLiveAccOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowLiveAcc(false);
+    }
+  }, {
+    id: "setLiveAccOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowLiveAcc(true);
+    }
+  }]
+};
+var commandsLiveBurst = {
+  title: "Live burst...",
+  configKey: "showLiveBurst",
+  list: [{
+    id: "setLiveBurstOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowLiveBurst(false);
+    }
+  }, {
+    id: "setLiveBurstOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowLiveBurst(true);
+    }
+  }]
+};
+var commandsShowTimer = {
+  title: "Timer/progress...",
+  configKey: "showTimerProgress",
+  list: [{
+    id: "setTimerProgressOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowTimerProgress(false);
+    }
+  }, {
+    id: "setTimerProgressOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowTimerProgress(true);
+    }
+  }]
+};
+var commandsKeyTips = {
+  title: "Key tips...",
+  configKey: "showKeyTips",
+  list: [{
+    id: "setKeyTipsOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setKeyTips(false);
+    }
+  }, {
+    id: "setKeyTipsOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setKeyTips(true);
+    }
+  }]
+};
+var commandsFreedomMode = {
+  title: "Freedom mode...",
+  configKey: "freedomMode",
+  list: [{
+    id: "setfreedomModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setFreedomMode(false);
+    }
+  }, {
+    id: "setfreedomModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setFreedomMode(true);
+    }
+  }]
+};
+var commandsStrictSpace = {
+  title: "Strict space...",
+  configKey: "strictSpace",
+  list: [{
+    id: "setStrictSpaceOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setStrictSpace(false);
+    }
+  }, {
+    id: "setStrictSpaceOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setStrictSpace(true);
+    }
+  }]
+};
+var commandsBlindMode = {
+  title: "Blind mode...",
+  configKey: "blindMode",
+  list: [{
+    id: "setBlindModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setBlindMode(false);
+    }
+  }, {
+    id: "setBlindModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setBlindMode(true);
+    }
+  }]
+};
+var commandsShowWordsHistory = {
+  title: "Always show words history...",
+  configKey: "alwaysShowWordsHistory",
+  list: [{
+    id: "setAlwaysShowWordsHistoryOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowWordsHistory(false);
+    }
+  }, {
+    id: "setAlwaysShowWordsHistoryOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowWordsHistory(true);
+    }
+  }]
+};
+var commandsIndicateTypos = {
+  title: "Indicate typos...",
+  configKey: "indicateTypos",
+  list: [{
+    id: "setIndicateTyposOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setIndicateTypos(false);
+    }
+  }, {
+    id: "setIndicateTyposOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setIndicateTypos(true);
+    }
+  }]
+};
+var commandsHideExtraLetters = {
+  title: "Hide extra letters...",
+  configKey: "hideExtraLetters",
+  list: [{
+    id: "setHideExtraLettersOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setHideExtraLetters(false);
+    }
+  }, {
+    id: "setHideExtraLettersOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setHideExtraLetters(true);
+    }
+  }]
+};
+var commandsQuickEnd = {
+  title: "Quick end...",
+  configKey: "quickEnd",
+  list: [{
+    id: "setQuickEndOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setQuickEnd(false);
+    }
+  }, {
+    id: "setQuickEndOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setQuickEnd(true);
+    }
+  }]
+};
 var commandsOppositeShiftMode = {
   title: "Change opposite shift mode...",
+  configKey: "oppositeShiftMode",
   list: [{
     id: "setOppositeShiftModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setOppositeShiftMode("off");
+      TestUI.updateModesNotice();
     }
   }, {
     id: "setOppositeShiftModeOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setOppositeShiftMode("on");
+      TestUI.updateModesNotice();
+    }
+  }]
+};
+var commandsSoundOnError = {
+  title: "Sound on error...",
+  configKey: "playSoundOnError",
+  list: [{
+    id: "setPlaySoundOnErrorOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setPlaySoundOnError(false);
+    }
+  }, {
+    id: "setPlaySoundOnErrorOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setPlaySoundOnError(true);
+    }
+  }]
+};
+var commandsFlipTestColors = {
+  title: "Flip test colors...",
+  configKey: "flipTestColors",
+  list: [{
+    id: "setFlipTestColorsOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setFlipTestColors(false);
+    }
+  }, {
+    id: "setFlipTestColorsOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setFlipTestColors(true);
+    }
+  }]
+};
+var commandsSmoothLineScroll = {
+  title: "Smooth line scroll...",
+  configKey: "smoothLineScroll",
+  list: [{
+    id: "setSmoothLineScrollOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setSmoothLineScroll(false);
+    }
+  }, {
+    id: "setSmoothLineScrollOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setSmoothLineScroll(true);
+    }
+  }]
+};
+var commandsAlwaysShowDecimal = {
+  title: "Always show decimal places...",
+  configKey: "alwaysShowDecimalPlaces",
+  list: [{
+    id: "setAlwaysShowDecimalPlacesOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowDecimalPlaces(false);
+    }
+  }, {
+    id: "setAlwaysShowDecimalPlacesOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowDecimalPlaces(true);
+    }
+  }]
+};
+var commandsAlwaysShowCPM = {
+  title: "Always show CPM...",
+  configKey: "alwaysShowCPM",
+  list: [{
+    id: "setAlwaysShowCPMOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowCPM(false);
+    }
+  }, {
+    id: "setAlwaysShowCPMOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowCPM(true);
+    }
+  }]
+};
+var commandsStartGraphsAtZero = {
+  title: "Start graphs at zero...",
+  configKey: "startGraphsAtZero",
+  list: [{
+    id: "setStartGraphsAtZeroOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setStartGraphsAtZero(false);
+    }
+  }, {
+    id: "setStartGraphsAtZeroOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setStartGraphsAtZero(true);
+    }
+  }]
+};
+var commandsSwapEscAndTab = {
+  title: "Swap esc and tab...",
+  configKey: "swapEscAndTab",
+  list: [{
+    id: "setSwapEscAndTabOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setSwapEscAndTab(false);
+    }
+  }, {
+    id: "setSwapEscAndTabOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setSwapEscAndTab(true);
+    }
+  }]
+};
+var commandsShowAllLines = {
+  title: "Show all lines...",
+  configKey: "showAllLines",
+  list: [{
+    id: "setShowAllLinesOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowAllLines(false);
+    }
+  }, {
+    id: "setShowAllLinesOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowAllLines(true);
+    }
+  }]
+};
+var commandsColorfulMode = {
+  title: "Colorful mode...",
+  configKey: "colorfulMode",
+  list: [{
+    id: "setColorfulModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setColorfulMode(false);
+    }
+  }, {
+    id: "setColorfulModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setColorfulMode(true);
+    }
+  }]
+};
+var commandsOutOfFocusWarning = {
+  title: "Colorful mode...",
+  configKey: "showOutOfFocusWarning",
+  list: [{
+    id: "setShowOutOfFocusWarningOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowOutOfFocusWarning(false);
+    }
+  }, {
+    id: "setShowOutOfFocusWarningOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowOutOfFocusWarning(true);
     }
   }]
 };
 var commandsKeymapMode = {
-  title: "Change keymap mode...",
+  title: "Keymap mode...",
+  configKey: "keymapMode",
   list: [{
     id: "setKeymapModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setKeymapMode("off");
     }
   }, {
     id: "setKeymapModeStatic",
     display: "static",
+    configValue: "static",
     exec: function exec() {
       UpdateConfig.setKeymapMode("static");
     }
   }, {
     id: "setKeymapModeNext",
     display: "next",
+    configValue: "next",
     exec: function exec() {
       UpdateConfig.setKeymapMode("next");
     }
   }, {
     id: "setKeymapModeReact",
     display: "react",
+    configValue: "react",
     exec: function exec() {
       UpdateConfig.setKeymapMode("react");
     }
   }]
 };
 var commandsSoundOnClick = {
-  title: "Change sound on click...",
+  title: "Sound on click...",
+  configKey: "playSoundOnClick",
   list: [{
     id: "setSoundOnClickOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("off");
     }
   }, {
     id: "setSoundOnClick1",
     display: "1",
+    configValue: "1",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("1");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -697,6 +1193,7 @@ var commandsSoundOnClick = {
   }, {
     id: "setSoundOnClick2",
     display: "2",
+    configValue: "2",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("2");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -704,6 +1201,7 @@ var commandsSoundOnClick = {
   }, {
     id: "setSoundOnClick3",
     display: "3",
+    configValue: "3",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("3");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -711,6 +1209,7 @@ var commandsSoundOnClick = {
   }, {
     id: "setSoundOnClick4",
     display: "4",
+    configValue: "4",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("4");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -718,96 +1217,132 @@ var commandsSoundOnClick = {
   }]
 };
 var commandsRandomTheme = {
-  title: "Change random theme...",
+  title: "Random theme...",
+  configKey: "randomTheme",
   list: [{
     id: "setRandomOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setRandomTheme("off");
     }
   }, {
     id: "setRandomOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setRandomTheme("on");
     }
   }, {
     id: "setRandomFav",
     display: "fav",
+    configValue: "fav",
     exec: function exec() {
       UpdateConfig.setRandomTheme("fav");
     }
   }, {
     id: "setRandomLight",
     display: "light",
+    configValue: "light",
     exec: function exec() {
       UpdateConfig.setRandomTheme("light");
     }
   }, {
     id: "setRandomDark",
     display: "dark",
+    configValue: "dark",
     exec: function exec() {
       UpdateConfig.setRandomTheme("dark");
     }
   }]
 };
 var commandsDifficulty = {
-  title: "Change difficulty...",
+  title: "Difficulty...",
+  configKey: "difficulty",
   list: [{
     id: "setDifficultyNormal",
-    display: "Normal",
+    display: "normal",
+    configValue: "normal",
     exec: function exec() {
       UpdateConfig.setDifficulty("normal");
     }
   }, {
     id: "setDifficultyExpert",
-    display: "Expert",
+    display: "expert",
+    configValue: "expert",
     exec: function exec() {
       UpdateConfig.setDifficulty("expert");
     }
   }, {
     id: "setDifficultyMaster",
-    display: "Master",
+    display: "master",
+    configValue: "master",
     exec: function exec() {
       UpdateConfig.setDifficulty("master");
     }
   }]
 };
+var commandsCustomTheme = {
+  title: "Custom theme...",
+  configKey: "customTheme",
+  list: [{
+    id: "setCustomThemeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setCustomTheme(false);
+    }
+  }, {
+    id: "setCustomThemeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setCustomTheme(true);
+    }
+  }]
+};
 var commandsCaretStyle = {
   title: "Change caret style...",
+  configKey: "caretStyle",
   list: [{
     id: "setCaretStyleOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setCaretStyle("off");
     }
   }, {
     id: "setCaretStyleDefault",
     display: "line",
+    configValue: "default",
     exec: function exec() {
       UpdateConfig.setCaretStyle("default");
     }
   }, {
     id: "setCaretStyleBlock",
     display: "block",
+    configValue: "block",
     exec: function exec() {
       UpdateConfig.setCaretStyle("block");
     }
   }, {
     id: "setCaretStyleOutline",
     display: "outline-block",
+    configValue: "outline",
     exec: function exec() {
       UpdateConfig.setCaretStyle("outline");
     }
   }, {
     id: "setCaretStyleUnderline",
     display: "underline",
+    configValue: "underliner",
     exec: function exec() {
       UpdateConfig.setCaretStyle("underline");
     }
   }, {
     id: "setCaretStyleCarrot",
     display: "carrot",
+    configValue: "carrot",
     visible: false,
     exec: function exec() {
       UpdateConfig.setCaretStyle("carrot");
@@ -815,6 +1350,7 @@ var commandsCaretStyle = {
   }, {
     id: "setCaretStyleBanana",
     display: "banana",
+    configValue: "banana",
     visible: false,
     exec: function exec() {
       UpdateConfig.setCaretStyle("banana");
@@ -823,33 +1359,39 @@ var commandsCaretStyle = {
 };
 var commandsPaceCaretStyle = {
   title: "Change pace caret style...",
+  configKey: "paceCaretStyle",
   list: [{
     id: "setPaceCaretStyleDefault",
     display: "line",
+    configValue: "default",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("default");
     }
   }, {
     id: "setPaceCaretStyleBlock",
     display: "block",
+    configValue: "block",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("block");
     }
   }, {
     id: "setPaceCaretStyleOutline",
     display: "outline-block",
+    configValue: "outline",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("outline");
     }
   }, {
     id: "setPaceCaretStyleUnderline",
     display: "underline",
+    configValue: "underline",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("underline");
     }
   }, {
     id: "setPaceCaretStyleCarrot",
     display: "carrot",
+    configValue: "carrot",
     visible: false,
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("carrot");
@@ -857,17 +1399,39 @@ var commandsPaceCaretStyle = {
   }, {
     id: "setPaceCaretStyleBanana",
     display: "banana",
+    configValue: "banana",
     visible: false,
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("banana");
     }
   }]
 };
+var commandsRepeatedPace = {
+  title: "Repeated pace...",
+  configKey: "repeatedPace",
+  list: [{
+    id: "setRepeatedPaceOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setRepeatedPace(false);
+    }
+  }, {
+    id: "setRepeatedPaceOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setRepeatedPace(true);
+    }
+  }]
+};
 var commandsPaceCaret = {
-  title: "Change pace caret mode...",
+  title: "Pace caret mode...",
+  configKey: "paceCaret",
   list: [{
     id: "setPaceCaretOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setPaceCaret("off");
       TestLogic.restart();
@@ -875,6 +1439,7 @@ var commandsPaceCaret = {
   }, {
     id: "setPaceCaretPb",
     display: "pb",
+    configValue: "pb",
     exec: function exec() {
       UpdateConfig.setPaceCaret("pb");
       TestLogic.restart();
@@ -882,6 +1447,7 @@ var commandsPaceCaret = {
   }, {
     id: "setPaceCaretAverage",
     display: "average",
+    configValue: "average",
     exec: function exec() {
       UpdateConfig.setPaceCaret("average");
       TestLogic.restart();
@@ -889,6 +1455,7 @@ var commandsPaceCaret = {
   }, {
     id: "setPaceCaretCustom",
     display: "custom...",
+    configValue: "custom",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setPaceCaretCustomSpeed(input);
@@ -899,15 +1466,18 @@ var commandsPaceCaret = {
 };
 var commandsMinWpm = {
   title: "Change min wpm mode...",
+  configKey: "minWpm",
   list: [{
     id: "setMinWpmOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setMinWpm("off");
     }
   }, {
     id: "setMinWpmCustom",
     display: "custom...",
+    configValue: "custom",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setMinWpmCustomSpeed(input);
@@ -917,15 +1487,18 @@ var commandsMinWpm = {
 };
 var commandsMinAcc = {
   title: "Change min accuracy mode...",
+  configKey: "minAcc",
   list: [{
     id: "setMinAccOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setMinAcc("off");
     }
   }, {
     id: "setMinAccCustom",
     display: "custom...",
+    configValue: "custom",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setMinAccCustom(input);
@@ -933,123 +1506,175 @@ var commandsMinAcc = {
     }
   }]
 };
+var commandsMinBurst = {
+  title: "Change min burst mode...",
+  configKey: "minBurst",
+  list: [{
+    id: "setMinBurstOff",
+    display: "off",
+    configValue: "off",
+    exec: function exec() {
+      UpdateConfig.setMinBurst("off");
+    }
+  }, {
+    id: "setMinBurstFixed",
+    display: "fixed...",
+    configValue: "fixed",
+    input: true,
+    exec: function exec(input) {
+      UpdateConfig.setMinBurst("fixed");
+      UpdateConfig.setMinBurstCustomSpeed(input);
+    }
+  }, {
+    id: "setMinBurstFlex",
+    display: "flex...",
+    configValue: "flex",
+    input: true,
+    exec: function exec(input) {
+      UpdateConfig.setMinBurst("flex");
+      UpdateConfig.setMinBurstCustomSpeed(input);
+    }
+  }]
+};
 var commandsKeymapStyle = {
-  title: "Change keymap style...",
+  title: "Keymap style...",
+  configKey: "keymapStyle",
   list: [{
     id: "setKeymapStyleStaggered",
     display: "staggered",
+    configValue: "staggered",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("staggered");
     }
   }, {
     id: "setKeymapStyleMatrix",
     display: "matrix",
+    configValue: "matrix",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("matrix");
     }
   }, {
     id: "setKeymapStyleSplit",
     display: "split",
+    configValue: "split",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("split");
     }
   }, {
     id: "setKeymapStyleSplitMatrix",
     display: "split matrix",
+    configValue: "split_matrix",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("split_matrix");
     }
   }]
 };
 var commandsKeymapLegendStyle = {
-  title: "Change keymap legend style...",
+  title: "Keymap legend style...",
+  configKey: "keymapLegendStyle",
   list: [{
     id: "setKeymapLegendStyleLowercase",
     display: "lowercase",
+    configValue: "lowercase",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("lowercase");
     }
   }, {
     id: "setKeymapLegendStyleUppercase",
     display: "uppercase",
+    configValue: "uppercase",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("uppercase");
     }
   }, {
     id: "setKeymapLegendStyleBlank",
     display: "blank",
+    configValue: "blank",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("blank");
     }
   }]
 };
 var commandsHighlightMode = {
-  title: "Change highlight mode...",
+  title: "Highlight mode...",
+  configKey: "highlightMode",
   list: [{
     id: "setHighlightModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setHighlightMode("off");
     }
   }, {
     id: "setHighlightModeLetter",
     display: "letter",
+    configValue: "letter",
     exec: function exec() {
       UpdateConfig.setHighlightMode("letter");
     }
   }, {
     id: "setHighlightModeWord",
     display: "word",
+    configValue: "word",
     exec: function exec() {
       UpdateConfig.setHighlightMode("word");
     }
   }]
 };
 var commandsTimerStyle = {
-  title: "Change timer/progress style...",
+  title: "Timer/progress style...",
+  configKey: "timerStyle",
   list: [{
     id: "setTimerStyleBar",
     display: "bar",
+    configValue: "bar",
     exec: function exec() {
       UpdateConfig.setTimerStyle("bar");
     }
   }, {
     id: "setTimerStyleText",
     display: "text",
+    configValue: "text",
     exec: function exec() {
       UpdateConfig.setTimerStyle("text");
     }
   }, {
     id: "setTimerStyleMini",
     display: "mini",
+    configValue: "mini",
     exec: function exec() {
       UpdateConfig.setTimerStyle("mini");
     }
   }]
 };
 var commandsTimerColor = {
-  title: "Change timer/progress color...",
+  title: "Timer/progress color...",
+  configKey: "timerColor",
   list: [{
     id: "setTimerColorBlack",
     display: "black",
+    configValue: "black",
     exec: function exec() {
       UpdateConfig.setTimerColor("bar");
     }
   }, {
     id: "setTimerColorSub",
     display: "sub",
+    configValue: "sub",
     exec: function exec() {
       UpdateConfig.setTimerColor("sub");
     }
   }, {
     id: "setTimerColorText",
     display: "text",
+    configValue: "text",
     exec: function exec() {
       UpdateConfig.setTimerColor("text");
     }
   }, {
     id: "setTimerColorMain",
     display: "main",
+    configValue: "main",
     exec: function exec() {
       UpdateConfig.setTimerColor("main");
     }
@@ -1057,43 +1682,51 @@ var commandsTimerColor = {
 };
 var commandsSingleListCommandLine = {
   title: "Single list command line...",
+  configKey: "singleListCommandLine",
   list: [{
     id: "singleListCommandLineManual",
     display: "manual",
+    configValue: "manual",
     exec: function exec() {
       UpdateConfig.setSingleListCommandLine("manual");
     }
   }, {
     id: "singleListCommandLineOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setSingleListCommandLine("on");
     }
   }]
 };
 var commandsTimerOpacity = {
-  title: "Change timer opacity...",
+  title: "Timer/progress opacity...",
+  configKey: "timerOpacity",
   list: [{
     id: "setTimerOpacity.25",
     display: ".25",
+    configValue: 0.25,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(0.25);
     }
   }, {
     id: "setTimerOpacity.5",
     display: ".5",
+    configValue: 0.5,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(0.5);
     }
   }, {
     id: "setTimerOpacity.75",
     display: ".75",
+    configValue: 0.75,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(0.75);
     }
   }, {
     id: "setTimerOpacity1",
     display: "1",
+    configValue: 1,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(1);
     }
@@ -1101,9 +1734,11 @@ var commandsTimerOpacity = {
 };
 var commandsWordCount = {
   title: "Change word count...",
+  configKey: "words",
   list: [{
     id: "changeWordCount10",
     display: "10",
+    configValue: 10,
     exec: function exec() {
       UpdateConfig.setWordCount("10");
       TestLogic.restart();
@@ -1111,6 +1746,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount25",
     display: "25",
+    configValue: 25,
     exec: function exec() {
       UpdateConfig.setWordCount("25");
       TestLogic.restart();
@@ -1118,6 +1754,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount50",
     display: "50",
+    configValue: 50,
     exec: function exec() {
       UpdateConfig.setWordCount("50");
       TestLogic.restart();
@@ -1125,6 +1762,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount100",
     display: "100",
+    configValue: 100,
     exec: function exec() {
       UpdateConfig.setWordCount("100");
       TestLogic.restart();
@@ -1132,6 +1770,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount200",
     display: "200",
+    configValue: 200,
     exec: function exec() {
       UpdateConfig.setWordCount("200");
       TestLogic.restart();
@@ -1148,9 +1787,11 @@ var commandsWordCount = {
 };
 var commandsQuoteLengthConfig = {
   title: "Change quote length...",
+  configKey: "quoteLength",
   list: [{
     id: "changeQuoteLengthAll",
     display: "all",
+    configValue: [0, 1, 2, 3],
     exec: function exec() {
       UpdateConfig.setQuoteLength([0, 1, 2, 3]);
       TestLogic.restart();
@@ -1158,6 +1799,8 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthShort",
     display: "short",
+    configValue: 0,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(0);
       TestLogic.restart();
@@ -1165,6 +1808,8 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthMedium",
     display: "medium",
+    configValue: 1,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(1);
       TestLogic.restart();
@@ -1172,6 +1817,8 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthLong",
     display: "long",
+    configValue: 2,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(2);
       TestLogic.restart();
@@ -1179,17 +1826,101 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthThicc",
     display: "thicc",
+    configValue: 3,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(3);
       TestLogic.restart();
     }
   }]
 };
+var commandsPunctuation = {
+  title: "Change punctuation...",
+  configKey: "punctuation",
+  list: [{
+    id: "changePunctuationOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setPunctuation(true);
+      TestLogic.restart();
+    }
+  }, {
+    id: "changePunctuationOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setPunctuation(false);
+      TestLogic.restart();
+    }
+  }]
+};
+var commandsNumbers = {
+  title: "Numbers...",
+  configKey: "numbers",
+  list: [{
+    id: "changeNumbersOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setNumbers(true);
+      TestLogic.restart();
+    }
+  }, {
+    id: "changeNumbersOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setNumbers(false);
+      TestLogic.restart();
+    }
+  }]
+};
+var commandsSmoothCaret = {
+  title: "Smooth caret...",
+  configKey: "smoothCaret",
+  list: [{
+    id: "changeSmoothCaretOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setSmoothCaret(true);
+    }
+  }, {
+    id: "changeSmoothCaretOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setSmoothCaret(false);
+    }
+  }]
+};
+var commandsQuickTab = {
+  title: "Quick tab...",
+  configKey: "quickTab",
+  list: [{
+    id: "changeQuickTabOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setQuickTabMode(true);
+    }
+  }, {
+    id: "changeQuickTabOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setQuickTabMode(false);
+    }
+  }]
+};
 var commandsMode = {
   title: "Change mode...",
+  configKey: "mode",
   list: [{
     id: "changeModeTime",
     display: "time",
+    configValue: "time",
     exec: function exec() {
       UpdateConfig.setMode("time");
       TestLogic.restart();
@@ -1197,6 +1928,7 @@ var commandsMode = {
   }, {
     id: "changeModeWords",
     display: "words",
+    configValue: "words",
     exec: function exec() {
       UpdateConfig.setMode("words");
       TestLogic.restart();
@@ -1204,6 +1936,7 @@ var commandsMode = {
   }, {
     id: "changeModeQuote",
     display: "quote",
+    configValue: "quote",
     exec: function exec() {
       UpdateConfig.setMode("quote");
       TestLogic.restart();
@@ -1211,6 +1944,7 @@ var commandsMode = {
   }, {
     id: "changeModeCustom",
     display: "custom",
+    configValue: "custom",
     exec: function exec() {
       UpdateConfig.setMode("custom");
       TestLogic.restart();
@@ -1218,6 +1952,7 @@ var commandsMode = {
   }, {
     id: "changeModeZen",
     display: "zen",
+    configValue: "zen",
     exec: function exec() {
       UpdateConfig.setMode("zen");
       ManualRestart.set();
@@ -1227,9 +1962,11 @@ var commandsMode = {
 };
 var commandsTimeConfig = {
   title: "Change time config...",
+  configKey: "time",
   list: [{
     id: "changeTimeConfig15",
     display: "15",
+    configValue: 15,
     exec: function exec() {
       UpdateConfig.setTimeConfig("15");
       TestLogic.restart();
@@ -1237,6 +1974,7 @@ var commandsTimeConfig = {
   }, {
     id: "changeTimeConfig30",
     display: "30",
+    configValue: 30,
     exec: function exec() {
       UpdateConfig.setTimeConfig("30");
       TestLogic.restart();
@@ -1244,6 +1982,7 @@ var commandsTimeConfig = {
   }, {
     id: "changeTimeConfig60",
     display: "60",
+    configValue: 60,
     exec: function exec() {
       UpdateConfig.setTimeConfig("60");
       TestLogic.restart();
@@ -1251,6 +1990,7 @@ var commandsTimeConfig = {
   }, {
     id: "changeTimeConfig120",
     display: "120",
+    configValue: 120,
     exec: function exec() {
       UpdateConfig.setTimeConfig("120");
       TestLogic.restart();
@@ -1266,54 +2006,64 @@ var commandsTimeConfig = {
   }]
 };
 var commandsConfidenceMode = {
-  title: "Change confidence mode...",
+  title: "Confidence mode...",
+  configKey: "confidenceMode",
   list: [{
     id: "changeConfidenceModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setConfidenceMode("off");
     }
   }, {
     id: "changeConfidenceModeOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setConfidenceMode("on");
     }
   }, {
     id: "changeConfidenceModeMax",
     display: "max",
+    configValue: "max",
     exec: function exec() {
       UpdateConfig.setConfidenceMode("max");
     }
   }]
 };
 var commandsStopOnError = {
-  title: "Change stop on error...",
+  title: "Stop on error...",
+  configKey: "stopOnError",
   list: [{
     id: "changeStopOnErrorOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setStopOnError("off");
     }
   }, {
     id: "changeStopOnErrorLetter",
     display: "letter",
+    configValue: "letter",
     exec: function exec() {
       UpdateConfig.setStopOnError("letter");
     }
   }, {
     id: "changeStopOnErrorWord",
     display: "word",
+    configValue: "word",
     exec: function exec() {
       UpdateConfig.setStopOnError("word");
     }
   }]
 };
 var commandsFontSize = {
-  title: "Change font size...",
+  title: "Font size...",
+  configKey: "fontSize",
   list: [{
     id: "changeFontSize1",
     display: "1x",
+    configValue: 1,
     exec: function exec() {
       UpdateConfig.setFontSize(1);
       TestLogic.restart();
@@ -1321,6 +2071,7 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize125",
     display: "1.25x",
+    configValue: 125,
     exec: function exec() {
       UpdateConfig.setFontSize(125);
       TestLogic.restart();
@@ -1328,6 +2079,7 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize15",
     display: "1.5x",
+    configValue: 15,
     exec: function exec() {
       UpdateConfig.setFontSize(15);
       TestLogic.restart();
@@ -1335,6 +2087,7 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize2",
     display: "2x",
+    configValue: 2,
     exec: function exec() {
       UpdateConfig.setFontSize(2);
       TestLogic.restart();
@@ -1342,48 +2095,64 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize3",
     display: "3x",
+    configValue: 3,
     exec: function exec() {
       UpdateConfig.setFontSize(3);
+      TestLogic.restart();
+    }
+  }, {
+    id: "changeFontSize4",
+    display: "4x",
+    configValue: 4,
+    exec: function exec() {
+      UpdateConfig.setFontSize(4);
       TestLogic.restart();
     }
   }]
 };
 var commandsPageWidth = {
-  title: "Change page width...",
+  title: "Page width...",
+  configKey: "pageWidth",
   list: [{
     id: "setPageWidth100",
     display: "100",
+    configValue: "100",
     exec: function exec() {
       UpdateConfig.setPageWidth("100");
     }
   }, {
     id: "setPageWidth125",
     display: "125",
+    configValue: "125",
     exec: function exec() {
       UpdateConfig.setPageWidth("125");
     }
   }, {
     id: "setPageWidth150",
     display: "150",
+    configValue: "150",
     exec: function exec() {
       UpdateConfig.setPageWidth("150");
     }
   }, {
     id: "setPageWidth200",
     display: "200",
+    configValue: "200",
     exec: function exec() {
       UpdateConfig.setPageWidth("200");
     }
   }, {
     id: "setPageWidthMax",
     display: "max",
+    configValue: "max",
     exec: function exec() {
       UpdateConfig.setPageWidth("max");
     }
   }]
 };
 var themeCommands = {
-  title: "Change theme...",
+  title: "Theme...",
+  configKey: "theme",
   list: []
 };
 exports.themeCommands = themeCommands;
@@ -1392,6 +2161,7 @@ Misc.getThemesList().then(function (themes) {
     themeCommands.list.push({
       id: "changeTheme" + Misc.capitalizeFirstLetter(theme.name),
       display: theme.name.replace(/_/g, " "),
+      configValue: theme.name,
       hover: function hover() {
         // previewTheme(theme.name);
         ThemeController.preview(theme.name);
@@ -1467,25 +2237,25 @@ var commandsMonkeyPowerLevel = {
     }
   }, {
     id: "monkeyPowerLevel1",
-    display: "1",
+    display: "mellow",
     exec: function exec() {
       return UpdateConfig.setMonkeyPowerLevel("1");
     }
   }, {
     id: "monkeyPowerLevel2",
-    display: "2",
+    display: "high",
     exec: function exec() {
       return UpdateConfig.setMonkeyPowerLevel("2");
     }
   }, {
     id: "monkeyPowerLevel3",
-    display: "3",
+    display: "ultra",
     exec: function exec() {
       return UpdateConfig.setMonkeyPowerLevel("3");
     }
   }, {
     id: "monkeyPowerLevel4",
-    display: "4",
+    display: "over 9000",
     exec: function exec() {
       return UpdateConfig.setMonkeyPowerLevel("4");
     }
@@ -1494,427 +2264,332 @@ var commandsMonkeyPowerLevel = {
 var defaultCommands = {
   title: "",
   list: [{
-    id: "togglePunctuation",
-    display: "Toggle punctuation",
-    exec: function exec() {
-      UpdateConfig.togglePunctuation();
-      TestLogic.restart();
+    id: "changePunctuation",
+    display: "Punctuation...",
+    subgroup: commandsPunctuation,
+    icon: "!?",
+    shift: {
+      display: "Toggle punctuation",
+      exec: function exec() {
+        UpdateConfig.togglePunctuation();
+      }
     }
   }, {
     id: "changeMode",
-    display: "Change mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsMode);
-      Commandline.show();
-    }
+    display: "Mode...",
+    icon: "fa-bars",
+    subgroup: commandsMode
   }, {
     id: "changeTimeConfig",
-    display: "Change time config...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimeConfig);
-      Commandline.show();
-    }
+    display: "Time...",
+    icon: "fa-clock",
+    subgroup: commandsTimeConfig
   }, {
     id: "changeWordCount",
-    display: "Change word count...",
+    display: "Words...",
     alias: "words",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsWordCount);
-      Commandline.show();
-    }
+    icon: "fa-font",
+    subgroup: commandsWordCount
   }, {
     id: "changeQuoteLength",
-    display: "Change quote length...",
+    display: "Quote length...",
+    icon: "fa-quote-right",
     alias: "quotes",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsQuoteLengthConfig);
-      Commandline.show();
-    }
+    subgroup: commandsQuoteLengthConfig
   }, {
     id: "changeConfidenceMode",
-    display: "Change confidence mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsConfidenceMode);
-      Commandline.show();
-    }
+    display: "Confidence mode...",
+    icon: "fa-backspace",
+    subgroup: commandsConfidenceMode
   }, {
     id: "changeStopOnError",
-    display: "Change stop on error...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsStopOnError);
-      Commandline.show();
-    }
+    display: "Stop on error...",
+    icon: "fa-hand-paper",
+    subgroup: commandsStopOnError
   }, {
     id: "changeSoundOnClick",
-    display: "Change sound on click...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsSoundOnClick);
-      Commandline.show();
-    }
+    display: "Sound on click...",
+    icon: "fa-volume-up",
+    subgroup: commandsSoundOnClick
   }, {
-    id: "toggleNumbers",
-    display: "Toggle numbers",
-    exec: function exec() {
-      UpdateConfig.toggleNumbers();
-      TestLogic.restart();
-    }
+    id: "changeNumbers",
+    display: "Numbers...",
+    icon: "15",
+    subgroup: commandsNumbers
   }, {
-    id: "toggleSmoothCaret",
-    display: "Toggle smooth caret",
-    exec: function exec() {
-      UpdateConfig.toggleSmoothCaret();
-    }
+    id: "changeSmoothCaret",
+    display: "Smooth caret...",
+    icon: "fa-i-cursor",
+    subgroup: commandsSmoothCaret
   }, {
-    id: "toggleQuickTab",
-    display: "Toggle quick tab mode",
-    exec: function exec() {
-      console.log("before command");
-      console.log(UpdateConfig["default"].quickTab);
-      UpdateConfig.toggleQuickTabMode();
-      console.log("after command");
-      console.log(UpdateConfig["default"].quickTab);
-    }
+    id: "changeQuickTab",
+    display: "Quick tab...",
+    icon: "fa-redo-alt",
+    subgroup: commandsQuickTab
   }, {
     id: "changeRepeatQuotes",
-    display: "Change repeat quotes...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsRepeatQuotes);
-      Commandline.show();
-    }
+    display: "Repeat quotes...",
+    icon: "fa-sync-alt",
+    subgroup: commandsRepeatQuotes
   }, {
-    id: "toggleShowLiveWpm",
-    display: "Toggle live wpm display",
-    exec: function exec() {
-      UpdateConfig.toggleShowLiveWpm();
-    }
+    id: "changeLiveWpm",
+    display: "Live WPM...",
+    icon: "fa-tachometer-alt",
+    subgroup: commandsLiveWpm
   }, {
-    id: "toggleShowLiveAcc",
-    display: "Toggle live accuracy display",
-    exec: function exec() {
-      UpdateConfig.toggleLiveAcc();
-    }
+    id: "changeLiveAcc",
+    display: "Live accuracy...",
+    icon: "fa-percentage",
+    subgroup: commandsLiveAcc
   }, {
-    id: "toggleTimerBar",
-    display: "Toggle timer display",
-    exec: function exec() {
-      UpdateConfig.toggleShowTimerProgress();
-    }
+    id: "changeLiveBurst",
+    display: "Live burst...",
+    icon: "fa-fire-alt",
+    subgroup: commandsLiveBurst
   }, {
-    id: "toggleKeyTips",
-    display: "Toggle keybind tips",
-    exec: function exec() {
-      UpdateConfig.toggleKeyTips();
-    }
+    id: "changeShowTimer",
+    display: "Timer/progress...",
+    icon: "fa-clock",
+    subgroup: commandsShowTimer
   }, {
-    id: "toggleFreedom",
-    display: "Toggle freedom mode",
-    exec: function exec() {
-      UpdateConfig.toggleFreedomMode();
-    }
+    id: "changeKeyTips",
+    display: "Key tips...",
+    icon: "fa-question",
+    subgroup: commandsKeyTips
   }, {
-    id: "toggleStrictSpace",
-    display: "Toggle strict space",
-    exec: function exec() {
-      UpdateConfig.toggleStrictSpace();
-    }
+    id: "changeFreedomMode",
+    display: "Freedom mode...",
+    subgroup: commandsFreedomMode
   }, {
-    id: "toggleBlindMode",
-    display: "Toggle blind mode",
-    exec: function exec() {
-      UpdateConfig.toggleBlindMode();
-    }
+    id: "changeStrictSpace",
+    display: "Strict space...",
+    icon: "fa-minus",
+    subgroup: commandsStrictSpace
   }, {
-    id: "toggleAlwaysShowWordsHistory",
-    display: "Toggle always show words history",
-    exec: function exec() {
-      UpdateConfig.toggleAlwaysShowWordsHistory();
-    }
+    id: "changeBlindMode",
+    display: "Blind mode...",
+    icon: "fa-eye-slash",
+    subgroup: commandsBlindMode
   }, {
-    id: "toggleIndicateTypos",
-    display: "Toggle indicate typos",
-    exec: function exec() {
-      UpdateConfig.toggleIndicateTypos();
-    }
+    id: "changeShowWordsHistory",
+    display: "Always show words history...",
+    icon: "fa-align-left",
+    subgroup: commandsShowWordsHistory
   }, {
-    id: "toggleHideExtraLetters",
-    display: "Toggle hide extra letters",
-    exec: function exec() {
-      UpdateConfig.toggleHideExtraLetters();
-    }
+    id: "changeIndicateTypos",
+    display: "Indicate typos...",
+    icon: "fa-exclamation",
+    subgroup: commandsIndicateTypos
   }, {
-    id: "toggleQuickEnd",
-    display: "Toggle quick end",
-    exec: function exec() {
-      UpdateConfig.toggleQuickEnd();
-    }
+    id: "changeHideExtraLetters",
+    display: "Hide extra letters...",
+    icon: "fa-eye-slash",
+    subgroup: commandsHideExtraLetters
+  }, {
+    id: "changeQuickEnd",
+    display: "Quick end...",
+    icon: "fa-step-forward",
+    subgroup: commandsQuickEnd
   }, {
     id: "singleListCommandLine",
     display: "Single list command line...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsSingleListCommandLine);
-      Commandline.show();
-    }
+    icon: "fa-list",
+    subgroup: commandsSingleListCommandLine
   }, {
     id: "changeMinWpm",
-    display: "Change min wpm mode...",
+    display: "Minimum wpm...",
     alias: "minimum",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsMinWpm);
-      Commandline.show();
-    }
+    icon: "fa-bomb",
+    subgroup: commandsMinWpm
   }, {
     id: "changeMinAcc",
-    display: "Change min accuracy mode...",
+    display: "Minimum accuracy...",
     alias: "minimum",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsMinAcc);
-      Commandline.show();
-    }
+    icon: "fa-bomb",
+    subgroup: commandsMinAcc
+  }, {
+    id: "changeMinBurst",
+    display: "Minimum burst...",
+    alias: "minimum",
+    icon: "fa-bomb",
+    subgroup: commandsMinBurst
   }, {
     id: "changeOppositeShiftMode",
     display: "Change opposite shift mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsOppositeShiftMode);
-      Commandline.show();
-    }
+    icon: "fa-exchange-alt",
+    subgroup: commandsOppositeShiftMode
   }, {
-    id: "togglePlaySoundOnError",
-    display: "Toggle play sound on error",
-    exec: function exec() {
-      UpdateConfig.togglePlaySoundOnError();
-    }
+    id: "changeSoundOnError",
+    display: "Sound on error...",
+    icon: "fa-volume-mute",
+    subgroup: commandsSoundOnError
   }, {
-    id: "toggleFlipTestColors",
-    display: "Toggle flip test colors",
-    exec: function exec() {
-      UpdateConfig.toggleFlipTestColors();
-    }
+    id: "changeFlipTestColors",
+    display: "Flip test colors...",
+    icon: "fa-adjust",
+    subgroup: commandsFlipTestColors
   }, {
-    id: "toggleSmoothLineScroll",
-    display: "Toggle smooth line scroll",
-    exec: function exec() {
-      UpdateConfig.toggleSmoothLineScroll();
-    }
+    id: "changeSmoothLineScroll",
+    display: "Smooth line scroll...",
+    icon: "fa-align-left",
+    subgroup: commandsSmoothLineScroll
   }, {
-    id: "toggleAlwaysShowDecimalPlaces",
-    display: "Toggle always show decimal places",
-    exec: function exec() {
-      UpdateConfig.toggleAlwaysShowDecimalPlaces();
-    }
+    id: "changeAlwaysShowDecimal",
+    display: "Always show decimal places...",
+    icon: "00",
+    subgroup: commandsAlwaysShowDecimal
   }, {
-    id: "toggleAlwaysShowCPM",
-    display: "Toggle always show CPM",
-    exec: function exec() {
-      UpdateConfig.toggleAlwaysShowCPM();
-    }
+    id: "changeAlwaysShowCPM",
+    display: "Always show CPM...",
+    icon: "fa-tachometer-alt",
+    subgroup: commandsAlwaysShowCPM
   }, {
-    id: "toggleStartGraphsAtZero",
-    display: "Toggle start graphs at zero",
-    exec: function exec() {
-      UpdateConfig.toggleStartGraphsAtZero();
-    }
+    id: "changeStartGraphsAtZero",
+    display: "Start graphs at zero...",
+    icon: "fa-chart-line",
+    subgroup: commandsStartGraphsAtZero
   }, {
-    id: "toggleSwapEscAndTab",
-    display: "Toggle swap esc and tab",
-    exec: function exec() {
-      UpdateConfig.toggleSwapEscAndTab();
-    }
+    id: "changeSwapEscAndTab",
+    display: "Swap esc and tab...",
+    icon: "fa-exchange-alt",
+    subgroup: commandsSwapEscAndTab
   }, {
-    id: "toggleShowAllLines",
-    display: "Toggle show all lines",
-    exec: function exec() {
-      UpdateConfig.toggleShowAllLines();
-    }
+    id: "changeShowAllLines",
+    display: "Show all lines...",
+    icon: "fa-align-left",
+    subgroup: commandsShowAllLines
   }, {
-    id: "toggleColorfulMode",
-    display: "Toggle colorful mode",
-    exec: function exec() {
-      UpdateConfig.toggleColorfulMode();
-    }
+    id: "changeColorfulMode",
+    display: "Colorful mode...",
+    icon: "fa-fill-drip",
+    subgroup: commandsColorfulMode
   }, {
-    id: "toggleShowOutOfFocusWarning",
-    display: "Toggle out of focus warning",
-    exec: function exec() {
-      UpdateConfig.toggleShowOutOfFocusWarning();
-    }
+    id: "changeOutOfFocusWarning",
+    display: "Out of focus warning...",
+    icon: "fa-exclamation",
+    subgroup: commandsOutOfFocusWarning
   }, {
-    id: "toggleCustomTheme",
-    display: "Toggle preset/custom theme",
+    id: "changeTheme",
+    display: "Theme...",
+    icon: "fa-palette",
+    subgroup: themeCommands
+  }, {
+    id: "setCustomTheme",
+    display: "Custom theme...",
+    icon: "fa-palette",
+    subgroup: commandsCustomTheme
+  }, {
+    id: "changeRandomTheme",
+    display: "Random theme...",
+    icon: "fa-random",
+    subgroup: commandsRandomTheme
+  }, {
+    id: "randomizeTheme",
+    display: "Next random theme",
+    icon: "fa-random",
     exec: function exec() {
-      UpdateConfig.toggleCustomTheme();
+      return ThemeController.randomizeTheme();
     }
   }, {
     id: "changeDifficulty",
-    display: "Change difficulty...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsDifficulty);
-      Commandline.show();
-    }
+    display: "Difficulty...",
+    icon: "fa-star",
+    subgroup: commandsDifficulty
   }, {
     id: "changeCaretStyle",
-    display: "Change caret style...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsCaretStyle);
-      Commandline.show();
-    }
+    display: "Caret style...",
+    icon: "fa-i-cursor",
+    subgroup: commandsCaretStyle
   }, {
     id: "changePaceCaret",
-    display: "Change pace caret mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsPaceCaret);
-      Commandline.show();
-    }
+    display: "Pace caret mode...",
+    icon: "fa-i-cursor",
+    subgroup: commandsPaceCaret
   }, {
     id: "changePaceCaretStyle",
-    display: "Change pace caret style...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsPaceCaretStyle);
-      Commandline.show();
-    }
+    display: "Pace caret style...",
+    icon: "fa-i-cursor",
+    subgroup: commandsPaceCaretStyle
   }, {
-    id: "toggleRepeatedPace",
-    display: "Toggle repeated pace",
-    exec: function exec() {
-      UpdateConfig.toggleRepeatedPace();
-    }
+    id: "changeRepeatedPace",
+    display: "Repeated pace...",
+    icon: "fa-i-cursor",
+    subgroup: commandsRepeatedPace
   }, {
     id: "changeTimerStyle",
-    display: "Change timer/progress style...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimerStyle);
-      Commandline.show();
-    }
+    display: "Timer/progress style...",
+    icon: "fa-clock",
+    subgroup: commandsTimerStyle
   }, {
     id: "changeTimerColor",
-    display: "Change timer/progress color...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimerColor);
-      Commandline.show();
-    }
+    display: "Timer/progress color...",
+    icon: "fa-clock",
+    subgroup: commandsTimerColor
   }, {
     id: "changeTimerOpacity",
-    display: "Change timer/progress opacity...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimerOpacity);
-      Commandline.show();
-    }
+    display: "Timer/progress opacity...",
+    icon: "fa-clock",
+    subgroup: commandsTimerOpacity
   }, {
     id: "changeHighlightMode",
-    display: "Change highlight mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsHighlightMode);
-      Commandline.show();
-    }
+    display: "Highlight mode...",
+    icon: "fa-highlighter",
+    subgroup: commandsHighlightMode
   }, {
     id: "changeCustomBackground",
-    display: "Change custom background...",
+    display: "Custom background...",
+    icon: "fa-image",
     defaultValue: "",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setCustomBackground(input);
     }
   }, {
-    id: "changeTheme",
-    display: "Change theme...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(themeCommands);
-      Commandline.show();
-    }
-  }, {
-    id: "changeRandomTheme",
-    display: "Change random theme...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsRandomTheme);
-      Commandline.show();
-    }
-  }, {
     id: "changeLanguage",
-    display: "Change language...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsLanguages);
-      Commandline.show();
-    }
+    display: "Language...",
+    icon: "fa-language",
+    subgroup: commandsLanguages
   }, {
     id: "changeFunbox",
-    display: "Change funbox...",
+    display: "Funbox...",
     alias: "fun box",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsFunbox);
-      Commandline.show();
-    }
+    icon: "fa-gamepad",
+    subgroup: commandsFunbox
   }, {
     id: "changeLayout",
-    display: "Change layout...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsLayouts);
-      Commandline.show();
-    }
+    display: "Layout...",
+    icon: "fa-keyboard",
+    subgroup: commandsLayouts
   }, {
     id: "toggleKeymap",
-    display: "Change keymap mode...",
-    subgroup: true,
+    display: "Keymap mode...",
+    icon: "fa-keyboard",
     alias: "keyboard",
-    exec: function exec() {
-      current.push(commandsKeymapMode);
-      Commandline.show();
-    }
+    subgroup: commandsKeymapMode
   }, {
     id: "changeKeymapStyle",
-    display: "Change keymap style...",
+    display: "Keymap style...",
     alias: "keyboard",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsKeymapStyle);
-      Commandline.show();
-    }
+    icon: "fa-keyboard",
+    subgroup: commandsKeymapStyle
   }, {
     id: "changeKeymapLegendStyle",
-    display: "Change keymap legend style...",
+    display: "Keymap legend style...",
     alias: "keyboard",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsKeymapLegendStyle);
-      Commandline.show();
-    }
+    icon: "fa-keyboard",
+    subgroup: commandsKeymapLegendStyle
   }, {
     id: "changeKeymapLayout",
-    display: "Change keymap layout...",
+    display: "Keymap layout...",
     alias: "keyboard",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsKeymapLayouts);
-      Commandline.show();
-    }
+    icon: "fa-keyboard",
+    subgroup: commandsKeymapLayouts
   }, {
     id: "changeCustomLayoutfluid",
-    display: "Change custom layoutfluid...",
+    display: "Custom layoutfluid...",
     defaultValue: "qwerty dvorak colemak",
     input: true,
+    icon: "fa-tint",
     exec: function exec(input) {
       UpdateConfig.setCustomLayoutfluid(input);
       if (UpdateConfig["default"].funbox === "layoutfluid") TestLogic.restart(); // UpdateConfig.setLayout(
@@ -1930,100 +2605,88 @@ var defaultCommands = {
     }
   }, {
     id: "changeFontSize",
-    display: "Change font size...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsFontSize);
-      Commandline.show();
-    }
+    display: "Font size...",
+    icon: "fa-font",
+    subgroup: commandsFontSize
   }, {
     id: "changeFontFamily",
-    display: "Change font family...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsFonts);
-      Commandline.show();
-    }
+    display: "Font family...",
+    icon: "fa-font",
+    subgroup: commandsFonts
   }, {
     id: "changePageWidth",
-    display: "Change page width...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsPageWidth);
-      Commandline.show();
-    }
-  }, {
-    id: "randomizeTheme",
-    display: "Next random theme",
-    exec: function exec() {
-      return ThemeController.randomizeTheme();
-    }
+    display: "Page width...",
+    icon: "fa-arrows-alt-h",
+    subgroup: commandsPageWidth
   }, {
     id: "viewTypingPage",
     display: "View Typing Page",
     alias: "start begin type test",
+    icon: "fa-keyboard",
     exec: function exec() {
       return $("#top #menu .icon-button.view-start").click();
     }
   }, {
     id: "viewAbout",
     display: "View About Page",
+    icon: "fa-info",
     exec: function exec() {
       return $("#top #menu .icon-button.view-about").click();
     }
   }, {
     id: "viewSettings",
     display: "View Settings Page",
+    icon: "fa-cog",
     exec: function exec() {
       return $("#top #menu .icon-button.view-settings").click();
     }
   }, {
     id: "toggleFullscreen",
     display: "Toggle Fullscreen",
+    icon: "fa-expand",
     exec: function exec() {
       Misc.toggleFullscreen();
     }
   }, {
     id: "bailOut",
     display: "Bail out...",
-    subgroup: true,
-    visible: false,
-    exec: function exec() {
-      current.push({
-        title: "Are you sure...",
-        list: [{
-          id: "bailOutNo",
-          display: "Nevermind",
-          exec: function exec() {},
-          available: function available() {
-            return canBailOut();
-          }
-        }, {
-          id: "bailOutForSure",
-          display: "Yes, I am sure",
-          exec: function exec() {
-            TestLogic.setBailout(true);
-            TestLogic.finish();
-          },
-          available: function available() {
-            return canBailOut();
-          }
-        }]
-      });
-      Commandline.show();
+    icon: "fa-running",
+    subgroup: {
+      title: "Are you sure...",
+      list: [{
+        id: "bailOutNo",
+        display: "Nevermind",
+        exec: function exec() {},
+        available: function available() {
+          return canBailOut();
+        }
+      }, {
+        id: "bailOutForSure",
+        display: "Yes, I am sure",
+        exec: function exec() {
+          TestLogic.setBailout(true);
+          TestLogic.finish();
+        },
+        available: function available() {
+          return canBailOut();
+        }
+      }]
     },
+    visible: false,
     available: function available() {
       return canBailOut();
     }
   }, {
     id: "joinDiscord",
     display: "Join the Discord server",
+    icon: "fa-users",
     exec: function exec() {
       window.open("https://discord.gg/monkeytype");
     }
   }, {
     id: "repeatTest",
     display: "Repeat test",
+    icon: "fa-sync-alt",
     exec: function exec() {
       TestLogic.restart(true);
     },
@@ -2033,6 +2696,7 @@ var defaultCommands = {
   }, {
     id: "practiceMissedWords",
     display: "Practice missed words",
+    icon: "fa-exclamation-triangle",
     exec: function exec() {
       PractiseMissed.init();
     },
@@ -2042,6 +2706,7 @@ var defaultCommands = {
   }, {
     id: "toggleWordHistory",
     display: "Toggle word history",
+    icon: "fa-align-left",
     exec: function exec() {
       TestUI.toggleResultWords();
     },
@@ -2051,6 +2716,7 @@ var defaultCommands = {
   }, {
     id: "saveScreenshot",
     display: "Save screenshot",
+    icon: "fa-image",
     alias: "ss picture",
     exec: function exec() {
       setTimeout(function () {
@@ -2063,12 +2729,14 @@ var defaultCommands = {
   }, {
     id: "changeCustomModeText",
     display: "Change custom text",
+    icon: "fa-align-left",
     exec: function exec() {
       CustomTextPopup.show();
     }
   }, {
     id: "toggleMonkey",
     display: "Toggle Monkey",
+    icon: "fa-egg",
     visible: false,
     exec: function exec() {
       UpdateConfig.toggleMonkey();
@@ -2076,6 +2744,7 @@ var defaultCommands = {
   }, {
     id: "copyWordsToClipboard",
     display: "Copy words to clipboard",
+    icon: "fa-copy",
     subgroup: true,
     exec: function exec() {
       current.push(commandsCopyWordsToClipboard);
@@ -2084,6 +2753,7 @@ var defaultCommands = {
   }, {
     id: "importSettingsJSON",
     display: "Import settings JSON",
+    icon: "fa-cog",
     input: true,
     exec: function exec(input) {
       try {
@@ -2098,6 +2768,7 @@ var defaultCommands = {
   }, {
     id: "exportSettingsJSON",
     display: "Export settings JSON",
+    icon: "fa-cog",
     input: true,
     defaultValue: "",
     exec: function exec(input) {}
@@ -2105,6 +2776,8 @@ var defaultCommands = {
     id: "monkeyPower",
     display: "Power mode...",
     alias: "powermode",
+    icon: "fa-egg",
+    visible: false,
     subgroup: true,
     exec: function exec() {
       current.push(commandsMonkeyPowerLevel);
@@ -2127,7 +2800,7 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./practise-missed":34,"./settings":40,"./sound":43,"./test-logic":46,"./test-stats":47,"./test-ui":49,"./theme-controller":51,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],6:[function(require,module,exports){
+},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./practise-missed":36,"./settings":42,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],6:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2184,7 +2857,32 @@ function showFound() {
   var list = CommandlineLists.current[CommandlineLists.current.length - 1];
   $.each(list.list, function (index, obj) {
     if (obj.found && (obj.available !== undefined ? obj.available() : true)) {
-      commandsHTML += '<div class="entry" command="' + obj.id + '">' + obj.display + "</div>";
+      var _obj$icon;
+
+      var icon = (_obj$icon = obj.icon) !== null && _obj$icon !== void 0 ? _obj$icon : "fa-chevron-right";
+      var faIcon = /^fa-/g.test(icon);
+
+      if (!faIcon) {
+        icon = "<div class=\"textIcon\">".concat(icon, "</div>");
+      } else {
+        icon = "<i class=\"fas fa-fw ".concat(icon, "\"></i>");
+      }
+
+      if (list.configKey) {
+        if (obj.configValueMode && obj.configValueMode === "include" && UpdateConfig["default"][list.configKey].includes(obj.configValue) || UpdateConfig["default"][list.configKey] === obj.configValue) {
+          icon = "<i class=\"fas fa-fw fa-check\"></i>";
+        } else {
+          icon = "<i class=\"fas fa-fw\"></i>";
+        }
+      }
+
+      var iconHTML = "<div class=\"icon\">".concat(icon, "</div>");
+
+      if (obj.noIcon && !isSingleListCommandLineActive()) {
+        iconHTML = "";
+      }
+
+      commandsHTML += "<div class=\"entry\" command=\"".concat(obj.id, "\">").concat(iconHTML, "<div>").concat(obj.display, "</div></div>");
     }
   });
   $("#commandLine .suggestions").html(commandsHTML);
@@ -2296,14 +2994,22 @@ function trigger(command) {
   $.each(list.list, function (i, obj) {
     if (obj.id == command) {
       if (obj.input) {
+        var _obj$display$split$;
+
         input = true;
-        showInput(obj.id, obj.display, obj.defaultValue);
+        var escaped = (_obj$display$split$ = obj.display.split("</i>")[1]) !== null && _obj$display$split$ !== void 0 ? _obj$display$split$ : obj.display;
+        showInput(obj.id, escaped, obj.defaultValue);
+      } else if (obj.subgroup) {
+        subgroup = true;
+
+        if (obj.beforeSubgroup) {
+          obj.beforeSubgroup();
+        }
+
+        CommandlineLists.current.push(obj.subgroup);
+        show();
       } else {
         obj.exec();
-
-        if (obj.subgroup !== null && obj.subgroup !== undefined) {
-          subgroup = obj.subgroup;
-        }
 
         if (obj.sticky === true) {
           sticky = true;
@@ -2337,22 +3043,39 @@ exports.show = show;
 
 function addChildCommands(unifiedCommands, commandItem) {
   var parentCommandDisplay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+  var parentCommand = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
   var commandItemDisplay = commandItem.display.replace(/\s?\.\.\.$/g, "");
-  if (parentCommandDisplay) commandItemDisplay = parentCommandDisplay + " > " + commandItemDisplay;
+  var icon = "<i class=\"fas fa-fw\"></i>";
+
+  if (commandItem.configValue !== undefined && UpdateConfig["default"][parentCommand.configKey] === commandItem.configValue) {
+    icon = "<i class=\"fas fa-fw fa-check\"></i>";
+  }
+
+  if (commandItem.noIcon) {
+    icon = "";
+  }
+
+  if (parentCommandDisplay) commandItemDisplay = parentCommandDisplay + " > " + icon + commandItemDisplay;
 
   if (commandItem.subgroup) {
+    if (commandItem.beforeSubgroup) commandItem.beforeSubgroup();
+
     try {
-      commandItem.exec();
-      var currentCommandsIndex = CommandlineLists.current.length - 1;
-      CommandlineLists.current[currentCommandsIndex].list.forEach(function (cmd) {
-        if (cmd.alias === undefined) cmd.alias = commandItem.alias;
-        addChildCommands(unifiedCommands, cmd, commandItemDisplay);
-      });
-      CommandlineLists.current.pop();
+      commandItem.subgroup.list.forEach(function (cmd) {
+        commandItem.configKey = commandItem.subgroup.configKey;
+        addChildCommands(unifiedCommands, cmd, commandItemDisplay, commandItem);
+      }); // commandItem.exec();
+      // const currentCommandsIndex = CommandlineLists.current.length - 1;
+      // CommandlineLists.current[currentCommandsIndex].list.forEach((cmd) => {
+      //   if (cmd.alias === undefined) cmd.alias = commandItem.alias;
+      //   addChildCommands(unifiedCommands, cmd, commandItemDisplay);
+      // });
+      // CommandlineLists.current.pop();
     } catch (e) {}
   } else {
     var tempCommandItem = _objectSpread({}, commandItem);
 
+    tempCommandItem.icon = parentCommand.icon;
     if (parentCommandDisplay) tempCommandItem.display = commandItemDisplay;
     unifiedCommands.push(tempCommandItem);
   }
@@ -2473,8 +3196,8 @@ $(document).on("mouseleave", "#commandLineWrapper #commandLine .suggestions .ent
   $(e.target).removeClass("activeMouse");
 });
 $("#commandLineWrapper #commandLine .suggestions").on("mouseover", function (e) {
-  if (!commandLineMouseMode) return;
-  console.log("clearing keyboard active");
+  if (!commandLineMouseMode) return; // console.log("clearing keyboard active");
+
   $("#commandLineWrapper #commandLine .suggestions .entry").removeClass("activeKeyboard");
   var hoverId = $(e.target).attr("command");
 
@@ -2489,9 +3212,9 @@ $("#commandLineWrapper #commandLine .suggestions").on("mouseover", function (e) 
     });
   } catch (e) {}
 });
-$("#commandLineWrapper #commandLine .suggestions").click(function (e) {
+$(document).on("click", "#commandLineWrapper #commandLine .suggestions .entry", function (e) {
   $(".suggestions .entry").removeClass("activeKeyboard");
-  trigger($(e.target).attr("command"));
+  trigger($(e.currentTarget).attr("command"));
 });
 $("#commandLineWrapper").click(function (e) {
   if ($(e.target).attr("id") === "commandLineWrapper") {
@@ -2502,7 +3225,37 @@ $("#commandLineWrapper").click(function (e) {
     //   setTheme(Config.theme, true);
     // }
   }
-});
+}); //might come back to it later
+// function shiftCommand(){
+//   let activeEntries = $("#commandLineWrapper #commandLine .suggestions .entry.activeKeyboard, #commandLineWrapper #commandLine .suggestions .entry.activeMouse");
+//   activeEntries.each((index, activeEntry) => {
+//     let commandId = activeEntry.getAttribute('command');
+//     let foundCommand = null;
+//     CommandlineLists.defaultCommands.list.forEach(command => {
+//       if(foundCommand === null && command.id === commandId){
+//         foundCommand = command;
+//       }
+//     })
+//     if(foundCommand.shift){
+//       $(activeEntry).find('div').text(foundCommand.shift.display);
+//     }
+//   })
+// }
+// let shiftedCommands = false;
+// $(document).keydown((e) => {
+//   if (e.key === "Shift") {
+//     if(shiftedCommands === false){
+//       shiftedCommands = true;
+//       shiftCommand();
+//     }
+//   }
+// });
+// $(document).keyup((e) => {
+//   if (e.key === "Shift") {
+//     shiftedCommands = false;
+//   }
+// });
+
 $(document).keydown(function (e) {
   // if (isPreviewingTheme) {
   // console.log("applying theme");
@@ -2595,7 +3348,7 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":5,"./config":7,"./focus":14,"./test-ui":49,"./theme-controller":51,"@babel/runtime/helpers/defineProperty":63,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],7:[function(require,module,exports){
+},{"./commandline-lists":5,"./config":7,"./focus":14,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/defineProperty":67,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2637,6 +3390,8 @@ exports.setMinWpm = setMinWpm;
 exports.setMinWpmCustomSpeed = setMinWpmCustomSpeed;
 exports.setMinAcc = setMinAcc;
 exports.setMinAccCustom = setMinAccCustom;
+exports.setMinBurst = setMinBurst;
+exports.setMinBurstCustomSpeed = setMinBurstCustomSpeed;
 exports.setAlwaysShowWordsHistory = setAlwaysShowWordsHistory;
 exports.toggleAlwaysShowWordsHistory = toggleAlwaysShowWordsHistory;
 exports.setSingleListCommandLine = setSingleListCommandLine;
@@ -2661,6 +3416,8 @@ exports.setShowLiveWpm = setShowLiveWpm;
 exports.toggleShowLiveWpm = toggleShowLiveWpm;
 exports.setShowLiveAcc = setShowLiveAcc;
 exports.toggleLiveAcc = toggleLiveAcc;
+exports.setShowLiveBurst = setShowLiveBurst;
+exports.toggleShowLiveBurst = toggleShowLiveBurst;
 exports.setHighlightMode = setHighlightMode;
 exports.setHideExtraLetters = setHideExtraLetters;
 exports.toggleHideExtraLetters = toggleHideExtraLetters;
@@ -2706,6 +3463,7 @@ exports.setCustomLayoutfluid = setCustomLayoutfluid;
 exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.setCustomBackgroundFilter = setCustomBackgroundFilter;
 exports.setMonkeyPowerLevel = setMonkeyPowerLevel;
+exports.setBurstHeatmap = setBurstHeatmap;
 exports.apply = apply;
 exports.reset = reset;
 exports.loadFromLocalStorage = loadFromLocalStorage;
@@ -2730,6 +3488,8 @@ var TimerProgress = _interopRequireWildcard(require("./timer-progress"));
 var LiveWpm = _interopRequireWildcard(require("./live-wpm"));
 
 var LiveAcc = _interopRequireWildcard(require("./live-acc"));
+
+var LiveBurst = _interopRequireWildcard(require("./live-burst"));
 
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
@@ -2840,7 +3600,10 @@ var defaultConfig = {
   customBackgroundSize: "cover",
   customBackgroundFilter: [0, 1, 1, 1, 1],
   customLayoutfluid: "qwerty#dvorak#colemak",
-  monkeyPowerLevel: "off"
+  monkeyPowerLevel: "off",
+  minBurst: "off",
+  minBurstCustomSpeed: 100,
+  burstHeatmap: false
 };
 
 function isConfigKeyValid(name) {
@@ -3280,6 +4043,26 @@ function setMinAccCustom(val, nosave) {
 
   config.minAccCustom = val;
   if (!nosave) saveToLocalStorage();
+} //min burst
+
+
+function setMinBurst(min, nosave) {
+  if (min == undefined) {
+    min = "off";
+  }
+
+  config.minBurst = min;
+  TestUI.updateModesNotice();
+  if (!nosave) saveToLocalStorage();
+}
+
+function setMinBurstCustomSpeed(val, nosave) {
+  if (val == undefined || Number.isNaN(parseInt(val))) {
+    val = 100;
+  }
+
+  config.minBurstCustomSpeed = val;
+  if (!nosave) saveToLocalStorage();
 } //always show words history
 
 
@@ -3591,6 +4374,34 @@ function toggleLiveAcc() {
   saveToLocalStorage();
 }
 
+function setShowLiveBurst(live, nosave) {
+  if (live == null || live == undefined) {
+    live = false;
+  }
+
+  config.showLiveBurst = live;
+
+  if (live) {
+    LiveBurst.show();
+  } else {
+    LiveAcc.hide();
+  }
+
+  if (!nosave) saveToLocalStorage();
+}
+
+function toggleShowLiveBurst() {
+  config.showLiveBurst = !config.showLiveBurst;
+
+  if (config.showLiveBurst) {
+    LiveBurst.show();
+  } else {
+    LiveBurst.hide();
+  }
+
+  saveToLocalStorage();
+}
+
 function setHighlightMode(mode, nosave) {
   if (mode === "word" && (config.funbox === "nospace" || config.funbox === "read_ahead" || config.funbox === "read_ahead_easy" || config.funbox === "read_ahead_hard")) {
     Notifications.add("Can't use word highlight with this funbox", 0);
@@ -3877,7 +4688,7 @@ function setFontFamily(font, nosave) {
   }
 
   config.fontFamily = font;
-  document.documentElement.style.setProperty("--font", '"' + font.replace(/_/g, " ") + '"');
+  document.documentElement.style.setProperty("--font", "\"".concat(font.replace(/_/g, " "), "\", \"Roboto Mono\""));
   if (!nosave) saveToLocalStorage();
 } //freedom
 
@@ -4126,10 +4937,16 @@ function setFontSize(fontSize, nosave) {
   $("#caret, #paceCaret").removeClass("size2");
   $("#words").removeClass("size3");
   $("#caret, #paceCaret").removeClass("size3");
+  $("#words").removeClass("size35");
+  $("#caret, #paceCaret").removeClass("size35");
+  $("#words").removeClass("size4");
+  $("#caret, #paceCaret").removeClass("size4");
   $("#miniTimerAndLiveWpm").removeClass("size125");
   $("#miniTimerAndLiveWpm").removeClass("size15");
   $("#miniTimerAndLiveWpm").removeClass("size2");
   $("#miniTimerAndLiveWpm").removeClass("size3");
+  $("#miniTimerAndLiveWpm").removeClass("size35");
+  $("#miniTimerAndLiveWpm").removeClass("size4");
 
   if (fontSize == 125) {
     $("#words").addClass("size125");
@@ -4147,6 +4964,14 @@ function setFontSize(fontSize, nosave) {
     $("#words").addClass("size3");
     $("#caret, #paceCaret").addClass("size3");
     $("#miniTimerAndLiveWpm").addClass("size3");
+  } else if (fontSize == 35) {
+    $("#words").addClass("size34");
+    $("#caret, #paceCaret").addClass("size35");
+    $("#miniTimerAndLiveWpm").addClass("size35");
+  } else if (fontSize == 4) {
+    $("#words").addClass("size4");
+    $("#caret, #paceCaret").addClass("size4");
+    $("#miniTimerAndLiveWpm").addClass("size4");
   }
 
   if (!nosave) saveToLocalStorage();
@@ -4221,6 +5046,16 @@ function setMonkeyPowerLevel(level, nosave) {
   if (!nosave) saveToLocalStorage();
 }
 
+function setBurstHeatmap(value, nosave) {
+  if (!value) {
+    value = false;
+  }
+
+  config.burstHeatmap = value;
+  TestUI.applyBurstHeatmap();
+  if (!nosave) saveToLocalStorage();
+}
+
 function apply(configObj) {
   if (configObj == null || configObj == undefined) {
     Notifications.add("Could not apply config", -1, 3);
@@ -4272,6 +5107,7 @@ function apply(configObj) {
     setSmoothLineScroll(configObj.smoothLineScroll, true);
     setShowLiveWpm(configObj.showLiveWpm, true);
     setShowLiveAcc(configObj.showLiveAcc, true);
+    setShowLiveBurst(configObj.showLiveBurst, true);
     setShowTimerProgress(configObj.showTimerProgress, true);
     setAlwaysShowDecimalPlaces(configObj.alwaysShowDecimalPlaces, true);
     setAlwaysShowWordsHistory(configObj.alwaysShowWordsHistory, true);
@@ -4289,6 +5125,8 @@ function apply(configObj) {
     setPaceCaretCustomSpeed(configObj.paceCaretCustomSpeed, true);
     setRepeatedPace(configObj.repeatedPace, true);
     setPageWidth(configObj.pageWidth, true);
+    setMinBurst(configObj.minBurst, true);
+    setMinBurstCustomSpeed(configObj.minBurstCustomSpeed, true);
     setMinWpm(configObj.minWpm, true);
     setMinWpmCustomSpeed(configObj.minWpmCustomSpeed, true);
     setMinAcc(configObj.minAcc, true);
@@ -4305,6 +5143,7 @@ function apply(configObj) {
     setMonkey(configObj.monkey, true);
     setRepeatQuotes(configObj.repeatQuotes, true);
     setMonkeyPowerLevel(configObj.monkeyPowerLevel, true);
+    setBurstHeatmap(configObj.burstHeatmap, true);
     LanguagePicker.setActiveGroup();
   }
 
@@ -4312,8 +5151,7 @@ function apply(configObj) {
 }
 
 function reset() {
-  config = _objectSpread({}, defaultConfig);
-  apply();
+  apply(defaultConfig);
   saveToLocalStorage();
 }
 
@@ -4361,7 +5199,7 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./commandline-lists":5,"./custom-background-filter":8,"./funbox":15,"./keymap":19,"./language-picker":20,"./layouts":22,"./live-acc":23,"./live-wpm":24,"./notifications":30,"./out-of-focus":31,"./pace-caret":32,"./sound":43,"./test-logic":46,"./test-ui":49,"./theme-controller":51,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/defineProperty":63,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],8:[function(require,module,exports){
+},{"./commandline-lists":5,"./custom-background-filter":8,"./funbox":15,"./keymap":19,"./language-picker":20,"./layouts":22,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./sound":45,"./test-logic":48,"./test-ui":51,"./theme-controller":53,"./timer-progress":55,"./ui":57,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/defineProperty":67,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],8:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4469,7 +5307,7 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   Notifications.add("Custom background filters saved", 1);
 });
 
-},{"./config":7,"./notifications":30,"@babel/runtime/helpers/typeof":72}],9:[function(require,module,exports){
+},{"./config":7,"./notifications":31,"@babel/runtime/helpers/typeof":76}],9:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -4615,7 +5453,7 @@ $("#customTestDurationPopup .button").click(function () {
   apply();
 });
 
-},{"./config":7,"./manual-restart-tracker":26,"./notifications":30,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72}],10:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/toConsumableArray":75,"@babel/runtime/helpers/typeof":76}],10:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4757,7 +5595,7 @@ $("#customTextPopup .wordfilter").click(function () {
   WordFilterPopup.show();
 });
 
-},{"./custom-text":11,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./test-logic":46,"./word-filter-popup":56,"@babel/runtime/helpers/typeof":72}],11:[function(require,module,exports){
+},{"./custom-text":11,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./test-logic":48,"./word-filter-popup":60,"@babel/runtime/helpers/typeof":76}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4866,7 +5704,7 @@ $("#shareCustomThemeButton").click(function (e) {
   }
 });
 
-},{"./config":7,"./notifications":30,"./theme-picker":52,"@babel/runtime/helpers/typeof":72}],13:[function(require,module,exports){
+},{"./config":7,"./notifications":31,"./theme-picker":54,"@babel/runtime/helpers/typeof":76}],13:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4942,7 +5780,7 @@ $("#customWordAmountPopup .button").click(function () {
   apply();
 });
 
-},{"./config":7,"./manual-restart-tracker":26,"./notifications":30,"./test-logic":46,"@babel/runtime/helpers/typeof":72}],14:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/typeof":76}],14:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -4984,7 +5822,7 @@ $(document).mousemove(function (event) {
   }
 });
 
-},{"./caret":3,"@babel/runtime/helpers/typeof":72}],15:[function(require,module,exports){
+},{"./caret":3,"@babel/runtime/helpers/typeof":76}],15:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -5116,21 +5954,36 @@ function _activate() {
               funbox = UpdateConfig["default"].funbox;
             }
 
-            if (!Misc.getCurrentLanguage().ligatures) {
-              _context.next = 7;
+            _context.next = 4;
+            return Misc.getCurrentLanguage().ligatures;
+
+          case 4:
+            if (!_context.sent) {
+              _context.next = 9;
               break;
             }
 
             if (!(funbox == "choo_choo" || funbox == "earthquake")) {
-              _context.next = 7;
+              _context.next = 9;
               break;
             }
 
             Notifications.add("Current language does not support this funbox mode", 0);
-            activate("none", null);
+            setFunbox("none", null);
             return _context.abrupt("return");
 
-          case 7:
+          case 9:
+            if (!(UpdateConfig["default"].mode === "zen" && funbox == "layoutfluid")) {
+              _context.next = 14;
+              break;
+            }
+
+            Notifications.add("Zen mode does not support the ".concat(funbox, " funbox"), 0);
+            setFunbox("none", null);
+            TestLogic.restart();
+            return _context.abrupt("return");
+
+          case 14:
             $("#funBoxTheme").attr("href", "");
             $("#words").removeClass("nospace"); // if (funbox === "none") {
 
@@ -5138,30 +5991,30 @@ function _activate() {
             $("#wordsWrapper").removeClass("hidden"); // }
 
             if (!(funbox === "none" && mode === undefined)) {
-              _context.next = 15;
+              _context.next = 22;
               break;
             }
 
             mode = null;
-            _context.next = 20;
+            _context.next = 27;
             break;
 
-          case 15:
+          case 22:
             if (!(funbox !== "none" && mode === undefined || funbox !== "none" && mode === null)) {
-              _context.next = 20;
+              _context.next = 27;
               break;
             }
 
-            _context.next = 18;
+            _context.next = 25;
             return Misc.getFunboxList();
 
-          case 18:
+          case 25:
             list = _context.sent;
             mode = list.filter(function (f) {
               return f.name === funbox;
             })[0].type;
 
-          case 20:
+          case 27:
             ManualRestart.set();
 
             if (mode === "style") {
@@ -5226,7 +6079,7 @@ function _activate() {
             TestUI.updateModesNotice();
             return _context.abrupt("return", true);
 
-          case 24:
+          case 31:
           case "end":
             return _context.stop();
         }
@@ -5243,7 +6096,7 @@ function setFunbox(funbox, mode) {
   return true;
 }
 
-},{"./config":7,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./settings":40,"./test-logic":46,"./test-ui":49,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],16:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./settings":42,"./test-logic":48,"./test-ui":51,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],16:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -5303,7 +6156,7 @@ $("#settingsImportWrapper").click(function (e) {
   }
 });
 
-},{"./config":7,"./notifications":30,"./settings":40,"@babel/runtime/helpers/typeof":72}],17:[function(require,module,exports){
+},{"./config":7,"./notifications":31,"./settings":42,"@babel/runtime/helpers/typeof":76}],17:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
@@ -5322,6 +6175,8 @@ var Misc = _interopRequireWildcard(require("./misc"));
 var _config = _interopRequireDefault(require("./config"));
 
 var SimplePopups = _interopRequireWildcard(require("./simple-popups"));
+
+var _testLogic = require("./test-logic");
 
 require("./caps-warning");
 
@@ -5354,8 +6209,10 @@ global.simplePopups = SimplePopups.simplePopups; //these exports are just for de
 
 global.config = _config["default"]; // global.addnotif = Notifications.add;
 
+global.glarsesMode = _testLogic.toggleGlarses;
+
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./about-page":1,"./caps-warning":2,"./config":7,"./custom-theme-popup":12,"./import-settings-popup":16,"./input-controller":18,"./misc":27,"./ready":36,"./simple-popups":42,"./support-popup":44,"./version-popup":55,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"chart.js":75,"chartjs-plugin-annotation":80,"chartjs-plugin-trendline":83}],18:[function(require,module,exports){
+},{"./about-page":1,"./caps-warning":2,"./config":7,"./custom-theme-popup":12,"./import-settings-popup":16,"./input-controller":18,"./misc":28,"./ready":38,"./simple-popups":44,"./support-popup":46,"./test-logic":48,"./version-popup":58,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"chart.js":79,"chartjs-plugin-annotation":84,"chartjs-plugin-trendline":87}],18:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -5375,6 +6232,8 @@ var Keymap = _interopRequireWildcard(require("./keymap"));
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var LiveAcc = _interopRequireWildcard(require("./live-acc"));
+
+var LiveBurst = _interopRequireWildcard(require("./live-burst"));
 
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
@@ -5407,6 +6266,8 @@ var ShiftTracker = _interopRequireWildcard(require("./shift-tracker"));
 var Replay = _interopRequireWildcard(require("./replay.js"));
 
 var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
+
+var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -5494,7 +6355,7 @@ function backspaceToPrevious() {
 
 function handleSpace() {
   if (!TestLogic.active) return;
-  var inputWord = TestLogic.input.currentWord.slice(0, -1); // handleLastChar() will decide if it gets inserted as character on start of word or not
+  var inputWord = TestLogic.input.currentWord.slice(0, -1); // handleChar() will decide if it gets inserted as character on start of word or not
 
   if (inputWord === "") return;
 
@@ -5522,19 +6383,21 @@ function handleSpace() {
     Settings.groups.layout.updateButton();
   }
 
-  dontInsertSpace = true; //correct word or in zen mode
+  dontInsertSpace = true;
+  var burst = TestStats.calculateBurst();
+  LiveBurst.update(Math.round(burst));
+  TestStats.pushBurstToHistory(burst); //correct word or in zen mode
 
   var isWordCorrect = currentWord == inputWord || UpdateConfig["default"].mode == "zen";
   MonkeyPower.addPower(isWordCorrect, true);
-  PaceCaret.handleSpace(isWordCorrect, currentWord);
   TestStats.incrementAccuracy(isWordCorrect);
 
   if (isWordCorrect) {
+    PaceCaret.handleSpace(true, currentWord);
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
     TestUI.updateActiveElement();
     Funbox.toggleScript(TestLogic.words.getCurrent());
-    Caret.updatePosition();
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
 
@@ -5552,6 +6415,7 @@ function handleSpace() {
       }
     }
 
+    TestStats.pushMissedWord(TestLogic.words.getCurrent());
     TestStats.incrementKeypressErrors();
     var cil = inputWord.length;
 
@@ -5566,32 +6430,32 @@ function handleSpace() {
     if (UpdateConfig["default"].stopOnError != "off") {
       if (UpdateConfig["default"].difficulty == "expert" || UpdateConfig["default"].difficulty == "master") {
         //failed due to diff when pressing space
-        TestLogic.fail();
+        TestLogic.fail("difficulty");
         return;
       }
 
       if (UpdateConfig["default"].stopOnError == "word") {
         TestLogic.input.currentWord += " ";
+        Replay.addReplayEvent("incorrectLetter", "_");
         TestUI.updateWordElement(true);
-        Caret.updatePosition();
       }
 
       return;
     }
 
+    PaceCaret.handleSpace(false, currentWord);
     if (UpdateConfig["default"].blindMode) $("#words .word.active letter").addClass("correct");
     TestUI.highlightBadWord(TestUI.currentWordElementIndex, !UpdateConfig["default"].blindMode);
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
     TestUI.updateActiveElement();
     Funbox.toggleScript(TestLogic.words.getCurrent());
-    Caret.updatePosition();
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
     TestStats.updateLastKeypress();
 
     if (UpdateConfig["default"].difficulty == "expert" || UpdateConfig["default"].difficulty == "master") {
-      TestLogic.fail();
+      TestLogic.fail("difficulty");
       return;
     } else if (TestLogic.words.currentIndex == TestLogic.words.length) {
       //submitted last word that is incorrect
@@ -5600,6 +6464,21 @@ function handleSpace() {
     }
 
     Replay.addReplayEvent("submitErrorWord");
+  }
+
+  var wordLength;
+
+  if (UpdateConfig["default"].mode === "zen") {
+    wordLength = inputWord.length;
+  } else {
+    wordLength = TestLogic.words.getCurrent().length;
+  }
+
+  var flex = Misc.whorf(UpdateConfig["default"].minBurstCustomSpeed, wordLength);
+
+  if (UpdateConfig["default"].minBurst === "fixed" && burst < UpdateConfig["default"].minBurstCustomSpeed || UpdateConfig["default"].minBurst === "flex" && burst < flex) {
+    TestLogic.fail("min burst");
+    return;
   }
 
   TestLogic.input.currentWord = inputWord;
@@ -5621,8 +6500,6 @@ function handleSpace() {
     }
   } //end of line wrap
 
-
-  Caret.updatePosition();
 
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey("Space", true);
@@ -5687,13 +6564,11 @@ function isCharCorrect(_char) {
   return false;
 }
 
-function handleLastChar() {
+function handleChar(_char2) {
   if (TestUI.resultCalculating || TestUI.resultVisible) {
     TestLogic.input.dropLastChar();
     return;
   }
-
-  var _char2 = TestLogic.input.currentWord[TestLogic.input.currentWord.length - 1];
 
   if (_char2 === "\n" && UpdateConfig["default"].funbox === "58008") {
     _char2 = " ";
@@ -5721,6 +6596,10 @@ function handleLastChar() {
     return;
   }
 
+  if (TestLogic.input.current == "") {
+    TestStats.setBurstStart(performance.now());
+  }
+
   Focus.set(true);
   Caret.stopAnimation();
   var thisCharCorrect = isCharCorrect(_char2);
@@ -5737,6 +6616,8 @@ function handleLastChar() {
     TestStats.incrementKeypressErrors();
     TestStats.pushMissedWord(TestLogic.words.getCurrent());
   }
+
+  WeakSpot.updateScore(UpdateConfig["default"].mode === "zen" ? _char2 : TestLogic.words.getCurrent().charAt(TestLogic.input.currentWord.length - 1), thisCharCorrect);
 
   if (thisCharCorrect) {
     Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -5789,7 +6670,7 @@ function handleLastChar() {
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
-    TestLogic.fail();
+    TestLogic.fail("difficulty");
     return;
   } //keymap
 
@@ -5839,9 +6720,10 @@ $(document).keydown(function (event) {
   var wordsFocused = $("#wordsInput").is(":focus");
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
+  var leaderboardsVisible = !$("#leaderboardsWrapper").hasClass("hidden");
   var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
 
-  if (pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
+  if (pageTestActive && !commandLineVisible && !leaderboardsVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
     TestUI.focusWords();
 
     if (UpdateConfig["default"].showOutOfFocusWarning) {
@@ -5938,11 +6820,9 @@ $("#wordsInput").on("beforeinput", function (event) {
   inputValueBeforeChange = event.target.value.normalize();
 });
 $("#wordsInput").on("input", function (event) {
-  var inputValue = event.target.value.normalize(); // if characters inserted or replaced
+  var inputValue = event.target.value.normalize();
 
-  if (inputValue.length >= inputValueBeforeChange.length || inputValue !== inputValueBeforeChange.slice(0, inputValue.length)) {
-    handleLastChar();
-  } else {
+  if (inputValue.length < inputValueBeforeChange.length) {
     if (inputValue === "") {
       // fallback for when no Backspace keydown event (mobile)
       event.target.value = " ";
@@ -5952,9 +6832,19 @@ $("#wordsInput").on("input", function (event) {
       TestUI.updateWordElement();
       Replay.addReplayEvent("setWordLetterIndex", TestLogic.input.currentWord.length);
     }
+  } else if (inputValue !== inputValueBeforeChange) {
+    var diffStart = 0;
+
+    while (inputValue[diffStart] === inputValueBeforeChange[diffStart]) {
+      diffStart++;
+    }
+
+    for (var i = diffStart; i < inputValue.length; i++) {
+      handleChar(inputValue[i]);
+    }
   }
 
-  Caret.updatePosition();
+  setTimeout(Caret.updatePosition, 0);
   var acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc); // force caret at end of input
   // doing it on next cycle because Chromium on Android won't let me edit
@@ -5970,7 +6860,7 @@ $("#wordsInput").focus(function (event) {
   event.target.selectionStart = event.target.selectionEnd = event.target.value.length;
 });
 
-},{"./caret":3,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./layout-emulator":21,"./live-acc":23,"./manual-restart-tracker":26,"./misc":27,"./monkey":29,"./monkey-power":28,"./notifications":30,"./pace-caret":32,"./replay.js":37,"./settings":40,"./shift-tracker":41,"./sound":43,"./test-logic":46,"./test-stats":47,"./test-timer":48,"./test-ui":49,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/typeof":72}],19:[function(require,module,exports){
+},{"./caret":3,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./layout-emulator":21,"./live-acc":23,"./live-burst":24,"./manual-restart-tracker":27,"./misc":28,"./monkey":30,"./monkey-power":29,"./notifications":31,"./pace-caret":33,"./replay.js":39,"./settings":42,"./shift-tracker":43,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./timer-progress":55,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/typeof":76}],19:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6258,7 +7148,7 @@ $(document).on("click", ".keymap .r5 #KeySpace", function (e) {
   Commandline.show();
 });
 
-},{"./commandline":6,"./commandline-lists":5,"./config":7,"./layouts":22,"./theme-colors":50,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],20:[function(require,module,exports){
+},{"./commandline":6,"./commandline-lists":5,"./config":7,"./layouts":22,"./theme-colors":52,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],20:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6349,7 +7239,7 @@ function _setActiveGroup() {
   return _setActiveGroup.apply(this, arguments);
 }
 
-},{"./config":7,"./misc":27,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],21:[function(require,module,exports){
+},{"./config":7,"./misc":28,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],21:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6395,7 +7285,7 @@ function getCharFromEvent(event) {
   return _char;
 }
 
-},{"./config":7,"./layouts":22,"./misc":27,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],22:[function(require,module,exports){
+},{"./config":7,"./layouts":22,"./misc":28,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6544,6 +7434,14 @@ var layouts = {
   engram: {
     keymapShowTopRow: true,
     keys: ["[{", "1|", "2=", "3~", "4+", "5<", "6>", "7^", "8&", "9%", "0*", "]}", "/\\", "bB", "yY", "oO", "uU", "'(", "\")", "lL", "dD", "wW", "vV", "zZ", "#$", "@`", "cC", "iI", "eE", "aA", ",;", ".:", "hH", "tT", "sS", "nN", "qQ", "\\|", "gG", "xX", "jJ", "kK", "-_", "?!", "rR", "mM", "fF", "pP", " "]
+  },
+  semimak: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "fF", "lL", "hH", "vV", "zZ", "qQ", "wW", "uU", "oO", "yY", "[{", "]}", "\\|", "sS", "rR", "nN", "tT", "kK", "cC", "dD", "eE", "aA", "iI", ";:", "\\|", "xX", "'\"", "bB", "mM", "jJ", "pP", "gG", ",<", ".>", "/?", " "]
+  },
+  boo: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "zZ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "pP", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "jJ", "bB", "hH", "mM", "kK", "qQ", " "]
   }
 };
 var _default = layouts;
@@ -6616,7 +7514,70 @@ function hide() {
   });
 }
 
-},{"./config":7,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],24:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],24:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.update = update;
+exports.show = show;
+exports.hide = hide;
+
+var _config = _interopRequireDefault(require("./config"));
+
+var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function update(burst) {
+  var number = burst;
+
+  if (_config["default"].blindMode) {
+    number = 0;
+  }
+
+  document.querySelector("#miniTimerAndLiveWpm .burst").innerHTML = number;
+  document.querySelector("#liveBurst").innerHTML = number;
+}
+
+function show() {
+  if (!_config["default"].showLiveBurst) return;
+  if (!TestLogic.active) return;
+
+  if (_config["default"].timerStyle === "mini") {
+    if (!$("#miniTimerAndLiveWpm .burst").hasClass("hidden")) return;
+    $("#miniTimerAndLiveWpm .burst").removeClass("hidden").css("opacity", 0).animate({
+      opacity: _config["default"].timerOpacity
+    }, 125);
+  } else {
+    if (!$("#liveBurst").hasClass("hidden")) return;
+    $("#liveBurst").removeClass("hidden").css("opacity", 0).animate({
+      opacity: _config["default"].timerOpacity
+    }, 125);
+  }
+}
+
+function hide() {
+  $("#liveBurst").animate({
+    opacity: _config["default"].timerOpacity
+  }, 125, function () {
+    $("#liveBurst").addClass("hidden");
+  });
+  $("#miniTimerAndLiveWpm .burst").animate({
+    opacity: _config["default"].timerOpacity
+  }, 125, function () {
+    $("#miniTimerAndLiveWpm .burst").addClass("hidden");
+  });
+}
+
+},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],25:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6690,7 +7651,7 @@ function hide() {
   });
 }
 
-},{"./config":7,"./test-logic":46,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],25:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6707,7 +7668,7 @@ function hide() {
   $("#backgroundLoader").stop(true, true).fadeOut(125);
 }
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6730,7 +7691,7 @@ function get() {
   return state;
 }
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -6756,11 +7717,13 @@ exports.migrateFromCookies = migrateFromCookies;
 exports.smooth = smooth;
 exports.stdDev = stdDev;
 exports.mean = mean;
+exports.median = median;
 exports.getReleasesFromGitHub = getReleasesFromGitHub;
 exports.getLastChar = getLastChar;
 exports.capitalizeFirstLetter = capitalizeFirstLetter;
 exports.isASCIILetter = isASCIILetter;
 exports.kogasa = kogasa;
+exports.whorf = whorf;
 exports.roundTo2 = roundTo2;
 exports.findLineByLeastSquares = findLineByLeastSquares;
 exports.getGibberish = getGibberish;
@@ -6781,6 +7744,7 @@ exports.mapRange = mapRange;
 exports.canQuickRestart = canQuickRestart;
 exports.clearTimeouts = clearTimeouts;
 exports.setCharAt = setCharAt;
+exports.regexIndexOf = regexIndexOf;
 exports.trailingComposeChars = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -6792,6 +7756,8 @@ var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var Loader = _interopRequireWildcard(require("./loader"));
+
+var _config = _interopRequireDefault(require("./config"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -7252,10 +8218,32 @@ function showNotification(text, time) {
   });
 }
 
-var currentLanguage = null;
+var currentLanguage;
 
 function getCurrentLanguage() {
-  return currentLanguage;
+  return _getCurrentLanguage.apply(this, arguments);
+}
+
+function _getCurrentLanguage() {
+  _getCurrentLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            _context10.next = 2;
+            return getLanguage(_config["default"].language);
+
+          case 2:
+            return _context10.abrupt("return", _context10.sent);
+
+          case 3:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+  return _getCurrentLanguage.apply(this, arguments);
 }
 
 function getLanguage(_x3) {
@@ -7263,47 +8251,47 @@ function getLanguage(_x3) {
 }
 
 function _getLanguage() {
-  _getLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(lang) {
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
+  _getLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(lang) {
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
       while (1) {
-        switch (_context10.prev = _context10.next) {
+        switch (_context11.prev = _context11.next) {
           case 0:
-            _context10.prev = 0;
+            _context11.prev = 0;
 
             if (!(currentLanguage == null || currentLanguage.name !== lang)) {
-              _context10.next = 5;
+              _context11.next = 5;
               break;
             }
 
             console.log("getting language json");
-            _context10.next = 5;
+            _context11.next = 5;
             return $.getJSON("languages/".concat(lang, ".json"), function (data) {
               currentLanguage = data;
             });
 
           case 5:
-            return _context10.abrupt("return", currentLanguage);
+            return _context11.abrupt("return", currentLanguage);
 
           case 8:
-            _context10.prev = 8;
-            _context10.t0 = _context10["catch"](0);
+            _context11.prev = 8;
+            _context11.t0 = _context11["catch"](0);
             console.error("error getting language");
-            console.error(_context10.t0);
-            showNotification("Error getting language: ".concat(_context10.t0.message), 4000);
-            _context10.next = 15;
+            console.error(_context11.t0);
+            showNotification("Error getting language: ".concat(_context11.t0.message), 4000);
+            _context11.next = 15;
             return $.getJSON("languages/english.json", function (data) {
               currentLanguage = data;
             });
 
           case 15:
-            return _context10.abrupt("return", currentLanguage);
+            return _context11.abrupt("return", currentLanguage);
 
           case 16:
           case "end":
-            return _context10.stop();
+            return _context11.stop();
         }
       }
-    }, _callee10, null, [[0, 8]]);
+    }, _callee11, null, [[0, 8]]);
   }));
   return _getLanguage.apply(this, arguments);
 }
@@ -7386,6 +8374,19 @@ function mean(array) {
   } catch (e) {
     return 0;
   }
+} //https://www.w3resource.com/javascript-exercises/fundamental/javascript-fundamental-exercise-88.php
+
+
+function median(arr) {
+  try {
+    var mid = Math.floor(arr.length / 2),
+        nums = (0, _toConsumableArray2["default"])(arr).sort(function (a, b) {
+      return a - b;
+    });
+    return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  } catch (e) {
+    return 0;
+  }
 }
 
 function getReleasesFromGitHub() {
@@ -7418,6 +8419,10 @@ function isASCIILetter(c) {
 
 function kogasa(cov) {
   return 100 * (1 - Math.tanh(cov + Math.pow(cov, 3) / 3 + Math.pow(cov, 5) / 5));
+}
+
+function whorf(speed, wordlen) {
+  return Math.min(speed, Math.floor(speed * Math.pow(1.03, -2 * (wordlen - 3))));
 }
 
 function roundTo2(num) {
@@ -7483,6 +8488,7 @@ function getGibberish() {
 }
 
 function secondsToString(sec) {
+  var full = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var hours = Math.floor(sec / 3600);
   var minutes = Math.floor(sec % 3600 / 60);
   var seconds = roundTo2(sec % 3600 % 60);
@@ -7491,10 +8497,10 @@ function secondsToString(sec) {
   var secondsString;
   hours < 10 ? hoursString = "0" + hours : hoursString = hours;
   minutes < 10 ? minutesString = "0" + minutes : minutesString = minutes;
-  seconds < 10 && (minutes > 0 || hours > 0) ? secondsString = "0" + seconds : secondsString = seconds;
+  seconds < 10 && (minutes > 0 || hours > 0 || full) ? secondsString = "0" + seconds : secondsString = seconds;
   var ret = "";
-  if (hours > 0) ret += hoursString + ":";
-  if (minutes > 0 || hours > 0) ret += minutesString + ":";
+  if (hours > 0 || full) ret += hoursString + ":";
+  if (minutes > 0 || hours > 0 || full) ret += minutesString + ":";
   ret += secondsString;
   return ret;
 }
@@ -7708,12 +8714,23 @@ function countAllKeys(obj) {
     return sum += countAllKeys(obj[key]);
   });
   return sum;
+} //https://stackoverflow.com/questions/273789/is-there-a-version-of-javascripts-string-indexof-that-allows-for-regular-expr
+
+
+function regexIndexOf(string, regex, startpos) {
+  var indexOf = string.substring(startpos || 0).search(regex);
+  return indexOf >= 0 ? indexOf + (startpos || 0) : indexOf;
 }
+
+String.prototype.lastIndexOfRegex = function (regex) {
+  var match = this.match(regex);
+  return match ? this.lastIndexOf(match[match.length - 1]) : -1;
+};
 
 var trailingComposeChars = /[\u02B0-\u02FF`´^¨~]+$|⎄.*$/;
 exports.trailingComposeChars = trailingComposeChars;
 
-},{"./loader":25,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],28:[function(require,module,exports){
+},{"./config":7,"./loader":26,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/toConsumableArray":75,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],29:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -7926,7 +8943,7 @@ function addPower() {
   startRender();
 }
 
-},{"./config":7,"./test-logic":46,"./theme-colors":50,"./ui":54,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],29:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"./theme-colors":52,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8004,7 +9021,7 @@ function stop() {
   update();
 }
 
-},{"./misc":27}],30:[function(require,module,exports){
+},{"./misc":28}],31:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8127,7 +9144,7 @@ function add(message, level, duration, customTitle, customIcon) {
   notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon).show());
 }
 
-},{"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/interopRequireDefault":66}],31:[function(require,module,exports){
+},{"@babel/runtime/helpers/classCallCheck":65,"@babel/runtime/helpers/createClass":66,"@babel/runtime/helpers/interopRequireDefault":70}],32:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -8159,7 +9176,7 @@ function show() {
   }, 1000));
 }
 
-},{"./misc":27,"@babel/runtime/helpers/typeof":72}],32:[function(require,module,exports){
+},{"./misc":28,"@babel/runtime/helpers/typeof":76}],33:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8411,7 +9428,7 @@ function start() {
   update(performance.now() + settings.spc * 1000);
 }
 
-},{"./config":7,"./test-logic":46,"./test-ui":49,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],33:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"./test-ui":51,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8430,7 +9447,112 @@ function show() {
   }, 250, "easeOutCubic");
 }
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getPoem = getPoem;
+exports.Poem = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var bannedChars = ["—", "_", " "];
+var maxWords = 100;
+var apiURL = "https://poetrydb.org/random";
+
+var Poem = /*#__PURE__*/function () {
+  function Poem(title, author, words) {
+    (0, _classCallCheck2["default"])(this, Poem);
+    this.title = title;
+    this.author = author;
+    this.words = words;
+    this.cleanUpText();
+  }
+
+  (0, _createClass2["default"])(Poem, [{
+    key: "cleanUpText",
+    value: function cleanUpText() {
+      var count = 0;
+      var scrubbedWords = [];
+
+      for (var i = 0; i < this.words.length; i++) {
+        var scrubbed = "";
+
+        for (var j = 0; j < this.words[i].length; j++) {
+          if (!bannedChars.includes(this.words[i][j])) scrubbed += this.words[i][j];
+        }
+
+        if (scrubbed == "") continue;
+        scrubbedWords.push(scrubbed);
+        count++;
+        if (count == maxWords) break;
+      }
+
+      this.words = scrubbedWords;
+    }
+  }]);
+  return Poem;
+}();
+
+exports.Poem = Poem;
+
+function getPoem() {
+  return _getPoem.apply(this, arguments);
+}
+
+function _getPoem() {
+  _getPoem = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            return _context.abrupt("return", new Promise(function (res, rej) {
+              console.log("Getting poem");
+              var poemReq = new XMLHttpRequest();
+
+              poemReq.onload = function () {
+                if (poemReq.readyState == 4) {
+                  if (poemReq.status == 200) {
+                    var poemObj = JSON.parse(poemReq.responseText)[0];
+                    var words = [];
+                    poemObj.lines.forEach(function (line) {
+                      line.split(" ").forEach(function (word) {
+                        words.push(word);
+                      });
+                    });
+                    var poem = new Poem(poemObj.title, poemObj.author, words);
+                    res(poem);
+                  } else {
+                    rej(poemReq.status);
+                  }
+                }
+              };
+
+              poemReq.open("GET", apiURL);
+              poemReq.send();
+            }));
+
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _getPoem.apply(this, arguments);
+}
+
+},{"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/classCallCheck":65,"@babel/runtime/helpers/createClass":66,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/regenerator":78}],36:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -8494,7 +9616,7 @@ function resetBefore() {
   before.numbers = null;
 }
 
-},{"./config":7,"./custom-text":11,"./notifications":30,"./test-logic":46,"./test-stats":47,"@babel/runtime/helpers/typeof":72}],35:[function(require,module,exports){
+},{"./config":7,"./custom-text":11,"./notifications":31,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/typeof":76}],37:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8708,7 +9830,7 @@ $("#quoteSearchPopup input").keypress(function (e) {
   }
 });
 
-},{"./config":7,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./test-logic":46,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],36:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],38:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -8735,9 +9857,8 @@ ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
+RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(function () {
-  RouteController.handleInitialPageClasses(window.location.hash);
-
   if (window.location.hash === "") {
     $("#top .config").removeClass("hidden");
   }
@@ -8767,10 +9888,12 @@ $(document).ready(function () {
   MonkeyPower.init();
 });
 
-},{"./config":7,"./manual-restart-tracker":26,"./misc":27,"./monkey-power":28,"./route-controller":38,"./settings":40,"./ui":54,"@babel/runtime/helpers/typeof":72}],37:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./route-controller":40,"./settings":42,"./ui":57,"@babel/runtime/helpers/typeof":76}],39:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof = require("@babel/runtime/helpers/typeof");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8786,6 +9909,14 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _config = _interopRequireDefault(require("./config"));
+
+var Sound = _interopRequireWildcard(require("./sound"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 /*
 TODO:
@@ -8856,13 +9987,29 @@ function pauseReplay() {
   toggleButton.parentNode.setAttribute("aria-label", "Resume replay");
 }
 
+function playSound() {
+  var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+  if (error) {
+    if (_config["default"].playSoundOnError) {
+      Sound.playError();
+    } else {
+      Sound.playClick();
+    }
+  } else {
+    Sound.playClick();
+  }
+}
+
 function handleDisplayLogic(item) {
   var activeWord = document.getElementById("replayWords").children[wordPos];
 
   if (item.action === "correctLetter") {
+    playSound();
     activeWord.children[curPos].classList.add("correct");
     curPos++;
   } else if (item.action === "incorrectLetter") {
+    playSound(true);
     var myElement;
 
     if (curPos >= activeWord.children.length) {
@@ -8877,6 +10024,7 @@ function handleDisplayLogic(item) {
     myElement.classList.add("incorrect");
     curPos++;
   } else if (item.action === "setWordLetterIndex") {
+    playSound();
     curPos = item.value; // remove all letters from cursor to end of word
 
     for (var i = curPos; i < activeWord.children.length; i++) {
@@ -8889,13 +10037,16 @@ function handleDisplayLogic(item) {
       }
     }
   } else if (item.action === "submitCorrectWord") {
+    playSound();
     wordPos++;
     curPos = 0;
   } else if (item.action === "submitErrorWord") {
+    playSound(true);
     activeWord.classList.add("error");
     wordPos++;
     curPos = 0;
   } else if (item.action === "backWord") {
+    playSound();
     wordPos--;
     activeWord = document.getElementById("replayWords").children[wordPos];
     curPos = activeWord.children.length;
@@ -9074,7 +10225,7 @@ $(document.body).on("click", "#watchReplayButton", function () {
   toggleReplayDisplay();
 });
 
-},{"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],38:[function(require,module,exports){
+},{"./config":7,"./sound":45,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/toConsumableArray":75,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],40:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9134,7 +10285,7 @@ $(window).on("popstate", function (e) {
   }
 });
 
-},{"./config":7,"./funbox":15,"./ui":54,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],39:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],41:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9224,7 +10375,7 @@ var SettingsGroup = /*#__PURE__*/function () {
 
 exports["default"] = SettingsGroup;
 
-},{"./config":7,"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/toConsumableArray":71}],40:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/classCallCheck":65,"@babel/runtime/helpers/createClass":66,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/toConsumableArray":75}],42:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9291,6 +10442,7 @@ function _initGroups() {
               groups.keymapMode.updateButton();
             });
             groups.showLiveAcc = new _settingsGroup["default"]("showLiveAcc", UpdateConfig.setShowLiveAcc);
+            groups.showLiveBurst = new _settingsGroup["default"]("showLiveBurst", UpdateConfig.setShowLiveBurst);
             groups.showTimerProgress = new _settingsGroup["default"]("showTimerProgress", UpdateConfig.setShowTimerProgress);
             groups.keymapMode = new _settingsGroup["default"]("keymapMode", UpdateConfig.setKeymapMode, function () {
               groups.showLiveWpm.updateButton();
@@ -9345,28 +10497,11 @@ function _initGroups() {
               if (UpdateConfig["default"].playSoundOnClick !== "off") Sound.playClick(UpdateConfig["default"].playSoundOnClick);
             });
             groups.showAllLines = new _settingsGroup["default"]("showAllLines", UpdateConfig.setShowAllLines);
-            groups.paceCaret = new _settingsGroup["default"]("paceCaret", UpdateConfig.setPaceCaret, function () {
-              if (UpdateConfig["default"].paceCaret === "custom") {
-                $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").removeClass("hidden");
-              } else {
-                $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").addClass("hidden");
-              }
-            });
+            groups.paceCaret = new _settingsGroup["default"]("paceCaret", UpdateConfig.setPaceCaret);
             groups.repeatedPace = new _settingsGroup["default"]("repeatedPace", UpdateConfig.setRepeatedPace);
-            groups.minWpm = new _settingsGroup["default"]("minWpm", UpdateConfig.setMinWpm, function () {
-              if (UpdateConfig["default"].minWpm === "custom") {
-                $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass("hidden");
-              } else {
-                $(".pageSettings .section.minWpm input.customMinWpmSpeed").addClass("hidden");
-              }
-            });
-            groups.minAcc = new _settingsGroup["default"]("minAcc", UpdateConfig.setMinAcc, function () {
-              if (UpdateConfig["default"].minAcc === "custom") {
-                $(".pageSettings .section.minAcc input.customMinAcc").removeClass("hidden");
-              } else {
-                $(".pageSettings .section.minAcc input.customMinAcc").addClass("hidden");
-              }
-            });
+            groups.minWpm = new _settingsGroup["default"]("minWpm", UpdateConfig.setMinWpm);
+            groups.minAcc = new _settingsGroup["default"]("minAcc", UpdateConfig.setMinAcc);
+            groups.minBurst = new _settingsGroup["default"]("minBurst", UpdateConfig.setMinBurst);
             groups.smoothLineScroll = new _settingsGroup["default"]("smoothLineScroll", UpdateConfig.setSmoothLineScroll);
             groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.setLayout);
             groups.language = new _settingsGroup["default"]("language", UpdateConfig.setLanguage);
@@ -9395,7 +10530,7 @@ function _initGroups() {
             //   UpdateConfig.setCustomLayoutfluid
             // );
 
-          case 53:
+          case 55:
           case "end":
             return _context.stop();
         }
@@ -9499,27 +10634,10 @@ function update() {
   ThemePicker.updateActiveTab();
   ThemePicker.setCustomInputs();
   ThemePicker.refreshButtons();
-
-  if (UpdateConfig["default"].paceCaret === "custom") {
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").removeClass("hidden");
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val(UpdateConfig["default"].paceCaretCustomSpeed);
-  } else {
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").addClass("hidden");
-  }
-
-  if (UpdateConfig["default"].minWpm === "custom") {
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass("hidden");
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").val(UpdateConfig["default"].minWpmCustomSpeed);
-  } else {
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").addClass("hidden");
-  }
-
-  if (UpdateConfig["default"].minAcc === "custom") {
-    $(".pageSettings .section.minAcc input.customMinAcc").removeClass("hidden");
-    $(".pageSettings .section.minAcc input.customMinAcc").val(UpdateConfig["default"].minAccCustom);
-  } else {
-    $(".pageSettings .section.minAcc input.customMinAcc").addClass("hidden");
-  }
+  $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val(UpdateConfig["default"].paceCaretCustomSpeed);
+  $(".pageSettings .section.minWpm input.customMinWpmSpeed").val(UpdateConfig["default"].minWpmCustomSpeed);
+  $(".pageSettings .section.minAcc input.customMinAcc").val(UpdateConfig["default"].minAccCustom);
+  $(".pageSettings .section.minBurst input.customMinBurst").val(UpdateConfig["default"].minBurstCustomSpeed);
 }
 
 function toggleSettingsGroup(groupName) {
@@ -9553,11 +10671,26 @@ function toggleSettingsGroup(groupName) {
 $(document).on("focusout", ".pageSettings .section.paceCaret input.customPaceCaretSpeed", function (e) {
   UpdateConfig.setPaceCaretCustomSpeed(parseInt($(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val()));
 });
+$(document).on("click", ".pageSettings .section.paceCaret .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val()));
+});
 $(document).on("focusout", ".pageSettings .section.minWpm input.customMinWpmSpeed", function (e) {
   UpdateConfig.setMinWpmCustomSpeed(parseInt($(".pageSettings .section.minWpm input.customMinWpmSpeed").val()));
 });
+$(document).on("click", ".pageSettings .section.minWpm .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minWpm input.customMinWpmSpeed").val()));
+});
 $(document).on("focusout", ".pageSettings .section.minAcc input.customMinAcc", function (e) {
   UpdateConfig.setMinAccCustom(parseInt($(".pageSettings .section.minAcc input.customMinAcc").val()));
+});
+$(document).on("click", ".pageSettings .section.minAcc .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minAcc input.customMinAcc").val()));
+});
+$(document).on("focusout", ".pageSettings .section.minBurst input.customMinBurst", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minBurst input.customMinBurst").val()));
+});
+$(document).on("click", ".pageSettings .section.minBurst .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minBurst input.customMinBurst").val()));
 });
 $(document).on("click", ".pageSettings .section.languageGroups .button", function (e) {
   var group = $(e.currentTarget).attr("group");
@@ -9571,12 +10704,7 @@ $(document).on("click", ".pageSettings .section.funbox .button", function (e) {
   setActiveFunboxButton();
 });
 $("#resetSettingsButton").click(function (e) {
-  if (confirm("Press OK to confirm.")) {
-    UpdateConfig.reset();
-    setTimeout(function () {
-      location.reload();
-    }, 1000);
-  }
+  SimplePopups.list.resetSettings.show();
 });
 $("#exportSettingsButton").click(function (e) {
   var configJSON = JSON.stringify(UpdateConfig["default"]);
@@ -9592,12 +10720,12 @@ $(".pageSettings .sectionGroupTitle").click(function (e) {
 $(".pageSettings #resetPersonalBestsButton").on("click", function (e) {
   SimplePopups.list.resetPersonalBests.show();
 });
-$(".pageSettings .section.customBackgroundSize .inputAndButton .save").on("click", function (e) {
-  UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
+$(".pageSettings .section.customBackgroundSize .inputAndSave .save").on("click", function (e) {
+  UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndSave input").val());
 });
-$(".pageSettings .section.customBackgroundSize .inputAndButton input").keypress(function (e) {
+$(".pageSettings .section.customBackgroundSize .inputAndSave input").keypress(function (e) {
   if (e.keyCode == 13) {
-    UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
+    UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndSave input").val());
   }
 });
 $(".pageSettings .section.customLayoutfluid .inputAndSave .save").on("click", function (e) {
@@ -9616,7 +10744,7 @@ $(".quickNav .links a").on("click", function (e) {
   isOpen && toggleSettingsGroup(settingsGroup);
 });
 
-},{"./config":7,"./funbox":15,"./language-picker":20,"./layouts":22,"./loader":25,"./misc":27,"./notifications":30,"./settings-group":39,"./simple-popups":42,"./sound":43,"./theme-picker":52,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],41:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./language-picker":20,"./layouts":22,"./loader":26,"./misc":28,"./notifications":31,"./settings-group":41,"./simple-popups":44,"./sound":45,"./theme-picker":54,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],43:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9632,14 +10760,15 @@ exports.rightState = rightState;
 $(document).keydown(function (e) {
   if (e.code === "ShiftLeft") {
     exports.leftState = leftState = true;
+    exports.rightState = rightState = false;
   } else if (e.code === "ShiftRight") {
+    exports.leftState = leftState = false;
     exports.rightState = rightState = true;
   }
 });
 $(document).keyup(function (e) {
-  if (e.code === "ShiftLeft") {
+  if (e.code === "ShiftLeft" || e.code === "ShiftRight") {
     exports.leftState = leftState = false;
-  } else if (e.code === "ShiftRight") {
     exports.rightState = rightState = false;
   }
 });
@@ -9663,7 +10792,7 @@ function isUsingOppositeShift(_char) {
   }
 }
 
-},{}],42:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9684,6 +10813,8 @@ var Loader = _interopRequireWildcard(require("./loader"));
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
+
+var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -9739,11 +10870,15 @@ var SimplePopup = /*#__PURE__*/function () {
       if (this.inputs.length > 0) {
         if (this.type === "number") {
           this.inputs.forEach(function (input) {
-            el.find(".inputs").append("\n        <input type=\"number\" min=\"1\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required>\n        "));
+            el.find(".inputs").append("\n        <input type=\"number\" min=\"1\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n        "));
           });
         } else if (this.type === "text") {
           this.inputs.forEach(function (input) {
-            el.find(".inputs").append("\n        <input type=\"text\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required>\n        "));
+            if (input.type) {
+              el.find(".inputs").append("\n            <input type=\"".concat(input.type, "\" val=\"").concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n            "));
+            } else {
+              el.find(".inputs").append("\n            <input type=\"text\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n            "));
+            }
           });
         }
 
@@ -9789,7 +10924,7 @@ var SimplePopup = /*#__PURE__*/function () {
   return SimplePopup;
 }();
 
-$("#simplePopupWrapper").click(function (e) {
+$("#simplePopupWrapper").mousedown(function (e) {
   if ($(e.target).attr("id") === "simplePopupWrapper") {
     $("#simplePopupWrapper").stop(true, true).css("opacity", 1).removeClass("hidden").animate({
       opacity: 0
@@ -9817,7 +10952,7 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
 }, function () {});
 
-},{"./loader":25,"./notifications":30,"./settings":40,"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],43:[function(require,module,exports){
+},{"./config":7,"./loader":26,"./notifications":31,"./settings":42,"@babel/runtime/helpers/classCallCheck":65,"@babel/runtime/helpers/createClass":66,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9970,7 +11105,7 @@ function playError() {
   errorSound.play();
 }
 
-},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":66,"howler":84}],44:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":70,"howler":88}],46:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -10003,7 +11138,7 @@ $(document.body).on("click", "#supportMeWrapper a.button", function () {
   });
 });
 
-},{"./commandline":6,"./commandline-lists":5,"@babel/runtime/helpers/typeof":72}],45:[function(require,module,exports){
+},{"./commandline":6,"./commandline-lists":5,"@babel/runtime/helpers/typeof":76}],47:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -10111,7 +11246,7 @@ $(document).on("click", "#top .config .mode .text-button", function (e) {
   TestLogic.restart();
 });
 
-},{"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./manual-restart-tracker":26,"./quote-search-popup":35,"./test-logic":46,"@babel/runtime/helpers/typeof":72}],46:[function(require,module,exports){
+},{"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./manual-restart-tracker":27,"./quote-search-popup":37,"./test-logic":48,"@babel/runtime/helpers/typeof":76}],48:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -10121,6 +11256,7 @@ var _typeof = require("@babel/runtime/helpers/typeof");
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.toggleGlarses = toggleGlarses;
 exports.setNotSignedInUid = setNotSignedInUid;
 exports.setActive = setActive;
 exports.setRepeated = setRepeated;
@@ -10188,6 +11324,8 @@ var LiveWpm = _interopRequireWildcard(require("./live-wpm"));
 
 var LiveAcc = _interopRequireWildcard(require("./live-acc"));
 
+var LiveBurst = _interopRequireWildcard(require("./live-burst"));
+
 var TimerProgress = _interopRequireWildcard(require("./timer-progress"));
 
 var ChartController = _interopRequireWildcard(require("./chart-controller"));
@@ -10208,6 +11346,12 @@ var Replay = _interopRequireWildcard(require("./replay.js"));
 
 var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 
+var Poetry = _interopRequireWildcard(require("./poetry.js"));
+
+var TodayTracker = _interopRequireWildcard(require("./today-tracker"));
+
+var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -10215,6 +11359,14 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2["default"])(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+var glarsesMode = false;
+
+function toggleGlarses() {
+  glarsesMode = true;
+  console.log("Glarses Mode On - test result will be hidden. You can check the stats in the console (here)");
+  console.log("To disable Glarses Mode refresh the page.");
+}
 
 var notSignedInLastResult = null;
 exports.notSignedInLastResult = notSignedInLastResult;
@@ -10296,6 +11448,11 @@ var InputWordList = /*#__PURE__*/function () {
       this.currentWord = "";
     }
   }, {
+    key: "getCurrent",
+    value: function getCurrent() {
+      return this.current;
+    }
+  }, {
     key: "pushHistory",
     value: function pushHistory() {
       this.history.push(this.currentWord);
@@ -10319,7 +11476,11 @@ var InputWordList = /*#__PURE__*/function () {
   }, {
     key: "getHistory",
     value: function getHistory(i) {
-      return this.history[i];
+      if (i === undefined) {
+        return this.history;
+      } else {
+        return this.history[i];
+      }
     }
   }]);
   return InputWordList;
@@ -10395,8 +11556,11 @@ function setRandomQuote(rq) {
   exports.randomQuote = randomQuote = rq;
 }
 
+var spanishSentenceTracker = "";
+
 function punctuateWord(previousWord, currentWord, index, maxindex) {
   var word = currentWord;
+  var currentLanguage = UpdateConfig["default"].language.split("_")[0];
 
   if (UpdateConfig["default"].funbox === "58008") {
     if (currentWord.length > 3) {
@@ -10406,33 +11570,56 @@ function punctuateWord(previousWord, currentWord, index, maxindex) {
       }
     }
   } else {
-    if ((index == 0 || Misc.getLastChar(previousWord) == "." || Misc.getLastChar(previousWord) == "?" || Misc.getLastChar(previousWord) == "!") && UpdateConfig["default"].language.split("_")[0] != "code") {
+    if ((index == 0 || Misc.getLastChar(previousWord) == "." || Misc.getLastChar(previousWord) == "?" || Misc.getLastChar(previousWord) == "!") && currentLanguage != "code") {
       //always capitalise the first word or if there was a dot unless using a code alphabet
       word = Misc.capitalizeFirstLetter(word);
-    } else if (Math.random() < 0.1 && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != "," && index != maxindex - 2 || index == maxindex - 1) {
-      var rand = Math.random();
 
-      if (rand <= 0.8) {
-        word += ".";
-      } else if (rand > 0.8 && rand < 0.9) {
-        if (UpdateConfig["default"].language.split("_")[0] == "french") {
-          word = "?";
-        } else {
-          word += "?";
-        }
-      } else {
-        if (UpdateConfig["default"].language.split("_")[0] == "french") {
-          word = "!";
-        } else {
-          word += "!";
+      if (currentLanguage == "spanish" || currentLanguage == "catalan") {
+        var rand = Math.random();
+
+        if (rand > 0.9) {
+          word = "¿" + word;
+          spanishSentenceTracker = "?";
+        } else if (rand > 0.8) {
+          word = "¡" + word;
+          spanishSentenceTracker = "!";
         }
       }
-    } else if (Math.random() < 0.01 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
+    } else if (Math.random() < 0.1 && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != "," && index != maxindex - 2 || index == maxindex - 1) {
+      if (currentLanguage == "spanish" || currentLanguage == "catalan") {
+        if (spanishSentenceTracker == "?" || spanishSentenceTracker == "!") {
+          word += spanishSentenceTracker;
+          spanishSentenceTracker = "";
+        }
+      } else {
+        var _rand = Math.random();
+
+        if (_rand <= 0.8) {
+          word += ".";
+        } else if (_rand > 0.8 && _rand < 0.9) {
+          if (currentLanguage == "french") {
+            word = "?";
+          } else if (currentLanguage == "arabic" || currentLanguage == "persian" || currentLanguage == "urdu") {
+            word += "؟";
+          } else if (currentLanguage == "greek") {
+            word += ";";
+          } else {
+            word += "?";
+          }
+        } else {
+          if (currentLanguage == "french") {
+            word = "!";
+          } else {
+            word += "!";
+          }
+        }
+      }
+    } else if (Math.random() < 0.01 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && currentLanguage !== "russian") {
       word = "\"".concat(word, "\"");
-    } else if (Math.random() < 0.011 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
+    } else if (Math.random() < 0.011 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && currentLanguage !== "russian" && currentLanguage !== "ukrainian") {
       word = "'".concat(word, "'");
     } else if (Math.random() < 0.012 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != ".") {
-      if (UpdateConfig["default"].language.split("_")[0] == "code") {
+      if (currentLanguage == "code") {
         var r = Math.random();
 
         if (r < 0.25) {
@@ -10448,23 +11635,35 @@ function punctuateWord(previousWord, currentWord, index, maxindex) {
         word = "(".concat(word, ")");
       }
     } else if (Math.random() < 0.013) {
-      if (UpdateConfig["default"].language.split("_")[0] == "french") {
+      if (currentLanguage == "french") {
         word = ":";
+      }
+
+      if (currentLanguage == "greek") {
+        word = "·";
       } else {
         word += ":";
       }
     } else if (Math.random() < 0.014 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && previousWord != "-") {
       word = "-";
     } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";") {
-      if (UpdateConfig["default"].language.split("_")[0] == "french") {
+      if (currentLanguage == "french") {
         word = ";";
+      }
+
+      if (currentLanguage == "greek") {
+        word = "·";
       } else {
         word += ";";
       }
     } else if (Math.random() < 0.2 && Misc.getLastChar(previousWord) != ",") {
-      word += ",";
-    } else if (Math.random() < 0.25 && UpdateConfig["default"].language.split("_")[0] == "code") {
-      var specials = ["{", "}", "[", "]", "(", ")", ";", "=", "%", "/"];
+      if (currentLanguage == "arabic" || currentLanguage == "urdu" || currentLanguage == "persian") {
+        word += "،";
+      } else {
+        word += ",";
+      }
+    } else if (Math.random() < 0.25 && currentLanguage == "code") {
+      var specials = ["{", "}", "[", "]", "(", ")", ";", "=", "+", "%", "/"];
       word = specials[Math.floor(Math.random() * 10)];
     }
   }
@@ -10486,6 +11685,7 @@ function startTest() {
   $("#liveWpm").text("0");
   LiveWpm.show();
   LiveAcc.show();
+  LiveBurst.show();
   TimerProgress.update(TestTimer.time);
   TestTimer.clear();
 
@@ -10510,7 +11710,7 @@ function init() {
 
 function _init() {
   _init = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-    var language, wordsBound, wordset, i, randomWord, previousWord, previousWord2, randomcaseword, _i2, quotes, rq, quoteLengths, groupIndex, w, _i3;
+    var language, wordsBound, wordset, poem, i, randomWord, previousWord, previousWord2, regenarationCount, randomcaseword, _i2, quotes, rq, quoteLengths, groupIndex, w, _i3;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -10549,7 +11749,7 @@ function _init() {
 
           case 14:
             if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
-              _context2.next = 25;
+              _context2.next = 33;
               break;
             }
 
@@ -10597,25 +11797,53 @@ function _init() {
               wordsBound = 2;
             }
 
+            if (UpdateConfig["default"].funbox === "plus_two") {
+              wordsBound = 3;
+            }
+
             wordset = language.words;
 
             if (UpdateConfig["default"].mode == "custom") {
               wordset = CustomText.text;
             }
 
+            if (!(UpdateConfig["default"].funbox == "poetry")) {
+              _context2.next = 30;
+              break;
+            }
+
+            _context2.next = 26;
+            return Poetry.getPoem();
+
+          case 26:
+            poem = _context2.sent;
+            poem.words.forEach(function (word) {
+              words.push(word);
+            });
+            _context2.next = 31;
+            break;
+
+          case 30:
             for (i = 0; i < wordsBound; i++) {
               randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               previousWord = words.get(i - 1);
               previousWord2 = words.get(i - 2);
 
-              if (UpdateConfig["default"].mode == "custom" && (CustomText.isWordRandom || CustomText.isTimeRandom)) {
-                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-              } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom) {
+              if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
                 randomWord = CustomText.text[i];
+              } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseMissed.before.mode !== null)) {
+                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               } else {
-                while (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I" || randomWord.indexOf(" ") > -1) {
+                regenarationCount = 0; //infinite loop emergency stop button
+
+                while (regenarationCount < 100 && (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I" || randomWord.indexOf(" ") > -1)) {
+                  regenarationCount++;
                   randomWord = wordset[Math.floor(Math.random() * wordset.length)];
                 }
+              }
+
+              if (randomWord === undefined) {
+                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               }
 
               if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
@@ -10644,6 +11872,8 @@ function _init() {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getASCII();
+              } else if (UpdateConfig["default"].funbox === "weakspot") {
+                randomWord = WeakSpot.getWord(wordset);
               }
 
               if (UpdateConfig["default"].punctuation) {
@@ -10667,23 +11897,24 @@ function _init() {
               words.push(randomWord);
             }
 
-            _context2.next = 62;
+          case 31:
+            _context2.next = 70;
             break;
 
-          case 25:
+          case 33:
             if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 62;
+              _context2.next = 70;
               break;
             }
 
-            _context2.next = 28;
+            _context2.next = 36;
             return Misc.getQuotes(UpdateConfig["default"].language.replace(/_\d*k$/g, ""));
 
-          case 28:
+          case 36:
             quotes = _context2.sent;
 
             if (!(quotes.length === 0)) {
-              _context2.next = 35;
+              _context2.next = 43;
               break;
             }
 
@@ -10693,16 +11924,16 @@ function _init() {
             restart();
             return _context2.abrupt("return");
 
-          case 35:
+          case 43:
             if (!(UpdateConfig["default"].quoteLength != -2)) {
-              _context2.next = 51;
+              _context2.next = 59;
               break;
             }
 
             quoteLengths = UpdateConfig["default"].quoteLength;
 
             if (!(quoteLengths.length > 1)) {
-              _context2.next = 42;
+              _context2.next = 50;
               break;
             }
 
@@ -10712,14 +11943,14 @@ function _init() {
               groupIndex = quoteLengths[Math.floor(Math.random() * quoteLengths.length)];
             }
 
-            _context2.next = 47;
+            _context2.next = 55;
             break;
 
-          case 42:
+          case 50:
             groupIndex = quoteLengths[0];
 
             if (!(quotes.groups[groupIndex].length === 0)) {
-              _context2.next = 47;
+              _context2.next = 55;
               break;
             }
 
@@ -10727,17 +11958,17 @@ function _init() {
             TestUI.setTestRestarting(false);
             return _context2.abrupt("return");
 
-          case 47:
+          case 55:
             rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
 
             if (randomQuote != null && rq.id === randomQuote.id) {
               rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
             }
 
-            _context2.next = 53;
+            _context2.next = 61;
             break;
 
-          case 51:
+          case 59:
             quotes.groups.forEach(function (group) {
               var filtered = group.filter(function (quote) {
                 return quote.id == QuoteSearchPopup.selectedId;
@@ -10753,7 +11984,7 @@ function _init() {
               Notifications.add("Quote Id Does Not Exist", 0);
             }
 
-          case 53:
+          case 61:
             rq.text = rq.text.replace(/ +/gm, " ");
             rq.text = rq.text.replace(/\\\\t/gm, "\t");
             rq.text = rq.text.replace(/\\\\n/gm, "\n");
@@ -10771,7 +12002,7 @@ function _init() {
               words.push(w[_i3]);
             }
 
-          case 62:
+          case 70:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -10796,17 +12027,17 @@ function _init() {
 
 
             if (!$(".pageTest").hasClass("active")) {
-              _context2.next = 67;
+              _context2.next = 75;
               break;
             }
 
-            _context2.next = 67;
+            _context2.next = 75;
             return Funbox.activate();
 
-          case 67:
+          case 75:
             TestUI.showWords(); // }
 
-          case 68:
+          case 76:
           case "end":
             return _context2.stop();
         }
@@ -10883,6 +12114,12 @@ function restart() {
     PractiseMissed.resetBefore();
   }
 
+  var repeatWithPace = false;
+
+  if (TestUI.resultVisible && UpdateConfig["default"].repeatedPace && withSameWordset) {
+    repeatWithPace = true;
+  }
+
   ManualRestart.reset();
   TestTimer.clear();
   TestStats.restart();
@@ -10894,6 +12131,7 @@ function restart() {
   Replay.stopReplayRecording();
   LiveWpm.hide();
   LiveAcc.hide();
+  LiveBurst.hide();
   TimerProgress.hide();
   setBailout(false);
   PaceCaret.reset();
@@ -10942,7 +12180,7 @@ function restart() {
             }
 
             setRepeated(false);
-            setPaceRepeat(false);
+            setPaceRepeat(repeatWithPace);
             setHasTab(false);
             _context.next = 9;
             return init();
@@ -10954,7 +12192,7 @@ function restart() {
 
           case 12:
             setRepeated(true);
-            setPaceRepeat(true);
+            setPaceRepeat(repeatWithPace);
             setActive(false);
             Replay.stopReplayRecording();
             words.resetCurrentIndex();
@@ -10979,8 +12217,10 @@ function restart() {
 
             document.querySelector("#miniTimerAndLiveWpm .wpm").innerHTML = "0";
             document.querySelector("#miniTimerAndLiveWpm .acc").innerHTML = "100%";
+            document.querySelector("#miniTimerAndLiveWpm .burst").innerHTML = "0";
             document.querySelector("#liveWpm").innerHTML = "0";
             document.querySelector("#liveAcc").innerHTML = "100%";
+            document.querySelector("#liveBurst").innerHTML = "0";
 
             if (UpdateConfig["default"].funbox === "memory") {
               Funbox.startMemoryTimer();
@@ -11008,7 +12248,7 @@ function restart() {
               fbtext = " " + UpdateConfig["default"].funbox;
             }
 
-            $(".pageTest #premidTestMode").text("".concat(UpdateConfig["default"].mode, " ").concat(mode2, " ").concat(UpdateConfig["default"].language).concat(fbtext));
+            $(".pageTest #premidTestMode").text("".concat(UpdateConfig["default"].mode, " ").concat(mode2, " ").concat(UpdateConfig["default"].language.replace(/_/g, " ")).concat(fbtext));
             $(".pageTest #premidSecondsLeft").text(UpdateConfig["default"].time);
 
             if (UpdateConfig["default"].funbox === "layoutfluid") {
@@ -11036,7 +12276,7 @@ function restart() {
               // console.log(TestStats.restartCount);
             });
 
-          case 39:
+          case 41:
           case "end":
             return _context.stop();
         }
@@ -11085,64 +12325,118 @@ function calculateWpmAndRaw() {
 }
 
 function addWord() {
-  var bound = 100;
-  if (UpdateConfig["default"].funbox === "plus_one") bound = 1;
-  if (words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length) return;
-  var language = UpdateConfig["default"].mode !== "custom" ? Misc.getCurrentLanguage() : {
-    //borrow the direction of the current language
-    leftToRight: Misc.getCurrentLanguage().leftToRight,
-    words: CustomText.text
-  };
-  var wordset = language.words;
-  var randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-  var previousWord = words.getLast();
-  var previousWordStripped = previousWord.replace(/[.?!":\-,]/g, "").toLowerCase();
-  var previousWord2Stripped = words.get(words.length - 2).replace(/[.?!":\-,]/g, "").toLowerCase();
+  return _addWord.apply(this, arguments);
+}
 
-  if (UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && wordset.length < 3) {
-    randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-  } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom) {
-    randomWord = CustomText.text[words.length];
-  } else {
-    while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
-      randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-    }
-  }
+function _addWord() {
+  _addWord = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+    var bound, language, wordset, randomWord, previousWord, previousWordStripped, previousWord2Stripped, randomcaseword, i;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            bound = 100;
+            if (UpdateConfig["default"].funbox === "plus_one") bound = 1;
+            if (UpdateConfig["default"].funbox === "plus_two") bound = 2;
 
-  if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
-    var randomcaseword = "";
+            if (!(words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length)) {
+              _context3.next = 5;
+              break;
+            }
 
-    for (var i = 0; i < randomWord.length; i++) {
-      if (i % 2 != 0) {
-        randomcaseword += randomWord[i].toUpperCase();
-      } else {
-        randomcaseword += randomWord[i];
+            return _context3.abrupt("return");
+
+          case 5:
+            if (!(UpdateConfig["default"].mode !== "custom")) {
+              _context3.next = 11;
+              break;
+            }
+
+            _context3.next = 8;
+            return Misc.getCurrentLanguage();
+
+          case 8:
+            _context3.t0 = _context3.sent;
+            _context3.next = 16;
+            break;
+
+          case 11:
+            _context3.next = 13;
+            return Misc.getCurrentLanguage().leftToRight;
+
+          case 13:
+            _context3.t1 = _context3.sent;
+            _context3.t2 = CustomText.text;
+            _context3.t0 = {
+              leftToRight: _context3.t1,
+              words: _context3.t2
+            };
+
+          case 16:
+            language = _context3.t0;
+            wordset = language.words;
+            randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            previousWord = words.getLast();
+            previousWordStripped = previousWord.replace(/[.?!":\-,]/g, "").toLowerCase();
+            previousWord2Stripped = words.get(words.length - 2).replace(/[.?!":\-,]/g, "").toLowerCase();
+
+            if (UpdateConfig["default"].mode === "custom" && (CustomText.isWordRandom || CustomText.isTimeRandom) && wordset.length < 3) {
+              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
+              randomWord = CustomText.text[words.length];
+            } else {
+              while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
+                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+              }
+            }
+
+            if (randomWord === undefined) {
+              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            }
+
+            if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
+              randomcaseword = "";
+
+              for (i = 0; i < randomWord.length; i++) {
+                if (i % 2 != 0) {
+                  randomcaseword += randomWord[i].toUpperCase();
+                } else {
+                  randomcaseword += randomWord[i];
+                }
+              }
+
+              randomWord = randomcaseword;
+            } else if (UpdateConfig["default"].funbox === "gibberish") {
+              randomWord = Misc.getGibberish();
+            } else if (UpdateConfig["default"].funbox === "58008") {
+              randomWord = Misc.getNumbers(7);
+            } else if (UpdateConfig["default"].funbox === "specials") {
+              randomWord = Misc.getSpecials();
+            } else if (UpdateConfig["default"].funbox === "ascii") {
+              randomWord = Misc.getASCII();
+            }
+
+            if (UpdateConfig["default"].punctuation && UpdateConfig["default"].mode != "custom") {
+              randomWord = punctuateWord(previousWord, randomWord, words.length, 0);
+            }
+
+            if (UpdateConfig["default"].numbers && UpdateConfig["default"].mode != "custom") {
+              if (Math.random() < 0.1) {
+                randomWord = Misc.getNumbers(4);
+              }
+            }
+
+            words.push(randomWord);
+            TestUI.addWord(randomWord);
+
+          case 29:
+          case "end":
+            return _context3.stop();
+        }
       }
-    }
-
-    randomWord = randomcaseword;
-  } else if (UpdateConfig["default"].funbox === "gibberish") {
-    randomWord = Misc.getGibberish();
-  } else if (UpdateConfig["default"].funbox === "58008") {
-    randomWord = Misc.getNumbers(7);
-  } else if (UpdateConfig["default"].funbox === "specials") {
-    randomWord = Misc.getSpecials();
-  } else if (UpdateConfig["default"].funbox === "ascii") {
-    randomWord = Misc.getASCII();
-  }
-
-  if (UpdateConfig["default"].punctuation && UpdateConfig["default"].mode != "custom") {
-    randomWord = punctuateWord(previousWord, randomWord, words.length, 0);
-  }
-
-  if (UpdateConfig["default"].numbers && UpdateConfig["default"].mode != "custom") {
-    if (Math.random() < 0.1) {
-      randomWord = Misc.getNumbers(4);
-    }
-  }
-
-  words.push(randomWord);
-  TestUI.addWord(randomWord);
+    }, _callee3);
+  }));
+  return _addWord.apply(this, arguments);
 }
 
 function finish() {
@@ -11166,9 +12460,15 @@ function finish() {
   LiveWpm.hide();
   PbCrown.hide();
   LiveAcc.hide();
+  LiveBurst.hide();
   TimerProgress.hide();
-  Keymap.hide();
   Funbox.activate("none", null);
+
+  if (TestStats.burstHistory.length !== input.getHistory().length) {
+    //auto ended test, need one more calculation for the last word
+    var burst = TestStats.calculateBurst();
+    TestStats.pushBurstToHistory(burst);
+  }
 
   if (Misc.roundTo2(TestStats.calculateTestSeconds()) % 1 != 0 && UpdateConfig["default"].mode !== "time") {
     TestStats.setLastSecondNotRound();
@@ -11204,6 +12504,18 @@ function finish() {
   TestTimer.clear();
   exports.lastTestWpm = lastTestWpm = stats.wpm;
   var testtime = stats.time;
+
+  if (TestStats.lastSecondNotRound && !difficultyFailed) {
+    var wpmAndRaw = calculateWpmAndRaw();
+    TestStats.pushToWpmHistory(wpmAndRaw.wpm);
+    TestStats.pushToRawHistory(wpmAndRaw.raw);
+    TestStats.pushKeypressesToHistory(); // errorsPerSecond.push(currentError);
+    // currentError = {
+    //   count: 0,
+    //   words: [],
+    // };
+  }
+
   var afkseconds = TestStats.calculateAfkSeconds(testtime);
   var afkSecondsPercent = Misc.roundTo2(afkseconds / testtime * 100);
   ChartController.result.options.annotation.annotations = [];
@@ -11292,6 +12604,14 @@ function finish() {
     $("#result .stats .time .bottom .afk").text(afkSecondsPercent + "% afk");
   }
 
+  var ttseconds = testtime - afkseconds;
+
+  if (!difficultyFailed) {
+    ttseconds += TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds);
+  }
+
+  TodayTracker.addSeconds(ttseconds);
+  $("#result .stats .time .bottom .timeToday").text(TodayTracker.getString());
   $("#result .stats .key .bottom").text(testtime + "s");
   $("#words").removeClass("blurred");
   OutOfFocus.hide();
@@ -11314,17 +12634,6 @@ function finish() {
     mode2 = randomQuote.id;
   } else if (UpdateConfig["default"].mode === "zen") {
     mode2 = "zen";
-  }
-
-  if (TestStats.lastSecondNotRound) {
-    var wpmAndRaw = calculateWpmAndRaw();
-    TestStats.pushToWpmHistory(wpmAndRaw.wpm);
-    TestStats.pushToRawHistory(wpmAndRaw.raw);
-    TestStats.pushKeypressesToHistory(); // errorsPerSecond.push(currentError);
-    // currentError = {
-    //   count: 0,
-    //   words: [],
-    // };
   }
 
   var labels = [];
@@ -11404,7 +12713,7 @@ function finish() {
   }
 
   if (difficultyFailed) {
-    Notifications.add("Test failed", 0, 1);
+    Notifications.add("Test failed - ".concat(failReason), 0, 1);
   } else if (afkDetected) {
     Notifications.add("Test invalid - AFK detected", 0);
   } else if (isRepeated) {
@@ -11503,7 +12812,7 @@ function finish() {
   }
 
   if (UpdateConfig["default"].mode != "custom" && UpdateConfig["default"].funbox !== "gibberish" && UpdateConfig["default"].funbox !== "ascii" && UpdateConfig["default"].funbox !== "58008") {
-    testType += "<br>" + lang;
+    testType += "<br>" + lang.replace(/_/g, " ");
   }
 
   if (UpdateConfig["default"].punctuation) {
@@ -11534,7 +12843,7 @@ function finish() {
   // }
 
   if (difficultyFailed) {
-    otherText += "<br>failed";
+    otherText += "<br>failed (".concat(failReason, ")");
   }
 
   if (afkDetected) {
@@ -11613,20 +12922,41 @@ function finish() {
     duration: 0
   });
   ChartController.result.resize();
+
+  if (glarsesMode) {
+    $("#middle #result .glarsesmessage").remove();
+    $("#middle #result").prepend("\n\n      <div class='glarsesmessage' style=\"\n        text-align: center;\n        grid-column: 1/3;\n        font-size: 2rem;\n        padding: 2rem 0;\n      \">Test completed</div>\n    \n    ");
+    $("#middle #result .stats").remove();
+    $("#middle #result .chart").remove();
+    $("#middle #result #resultWordsHistory").remove();
+    $("#middle #result #resultReplay").remove();
+    $("#middle #result .loginTip").remove();
+    console.log("Test Completed: ".concat(stats.wpm, " wpm ").concat(stats.acc, "% acc ").concat(stats.wpmRaw, " raw ").concat(consistency, "% consistency"));
+  }
+
   UI.swapElements($("#typingTest"), $("#result"), 250, function () {
     TestUI.setResultCalculating(false);
     $("#words").empty();
     ChartController.result.resize();
 
+    if (UpdateConfig["default"].burstHeatmap) {
+      TestUI.applyBurstHeatmap();
+    }
+
+    $("#testModesNotice").addClass("hidden");
+  }, function () {
     if (UpdateConfig["default"].alwaysShowWordsHistory) {
       TestUI.toggleResultWords();
     }
 
-    $("#testModesNotice").addClass("hidden");
+    Keymap.hide();
   });
 }
 
-function fail() {
+var failReason = "";
+
+function fail(reason) {
+  failReason = reason;
   input.pushHistory();
   corrected.pushHistory();
   TestStats.pushKeypressesToHistory();
@@ -11639,7 +12969,7 @@ function fail() {
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-wpm":24,"./manual-restart-tracker":26,"./misc":27,"./monkey-power":28,"./notifications":30,"./out-of-focus":31,"./pace-caret":32,"./pb-crown":33,"./practise-missed":34,"./quote-search-popup":35,"./replay.js":37,"./shift-tracker":41,"./test-stats":47,"./test-timer":48,"./test-ui":49,"./theme-colors":50,"./theme-controller":51,"./timer-progress":53,"./ui":54,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/classCallCheck":61,"@babel/runtime/helpers/createClass":62,"@babel/runtime/helpers/getPrototypeOf":64,"@babel/runtime/helpers/inherits":65,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/possibleConstructorReturn":69,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],47:[function(require,module,exports){
+},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./pb-crown":34,"./poetry.js":35,"./practise-missed":36,"./quote-search-popup":37,"./replay.js":39,"./shift-tracker":43,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./theme-colors":52,"./theme-controller":53,"./timer-progress":55,"./today-tracker":56,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/classCallCheck":65,"@babel/runtime/helpers/createClass":66,"@babel/runtime/helpers/getPrototypeOf":68,"@babel/runtime/helpers/inherits":69,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/possibleConstructorReturn":73,"@babel/runtime/helpers/toConsumableArray":75,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -11667,6 +12997,9 @@ exports.pushKeypressWord = pushKeypressWord;
 exports.pushKeypressesToHistory = pushKeypressesToHistory;
 exports.calculateAfkSeconds = calculateAfkSeconds;
 exports.setLastSecondNotRound = setLastSecondNotRound;
+exports.setBurstStart = setBurstStart;
+exports.calculateBurst = calculateBurst;
+exports.pushBurstToHistory = pushBurstToHistory;
 exports.calculateAccuracy = calculateAccuracy;
 exports.incrementAccuracy = incrementAccuracy;
 exports.setKeypressTimingsTooLong = setKeypressTimingsTooLong;
@@ -11679,7 +13012,7 @@ exports.resetKeypressTimings = resetKeypressTimings;
 exports.pushMissedWord = pushMissedWord;
 exports.removeAfkData = removeAfkData;
 exports.calculateStats = calculateStats;
-exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exports.accuracy = exports.missedWords = exports.lastSecondNotRound = exports.lastKeypress = exports.currentKeypress = exports.keypressPerSecond = exports.rawHistory = exports.wpmHistory = exports.end = exports.start = exports.invalid = void 0;
+exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exports.accuracy = exports.missedWords = exports.lastSecondNotRound = exports.currentBurstStart = exports.lastKeypress = exports.currentKeypress = exports.keypressPerSecond = exports.burstHistory = exports.rawHistory = exports.wpmHistory = exports.end = exports.start = exports.invalid = void 0;
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
@@ -11704,6 +13037,8 @@ var wpmHistory = [];
 exports.wpmHistory = wpmHistory;
 var rawHistory = [];
 exports.rawHistory = rawHistory;
+var burstHistory = [];
+exports.burstHistory = burstHistory;
 var keypressPerSecond = [];
 exports.keypressPerSecond = keypressPerSecond;
 var currentKeypress = {
@@ -11713,13 +13048,15 @@ var currentKeypress = {
   afk: true
 };
 exports.currentKeypress = currentKeypress;
-var lastKeypress; // export let errorsPerSecond = [];
+var lastKeypress;
+exports.lastKeypress = lastKeypress;
+var currentBurstStart = 0; // export let errorsPerSecond = [];
 // export let currentError = {
 //   count: 0,
 //   words: [],
 // };
 
-exports.lastKeypress = lastKeypress;
+exports.currentBurstStart = currentBurstStart;
 var lastSecondNotRound = false;
 exports.lastSecondNotRound = lastSecondNotRound;
 var missedWords = {};
@@ -11747,13 +13084,15 @@ function restart() {
   exports.invalid = invalid = false;
   exports.wpmHistory = wpmHistory = [];
   exports.rawHistory = rawHistory = [];
+  exports.burstHistory = burstHistory = [];
   exports.keypressPerSecond = keypressPerSecond = [];
   exports.currentKeypress = currentKeypress = {
     count: 0,
     errors: 0,
     words: [],
     afk: true
-  }; // errorsPerSecond = [];
+  };
+  exports.currentBurstStart = currentBurstStart = 0; // errorsPerSecond = [];
   // currentError = {
   //   count: 0,
   //   words: [],
@@ -11863,11 +13202,18 @@ function calculateAfkSeconds(testSeconds) {
   var extraAfk = 0;
 
   if (testSeconds !== undefined) {
-    extraAfk = Math.ceil(testSeconds) - keypressPerSecond.length;
-    console.log("-- extra afk debug");
-    console.log("should be " + Math.ceil(testSeconds));
-    console.log(keypressPerSecond.length);
-    console.log("gonna add extra ".concat(extraAfk, " seconds of afk because of no keypress data"));
+    if (_config["default"].mode === "time") {
+      extraAfk = Math.round(testSeconds) - keypressPerSecond.length;
+    } else {
+      extraAfk = Math.ceil(testSeconds) - keypressPerSecond.length;
+    }
+
+    if (extraAfk < 0) extraAfk = 0; // console.log("-- extra afk debug");
+    // console.log("should be " + Math.ceil(testSeconds));
+    // console.log(keypressPerSecond.length);
+    // console.log(
+    //   `gonna add extra ${extraAfk} seconds of afk because of no keypress data`
+    // );
   }
 
   var ret = keypressPerSecond.filter(function (x) {
@@ -11878,6 +13224,33 @@ function calculateAfkSeconds(testSeconds) {
 
 function setLastSecondNotRound() {
   exports.lastSecondNotRound = lastSecondNotRound = true;
+}
+
+function setBurstStart(time) {
+  exports.currentBurstStart = currentBurstStart = time;
+}
+
+function calculateBurst() {
+  var timeToWrite = (performance.now() - currentBurstStart) / 1000;
+  var wordLength;
+
+  if (_config["default"].mode === "zen") {
+    wordLength = TestLogic.input.currentWord.length;
+  } else {
+    wordLength = TestLogic.words.getCurrent().length;
+  }
+
+  var speed = Misc.roundTo2(wordLength * (60 / timeToWrite) / 5);
+  return Math.round(speed);
+}
+
+function pushBurstToHistory(speed) {
+  if (burstHistory[TestLogic.words.currentIndex] === undefined) {
+    burstHistory.push(speed);
+  } else {
+    //repeated word - override
+    burstHistory[TestLogic.words.currentIndex] = speed;
+  }
 }
 
 function calculateAccuracy() {
@@ -12068,7 +13441,7 @@ function calculateStats() {
   };
 }
 
-},{"./config":7,"./funbox":15,"./misc":27,"./test-logic":46,"./test-stats":47,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],48:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./misc":28,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],50:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -12167,9 +13540,15 @@ function start() {
 
       TestStats.pushKeypressesToHistory();
 
-      if (UpdateConfig["default"].minWpm === "custom" && wpmAndRaw.wpm < parseInt(UpdateConfig["default"].minWpmCustomSpeed) && TestLogic.words.currentIndex > 3 || UpdateConfig["default"].minAcc === "custom" && acc < parseInt(UpdateConfig["default"].minAccCustom) && TestLogic.words.currentIndex > 3) {
+      if (UpdateConfig["default"].minWpm === "custom" && wpmAndRaw.wpm < parseInt(UpdateConfig["default"].minWpmCustomSpeed) && TestLogic.words.currentIndex > 3) {
         clearTimeout(timer);
-        TestLogic.fail();
+        TestLogic.fail("min wpm");
+        return;
+      }
+
+      if (UpdateConfig["default"].minAcc === "custom" && acc < parseInt(UpdateConfig["default"].minAccCustom) && TestLogic.words.currentIndex > 3) {
+        clearTimeout(timer);
+        TestLogic.fail("min accuracy");
         return;
       }
 
@@ -12190,7 +13569,7 @@ function start() {
   })(TestStats.start + stepIntervalMS);
 }
 
-},{"./caret":3,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./live-wpm":24,"./misc":27,"./monkey":29,"./notifications":30,"./test-logic":46,"./test-stats":47,"./timer-progress":53,"@babel/runtime/helpers/typeof":72}],49:[function(require,module,exports){
+},{"./caret":3,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./live-wpm":25,"./misc":28,"./monkey":30,"./notifications":31,"./test-logic":48,"./test-stats":49,"./timer-progress":55,"@babel/runtime/helpers/typeof":76}],51:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -12219,10 +13598,13 @@ exports.updateModesNotice = updateModesNotice;
 exports.arrangeCharactersRightToLeft = arrangeCharactersRightToLeft;
 exports.arrangeCharactersLeftToRight = arrangeCharactersLeftToRight;
 exports.toggleResultWords = toggleResultWords;
+exports.applyBurstHeatmap = applyBurstHeatmap;
 exports.highlightBadWord = highlightBadWord;
 exports.resultCalculating = exports.currentTestLine = exports.lineTransition = exports.testRestarting = exports.activeWordTop = exports.resultVisible = exports.currentWordElementIndex = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -12254,9 +13636,11 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 
 var PractiseMissed = _interopRequireWildcard(require("./practise-missed"));
 
-var Misc = _interopRequireWildcard(require("./misc"));
-
 var Replay = _interopRequireWildcard(require("./replay"));
+
+var TestStats = _interopRequireWildcard(require("./test-stats"));
+
+var Misc = _interopRequireWildcard(require("./misc"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -12430,6 +13814,7 @@ function screenshot() {
     $("#notificationCenter").removeClass("hidden");
     $("#commandLineMobileButton").removeClass("hidden");
     $(".pageTest .ssWatermark").addClass("hidden");
+    $(".pageTest .ssWatermark").text("monkeytype.com");
     $(".pageTest .buttons").removeClass("hidden");
     if (revealReplay) $("#resultReplay").removeClass("hidden");
   }
@@ -12590,6 +13975,14 @@ function updateWordElement() {
         }
       }
     }
+
+    if (UpdateConfig["default"].highlightMode === "letter" && UpdateConfig["default"].hideExtraLetters) {
+      if (input.length > currentWord.length) {
+        $(wordAtIndex).addClass("error");
+      } else if (input.length == currentWord.length) {
+        $(wordAtIndex).removeClass("error");
+      }
+    }
   }
 
   wordAtIndex.innerHTML = ret;
@@ -12655,7 +14048,7 @@ function updateModesNotice() {
   if ($(".pageTest #testModesNotice").text() === "") anim = true;
   $(".pageTest #testModesNotice").empty();
 
-  if (TestLogic.isRepeated) {
+  if (TestLogic.isRepeated && UpdateConfig["default"].mode !== "quote") {
     $(".pageTest #testModesNotice").append("<div class=\"text-button restart\" style=\"color:var(--error-color);\"><i class=\"fas fa-sync-alt\"></i>repeated</div>");
   }
 
@@ -12689,7 +14082,7 @@ function updateModesNotice() {
       speed = " (".concat(Math.round(PaceCaret.settings.wpm), " wpm)");
     } catch (_unused) {}
 
-    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsPaceCaret\"><i class=\"fas fa-tachometer-alt\"></i>".concat(UpdateConfig["default"].paceCaret === "average" ? "average" : UpdateConfig["default"].paceCaret === "pb" ? "pb" : UpdateConfig["default"].paceCaret == "repeat" ? "repeated" : "custom", " pace").concat(speed, "</div>"));
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsPaceCaret\"><i class=\"fas fa-tachometer-alt\"></i>".concat(UpdateConfig["default"].paceCaret === "average" ? "average" : UpdateConfig["default"].paceCaret === "pb" ? "pb" : "custom", " pace").concat(speed, "</div>"));
   }
 
   if (UpdateConfig["default"].minWpm !== "off") {
@@ -12698,6 +14091,10 @@ function updateModesNotice() {
 
   if (UpdateConfig["default"].minAcc !== "off") {
     $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsMinAcc\"><i class=\"fas fa-bomb\"></i>min ".concat(UpdateConfig["default"].minAccCustom, "% acc</div>"));
+  }
+
+  if (UpdateConfig["default"].minBurst !== "off") {
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsMinBurst\"><i class=\"fas fa-bomb\"></i>min ".concat(UpdateConfig["default"].minBurstCustomSpeed, " burst ").concat(UpdateConfig["default"].minBurst === "flex" ? "(flex)" : "", "</div>"));
   }
 
   if (UpdateConfig["default"].funbox !== "none") {
@@ -12750,12 +14147,12 @@ function loadWordsHistory() {
 }
 
 function _loadWordsHistory() {
-  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
     var wordsHTML, i, input, word, wordEl, wordstats, length, c, loop, _c, correctedChar, extraCorrected, _c2;
 
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             $("#resultWordsHistory .words").empty();
             wordsHTML = "";
@@ -12763,17 +14160,17 @@ function _loadWordsHistory() {
 
           case 3:
             if (!(i < TestLogic.input.history.length + 2)) {
-              _context2.next = 25;
+              _context3.next = 25;
               break;
             }
 
             input = TestLogic.input.getHistory(i);
             word = TestLogic.words.get(i);
             wordEl = "";
-            _context2.prev = 7;
+            _context3.prev = 7;
 
             if (!(input === "")) {
-              _context2.next = 10;
+              _context3.next = 10;
               break;
             }
 
@@ -12781,9 +14178,9 @@ function _loadWordsHistory() {
 
           case 10:
             if (TestLogic.corrected.getHistory(i) !== undefined && TestLogic.corrected.getHistory(i) !== "") {
-              wordEl = "<div class='word' input=\"".concat(TestLogic.corrected.getHistory(i).replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+              wordEl = "<div class='word' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(TestLogic.corrected.getHistory(i).replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
             } else {
-              wordEl = "<div class='word' input=\"".concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+              wordEl = "<div class='word' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
             }
 
             if (i === TestLogic.input.history.length - 1) {
@@ -12811,12 +14208,12 @@ function _loadWordsHistory() {
 
               if (wordstats.incorrect !== 0 || UpdateConfig["default"].mode !== "time") {
                 if (UpdateConfig["default"].mode != "zen" && input !== word) {
-                  wordEl = "<div class='word error' input=\"".concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+                  wordEl = "<div class='word error' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
                 }
               }
             } else {
               if (UpdateConfig["default"].mode != "zen" && input !== word) {
-                wordEl = "<div class='word error' input=\"".concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+                wordEl = "<div class='word error' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
               }
             }
 
@@ -12867,12 +14264,12 @@ function _loadWordsHistory() {
             }
 
             wordEl += "</div>";
-            _context2.next = 21;
+            _context3.next = 21;
             break;
 
           case 18:
-            _context2.prev = 18;
-            _context2.t0 = _context2["catch"](7);
+            _context3.prev = 18;
+            _context3.t0 = _context3["catch"](7);
 
             try {
               wordEl = "<div class='word'>";
@@ -12889,20 +14286,20 @@ function _loadWordsHistory() {
 
           case 22:
             i++;
-            _context2.next = 3;
+            _context3.next = 3;
             break;
 
           case 25:
             $("#resultWordsHistory .words").html(wordsHTML);
             $("#showWordHistoryButton").addClass("loaded");
-            return _context2.abrupt("return", true);
+            return _context3.abrupt("return", true);
 
           case 28:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[7, 18]]);
+    }, _callee3, null, [[7, 18]]);
   }));
   return _loadWordsHistory.apply(this, arguments);
 }
@@ -12925,6 +14322,75 @@ function toggleResultWords() {
         $("#resultWordsHistory").addClass("hidden");
       });
     }
+  }
+}
+
+function applyBurstHeatmap() {
+  if (UpdateConfig["default"].burstHeatmap) {
+    $("#resultWordsHistory .heatmapLegend").removeClass("hidden");
+    var min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
+    var max = Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory)); // let step = (max - min) / 5;
+    // let steps = [
+    //   {
+    //     val: min,
+    //     class: 'heatmap-0'
+    //   },
+    //   {
+    //     val: min + (step * 1),
+    //     class: 'heatmap-1'
+    //   },
+    //   {
+    //     val: min + (step * 2),
+    //     class: 'heatmap-2'
+    //   },
+    //   {
+    //     val: min + (step * 3),
+    //     class: 'heatmap-3'
+    //   },
+    //   {
+    //     val: min + (step * 4),
+    //     class: 'heatmap-4'
+    //   },
+    // ];
+
+    var median = Misc.median(TestStats.burstHistory);
+    var adatm = [];
+    TestStats.burstHistory.forEach(function (burst) {
+      adatm.push(Math.abs(median - burst));
+    });
+    var step = Misc.mean(adatm); // let step = Misc.stdDev(TestStats.burstHistory)/2;
+
+    var steps = [{
+      val: 0,
+      "class": "heatmap-0"
+    }, {
+      val: median - step * 1.5,
+      "class": "heatmap-1"
+    }, {
+      val: median - step * 0.5,
+      "class": "heatmap-2"
+    }, {
+      val: median + step * 0.5,
+      "class": "heatmap-3"
+    }, {
+      val: median + step * 1.5,
+      "class": "heatmap-4"
+    }];
+    $("#resultWordsHistory .words .word").each(function (index, word) {
+      var wordBurstVal = parseInt($(word).attr("burst"));
+      var cls = "";
+      steps.forEach(function (step) {
+        if (wordBurstVal > step.val) cls = step["class"];
+      });
+      $(word).addClass(cls);
+    });
+  } else {
+    $("#resultWordsHistory .heatmapLegend").addClass("hidden");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-0");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-1");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-2");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-3");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-4");
   }
 }
 
@@ -12982,6 +14448,26 @@ $(".pageTest #copyWordsListButton").click( /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
+$(".pageTest #toggleBurstHeatmap").click( /*#__PURE__*/function () {
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(event) {
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            UpdateConfig.setBurstHeatmap(!UpdateConfig["default"].burstHeatmap);
+
+          case 1:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function (_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}());
 $(document).on("mouseleave", "#resultWordsHistory .words .word", function (e) {
   $(".wordInputAfter").remove();
 });
@@ -12991,7 +14477,8 @@ $("#wpmChart").on("mouseleave", function (e) {
 $(document).on("mouseenter", "#resultWordsHistory .words .word", function (e) {
   if (resultVisible) {
     var input = $(e.currentTarget).attr("input");
-    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "</div>"));
+    var burst = $(e.currentTarget).attr("burst");
+    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">\n          <div class=\"text\">\n          ".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "\n          </div>\n          <div class=\"speed\">\n          ").concat(burst, "wpm\n          </div>\n          </div>"));
   }
 });
 $(document).on("click", "#testModesNotice .text-button", function (event) {
@@ -13087,7 +14574,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":26,"./misc":27,"./notifications":30,"./out-of-focus":31,"./pace-caret":32,"./practise-missed":34,"./replay":37,"./test-logic":46,"./theme-colors":50,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],50:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-missed":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/toConsumableArray":75,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],52:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13127,7 +14614,7 @@ function update() {
   exports.colorfulErrorExtra = colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
 }
 
-},{}],51:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13289,8 +14776,7 @@ function randomizeTheme() {
     exports.randomTheme = randomTheme = randomList[Math.floor(Math.random() * randomList.length)];
     preview(randomTheme);
 
-    if (previousTheme != randomTheme) {
-      Notifications.add(randomTheme.replace(/_/g, " "), 0);
+    if (previousTheme != randomTheme) {// Notifications.add(randomTheme.replace(/_/g, " "), 0);
     }
   });
 }
@@ -13324,7 +14810,7 @@ function applyCustomBackgroundSize() {
   }
 }
 
-},{"./chart-controller":4,"./config":7,"./misc":27,"./notifications":30,"./theme-colors":50,"./ui":54,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"tinycolor2":87}],52:[function(require,module,exports){
+},{"./chart-controller":4,"./config":7,"./misc":28,"./notifications":31,"./theme-colors":52,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"tinycolor2":91}],54:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -13550,7 +15036,7 @@ $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   }, 250);
 });
 
-},{"./chart-controller":4,"./commandline-lists":5,"./config":7,"./misc":27,"./notifications":30,"./theme-colors":50,"./theme-controller":51,"./ui":54,"@babel/runtime/helpers/typeof":72}],53:[function(require,module,exports){
+},{"./chart-controller":4,"./commandline-lists":5,"./config":7,"./misc":28,"./notifications":31,"./theme-colors":52,"./theme-controller":53,"./ui":57,"@babel/runtime/helpers/typeof":76}],55:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13730,7 +15216,47 @@ function update() {
   }
 }
 
-},{"./config":7,"./custom-text":11,"./misc":27,"./test-logic":46,"./test-timer":48,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72}],54:[function(require,module,exports){
+},{"./config":7,"./custom-text":11,"./misc":28,"./test-logic":48,"./test-timer":50,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76}],56:[function(require,module,exports){
+"use strict";
+
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.addSeconds = addSeconds;
+exports.getString = getString;
+
+var Misc = _interopRequireWildcard(require("./misc"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var seconds = 0;
+var addedAllToday = false;
+var dayToday = null;
+
+function addSeconds(s) {
+  if (addedAllToday) {
+    var nowDate = new Date();
+    nowDate = nowDate.getDate();
+
+    if (nowDate > dayToday) {
+      seconds = s;
+      return;
+    }
+  }
+
+  seconds += s;
+}
+
+function getString() {
+  var secString = Misc.secondsToString(Math.round(seconds), true);
+  return secString + (addedAllToday === true ? " today" : " session");
+}
+
+},{"./misc":28,"@babel/runtime/helpers/typeof":76}],57:[function(require,module,exports){
 "use strict";
 
 var _typeof = require("@babel/runtime/helpers/typeof");
@@ -13830,6 +15356,8 @@ function swapElements(el1, el2, totalDuration) {
 }
 
 function changePage(page) {
+  console.log("change");
+
   if (pageTransition) {
     return;
   }
@@ -13940,7 +15468,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./manual-restart-tracker":26,"./notifications":30,"./settings":40,"./test-config":45,"./test-logic":46,"./test-stats":47,"./test-ui":49,"@babel/runtime/helpers/typeof":72}],55:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./manual-restart-tracker":27,"./notifications":31,"./settings":42,"./test-config":47,"./test-logic":48,"./test-stats":49,"./test-ui":51,"@babel/runtime/helpers/typeof":76}],58:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
@@ -13956,7 +15484,102 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
   });
 });
 
-},{}],56:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
+"use strict";
+
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateScore = updateScore;
+exports.getWord = getWord;
+
+var TestStats = _interopRequireWildcard(require("./test-stats"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+// Changes how quickly it 'learns' scores - very roughly the score for a char
+// is based on last 1/adjustRate occurrences. Make it larger to adjust faster.
+// Should be between 0 and 1.
+var adjustRate = 0.02; // Choose the highest scoring word from this many random words. Higher values
+// will choose words with more weak letters on average.
+
+var wordSamples = 20; // The score that every character starts on. The ideal value would be the
+// average spacing in milliseconds, but since we don't know that at the start,
+// pick something little high and it'll converge as the user types.
+
+var defaultScore = 500; // Score penatly (in milliseconds) for getting a letter wrong.
+
+var incorrectPenalty = 5000;
+var scores = {};
+
+function updateScore(_char, isCorrect) {
+  var score = 0.0;
+  var timings = TestStats.keypressTimings.spacing.array;
+
+  if (timings.length > 0) {
+    score += timings[timings.length - 1];
+  }
+
+  if (!isCorrect) {
+    score += incorrectPenalty;
+  }
+
+  if (!(_char in scores)) {
+    scores[_char] = defaultScore;
+  } // Keep an exponential moving average of the score over time.
+
+
+  scores[_char] = score * adjustRate + scores[_char] * (1 - adjustRate);
+}
+
+function getWord(wordset) {
+  var highScore;
+  var randomWord;
+
+  for (var i = 0; i < wordSamples; i++) {
+    var newWord = wordset[Math.floor(Math.random() * wordset.length)];
+    var newScore = score(newWord);
+
+    if (i == 0 || newScore > highScore) {
+      randomWord = newWord;
+      highScore = newScore;
+    }
+  }
+
+  return randomWord;
+}
+
+function score(word) {
+  var total = 0.0;
+
+  var _iterator = _createForOfIteratorHelper(word),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var c = _step.value;
+      total += c in scores ? scores[c] : defaultScore;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  return total / word.length;
+}
+
+},{"./test-stats":49,"@babel/runtime/helpers/typeof":76}],60:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -14164,7 +15787,7 @@ $("#wordFilterPopupWrapper .button").mousedown(function (e) {
   }, 1);
 });
 
-},{"./misc":27,"@babel/runtime/helpers/asyncToGenerator":60,"@babel/runtime/helpers/interopRequireDefault":66,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],57:[function(require,module,exports){
+},{"./misc":28,"@babel/runtime/helpers/asyncToGenerator":64,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/typeof":76,"@babel/runtime/regenerator":78}],61:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -14177,7 +15800,7 @@ function _arrayLikeToArray(arr, len) {
 
 module.exports = _arrayLikeToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],58:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray.js");
 
 function _arrayWithoutHoles(arr) {
@@ -14186,7 +15809,7 @@ function _arrayWithoutHoles(arr) {
 
 module.exports = _arrayWithoutHoles;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayLikeToArray.js":57}],59:[function(require,module,exports){
+},{"./arrayLikeToArray.js":61}],63:[function(require,module,exports){
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -14197,7 +15820,7 @@ function _assertThisInitialized(self) {
 
 module.exports = _assertThisInitialized;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],60:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -14236,7 +15859,7 @@ function _asyncToGenerator(fn) {
 
 module.exports = _asyncToGenerator;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],61:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -14245,7 +15868,7 @@ function _classCallCheck(instance, Constructor) {
 
 module.exports = _classCallCheck;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],62:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -14264,7 +15887,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 
 module.exports = _createClass;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],63:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -14282,7 +15905,7 @@ function _defineProperty(obj, key, value) {
 
 module.exports = _defineProperty;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],64:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 function _getPrototypeOf(o) {
   module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
     return o.__proto__ || Object.getPrototypeOf(o);
@@ -14293,7 +15916,7 @@ function _getPrototypeOf(o) {
 
 module.exports = _getPrototypeOf;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],65:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 var setPrototypeOf = require("./setPrototypeOf.js");
 
 function _inherits(subClass, superClass) {
@@ -14313,7 +15936,7 @@ function _inherits(subClass, superClass) {
 
 module.exports = _inherits;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./setPrototypeOf.js":70}],66:[function(require,module,exports){
+},{"./setPrototypeOf.js":74}],70:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -14322,21 +15945,21 @@ function _interopRequireDefault(obj) {
 
 module.exports = _interopRequireDefault;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],67:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 function _iterableToArray(iter) {
   if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 module.exports = _iterableToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],68:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableSpread;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],69:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 var _typeof = require("@babel/runtime/helpers/typeof")["default"];
 
 var assertThisInitialized = require("./assertThisInitialized.js");
@@ -14351,7 +15974,7 @@ function _possibleConstructorReturn(self, call) {
 
 module.exports = _possibleConstructorReturn;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./assertThisInitialized.js":59,"@babel/runtime/helpers/typeof":72}],70:[function(require,module,exports){
+},{"./assertThisInitialized.js":63,"@babel/runtime/helpers/typeof":76}],74:[function(require,module,exports){
 function _setPrototypeOf(o, p) {
   module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
     o.__proto__ = p;
@@ -14364,7 +15987,7 @@ function _setPrototypeOf(o, p) {
 
 module.exports = _setPrototypeOf;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],71:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 var arrayWithoutHoles = require("./arrayWithoutHoles.js");
 
 var iterableToArray = require("./iterableToArray.js");
@@ -14379,7 +16002,7 @@ function _toConsumableArray(arr) {
 
 module.exports = _toConsumableArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayWithoutHoles.js":58,"./iterableToArray.js":67,"./nonIterableSpread.js":68,"./unsupportedIterableToArray.js":73}],72:[function(require,module,exports){
+},{"./arrayWithoutHoles.js":62,"./iterableToArray.js":71,"./nonIterableSpread.js":72,"./unsupportedIterableToArray.js":77}],76:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -14402,7 +16025,7 @@ function _typeof(obj) {
 
 module.exports = _typeof;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],73:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray.js");
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -14416,10 +16039,10 @@ function _unsupportedIterableToArray(o, minLen) {
 
 module.exports = _unsupportedIterableToArray;
 module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayLikeToArray.js":57}],74:[function(require,module,exports){
+},{"./arrayLikeToArray.js":61}],78:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":86}],75:[function(require,module,exports){
+},{"regenerator-runtime":90}],79:[function(require,module,exports){
 /*!
  * Chart.js v2.9.4
  * https://www.chartjs.org
@@ -30593,7 +32216,7 @@ return src;
 
 })));
 
-},{"moment":85}],76:[function(require,module,exports){
+},{"moment":89}],80:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 
@@ -30721,7 +32344,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./events.js":78,"./helpers.js":79}],77:[function(require,module,exports){
+},{"./events.js":82,"./helpers.js":83}],81:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	
@@ -30746,7 +32369,7 @@ module.exports = function(Chart) {
 	return AnnotationElement;
 };
 
-},{}],78:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	var helpers = require('./helpers.js')(Chart);
@@ -30856,7 +32479,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./helpers.js":79}],79:[function(require,module,exports){
+},{"./helpers.js":83}],83:[function(require,module,exports){
 function noop() {}
 
 function elements(chartInstance) {
@@ -31043,7 +32666,7 @@ module.exports = function(Chart) {
 };
 
 
-},{}],80:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 // Get the chart variable
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
@@ -31092,7 +32715,7 @@ var annotationPlugin = require('./annotation.js')(Chart);
 module.exports = annotationPlugin;
 Chart.pluginService.register(annotationPlugin);
 
-},{"./annotation.js":76,"./element.js":77,"./types/box.js":81,"./types/line.js":82,"chart.js":75}],81:[function(require,module,exports){
+},{"./annotation.js":80,"./element.js":81,"./types/box.js":85,"./types/line.js":86,"chart.js":79}],85:[function(require,module,exports){
 // Box Annotation implementation
 module.exports = function(Chart) {
 	var helpers = require('../helpers.js')(Chart);
@@ -31240,7 +32863,7 @@ module.exports = function(Chart) {
 	return BoxAnnotation;
 };
 
-},{"../helpers.js":79}],82:[function(require,module,exports){
+},{"../helpers.js":83}],86:[function(require,module,exports){
 // Line Annotation implementation
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
@@ -31509,7 +33132,7 @@ module.exports = function(Chart) {
 	return LineAnnotation;
 };
 
-},{"../helpers.js":79}],83:[function(require,module,exports){
+},{"../helpers.js":83}],87:[function(require,module,exports){
 /*!
  * chartjs-plugin-trendline.js
  * Version: 0.2.2
@@ -31657,7 +33280,7 @@ try {
     module.exports = exports = pluginTrendlineLinear;
 } catch (e) {}
 
-},{}],84:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 (function (global){(function (){
 /*!
  *  howler.js v2.2.1
@@ -34886,7 +36509,7 @@ try {
 })();
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],85:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -40558,7 +42181,7 @@ try {
 
 })));
 
-},{}],86:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -41308,7 +42931,7 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],87:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 // TinyColor v1.4.2
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License

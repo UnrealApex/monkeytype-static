@@ -11,8 +11,8 @@ Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
 
+RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(() => {
-  RouteController.handleInitialPageClasses(window.location.hash);
   if (window.location.hash === "") {
     $("#top .config").removeClass("hidden");
   }
