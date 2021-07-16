@@ -6361,7 +6361,7 @@ function backspaceToPrevious() {
 
 function handleSpace() {
   if (!TestLogic.active) return;
-  var inputWord = TestLogic.input.currentWord.slice(0, -1); // handleChar() will decide if it gets inserted as character on start of word or not
+  var inputWord = TestLogic.input.currentWord.slice(0, -1); // handleCharAt() will decide if it gets inserted as character on start of word or not
 
   if (inputWord === "") return;
 
@@ -6522,7 +6522,7 @@ function handleSpace() {
   }
 }
 
-function isCharCorrect(_char) {
+function isCharCorrect(_char, originalChar) {
   if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char) === false) {
     return false;
   }
@@ -6530,8 +6530,6 @@ function isCharCorrect(_char) {
   if (UpdateConfig["default"].mode == "zen") {
     return true;
   }
-
-  var originalChar = TestLogic.words.getCurrent().charAt(TestLogic.input.currentWord.length - 1);
 
   if (originalChar == _char) {
     return true;
@@ -6570,11 +6568,13 @@ function isCharCorrect(_char) {
   return false;
 }
 
-function handleChar(_char2) {
+function handleCharAt(charIndex) {
   if (TestUI.resultCalculating || TestUI.resultVisible) {
     TestLogic.input.dropLastChar();
     return;
   }
+
+  var _char2 = TestLogic.input.currentWord[charIndex];
 
   if (_char2 === "\n" && UpdateConfig["default"].funbox === "58008") {
     _char2 = " ";
@@ -6602,13 +6602,13 @@ function handleChar(_char2) {
     return;
   }
 
-  if (TestLogic.input.current == "") {
+  if (TestLogic.input.currentWord == "") {
     TestStats.setBurstStart(performance.now());
   }
 
   Focus.set(true);
   Caret.stopAnimation();
-  var thisCharCorrect = isCharCorrect(_char2);
+  var thisCharCorrect = isCharCorrect(_char2, TestLogic.words.getCurrent()[charIndex]);
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(_char2)) {
     TestUI.updateWordElement();
@@ -6839,14 +6839,15 @@ $("#wordsInput").on("input", function (event) {
       Replay.addReplayEvent("setWordLetterIndex", TestLogic.input.currentWord.length);
     }
   } else if (inputValue !== inputValueBeforeChange) {
-    var diffStart = 0;
+    var diffStart = 1;
 
     while (inputValue[diffStart] === inputValueBeforeChange[diffStart]) {
       diffStart++;
     }
 
     for (var i = diffStart; i < inputValue.length; i++) {
-      handleChar(inputValue[i]);
+      // minus 1 for the padding space at the start
+      handleCharAt(i - 1);
     }
   }
 
