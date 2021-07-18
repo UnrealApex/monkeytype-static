@@ -2298,6 +2298,19 @@ var defaultCommands = {
     subgroup: commandsQuoteLengthConfig
   }, {
     id: "changeConfidenceMode",
+    display: "Change confidence mode...",
+    subgroup: true,
+    exec: function exec() {
+      current.push(commandsConfidenceMode);
+      Commandline.show();
+    } // exec: () => {
+    //   updatePresetCommands();
+    //   current.push(commandsPresets);
+    //   Commandline.show();
+    // },
+
+  }, {
+    id: "changeConfidenceMode",
     display: "Confidence mode...",
     icon: "fa-backspace",
     subgroup: commandsConfidenceMode
@@ -6524,7 +6537,9 @@ function handleSpace() {
   }
 }
 
-function isCharCorrect(_char, originalChar) {
+function isCharCorrectAt(charIndex) {
+  var _char = TestLogic.input.currentWord[charIndex];
+
   if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char) === false) {
     return false;
   }
@@ -6532,6 +6547,8 @@ function isCharCorrect(_char, originalChar) {
   if (UpdateConfig["default"].mode == "zen") {
     return true;
   }
+
+  var originalChar = TestLogic.words.getCurrent()[charIndex];
 
   if (originalChar == _char) {
     return true;
@@ -6610,7 +6627,7 @@ function handleCharAt(charIndex) {
 
   Focus.set(true);
   Caret.stopAnimation();
-  var thisCharCorrect = isCharCorrect(_char2, TestLogic.words.getCurrent()[charIndex]);
+  var thisCharCorrect = isCharCorrectAt(charIndex);
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(_char2)) {
     TestUI.updateWordElement();
@@ -6841,15 +6858,17 @@ $("#wordsInput").on("input", function (event) {
       Replay.addReplayEvent("setWordLetterIndex", TestLogic.input.currentWord.length);
     }
   } else if (inputValue !== inputValueBeforeChange) {
-    var diffStart = 1;
+    var diffStart = 0;
 
     while (inputValue[diffStart] === inputValueBeforeChange[diffStart]) {
       diffStart++;
     }
 
-    for (var i = diffStart; i < inputValue.length; i++) {
-      // minus 1 for the padding space at the start
-      handleCharAt(i - 1);
+    if (diffStart) {
+      for (var i = diffStart; i < inputValue.length; i++) {
+        // offset by 1 because of the padding space at the start of TestLogic.input.currentWord
+        handleCharAt(i - 1);
+      }
     }
   }
 
@@ -7451,6 +7470,10 @@ var layouts = {
   boo: {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "zZ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "pP", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "jJ", "bB", "hH", "mM", "kK", "qQ", " "]
+  },
+  APT: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "wW", "cC", "dD", "lL", "'\"", "/?", "yY", "oO", "uU", "qQ", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "vV", "bB", "gG", "mM", ",<", ".>", "fF", "jJ", "xX", "zZ", " "]
   }
 };
 var _default = layouts;
@@ -15365,7 +15388,7 @@ function swapElements(el1, el2, totalDuration) {
 }
 
 function changePage(page) {
-  console.log("change");
+  console.log('change');
 
   if (pageTransition) {
     return;
@@ -33292,7 +33315,7 @@ try {
 },{}],88:[function(require,module,exports){
 (function (global){(function (){
 /*!
- *  howler.js v2.2.1
+ *  howler.js v2.2.3
  *  howlerjs.com
  *
  *  (c) 2013-2020, James Simpson of GoldFire Studios
@@ -33557,8 +33580,12 @@ try {
       var mpegTest = audioTest.canPlayType('audio/mpeg;').replace(/^no$/, '');
 
       // Opera version <33 has mixed MP3 support, so we need to check for and block it.
-      var checkOpera = self._navigator && self._navigator.userAgent.match(/OPR\/([0-6].)/g);
+      var ua = self._navigator ? self._navigator.userAgent : '';
+      var checkOpera = ua.match(/OPR\/([0-6].)/g);
       var isOldOpera = (checkOpera && parseInt(checkOpera[0].split('/')[1], 10) < 33);
+      var checkSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Chrome') === -1;
+      var safariVersion = ua.match(/Version\/(.*?) /);
+      var isOldSafari = (checkSafari && safariVersion && parseInt(safariVersion[1], 10) < 15);
 
       self._codecs = {
         mp3: !!(!isOldOpera && (mpegTest || audioTest.canPlayType('audio/mp3;').replace(/^no$/, ''))),
@@ -33572,8 +33599,8 @@ try {
         m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/, ''),
         m4b: !!(audioTest.canPlayType('audio/x-m4b;') || audioTest.canPlayType('audio/m4b;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/, ''),
         mp4: !!(audioTest.canPlayType('audio/x-mp4;') || audioTest.canPlayType('audio/mp4;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/, ''),
-        weba: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''),
-        webm: !!audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, ''),
+        weba: !!(!isOldSafari && audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')),
+        webm: !!(!isOldSafari && audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')),
         dolby: !!audioTest.canPlayType('audio/mp4; codecs="ec-3"').replace(/^no$/, ''),
         flac: !!(audioTest.canPlayType('audio/x-flac;') || audioTest.canPlayType('audio/flac;')).replace(/^no$/, '')
       };
@@ -33685,6 +33712,7 @@ try {
           document.removeEventListener('touchstart', unlock, true);
           document.removeEventListener('touchend', unlock, true);
           document.removeEventListener('click', unlock, true);
+          document.removeEventListener('keydown', unlock, true);
 
           // Let all sounds know that audio has been unlocked.
           for (var i=0; i<self._howls.length; i++) {
@@ -33697,6 +33725,7 @@ try {
       document.addEventListener('touchstart', unlock, true);
       document.addEventListener('touchend', unlock, true);
       document.addEventListener('click', unlock, true);
+      document.addEventListener('keydown', unlock, true);
 
       return self;
     },
@@ -34208,6 +34237,7 @@ try {
                   node._unlocked = true;
                   if (!internal) {
                     self._emit('play', sound._id);
+                  } else {
                     self._loadQueue();
                   }
                 })
@@ -34224,7 +34254,6 @@ try {
               self._playLock = false;
               setParams();
               self._emit('play', sound._id);
-              self._loadQueue();
             }
 
             // Setting rate before playing won't work in IE, so we set it again here.
@@ -34267,8 +34296,11 @@ try {
           playHtml5();
         } else {
           self._playLock = true;
+          self._state = 'loading';
 
           var listener = function() {
+            self._state = 'loaded';
+            
             // Begin playback.
             playHtml5();
 
@@ -34756,6 +34788,12 @@ try {
             if (loop) {
               sound._node.bufferSource.loopStart = sound._start || 0;
               sound._node.bufferSource.loopEnd = sound._stop;
+
+              // If playing, restart playback to ensure looping updates.
+              if (self.playing(ids[i])) {
+                self.pause(ids[i], true);
+                self.play(ids[i], true);
+              }
             }
           }
         }
@@ -34875,7 +34913,9 @@ try {
       // Determine the values based on arguments.
       if (args.length === 0) {
         // We will simply return the current position of the first node.
-        id = self._sounds[0]._id;
+        if (self._sounds.length) {
+          id = self._sounds[0]._id;
+        }
       } else if (args.length === 1) {
         // First check if this is an ID, and if not, assume it is a new seek position.
         var ids = self._getSoundIds();
@@ -34893,7 +34933,7 @@ try {
 
       // If there is no ID, bail out.
       if (typeof id === 'undefined') {
-        return self;
+        return 0;
       }
 
       // If the sound hasn't loaded, add it to the load queue to seek when capable.
@@ -34931,12 +34971,12 @@ try {
 
           // Seek and emit when ready.
           var seekAndEmit = function() {
-            self._emit('seek', id);
-
             // Restart the playback if the sound was playing.
             if (playing) {
               self.play(id, true);
             }
+
+            self._emit('seek', id);
           };
 
           // Wait for the play lock to be unset before emitting (HTML5 Audio).
@@ -35862,7 +35902,7 @@ try {
 /*!
  *  Spatial Plugin - Adds support for stereo and 3D audio where Web Audio is supported.
  *  
- *  howler.js v2.2.1
+ *  howler.js v2.2.3
  *  howlerjs.com
  *
  *  (c) 2013-2020, James Simpson of GoldFire Studios

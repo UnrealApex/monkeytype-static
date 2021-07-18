@@ -2093,6 +2093,20 @@ export let defaultCommands = {
     },
     {
       id: "changeConfidenceMode",
+      display: "Change confidence mode...",
+      subgroup: true,
+      exec: () => {
+        current.push(commandsConfidenceMode);
+        Commandline.show();
+      },
+      // exec: () => {
+      //   updatePresetCommands();
+      //   current.push(commandsPresets);
+      //   Commandline.show();
+      // },
+    },
+    {
+      id: "changeConfidenceMode",
       display: "Confidence mode...",
       icon: "fa-backspace",
       subgroup: commandsConfidenceMode,

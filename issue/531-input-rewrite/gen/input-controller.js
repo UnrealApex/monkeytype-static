@@ -341,7 +341,9 @@ function handleSpace() {
   }
 }
 
-function isCharCorrect(char, originalChar) {
+function isCharCorrectAt(charIndex) {
+  const char = TestLogic.input.currentWord[charIndex];
+
   if (
     Config.oppositeShiftMode === "on" &&
     ShiftTracker.isUsingOppositeShift(char) === false
@@ -352,6 +354,8 @@ function isCharCorrect(char, originalChar) {
   if (Config.mode == "zen") {
     return true;
   }
+
+  const originalChar = TestLogic.words.getCurrent()[charIndex];
 
   if (originalChar == char) {
     return true;
@@ -431,10 +435,7 @@ function handleCharAt(charIndex) {
   Focus.set(true);
   Caret.stopAnimation();
 
-  let thisCharCorrect = isCharCorrect(
-    char,
-    TestLogic.words.getCurrent()[charIndex]
-  );
+  let thisCharCorrect = isCharCorrectAt(charIndex);
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) {
     TestUI.updateWordElement();
@@ -744,13 +745,15 @@ $("#wordsInput").on("input", function (event) {
       );
     }
   } else if (inputValue !== inputValueBeforeChange) {
-    let diffStart = 1;
+    let diffStart = 0;
     while (inputValue[diffStart] === inputValueBeforeChange[diffStart])
       diffStart++;
 
-    for (let i = diffStart; i < inputValue.length; i++) {
-      // minus 1 for the padding space at the start
-      handleCharAt(i - 1);
+    if (diffStart) {
+      for (let i = diffStart; i < inputValue.length; i++) {
+        // offset by 1 because of the padding space at the start of TestLogic.input.currentWord
+        handleCharAt(i - 1);
+      }
     }
   }
 
