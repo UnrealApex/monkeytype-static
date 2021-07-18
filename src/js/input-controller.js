@@ -393,8 +393,7 @@ function isCharCorrectAt(charIndex) {
 
 function handleCharAt(charIndex) {
   if (TestUI.resultCalculating || TestUI.resultVisible) {
-    TestLogic.input.dropLastChar();
-    return;
+    return false;
   }
 
   let char = TestLogic.input.currentWord[charIndex];
@@ -411,19 +410,16 @@ function handleCharAt(charIndex) {
     if (Config.difficulty !== "normal" || Config.strictSpace) {
       if (dontInsertSpace) {
         dontInsertSpace = false;
-        TestLogic.input.dropLastChar();
-        return;
+        return false;
       }
     } else {
-      TestLogic.input.dropLastChar();
-      return;
+      return false;
     }
   }
 
   //start the test
   if (!TestLogic.active && !TestLogic.startTest()) {
-    TestLogic.input.dropLastChar();
-    return;
+    return false;
   }
 
   if (TestLogic.input.currentWord == "") {
@@ -437,7 +433,7 @@ function handleCharAt(charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) {
     TestUI.updateWordElement();
-    return;
+    return true;
   }
 
   MonkeyPower.addPower(thisCharCorrect);
@@ -471,8 +467,7 @@ function handleCharAt(charIndex) {
     Config.oppositeShiftMode === "on" &&
     ShiftTracker.isUsingOppositeShift(char) === false
   ) {
-    TestLogic.input.dropLastChar();
-    return;
+    return false;
   }
 
   //update current corrected version. if its empty then add the current char. if its not then replace the last character with the currently pressed one / add it
@@ -495,8 +490,7 @@ function handleCharAt(charIndex) {
   TestStats.pushKeypressWord(TestLogic.words.currentIndex);
 
   if (Config.stopOnError == "letter" && !thisCharCorrect) {
-    TestLogic.input.dropLastChar();
-    return;
+    return false;
   }
 
   Replay.addReplayEvent(
@@ -524,7 +518,7 @@ function handleCharAt(charIndex) {
 
   if (!thisCharCorrect && Config.difficulty == "master") {
     TestLogic.fail("difficulty");
-    return;
+    return false;
   }
 
   //keymap
@@ -578,7 +572,6 @@ function handleCharAt(charIndex) {
       );
       if (!Config.showAllLines) TestUI.lineJump(currentTop);
     } else {
-      TestLogic.input.dropLastChar();
       TestUI.updateWordElement();
     }
   }
@@ -593,6 +586,8 @@ function handleCharAt(charIndex) {
     TestLogic.input.currentWord += " ";
     setTimeout(handleSpace, 0);
   }
+
+  return true;
 }
 
 $(document).keydown(function (event) {
@@ -750,7 +745,13 @@ $("#wordsInput").on("input", function (event) {
     if (diffStart) {
       for (let i = diffStart; i < inputValue.length; i++) {
         // offset by 1 because of the padding space at the start of TestLogic.input.currentWord
-        handleCharAt(i - 1);
+        if (!handleCharAt(i - 1)) {
+          TestLogic.input.currentWord = TestLogic.input.currentWord.slice(
+            0,
+            i - 1
+          );
+          break;
+        }
       }
     }
   }
