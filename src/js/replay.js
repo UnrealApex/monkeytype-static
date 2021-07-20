@@ -124,6 +124,13 @@ function handleDisplayLogic(item) {
     activeWord.classList.add("error");
     wordPos++;
     curPos = 0;
+  } else if (item.action === "backWord") {
+    playSound();
+    wordPos--;
+    activeWord = document.getElementById("replayWords").children[wordPos];
+    curPos = activeWord.children.length;
+    while (activeWord.children[curPos - 1].className === "") curPos--;
+    activeWord.classList.remove("error");
   }
 }
 
