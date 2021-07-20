@@ -785,12 +785,21 @@ $("#wordsInput").on("input", function (event) {
 
   if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
     handleLastChar();
-  } else {
+  } else if (inputWordBeforeChange.length > 0) {
     TestUI.updateWordElement();
+    for (
+      let i = 0;
+      i < inputWordBeforeChange.length - TestLogic.input.currentWord.length;
+      i++
+    ) {
+      Replay.addReplayEvent("deleteLetter");
+    }
   }
 
   Caret.updatePosition();
 
   let acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc);
+
+  inputWordBeforeChange = "";
 });
