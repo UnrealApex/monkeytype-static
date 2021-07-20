@@ -26,7 +26,7 @@ import * as MonkeyPower from "./monkey-power";
 import * as WeakSpot from "./weak-spot";
 
 let dontInsertSpace = false;
-let inputWordBeforeChange = "";
+let inputValueBeforeChange = " ";
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -97,13 +97,12 @@ function handleTab(event) {
   }
 }
 
-function setupBackspace(event) {
+function backspaceToPrevious() {
   if (!TestLogic.active) return;
 
   Sound.playClick(Config.playSoundOnClick);
 
   if (
-    TestLogic.input.currentWord.length > 0 ||
     TestLogic.input.history.length == 0 ||
     TestUI.currentWordElementIndex == 0
   )
@@ -115,20 +114,18 @@ function setupBackspace(event) {
       !Config.freedomMode) ||
     $($(".word")[TestLogic.words.currentIndex - 1]).hasClass("hidden")
   ) {
-    event.preventDefault();
     return;
   }
 
   if (Config.confidenceMode === "on" || Config.confidenceMode === "max") {
-    event.preventDefault();
     return;
   }
 
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
-  if (Config.funbox !== "nospace") {
-    TestLogic.input.currentWord += " ";
+  if (Config.funbox === "nospace") {
+    TestLogic.input.currentWord = TestLogic.input.currentWord.slice(0, -1);
   }
 
   TestLogic.words.decreaseCurrentIndex();
@@ -136,9 +133,7 @@ function setupBackspace(event) {
   TestUI.updateActiveElement(true);
   Funbox.toggleScript(TestLogic.words.getCurrent());
 
-  if (Config.keymapMode === "react") {
-    Keymap.flashKey(event.code, true);
-  } else if (Config.keymapMode === "next" && Config.mode !== "zen") {
+  if (Config.keymapMode === "next" && Config.mode !== "zen") {
     Keymap.highlightKey(
       TestLogic.words
         .getCurrent()
@@ -659,8 +654,10 @@ $(document).keydown(function (event) {
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
 
-  if (event.key === "Backspace") {
-    setupBackspace(event);
+  if (event.key === "Backspace" && TestLogic.input.currentWord.length === 0) {
+    backspaceToPrevious();
+    Replay.addReplayEvent("backWord");
+    TestLogic.input.currentWord += " ";
   }
 
   if (event.key === "Enter") {
@@ -770,20 +767,27 @@ function triggerInputWith(string) {
 }
 
 $("#wordsInput").on("beforeinput", function (event) {
-  inputWordBeforeChange = event.target.value.normalize();
+  inputValueBeforeChange = event.target.value.normalize();
 });
 
 $("#wordsInput").on("input", function (event) {
-  if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
+  if (event.target.value.length >= inputValueBeforeChange.length) {
     handleLastChar();
-  } else if (inputWordBeforeChange.length > 0) {
-    TestUI.updateWordElement();
-    for (
-      let i = 0;
-      i < inputWordBeforeChange.length - TestLogic.input.currentWord.length;
-      i++
-    ) {
-      Replay.addReplayEvent("deleteLetter");
+  } else {
+    if (event.target.value === "") {
+      // fallback for when no Backspace keydown event (mobile)
+      event.target.value = " ";
+      backspaceToPrevious();
+      Replay.addReplayEvent("backWord");
+    } else {
+      TestUI.updateWordElement();
+      for (
+        let i = 0;
+        i < inputValueBeforeChange.length - event.target.value.length;
+        i++
+      ) {
+        Replay.addReplayEvent("deleteLetter");
+      }
     }
   }
 
