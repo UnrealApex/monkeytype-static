@@ -653,6 +653,7 @@ $(document).keydown(function (event) {
 
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
+  TestStats.setKeypressNotAfk();
 
   if (event.key === "Backspace" && TestLogic.input.currentWord.length === 0) {
     backspaceToPrevious();
@@ -686,53 +687,6 @@ $(document).keydown(function (event) {
       ]
     ).toggleClass("dead");
     return;
-  }
-
-  if (
-    [
-      "ContextMenu",
-      "Escape",
-      "Shift",
-      "Control",
-      "Meta",
-      "Alt",
-      "AltGraph",
-      "CapsLock",
-      "Backspace",
-      "PageUp",
-      "PageDown",
-      "Home",
-      "ArrowUp",
-      "ArrowLeft",
-      "ArrowRight",
-      "ArrowDown",
-      "OS",
-      "Insert",
-      "Home",
-      "Undefined",
-      "Control",
-      "Fn",
-      "FnLock",
-      "Hyper",
-      "NumLock",
-      "ScrollLock",
-      "Symbol",
-      "SymbolLock",
-      "Super",
-      "Unidentified",
-      "Process",
-      "Delete",
-      "KanjiMode",
-      "Pause",
-      "PrintScreen",
-      "Clear",
-      "End",
-      "GroupPrevious",
-      "GroupNext",
-      undefined,
-    ].includes(event.key)
-  ) {
-    TestStats.incrementKeypressMod();
   }
 
   if (Config.layout !== "default") {
