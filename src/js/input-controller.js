@@ -621,11 +621,11 @@ $(document).keydown(function (event) {
   Monkey.type();
 
   //autofocus
-  let pageTestActive = !$(".pageTest").hasClass("hidden");
-  let commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
-  let leaderboardsVisible = !$("#leaderboardsWrapper").hasClass("hidden");
   let wordsFocused = $("#wordsInput").is(":focus");
-  let modePopupVisible =
+  const pageTestActive = !$(".pageTest").hasClass("hidden");
+  const commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
+  const leaderboardsVisible = !$("#leaderboardsWrapper").hasClass("hidden");
+  const modePopupVisible =
     !$("#customTextPopupWrapper").hasClass("hidden") ||
     !$("#customWordAmountPopupWrapper").hasClass("hidden") ||
     !$("#customTestDurationPopupWrapper").hasClass("hidden") ||
@@ -641,8 +641,11 @@ $(document).keydown(function (event) {
     event.key !== "Enter"
   ) {
     TestUI.focusWords();
-    wordsFocused = true;
-    if (Config.showOutOfFocusWarning) return;
+    if (Config.showOutOfFocusWarning) {
+      event.preventDefault();
+    } else {
+      wordsFocused = true;
+    }
   }
 
   //tab
@@ -667,11 +670,16 @@ $(document).keydown(function (event) {
 
   TestStats.setKeypressDuration(performance.now());
 
+  if (!wordsFocused) return;
+
   if (TestUI.testRestarting) {
+    event.preventDefault();
     return;
   }
 
-  if (event.key === "Backspace" && wordsFocused) {
+  TestStats.setKeypressDuration(performance.now());
+
+  if (event.key === "Backspace") {
     setupBackspace(event);
   }
 
@@ -750,12 +758,7 @@ $(document).keydown(function (event) {
     TestStats.incrementKeypressMod();
   }
 
-  if (
-    Config.layout !== "default" &&
-    wordsFocused &&
-    !TestLogic.resultVisible &&
-    !TestLogic.resultCalculating
-  ) {
+  if (Config.layout !== "default") {
     const char = LayoutEmulator.getCharFromEvent(event);
     if (char !== null) {
       event.preventDefault();
@@ -775,8 +778,6 @@ $("#wordsInput").on("beforeinput", function (event) {
 });
 
 $("#wordsInput").on("input", function (event) {
-  if (TestUI.testRestarting) return;
-
   if (TestLogic.input.currentWord.length >= inputWordBeforeChange.length) {
     handleLastChar();
   } else if (inputWordBeforeChange.length > 0) {
