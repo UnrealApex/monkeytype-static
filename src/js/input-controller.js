@@ -6,6 +6,7 @@ import Config, * as UpdateConfig from "./config";
 import * as Keymap from "./keymap";
 import * as Misc from "./misc";
 import * as LiveAcc from "./live-acc";
+import * as LiveBurst from "./live-burst";
 import * as Funbox from "./funbox";
 import * as Sound from "./sound";
 import * as Caret from "./caret";
@@ -20,6 +21,9 @@ import * as TimerProgress from "./timer-progress";
 import * as TestTimer from "./test-timer";
 import * as Focus from "./focus";
 import * as ShiftTracker from "./shift-tracker";
+import * as Replay from "./replay.js";
+import * as MonkeyPower from "./monkey-power";
+import * as WeakSpot from "./weak-spot";
 
 let dontInsertSpace = false;
 let inputWordBeforeChange = "";
@@ -47,7 +51,8 @@ function handleTab(event) {
   } else if (
     !TestUI.resultCalculating &&
     $("#commandLineWrapper").hasClass("hidden") &&
-    $("#simplePopupWrapper").hasClass("hidden")
+    $("#simplePopupWrapper").hasClass("hidden") &&
+    !$(".page.pageLogin").hasClass("active")
   ) {
     if ($(".pageTest").hasClass("active")) {
       if (Config.quickTab) {
@@ -122,7 +127,7 @@ function setupBackspace(event) {
   TestLogic.input.currentWord = TestLogic.input.popHistory();
   TestLogic.corrected.popHistory();
 
-  if (Funbox.active !== "nospace") {
+  if (Config.funbox !== "nospace") {
     TestLogic.input.currentWord += " ";
   }
 
@@ -161,11 +166,16 @@ function handleSpace() {
   }
 
   let currentWord = TestLogic.words.getCurrent();
-  if (Funbox.active === "layoutfluid" && Config.mode !== "time") {
-    const layouts = ["qwerty", "dvorak", "colemak"];
+  if (Config.funbox === "layoutfluid" && Config.mode !== "time") {
+    // here I need to check if Config.customLayoutFluid exists because of my scuffed solution of returning whenever value is undefined in the setCustomLayoutfluid function
+    const layouts = Config.customLayoutfluid
+      ? Config.customLayoutfluid.split("#")
+      : ["qwerty", "dvorak", "colemak"];
     let index = 0;
     let outof = TestLogic.words.length;
-    index = Math.floor((TestLogic.input.history.length + 1) / (outof / 3));
+    index = Math.floor(
+      (TestLogic.input.history.length + 1) / (outof / layouts.length)
+    );
     if (Config.layout !== layouts[index] && layouts[index] !== undefined) {
       Notifications.add(`--- !!! ${layouts[index]} !!! ---`, 0);
     }
@@ -182,8 +192,13 @@ function handleSpace() {
   }
   dontInsertSpace = true;
 
+  let burst = TestStats.calculateBurst();
+  LiveBurst.update(Math.round(burst));
+  TestStats.pushBurstToHistory(burst);
+
   //correct word or in zen mode
   const isWordCorrect = currentWord == inputWord || Config.mode == "zen";
+  MonkeyPower.addPower(isWordCorrect, true);
   TestStats.incrementAccuracy(isWordCorrect);
   if (isWordCorrect) {
     PaceCaret.handleSpace(true, currentWord);
@@ -196,17 +211,19 @@ function handleSpace() {
     Caret.updatePosition();
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
-    if (Funbox.active !== "nospace") {
+    if (Config.funbox !== "nospace") {
       Sound.playClick(Config.playSoundOnClick);
     }
+    Replay.addReplayEvent("submitCorrectWord");
   } else {
-    if (Funbox.active !== "nospace") {
+    if (Config.funbox !== "nospace") {
       if (!Config.playSoundOnError || Config.blindMode) {
         Sound.playClick(Config.playSoundOnClick);
       } else {
         Sound.playError(Config.playSoundOnError);
       }
     }
+    TestStats.pushMissedWord(TestLogic.words.getCurrent());
     TestStats.incrementKeypressErrors();
     let cil = inputWord.length;
     if (cil <= TestLogic.words.getCurrent().length) {
@@ -222,11 +239,12 @@ function handleSpace() {
     if (Config.stopOnError != "off") {
       if (Config.difficulty == "expert" || Config.difficulty == "master") {
         //failed due to diff when pressing space
-        TestLogic.fail();
+        TestLogic.fail("difficulty");
         return;
       }
       if (Config.stopOnError == "word") {
         TestLogic.input.currentWord += " ";
+        Replay.addReplayEvent("incorrectLetter", "_");
         TestUI.updateWordElement(true);
         Caret.updatePosition();
       }
@@ -244,15 +262,32 @@ function handleSpace() {
     Caret.updatePosition();
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
+    TestStats.updateLastKeypress();
     if (Config.difficulty == "expert" || Config.difficulty == "master") {
-      TestLogic.fail();
+      TestLogic.fail("difficulty");
       return;
     } else if (TestLogic.words.currentIndex == TestLogic.words.length) {
       //submitted last word that is incorrect
-      TestStats.setLastSecondNotRound();
       TestLogic.finish();
       return;
     }
+    Replay.addReplayEvent("submitErrorWord");
+  }
+
+  let wordLength;
+  if (Config.mode === "zen") {
+    wordLength = TestLogic.input.getCurrent().length;
+  } else {
+    wordLength = TestLogic.words.getCurrent().length;
+  }
+
+  let flex = Misc.whorf(Config.minBurstCustomSpeed, wordLength);
+  if (
+    (Config.minBurst === "fixed" && burst < Config.minBurstCustomSpeed) ||
+    (Config.minBurst === "flex" && burst < flex)
+  ) {
+    TestLogic.fail("min burst");
+    return;
   }
 
   TestLogic.corrected.pushHistory();
@@ -284,7 +319,7 @@ function handleSpace() {
     }
   } //end of line wrap
 
-  Caret.updatePosition();
+  // Caret.updatePosition();
 
   if (Config.keymapMode === "react") {
     Keymap.flashKey("Space", true);
@@ -375,7 +410,7 @@ function handleLastChar() {
   let char =
     TestLogic.input.currentWord[TestLogic.input.currentWord.length - 1];
 
-  if (char === "\n" && Funbox.active === "58008") {
+  if (char === "\n" && Config.funbox === "58008") {
     char = " ";
   }
 
@@ -402,6 +437,10 @@ function handleLastChar() {
     return;
   }
 
+  if (TestLogic.input.currentWord == "") {
+    TestStats.setBurstStart(performance.now());
+  }
+
   Focus.set(true);
   Caret.stopAnimation();
 
@@ -409,12 +448,17 @@ function handleLastChar() {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) return;
 
+  MonkeyPower.addPower(thisCharCorrect);
   TestStats.incrementAccuracy(thisCharCorrect);
 
   if (!thisCharCorrect) {
     TestStats.incrementKeypressErrors();
     TestStats.pushMissedWord(TestLogic.words.getCurrent());
   }
+  WeakSpot.updateScore(
+    TestLogic.words.getCurrent().charAt(TestLogic.input.currentWord.length - 1),
+    thisCharCorrect
+  );
 
   if (thisCharCorrect) {
     Sound.playClick(Config.playSoundOnClick);
@@ -450,12 +494,18 @@ function handleLastChar() {
   }
 
   TestStats.incrementKeypressCount();
+  TestStats.updateLastKeypress();
   TestStats.pushKeypressWord(TestLogic.words.currentIndex);
 
   if (Config.stopOnError == "letter" && !thisCharCorrect) {
     TestLogic.input.dropLastChar();
     return;
   }
+
+  Replay.addReplayEvent(
+    thisCharCorrect ? "correctLetter" : "incorrectLetter",
+    event.key
+  );
 
   //update the active word top, but only once
   if (
@@ -476,7 +526,7 @@ function handleLastChar() {
   }
 
   if (!thisCharCorrect && Config.difficulty == "master") {
-    TestLogic.fail();
+    TestLogic.fail("difficulty");
     return;
   }
 
@@ -510,7 +560,6 @@ function handleLastChar() {
     ) {
       TestLogic.input.pushHistory();
       TestLogic.corrected.pushHistory();
-      TestStats.setLastSecondNotRound();
       TestLogic.finish();
     }
   }
@@ -539,7 +588,7 @@ function handleLastChar() {
 
   //simulate space press in nospace funbox
   if (
-    (Funbox.active === "nospace" &&
+    (Config.funbox === "nospace" &&
       TestLogic.input.currentWord.length ===
         TestLogic.words.getCurrent().length) ||
     (char === "\n" && thisCharCorrect)
@@ -574,6 +623,7 @@ $(document).keydown(function (event) {
   //autofocus
   let pageTestActive = !$(".pageTest").hasClass("hidden");
   let commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
+  let leaderboardsVisible = !$("#leaderboardsWrapper").hasClass("hidden");
   let wordsFocused = $("#wordsInput").is(":focus");
   let modePopupVisible =
     !$("#customTextPopupWrapper").hasClass("hidden") ||
@@ -584,6 +634,7 @@ $(document).keydown(function (event) {
   if (
     pageTestActive &&
     !commandLineVisible &&
+    !leaderboardsVisible &&
     !modePopupVisible &&
     !TestUI.resultVisible &&
     !wordsFocused &&
@@ -697,6 +748,8 @@ $(document).keydown(function (event) {
       "PrintScreen",
       "Clear",
       "End",
+      "GroupPrevious",
+      "GroupNext",
       undefined,
     ].includes(event.key)
   ) {
