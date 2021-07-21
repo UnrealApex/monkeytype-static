@@ -350,6 +350,13 @@ function handleSpace() {
 }
 
 function isCharCorrect(char) {
+  if (
+    Config.oppositeShiftMode === "on" &&
+    ShiftTracker.isUsingOppositeShift(char) === false
+  ) {
+    return false;
+  }
+
   if (Config.mode == "zen") {
     return true;
   }
