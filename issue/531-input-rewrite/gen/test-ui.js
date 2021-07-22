@@ -150,8 +150,8 @@ export function showWords() {
         TestLogic.words
           .getCurrent()
           .substring(
-            TestLogic.input.currentWord.length,
-            TestLogic.input.currentWord.length + 1
+            TestLogic.input.current.length,
+            TestLogic.input.current.length + 1
           )
           .toString()
           .toUpperCase()
@@ -257,7 +257,7 @@ export function screenshot() {
 }
 
 export function updateWordElement(showError = !Config.blindMode) {
-  let input = TestLogic.input.currentWord;
+  let input = TestLogic.input.current;
   let wordAtIndex;
   let currentWord;
   wordAtIndex = document.querySelector("#words .word.active");
@@ -267,14 +267,14 @@ export function updateWordElement(showError = !Config.blindMode) {
   let newlineafter = false;
 
   if (Config.mode === "zen") {
-    for (let i = 0; i < TestLogic.input.currentWord.length; i++) {
-      if (TestLogic.input.currentWord[i] === "\t") {
+    for (let i = 0; i < TestLogic.input.current.length; i++) {
+      if (TestLogic.input.current[i] === "\t") {
         ret += `<letter class='tabChar correct'><i class="fas fa-long-arrow-alt-right"></i></letter>`;
-      } else if (TestLogic.input.currentWord[i] === "\n") {
+      } else if (TestLogic.input.current[i] === "\n") {
         newlineafter = true;
         ret += `<letter class='nlChar correct'><i class="fas fa-angle-down"></i></letter>`;
       } else {
-        ret += `<letter class="correct">${TestLogic.input.currentWord[i]}</letter>`;
+        ret += `<letter class="correct">${TestLogic.input.current[i]}</letter>`;
       }
     }
   } else {
@@ -287,7 +287,7 @@ export function updateWordElement(showError = !Config.blindMode) {
     if (
       input.search(Misc.trailingComposeChars) < currentWord.length &&
       currentWord.slice(0, inputWithoutComposeLength) ===
-        input.slice(0, inputWithoutComposeLength)
+      input.slice(0, inputWithoutComposeLength)
     ) {
       correctSoFar = true;
     }
@@ -712,7 +712,7 @@ async function loadWordsHistory() {
                 "</letter>";
             }
           } else {
-            if (input[c] === TestLogic.input.currentWord) {
+            if (input[c] === TestLogic.input.current) {
               wordEl +=
                 `<letter class='correct ${extraCorrected}'>` +
                 word[c] +
@@ -940,7 +940,7 @@ $("#wordsInput").on("focus", () => {
   if (!resultVisible && Config.showOutOfFocusWarning) {
     OutOfFocus.hide();
   }
-  Caret.show(TestLogic.input.currentWord);
+  Caret.show(TestLogic.input.current);
 });
 
 $("#wordsInput").on("focusout", () => {

@@ -84,14 +84,14 @@ function playSound(error = false) {
   }
 }
 
-function handleDisplayLogic(item) {
+function handleDisplayLogic(item, nosound = false) {
   let activeWord = document.getElementById("replayWords").children[wordPos];
   if (item.action === "correctLetter") {
-    playSound();
+    if (!nosound) playSound();
     activeWord.children[curPos].classList.add("correct");
     curPos++;
   } else if (item.action === "incorrectLetter") {
-    playSound(true);
+    if (!nosound) playSound(true);
     let myElement;
     if (curPos >= activeWord.children.length) {
       //if letter is an extra
@@ -104,10 +104,10 @@ function handleDisplayLogic(item) {
     myElement.classList.add("incorrect");
     curPos++;
   } else if (item.action === "setWordLetterIndex") {
-    playSound();
+    if (!nosound) playSound();
     curPos = item.value;
     // remove all letters from cursor to end of word
-    for (let i = curPos; i < activeWord.children.length; i++) {
+    for (let i = curPos + 1; i < activeWord.children.length; i++) {
       let myElement = activeWord.children[i];
       if (myElement.classList.contains("extra")) {
         myElement.remove();
@@ -116,16 +116,16 @@ function handleDisplayLogic(item) {
       }
     }
   } else if (item.action === "submitCorrectWord") {
-    playSound();
+    if (!nosound) playSound();
     wordPos++;
     curPos = 0;
   } else if (item.action === "submitErrorWord") {
-    playSound(true);
+    if (!nosound) playSound(true);
     activeWord.classList.add("error");
     wordPos++;
     curPos = 0;
   } else if (item.action === "backWord") {
-    playSound();
+    if (!nosound) playSound();
     wordPos--;
     activeWord = document.getElementById("replayWords").children[wordPos];
     curPos = activeWord.children.length;
@@ -144,7 +144,7 @@ function loadOldReplay() {
       (wordPos === targetWordPos && curPos < targetCurPos)
     ) {
       //quickly display everything up to the target
-      handleDisplayLogic(item);
+      handleDisplayLogic(item, true);
       startingIndex = i + 1;
     }
   });

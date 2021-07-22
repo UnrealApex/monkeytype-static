@@ -1,5 +1,6 @@
 import * as Funbox from "./funbox";
 import * as UI from "./ui";
+import Config from "./config";
 
 let mappedRoutes = {
   "": "pageTest",
@@ -18,7 +19,7 @@ export function handleInitialPageClasses(hash) {
 (function (history) {
   var pushState = history.pushState;
   history.pushState = function (state) {
-    if (Funbox.active === "memory" && state !== "/") {
+    if (Config.funbox === "memory" && state !== "/") {
       Funbox.resetMemoryTimer();
     }
     return pushState.apply(history, arguments);

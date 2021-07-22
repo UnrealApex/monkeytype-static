@@ -10,6 +10,7 @@ Chart.plugins.register(chartAnnotation);
 import * as Misc from "./misc";
 import Config from "./config";
 import * as SimplePopups from "./simple-popups";
+import { toggleGlarses } from "./test-logic";
 import "./caps-warning";
 import "./support-popup";
 import "./version-popup";
@@ -17,6 +18,7 @@ import "./custom-theme-popup";
 import "./import-settings-popup";
 import "./input-controller";
 import "./ready";
+import "./about-page";
 
 //this file should be concatenated with the legacy js files
 
@@ -26,3 +28,4 @@ global.simplePopups = SimplePopups.simplePopups;
 //these exports are just for debugging in the browser
 global.config = Config;
 // global.addnotif = Notifications.add;
+global.glarsesMode = toggleGlarses;

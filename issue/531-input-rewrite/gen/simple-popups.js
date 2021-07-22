@@ -46,7 +46,12 @@ class SimplePopup {
 
     this.initInputs();
 
-    el.find(".button").text(this.buttonText);
+    if (!this.buttonText) {
+      el.find(".button").remove();
+    } else {
+      el.find(".button").text(this.buttonText);
+    }
+
     // }
   }
 

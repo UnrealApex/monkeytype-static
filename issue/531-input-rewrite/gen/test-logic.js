@@ -88,12 +88,12 @@ class WordList {
 class InputWordList {
   constructor() {
     this.history = [];
-    this.currentWord = "";
+    this.current = "";
   }
 
   reset() {
     this.history = [];
-    this.currentWord = "";
+    this.current = "";
   }
 
   getCurrent() {
@@ -101,8 +101,8 @@ class InputWordList {
   }
 
   pushHistory() {
-    this.history.push(this.currentWord);
-    this.currentWord = "";
+    this.history.push(this.current);
+    this.current = "";
   }
 
   popHistory() {
@@ -110,7 +110,7 @@ class InputWordList {
   }
 
   getLastChar() {
-    return this.currentWord[this.currentWord.length];
+    return this.current[this.current.length];
   }
 
   getHistory(i) {
@@ -123,11 +123,11 @@ class InputWordList {
 }
 
 class InputWordListBound extends InputWordList {
-  get currentWord() {
+  get current() {
     return $("#wordsInput").val().normalize().slice(1);
   }
 
-  set currentWord(val) {
+  set current(val) {
     $("#wordsInput").val(" " + val.normalize());
   }
 }
@@ -742,6 +742,7 @@ export function restart(
   LiveAcc.hide();
   LiveBurst.hide();
   TimerProgress.hide();
+  Replay.pauseReplay();
   setBailout(false);
   PaceCaret.reset();
   $("#showWordHistoryButton").removeClass("loaded");
@@ -853,7 +854,7 @@ export function restart(
         Keymap.highlightKey(
           words
             .getCurrent()
-            .substring(input.currentWord.length, input.currentWord.length + 1)
+            .substring(input.current.length, input.current.length + 1)
             .toString()
             .toUpperCase()
         );
@@ -910,13 +911,13 @@ export function calculateWpmAndRaw() {
     }
     chars += input.getHistory(i).length;
   }
-  if (words.getCurrent() == input.currentWord) {
-    correctWordChars += input.currentWord.length;
+  if (words.getCurrent() == input.current) {
+    correctWordChars += input.current.length;
   }
   if (Config.funbox === "nospace") {
     spaces = 0;
   }
-  chars += input.currentWord.length;
+  chars += input.current.length;
   let testSeconds = TestStats.calculateTestSeconds(performance.now());
   let wpm = Math.round(((correctWordChars + spaces) * (60 / testSeconds)) / 5);
   let raw = Math.round(((chars + spaces) * (60 / testSeconds)) / 5);
@@ -1010,10 +1011,10 @@ export async function addWord() {
     randomWord = Misc.getASCII();
   }
 
-  if (Config.punctuation && Config.mode != "custom") {
+  if (Config.punctuation) {
     randomWord = punctuateWord(previousWord, randomWord, words.length, 0);
   }
-  if (Config.numbers && Config.mode != "custom") {
+  if (Config.numbers) {
     if (Math.random() < 0.1) {
       randomWord = Misc.getNumbers(4);
     }
@@ -1025,7 +1026,7 @@ export async function addWord() {
 
 export function finish(difficultyFailed = false) {
   if (!active) return;
-  if (Config.mode == "zen" && input.currentWord.length != 0) {
+  if (Config.mode == "zen" && input.current.length != 0) {
     input.pushHistory();
     corrected.pushHistory();
     Replay.replayGetWordsList(input.history);

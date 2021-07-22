@@ -191,7 +191,7 @@ export function calculateBurst() {
   let timeToWrite = (performance.now() - currentBurstStart) / 1000;
   let wordLength;
   if (Config.mode === "zen") {
-    wordLength = TestLogic.input.currentWord.length;
+    wordLength = TestLogic.input.current.length;
   } else {
     wordLength = TestLogic.words.getCurrent().length;
   }

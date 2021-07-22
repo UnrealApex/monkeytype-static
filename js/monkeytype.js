@@ -1,6 +1,20 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var CommandlineLists = _interopRequireWildcard(require("./commandline-lists.js"));
+
+var Commandline = _interopRequireWildcard(require("./commandline.js"));
+
+$(".supportButtons .button.ads").click(function (e) {
+  CommandlineLists.pushCurrent(CommandlineLists.commandsEnableAds);
+  Commandline.show();
+});
+
+},{"./commandline-lists.js":5,"./commandline.js":6,"@babel/runtime/helpers/interopRequireWildcard":68}],2:[function(require,module,exports){
+"use strict";
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _config = _interopRequireDefault(require("./config"));
@@ -27,12 +41,12 @@ $(document).keydown(function (event) {
   } catch (_unused) {}
 });
 
-},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":60}],2:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":67}],3:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -44,15 +58,15 @@ exports.updatePosition = updatePosition;
 exports.show = show;
 exports.caretAnimating = void 0;
 
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var _config = _interopRequireDefault(require("./config"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var caretAnimating = true;
 exports.caretAnimating = caretAnimating;
@@ -82,85 +96,131 @@ function hide() {
 }
 
 function updatePosition() {
-  if ($("#wordsWrapper").hasClass("hidden")) return;
+  return _updatePosition.apply(this, arguments);
+}
 
-  if ($("#caret").hasClass("off")) {
-    return;
-  }
+function _updatePosition() {
+  _updatePosition = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    var caret, inputLen, currentLetterIndex, activeWordEmpty, currentWordNodeList, currentLetter, currentLanguage, isLanguageLeftToRight, currentLetterPosLeft, currentLetterPosTop, letterHeight, newTop, newLeft, smoothlinescroll, browserHeight, middlePos, contentHeight;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!$("#wordsWrapper").hasClass("hidden")) {
+              _context.next = 2;
+              break;
+            }
 
-  var caret = $("#caret");
-  var inputLen = TestLogic.input.current.length;
-  var currentLetterIndex = inputLen - 1;
+            return _context.abrupt("return");
 
-  if (currentLetterIndex == -1) {
-    currentLetterIndex = 0;
-  }
+          case 2:
+            if (!$("#caret").hasClass("off")) {
+              _context.next = 4;
+              break;
+            }
 
-  try {
-    //insert temporary character so the caret will work in zen mode
-    var activeWordEmpty = $("#words .active").children().length == 0;
+            return _context.abrupt("return");
 
-    if (activeWordEmpty) {
-      $("#words .active").append('<letter style="opacity: 0;">_</letter>');
-    }
+          case 4:
+            caret = $("#caret");
+            inputLen = TestLogic.input.current.length;
+            currentLetterIndex = inputLen - 1;
 
-    var currentWordNodeList = document.querySelector("#words .active").querySelectorAll("letter");
-    var currentLetter = currentWordNodeList[currentLetterIndex];
+            if (currentLetterIndex == -1) {
+              currentLetterIndex = 0;
+            }
 
-    if (inputLen > currentWordNodeList.length) {
-      currentLetter = currentWordNodeList[currentWordNodeList.length - 1];
-    }
+            _context.prev = 8;
+            //insert temporary character so the caret will work in zen mode
+            activeWordEmpty = $("#words .active").children().length == 0;
 
-    if (_config["default"].mode != "zen" && $(currentLetter).length == 0) return;
-    var isLanguageLeftToRight = Misc.getCurrentLanguage().leftToRight;
-    var currentLetterPosLeft = isLanguageLeftToRight ? currentLetter.offsetLeft : currentLetter.offsetLeft + $(currentLetter).width();
-    var currentLetterPosTop = currentLetter.offsetTop;
-    var letterHeight = $(currentLetter).height();
-    var newTop = 0;
-    var newLeft = 0;
-    newTop = currentLetterPosTop - Math.round(letterHeight / 5);
+            if (activeWordEmpty) {
+              $("#words .active").append('<letter style="opacity: 0;">_</letter>');
+            }
 
-    if (inputLen == 0) {
-      newLeft = isLanguageLeftToRight ? currentLetterPosLeft - caret.width() / 2 : currentLetterPosLeft + caret.width() / 2;
-    } else {
-      newLeft = isLanguageLeftToRight ? currentLetterPosLeft + $(currentLetter).width() - caret.width() / 2 : currentLetterPosLeft - $(currentLetter).width() + caret.width() / 2;
-    }
+            currentWordNodeList = document.querySelector("#words .active").querySelectorAll("letter");
+            currentLetter = currentWordNodeList[currentLetterIndex];
 
-    var smoothlinescroll = $("#words .smoothScroller").height();
-    if (smoothlinescroll === undefined) smoothlinescroll = 0;
+            if (inputLen > currentWordNodeList.length) {
+              currentLetter = currentWordNodeList[currentWordNodeList.length - 1];
+            }
 
-    if (_config["default"].smoothCaret) {
-      caret.stop(true, false).animate({
-        top: newTop - smoothlinescroll,
-        left: newLeft
-      }, 100);
-    } else {
-      caret.stop(true, true).animate({
-        top: newTop - smoothlinescroll,
-        left: newLeft
-      }, 0);
-    }
+            if (!(_config["default"].mode != "zen" && $(currentLetter).length == 0)) {
+              _context.next = 16;
+              break;
+            }
 
-    if (_config["default"].showAllLines) {
-      var browserHeight = window.innerHeight;
-      var middlePos = browserHeight / 2 - $("#caret").outerHeight() / 2;
-      var contentHeight = document.body.scrollHeight;
+            return _context.abrupt("return");
 
-      if (newTop >= middlePos && contentHeight > browserHeight) {
-        window.scrollTo({
-          left: 0,
-          top: newTop - middlePos,
-          behavior: "smooth"
-        });
+          case 16:
+            _context.next = 18;
+            return Misc.getCurrentLanguage();
+
+          case 18:
+            currentLanguage = _context.sent;
+            isLanguageLeftToRight = currentLanguage.leftToRight;
+            currentLetterPosLeft = isLanguageLeftToRight ? currentLetter.offsetLeft : currentLetter.offsetLeft + $(currentLetter).width();
+            currentLetterPosTop = currentLetter.offsetTop;
+            letterHeight = $(currentLetter).height();
+            newTop = 0;
+            newLeft = 0;
+            newTop = currentLetterPosTop - Math.round(letterHeight / 5);
+
+            if (inputLen == 0) {
+              newLeft = isLanguageLeftToRight ? currentLetterPosLeft - caret.width() / 2 : currentLetterPosLeft + caret.width() / 2;
+            } else {
+              newLeft = isLanguageLeftToRight ? currentLetterPosLeft + $(currentLetter).width() - caret.width() / 2 : currentLetterPosLeft - $(currentLetter).width() + caret.width() / 2;
+            }
+
+            smoothlinescroll = $("#words .smoothScroller").height();
+            if (smoothlinescroll === undefined) smoothlinescroll = 0;
+
+            if (_config["default"].smoothCaret) {
+              caret.stop(true, false).animate({
+                top: newTop - smoothlinescroll,
+                left: newLeft
+              }, 100);
+            } else {
+              caret.stop(true, true).animate({
+                top: newTop - smoothlinescroll,
+                left: newLeft
+              }, 0);
+            }
+
+            if (_config["default"].showAllLines) {
+              browserHeight = window.innerHeight;
+              middlePos = browserHeight / 2 - $("#caret").outerHeight() / 2;
+              contentHeight = document.body.scrollHeight;
+
+              if (newTop >= middlePos && contentHeight > browserHeight) {
+                window.scrollTo({
+                  left: 0,
+                  top: newTop - middlePos,
+                  behavior: "smooth"
+                });
+              }
+            }
+
+            if (activeWordEmpty) {
+              $("#words .active").children().remove();
+            }
+
+            _context.next = 37;
+            break;
+
+          case 34:
+            _context.prev = 34;
+            _context.t0 = _context["catch"](8);
+            console.log("could not move caret: " + _context.t0.message);
+
+          case 37:
+          case "end":
+            return _context.stop();
+        }
       }
-    }
-
-    if (activeWordEmpty) {
-      $("#words .active").children().remove();
-    }
-  } catch (e) {
-    console.log("could not move caret: " + e.message);
-  }
+    }, _callee, null, [[8, 34]]);
+  }));
+  return _updatePosition.apply(this, arguments);
 }
 
 function show() {
@@ -171,12 +231,12 @@ function show() {
   }
 }
 
-},{"./config":6,"./misc":26,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],3:[function(require,module,exports){
+},{"./config":7,"./misc":28,"./test-logic":48,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],4:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -195,10 +255,6 @@ var TestStats = _interopRequireWildcard(require("./test-stats"));
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var result = new _chart["default"]($("#wpmChart"), {
   type: "line",
@@ -256,7 +312,7 @@ var result = new _chart["default"]($("#wpmChart"), {
             unique.forEach(function (wordIndex) {
               var wordEl = $($("#resultWordsHistory .words .word")[wordIndex]);
               var input = wordEl.attr("input");
-              if (input != undefined) wordEl.append("<div class=\"wordInputAfter\">".concat(input, "</div>"));
+              if (input != undefined) wordEl.append("<div class=\"wordInputAfter\">".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "</div>"));
             });
           } catch (_unused) {}
         }
@@ -411,12 +467,12 @@ function updateAllChartColors() {
   result.updateColors();
 }
 
-},{"./misc":26,"./test-stats":44,"./theme-colors":47,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/toConsumableArray":63,"@babel/runtime/helpers/typeof":64,"chart.js":67}],4:[function(require,module,exports){
+},{"./misc":28,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"chart.js":75}],5:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -457,9 +513,7 @@ var Commandline = _interopRequireWildcard(require("./commandline"));
 
 var CustomText = _interopRequireWildcard(require("./custom-text"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var Settings = _interopRequireWildcard(require("./settings"));
 
 var current = [];
 exports.current = current;
@@ -469,7 +523,8 @@ function canBailOut() {
 }
 
 var commandsLayouts = {
-  title: "Change layout...",
+  title: "Layout...",
+  configKey: "layout",
   list: [{
     id: "couldnotload",
     display: "Could not load the layouts list :("
@@ -482,6 +537,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
     commandsLayouts.list.push({
       id: "changeLayout" + Misc.capitalizeFirstLetter(layout),
       display: layout.replace(/_/g, " "),
+      configValue: layout,
       exec: function exec() {
         // UpdateConfig.setSavedLayout(layout);
         UpdateConfig.setLayout(layout);
@@ -493,6 +549,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
 
 var commandsKeymapLayouts = {
   title: "Change keymap layout...",
+  configKey: "keymapLayout",
   list: [{
     id: "couldnotload",
     display: "Could not load the layouts list :("
@@ -505,6 +562,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
   commandsKeymapLayouts.list.push({
     id: "changeKeymapLayoutOverrideSync",
     display: "override sync",
+    configValue: "overrideSync",
     exec: function exec() {
       UpdateConfig.setKeymapLayout("overrideSync");
       TestLogic.restart();
@@ -515,6 +573,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
       commandsKeymapLayouts.list.push({
         id: "changeKeymapLayout" + Misc.capitalizeFirstLetter(layout),
         display: layout.replace(/_/g, " "),
+        configValue: layout,
         exec: function exec() {
           UpdateConfig.setKeymapLayout(layout);
           TestLogic.restart();
@@ -525,7 +584,8 @@ if (Object.keys(_layouts["default"]).length > 0) {
 }
 
 var commandsLanguages = {
-  title: "Change language...",
+  title: "Language...",
+  configKey: "language",
   list: [{
     id: "couldnotload",
     display: "Could not load the languages list :("
@@ -537,6 +597,7 @@ Misc.getLanguageList().then(function (languages) {
     commandsLanguages.list.push({
       id: "changeLanguage" + Misc.capitalizeFirstLetter(language),
       display: language.replace(/_/g, " "),
+      configValue: language,
       exec: function exec() {
         UpdateConfig.setLanguage(language);
         TestLogic.restart();
@@ -545,10 +606,12 @@ Misc.getLanguageList().then(function (languages) {
   });
 });
 var commandsFunbox = {
-  title: "Change funbox...",
+  title: "Funbox...",
+  configKey: "funbox",
   list: [{
     id: "changeFunboxNone",
     display: "none",
+    configValue: "none",
     exec: function exec() {
       if (Funbox.setFunbox("none", null)) {
         TestLogic.restart();
@@ -561,6 +624,7 @@ Misc.getFunboxList().then(function (funboxes) {
     commandsFunbox.list.push({
       id: "changeFunbox" + funbox.name,
       display: funbox.name.replace(/_/g, " "),
+      configValue: funbox.name,
       exec: function exec() {
         if (Funbox.setFunbox(funbox.name, funbox.type)) {
           TestLogic.restart();
@@ -570,7 +634,8 @@ Misc.getFunboxList().then(function (funboxes) {
   });
 });
 var commandsFonts = {
-  title: "Change font...",
+  title: "Font family...",
+  configKey: "fontFamily",
   list: []
 };
 Misc.getFontsList().then(function (fonts) {
@@ -578,6 +643,7 @@ Misc.getFontsList().then(function (fonts) {
     commandsFonts.list.push({
       id: "changeFont" + font.name.replace(/ /g, "_"),
       display: font.display !== undefined ? font.display : font.name,
+      configValue: font.name,
       hover: function hover() {
         UpdateConfig.previewFontFamily(font.name);
       },
@@ -599,76 +665,529 @@ Misc.getFontsList().then(function (fonts) {
   });
 });
 var commandsRepeatQuotes = {
-  title: "Change repeat quotes...",
+  title: "Repeat quotes...",
+  configKey: "repeatQuotes",
   list: [{
     id: "setRepeatQuotesOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setRepeatQuotes("off");
     }
   }, {
     id: "setRepeatQuotesTyping",
     display: "typing",
+    configValue: "typing",
     exec: function exec() {
       UpdateConfig.setRepeatQuotes("typing");
     }
   }]
 };
+var commandsLiveWpm = {
+  title: "Live WPM...",
+  configKey: "showLiveWpm",
+  list: [{
+    id: "setLiveWpmOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowLiveWpm(false);
+    }
+  }, {
+    id: "setLiveWpmOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowLiveWpm(true);
+    }
+  }]
+};
+var commandsCapsLockBackspace = {
+  title: "Caps lock backspace...",
+  configKey: "capsLockBackspace",
+  list: [{
+    id: "setCapsLockBackspaceOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowCapsLockBackspace(false);
+    }
+  }, {
+    id: "setCapsLockBackspaceOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowCapsLockBackspace(true);
+    }
+  }]
+};
+var commandsLiveAcc = {
+  title: "Live accuracy...",
+  configKey: "showLiveAcc",
+  list: [{
+    id: "setLiveAccOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowLiveAcc(false);
+    }
+  }, {
+    id: "setLiveAccOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowLiveAcc(true);
+    }
+  }]
+};
+var commandsLiveBurst = {
+  title: "Live burst...",
+  configKey: "showLiveBurst",
+  list: [{
+    id: "setLiveBurstOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowLiveBurst(false);
+    }
+  }, {
+    id: "setLiveBurstOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowLiveBurst(true);
+    }
+  }]
+};
+var commandsShowTimer = {
+  title: "Timer/progress...",
+  configKey: "showTimerProgress",
+  list: [{
+    id: "setTimerProgressOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowTimerProgress(false);
+    }
+  }, {
+    id: "setTimerProgressOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowTimerProgress(true);
+    }
+  }]
+};
+var commandsKeyTips = {
+  title: "Key tips...",
+  configKey: "showKeyTips",
+  list: [{
+    id: "setKeyTipsOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setKeyTips(false);
+    }
+  }, {
+    id: "setKeyTipsOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setKeyTips(true);
+    }
+  }]
+};
+var commandsFreedomMode = {
+  title: "Freedom mode...",
+  configKey: "freedomMode",
+  list: [{
+    id: "setfreedomModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setFreedomMode(false);
+    }
+  }, {
+    id: "setfreedomModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setFreedomMode(true);
+    }
+  }]
+};
+var commandsStrictSpace = {
+  title: "Strict space...",
+  configKey: "strictSpace",
+  list: [{
+    id: "setStrictSpaceOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setStrictSpace(false);
+    }
+  }, {
+    id: "setStrictSpaceOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setStrictSpace(true);
+    }
+  }]
+};
+var commandsBlindMode = {
+  title: "Blind mode...",
+  configKey: "blindMode",
+  list: [{
+    id: "setBlindModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setBlindMode(false);
+    }
+  }, {
+    id: "setBlindModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setBlindMode(true);
+    }
+  }]
+};
+var commandsShowWordsHistory = {
+  title: "Always show words history...",
+  configKey: "alwaysShowWordsHistory",
+  list: [{
+    id: "setAlwaysShowWordsHistoryOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowWordsHistory(false);
+    }
+  }, {
+    id: "setAlwaysShowWordsHistoryOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowWordsHistory(true);
+    }
+  }]
+};
+var commandsIndicateTypos = {
+  title: "Indicate typos...",
+  configKey: "indicateTypos",
+  list: [{
+    id: "setIndicateTyposOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setIndicateTypos(false);
+    }
+  }, {
+    id: "setIndicateTyposOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setIndicateTypos(true);
+    }
+  }]
+};
+var commandsHideExtraLetters = {
+  title: "Hide extra letters...",
+  configKey: "hideExtraLetters",
+  list: [{
+    id: "setHideExtraLettersOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setHideExtraLetters(false);
+    }
+  }, {
+    id: "setHideExtraLettersOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setHideExtraLetters(true);
+    }
+  }]
+};
+var commandsQuickEnd = {
+  title: "Quick end...",
+  configKey: "quickEnd",
+  list: [{
+    id: "setQuickEndOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setQuickEnd(false);
+    }
+  }, {
+    id: "setQuickEndOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setQuickEnd(true);
+    }
+  }]
+};
 var commandsOppositeShiftMode = {
   title: "Change opposite shift mode...",
+  configKey: "oppositeShiftMode",
   list: [{
     id: "setOppositeShiftModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setOppositeShiftMode("off");
+      TestUI.updateModesNotice();
     }
   }, {
     id: "setOppositeShiftModeOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setOppositeShiftMode("on");
+      TestUI.updateModesNotice();
+    }
+  }]
+};
+var commandsSoundOnError = {
+  title: "Sound on error...",
+  configKey: "playSoundOnError",
+  list: [{
+    id: "setPlaySoundOnErrorOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setPlaySoundOnError(false);
+    }
+  }, {
+    id: "setPlaySoundOnErrorOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setPlaySoundOnError(true);
+    }
+  }]
+};
+var commandsFlipTestColors = {
+  title: "Flip test colors...",
+  configKey: "flipTestColors",
+  list: [{
+    id: "setFlipTestColorsOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setFlipTestColors(false);
+    }
+  }, {
+    id: "setFlipTestColorsOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setFlipTestColors(true);
+    }
+  }]
+};
+var commandsSmoothLineScroll = {
+  title: "Smooth line scroll...",
+  configKey: "smoothLineScroll",
+  list: [{
+    id: "setSmoothLineScrollOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setSmoothLineScroll(false);
+    }
+  }, {
+    id: "setSmoothLineScrollOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setSmoothLineScroll(true);
+    }
+  }]
+};
+var commandsAlwaysShowDecimal = {
+  title: "Always show decimal places...",
+  configKey: "alwaysShowDecimalPlaces",
+  list: [{
+    id: "setAlwaysShowDecimalPlacesOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowDecimalPlaces(false);
+    }
+  }, {
+    id: "setAlwaysShowDecimalPlacesOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowDecimalPlaces(true);
+    }
+  }]
+};
+var commandsAlwaysShowCPM = {
+  title: "Always show CPM...",
+  configKey: "alwaysShowCPM",
+  list: [{
+    id: "setAlwaysShowCPMOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowCPM(false);
+    }
+  }, {
+    id: "setAlwaysShowCPMOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setAlwaysShowCPM(true);
+    }
+  }]
+};
+var commandsStartGraphsAtZero = {
+  title: "Start graphs at zero...",
+  configKey: "startGraphsAtZero",
+  list: [{
+    id: "setStartGraphsAtZeroOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setStartGraphsAtZero(false);
+    }
+  }, {
+    id: "setStartGraphsAtZeroOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setStartGraphsAtZero(true);
+    }
+  }]
+};
+var commandsSwapEscAndTab = {
+  title: "Swap esc and tab...",
+  configKey: "swapEscAndTab",
+  list: [{
+    id: "setSwapEscAndTabOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setSwapEscAndTab(false);
+    }
+  }, {
+    id: "setSwapEscAndTabOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setSwapEscAndTab(true);
+    }
+  }]
+};
+var commandsShowAllLines = {
+  title: "Show all lines...",
+  configKey: "showAllLines",
+  list: [{
+    id: "setShowAllLinesOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowAllLines(false);
+    }
+  }, {
+    id: "setShowAllLinesOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowAllLines(true);
+    }
+  }]
+};
+var commandsColorfulMode = {
+  title: "Colorful mode...",
+  configKey: "colorfulMode",
+  list: [{
+    id: "setColorfulModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setColorfulMode(false);
+    }
+  }, {
+    id: "setColorfulModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setColorfulMode(true);
+    }
+  }]
+};
+var commandsOutOfFocusWarning = {
+  title: "Colorful mode...",
+  configKey: "showOutOfFocusWarning",
+  list: [{
+    id: "setShowOutOfFocusWarningOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setShowOutOfFocusWarning(false);
+    }
+  }, {
+    id: "setShowOutOfFocusWarningOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setShowOutOfFocusWarning(true);
     }
   }]
 };
 var commandsKeymapMode = {
-  title: "Change keymap mode...",
+  title: "Keymap mode...",
+  configKey: "keymapMode",
   list: [{
     id: "setKeymapModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setKeymapMode("off");
     }
   }, {
     id: "setKeymapModeStatic",
     display: "static",
+    configValue: "static",
     exec: function exec() {
       UpdateConfig.setKeymapMode("static");
     }
   }, {
     id: "setKeymapModeNext",
     display: "next",
+    configValue: "next",
     exec: function exec() {
       UpdateConfig.setKeymapMode("next");
     }
   }, {
     id: "setKeymapModeReact",
     display: "react",
+    configValue: "react",
     exec: function exec() {
       UpdateConfig.setKeymapMode("react");
     }
   }]
 };
 var commandsSoundOnClick = {
-  title: "Change sound on click...",
+  title: "Sound on click...",
+  configKey: "playSoundOnClick",
   list: [{
     id: "setSoundOnClickOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("off");
     }
   }, {
     id: "setSoundOnClick1",
     display: "1",
+    configValue: "1",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("1");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -676,6 +1195,7 @@ var commandsSoundOnClick = {
   }, {
     id: "setSoundOnClick2",
     display: "2",
+    configValue: "2",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("2");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -683,6 +1203,7 @@ var commandsSoundOnClick = {
   }, {
     id: "setSoundOnClick3",
     display: "3",
+    configValue: "3",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("3");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -690,6 +1211,7 @@ var commandsSoundOnClick = {
   }, {
     id: "setSoundOnClick4",
     display: "4",
+    configValue: "4",
     exec: function exec() {
       UpdateConfig.setPlaySoundOnClick("4");
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -697,84 +1219,132 @@ var commandsSoundOnClick = {
   }]
 };
 var commandsRandomTheme = {
-  title: "Change random theme...",
+  title: "Random theme...",
+  configKey: "randomTheme",
   list: [{
     id: "setRandomOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setRandomTheme("off");
     }
   }, {
     id: "setRandomOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setRandomTheme("on");
     }
   }, {
     id: "setRandomFav",
     display: "fav",
+    configValue: "fav",
     exec: function exec() {
       UpdateConfig.setRandomTheme("fav");
+    }
+  }, {
+    id: "setRandomLight",
+    display: "light",
+    configValue: "light",
+    exec: function exec() {
+      UpdateConfig.setRandomTheme("light");
+    }
+  }, {
+    id: "setRandomDark",
+    display: "dark",
+    configValue: "dark",
+    exec: function exec() {
+      UpdateConfig.setRandomTheme("dark");
     }
   }]
 };
 var commandsDifficulty = {
-  title: "Change difficulty...",
+  title: "Difficulty...",
+  configKey: "difficulty",
   list: [{
     id: "setDifficultyNormal",
-    display: "Normal",
+    display: "normal",
+    configValue: "normal",
     exec: function exec() {
       UpdateConfig.setDifficulty("normal");
     }
   }, {
     id: "setDifficultyExpert",
-    display: "Expert",
+    display: "expert",
+    configValue: "expert",
     exec: function exec() {
       UpdateConfig.setDifficulty("expert");
     }
   }, {
     id: "setDifficultyMaster",
-    display: "Master",
+    display: "master",
+    configValue: "master",
     exec: function exec() {
       UpdateConfig.setDifficulty("master");
     }
   }]
 };
+var commandsCustomTheme = {
+  title: "Custom theme...",
+  configKey: "customTheme",
+  list: [{
+    id: "setCustomThemeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setCustomTheme(false);
+    }
+  }, {
+    id: "setCustomThemeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setCustomTheme(true);
+    }
+  }]
+};
 var commandsCaretStyle = {
   title: "Change caret style...",
+  configKey: "caretStyle",
   list: [{
     id: "setCaretStyleOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setCaretStyle("off");
     }
   }, {
     id: "setCaretStyleDefault",
     display: "line",
+    configValue: "default",
     exec: function exec() {
       UpdateConfig.setCaretStyle("default");
     }
   }, {
     id: "setCaretStyleBlock",
     display: "block",
+    configValue: "block",
     exec: function exec() {
       UpdateConfig.setCaretStyle("block");
     }
   }, {
     id: "setCaretStyleOutline",
     display: "outline-block",
+    configValue: "outline",
     exec: function exec() {
       UpdateConfig.setCaretStyle("outline");
     }
   }, {
     id: "setCaretStyleUnderline",
     display: "underline",
+    configValue: "underliner",
     exec: function exec() {
       UpdateConfig.setCaretStyle("underline");
     }
   }, {
     id: "setCaretStyleCarrot",
     display: "carrot",
+    configValue: "carrot",
     visible: false,
     exec: function exec() {
       UpdateConfig.setCaretStyle("carrot");
@@ -782,6 +1352,7 @@ var commandsCaretStyle = {
   }, {
     id: "setCaretStyleBanana",
     display: "banana",
+    configValue: "banana",
     visible: false,
     exec: function exec() {
       UpdateConfig.setCaretStyle("banana");
@@ -790,39 +1361,39 @@ var commandsCaretStyle = {
 };
 var commandsPaceCaretStyle = {
   title: "Change pace caret style...",
+  configKey: "paceCaretStyle",
   list: [{
-    id: "setPaceCaretStyleOff",
-    display: "off",
-    exec: function exec() {
-      UpdateConfig.setPaceCaretStyle("off");
-    }
-  }, {
     id: "setPaceCaretStyleDefault",
     display: "line",
+    configValue: "default",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("default");
     }
   }, {
     id: "setPaceCaretStyleBlock",
     display: "block",
+    configValue: "block",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("block");
     }
   }, {
     id: "setPaceCaretStyleOutline",
     display: "outline-block",
+    configValue: "outline",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("outline");
     }
   }, {
     id: "setPaceCaretStyleUnderline",
     display: "underline",
+    configValue: "underline",
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("underline");
     }
   }, {
     id: "setPaceCaretStyleCarrot",
     display: "carrot",
+    configValue: "carrot",
     visible: false,
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("carrot");
@@ -830,53 +1401,85 @@ var commandsPaceCaretStyle = {
   }, {
     id: "setPaceCaretStyleBanana",
     display: "banana",
+    configValue: "banana",
     visible: false,
     exec: function exec() {
       UpdateConfig.setPaceCaretStyle("banana");
     }
   }]
 };
+var commandsRepeatedPace = {
+  title: "Repeated pace...",
+  configKey: "repeatedPace",
+  list: [{
+    id: "setRepeatedPaceOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setRepeatedPace(false);
+    }
+  }, {
+    id: "setRepeatedPaceOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setRepeatedPace(true);
+    }
+  }]
+};
 var commandsPaceCaret = {
-  title: "Change pace caret mode...",
+  title: "Pace caret mode...",
+  configKey: "paceCaret",
   list: [{
     id: "setPaceCaretOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setPaceCaret("off");
+      TestLogic.restart();
     }
   }, {
     id: "setPaceCaretPb",
     display: "pb",
+    configValue: "pb",
     exec: function exec() {
       UpdateConfig.setPaceCaret("pb");
+      TestLogic.restart();
     }
   }, {
     id: "setPaceCaretAverage",
     display: "average",
+    configValue: "average",
     exec: function exec() {
       UpdateConfig.setPaceCaret("average");
+      TestLogic.restart();
     }
   }, {
     id: "setPaceCaretCustom",
     display: "custom...",
+    configValue: "custom",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setPaceCaretCustomSpeed(input);
       UpdateConfig.setPaceCaret("custom");
+      TestLogic.restart();
     }
   }]
 };
 var commandsMinWpm = {
   title: "Change min wpm mode...",
+  configKey: "minWpm",
   list: [{
     id: "setMinWpmOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setMinWpm("off");
     }
   }, {
     id: "setMinWpmCustom",
     display: "custom...",
+    configValue: "custom",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setMinWpmCustomSpeed(input);
@@ -886,15 +1489,18 @@ var commandsMinWpm = {
 };
 var commandsMinAcc = {
   title: "Change min accuracy mode...",
+  configKey: "minAcc",
   list: [{
     id: "setMinAccOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setMinAcc("off");
     }
   }, {
     id: "setMinAccCustom",
     display: "custom...",
+    configValue: "custom",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setMinAccCustom(input);
@@ -902,117 +1508,175 @@ var commandsMinAcc = {
     }
   }]
 };
+var commandsMinBurst = {
+  title: "Change min burst mode...",
+  configKey: "minBurst",
+  list: [{
+    id: "setMinBurstOff",
+    display: "off",
+    configValue: "off",
+    exec: function exec() {
+      UpdateConfig.setMinBurst("off");
+    }
+  }, {
+    id: "setMinBurstFixed",
+    display: "fixed...",
+    configValue: "fixed",
+    input: true,
+    exec: function exec(input) {
+      UpdateConfig.setMinBurst("fixed");
+      UpdateConfig.setMinBurstCustomSpeed(input);
+    }
+  }, {
+    id: "setMinBurstFlex",
+    display: "flex...",
+    configValue: "flex",
+    input: true,
+    exec: function exec(input) {
+      UpdateConfig.setMinBurst("flex");
+      UpdateConfig.setMinBurstCustomSpeed(input);
+    }
+  }]
+};
 var commandsKeymapStyle = {
-  title: "Change keymap style...",
+  title: "Keymap style...",
+  configKey: "keymapStyle",
   list: [{
     id: "setKeymapStyleStaggered",
     display: "staggered",
+    configValue: "staggered",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("staggered");
     }
   }, {
     id: "setKeymapStyleMatrix",
     display: "matrix",
+    configValue: "matrix",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("matrix");
     }
   }, {
     id: "setKeymapStyleSplit",
     display: "split",
+    configValue: "split",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("split");
     }
   }, {
     id: "setKeymapStyleSplitMatrix",
     display: "split matrix",
+    configValue: "split_matrix",
     exec: function exec() {
       UpdateConfig.setKeymapStyle("split_matrix");
     }
   }]
 };
 var commandsKeymapLegendStyle = {
-  title: "Change keymap legend style...",
+  title: "Keymap legend style...",
+  configKey: "keymapLegendStyle",
   list: [{
     id: "setKeymapLegendStyleLowercase",
     display: "lowercase",
+    configValue: "lowercase",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("lowercase");
     }
   }, {
     id: "setKeymapLegendStyleUppercase",
     display: "uppercase",
+    configValue: "uppercase",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("uppercase");
     }
   }, {
     id: "setKeymapLegendStyleBlank",
     display: "blank",
+    configValue: "blank",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("blank");
     }
   }]
 };
 var commandsHighlightMode = {
-  title: "Change highlight mode...",
+  title: "Highlight mode...",
+  configKey: "highlightMode",
   list: [{
+    id: "setHighlightModeOff",
+    display: "off",
+    configValue: "off",
+    exec: function exec() {
+      UpdateConfig.setHighlightMode("off");
+    }
+  }, {
     id: "setHighlightModeLetter",
     display: "letter",
+    configValue: "letter",
     exec: function exec() {
       UpdateConfig.setHighlightMode("letter");
     }
   }, {
     id: "setHighlightModeWord",
     display: "word",
+    configValue: "word",
     exec: function exec() {
       UpdateConfig.setHighlightMode("word");
     }
   }]
 };
 var commandsTimerStyle = {
-  title: "Change timer/progress style...",
+  title: "Timer/progress style...",
+  configKey: "timerStyle",
   list: [{
     id: "setTimerStyleBar",
     display: "bar",
+    configValue: "bar",
     exec: function exec() {
       UpdateConfig.setTimerStyle("bar");
     }
   }, {
     id: "setTimerStyleText",
     display: "text",
+    configValue: "text",
     exec: function exec() {
       UpdateConfig.setTimerStyle("text");
     }
   }, {
     id: "setTimerStyleMini",
     display: "mini",
+    configValue: "mini",
     exec: function exec() {
       UpdateConfig.setTimerStyle("mini");
     }
   }]
 };
 var commandsTimerColor = {
-  title: "Change timer/progress color...",
+  title: "Timer/progress color...",
+  configKey: "timerColor",
   list: [{
     id: "setTimerColorBlack",
     display: "black",
+    configValue: "black",
     exec: function exec() {
       UpdateConfig.setTimerColor("bar");
     }
   }, {
     id: "setTimerColorSub",
     display: "sub",
+    configValue: "sub",
     exec: function exec() {
       UpdateConfig.setTimerColor("sub");
     }
   }, {
     id: "setTimerColorText",
     display: "text",
+    configValue: "text",
     exec: function exec() {
       UpdateConfig.setTimerColor("text");
     }
   }, {
     id: "setTimerColorMain",
     display: "main",
+    configValue: "main",
     exec: function exec() {
       UpdateConfig.setTimerColor("main");
     }
@@ -1020,43 +1684,51 @@ var commandsTimerColor = {
 };
 var commandsSingleListCommandLine = {
   title: "Single list command line...",
+  configKey: "singleListCommandLine",
   list: [{
     id: "singleListCommandLineManual",
     display: "manual",
+    configValue: "manual",
     exec: function exec() {
       UpdateConfig.setSingleListCommandLine("manual");
     }
   }, {
     id: "singleListCommandLineOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setSingleListCommandLine("on");
     }
   }]
 };
 var commandsTimerOpacity = {
-  title: "Change timer opacity...",
+  title: "Timer/progress opacity...",
+  configKey: "timerOpacity",
   list: [{
     id: "setTimerOpacity.25",
     display: ".25",
+    configValue: 0.25,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(0.25);
     }
   }, {
     id: "setTimerOpacity.5",
     display: ".5",
+    configValue: 0.5,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(0.5);
     }
   }, {
     id: "setTimerOpacity.75",
     display: ".75",
+    configValue: 0.75,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(0.75);
     }
   }, {
     id: "setTimerOpacity1",
     display: "1",
+    configValue: 1,
     exec: function exec() {
       UpdateConfig.setTimerOpacity(1);
     }
@@ -1064,9 +1736,11 @@ var commandsTimerOpacity = {
 };
 var commandsWordCount = {
   title: "Change word count...",
+  configKey: "words",
   list: [{
     id: "changeWordCount10",
     display: "10",
+    configValue: 10,
     exec: function exec() {
       UpdateConfig.setWordCount("10");
       TestLogic.restart();
@@ -1074,6 +1748,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount25",
     display: "25",
+    configValue: 25,
     exec: function exec() {
       UpdateConfig.setWordCount("25");
       TestLogic.restart();
@@ -1081,6 +1756,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount50",
     display: "50",
+    configValue: 50,
     exec: function exec() {
       UpdateConfig.setWordCount("50");
       TestLogic.restart();
@@ -1088,6 +1764,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount100",
     display: "100",
+    configValue: 100,
     exec: function exec() {
       UpdateConfig.setWordCount("100");
       TestLogic.restart();
@@ -1095,6 +1772,7 @@ var commandsWordCount = {
   }, {
     id: "changeWordCount200",
     display: "200",
+    configValue: 200,
     exec: function exec() {
       UpdateConfig.setWordCount("200");
       TestLogic.restart();
@@ -1111,9 +1789,11 @@ var commandsWordCount = {
 };
 var commandsQuoteLengthConfig = {
   title: "Change quote length...",
+  configKey: "quoteLength",
   list: [{
     id: "changeQuoteLengthAll",
     display: "all",
+    configValue: [0, 1, 2, 3],
     exec: function exec() {
       UpdateConfig.setQuoteLength([0, 1, 2, 3]);
       TestLogic.restart();
@@ -1121,6 +1801,8 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthShort",
     display: "short",
+    configValue: 0,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(0);
       TestLogic.restart();
@@ -1128,6 +1810,8 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthMedium",
     display: "medium",
+    configValue: 1,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(1);
       TestLogic.restart();
@@ -1135,6 +1819,8 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthLong",
     display: "long",
+    configValue: 2,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(2);
       TestLogic.restart();
@@ -1142,17 +1828,101 @@ var commandsQuoteLengthConfig = {
   }, {
     id: "changeQuoteLengthThicc",
     display: "thicc",
+    configValue: 3,
+    configValueMode: "include",
     exec: function exec() {
       UpdateConfig.setQuoteLength(3);
       TestLogic.restart();
     }
   }]
 };
+var commandsPunctuation = {
+  title: "Change punctuation...",
+  configKey: "punctuation",
+  list: [{
+    id: "changePunctuationOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setPunctuation(true);
+      TestLogic.restart();
+    }
+  }, {
+    id: "changePunctuationOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setPunctuation(false);
+      TestLogic.restart();
+    }
+  }]
+};
+var commandsNumbers = {
+  title: "Numbers...",
+  configKey: "numbers",
+  list: [{
+    id: "changeNumbersOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setNumbers(true);
+      TestLogic.restart();
+    }
+  }, {
+    id: "changeNumbersOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setNumbers(false);
+      TestLogic.restart();
+    }
+  }]
+};
+var commandsSmoothCaret = {
+  title: "Smooth caret...",
+  configKey: "smoothCaret",
+  list: [{
+    id: "changeSmoothCaretOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setSmoothCaret(true);
+    }
+  }, {
+    id: "changeSmoothCaretOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setSmoothCaret(false);
+    }
+  }]
+};
+var commandsQuickTab = {
+  title: "Quick tab...",
+  configKey: "quickTab",
+  list: [{
+    id: "changeQuickTabOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setQuickTabMode(true);
+    }
+  }, {
+    id: "changeQuickTabOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setQuickTabMode(false);
+    }
+  }]
+};
 var commandsMode = {
   title: "Change mode...",
+  configKey: "mode",
   list: [{
     id: "changeModeTime",
     display: "time",
+    configValue: "time",
     exec: function exec() {
       UpdateConfig.setMode("time");
       TestLogic.restart();
@@ -1160,6 +1930,7 @@ var commandsMode = {
   }, {
     id: "changeModeWords",
     display: "words",
+    configValue: "words",
     exec: function exec() {
       UpdateConfig.setMode("words");
       TestLogic.restart();
@@ -1167,6 +1938,7 @@ var commandsMode = {
   }, {
     id: "changeModeQuote",
     display: "quote",
+    configValue: "quote",
     exec: function exec() {
       UpdateConfig.setMode("quote");
       TestLogic.restart();
@@ -1174,6 +1946,7 @@ var commandsMode = {
   }, {
     id: "changeModeCustom",
     display: "custom",
+    configValue: "custom",
     exec: function exec() {
       UpdateConfig.setMode("custom");
       TestLogic.restart();
@@ -1181,6 +1954,7 @@ var commandsMode = {
   }, {
     id: "changeModeZen",
     display: "zen",
+    configValue: "zen",
     exec: function exec() {
       UpdateConfig.setMode("zen");
       ManualRestart.set();
@@ -1190,9 +1964,11 @@ var commandsMode = {
 };
 var commandsTimeConfig = {
   title: "Change time config...",
+  configKey: "time",
   list: [{
     id: "changeTimeConfig15",
     display: "15",
+    configValue: 15,
     exec: function exec() {
       UpdateConfig.setTimeConfig("15");
       TestLogic.restart();
@@ -1200,6 +1976,7 @@ var commandsTimeConfig = {
   }, {
     id: "changeTimeConfig30",
     display: "30",
+    configValue: 30,
     exec: function exec() {
       UpdateConfig.setTimeConfig("30");
       TestLogic.restart();
@@ -1207,6 +1984,7 @@ var commandsTimeConfig = {
   }, {
     id: "changeTimeConfig60",
     display: "60",
+    configValue: 60,
     exec: function exec() {
       UpdateConfig.setTimeConfig("60");
       TestLogic.restart();
@@ -1214,6 +1992,7 @@ var commandsTimeConfig = {
   }, {
     id: "changeTimeConfig120",
     display: "120",
+    configValue: 120,
     exec: function exec() {
       UpdateConfig.setTimeConfig("120");
       TestLogic.restart();
@@ -1229,54 +2008,64 @@ var commandsTimeConfig = {
   }]
 };
 var commandsConfidenceMode = {
-  title: "Change confidence mode...",
+  title: "Confidence mode...",
+  configKey: "confidenceMode",
   list: [{
     id: "changeConfidenceModeOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setConfidenceMode("off");
     }
   }, {
     id: "changeConfidenceModeOn",
     display: "on",
+    configValue: "on",
     exec: function exec() {
       UpdateConfig.setConfidenceMode("on");
     }
   }, {
     id: "changeConfidenceModeMax",
     display: "max",
+    configValue: "max",
     exec: function exec() {
       UpdateConfig.setConfidenceMode("max");
     }
   }]
 };
 var commandsStopOnError = {
-  title: "Change stop on error...",
+  title: "Stop on error...",
+  configKey: "stopOnError",
   list: [{
     id: "changeStopOnErrorOff",
     display: "off",
+    configValue: "off",
     exec: function exec() {
       UpdateConfig.setStopOnError("off");
     }
   }, {
     id: "changeStopOnErrorLetter",
     display: "letter",
+    configValue: "letter",
     exec: function exec() {
       UpdateConfig.setStopOnError("letter");
     }
   }, {
     id: "changeStopOnErrorWord",
     display: "word",
+    configValue: "word",
     exec: function exec() {
       UpdateConfig.setStopOnError("word");
     }
   }]
 };
 var commandsFontSize = {
-  title: "Change font size...",
+  title: "Font size...",
+  configKey: "fontSize",
   list: [{
     id: "changeFontSize1",
     display: "1x",
+    configValue: 1,
     exec: function exec() {
       UpdateConfig.setFontSize(1);
       TestLogic.restart();
@@ -1284,6 +2073,7 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize125",
     display: "1.25x",
+    configValue: 125,
     exec: function exec() {
       UpdateConfig.setFontSize(125);
       TestLogic.restart();
@@ -1291,6 +2081,7 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize15",
     display: "1.5x",
+    configValue: 15,
     exec: function exec() {
       UpdateConfig.setFontSize(15);
       TestLogic.restart();
@@ -1298,6 +2089,7 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize2",
     display: "2x",
+    configValue: 2,
     exec: function exec() {
       UpdateConfig.setFontSize(2);
       TestLogic.restart();
@@ -1305,48 +2097,64 @@ var commandsFontSize = {
   }, {
     id: "changeFontSize3",
     display: "3x",
+    configValue: 3,
     exec: function exec() {
       UpdateConfig.setFontSize(3);
+      TestLogic.restart();
+    }
+  }, {
+    id: "changeFontSize4",
+    display: "4x",
+    configValue: 4,
+    exec: function exec() {
+      UpdateConfig.setFontSize(4);
       TestLogic.restart();
     }
   }]
 };
 var commandsPageWidth = {
-  title: "Change page width...",
+  title: "Page width...",
+  configKey: "pageWidth",
   list: [{
     id: "setPageWidth100",
     display: "100",
+    configValue: "100",
     exec: function exec() {
       UpdateConfig.setPageWidth("100");
     }
   }, {
     id: "setPageWidth125",
     display: "125",
+    configValue: "125",
     exec: function exec() {
       UpdateConfig.setPageWidth("125");
     }
   }, {
     id: "setPageWidth150",
     display: "150",
+    configValue: "150",
     exec: function exec() {
       UpdateConfig.setPageWidth("150");
     }
   }, {
     id: "setPageWidth200",
     display: "200",
+    configValue: "200",
     exec: function exec() {
       UpdateConfig.setPageWidth("200");
     }
   }, {
     id: "setPageWidthMax",
     display: "max",
+    configValue: "max",
     exec: function exec() {
       UpdateConfig.setPageWidth("max");
     }
   }]
 };
 var themeCommands = {
-  title: "Change theme...",
+  title: "Theme...",
+  configKey: "theme",
   list: []
 };
 exports.themeCommands = themeCommands;
@@ -1355,6 +2163,7 @@ Misc.getThemesList().then(function (themes) {
     themeCommands.list.push({
       id: "changeTheme" + Misc.capitalizeFirstLetter(theme.name),
       display: theme.name.replace(/_/g, " "),
+      configValue: theme.name,
       hover: function hover() {
         // previewTheme(theme.name);
         ThemeController.preview(theme.name);
@@ -1420,523 +2229,477 @@ var commandsCopyWordsToClipboard = {
     }
   }]
 };
+var commandsMonkeyPowerLevel = {
+  title: "Power mode...",
+  configKey: "monkeyPowerLevel",
+  list: [{
+    id: "monkeyPowerLevelOff",
+    display: "off",
+    configValue: "off",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("off");
+    }
+  }, {
+    id: "monkeyPowerLevel1",
+    display: "mellow",
+    configValue: "1",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("1");
+    }
+  }, {
+    id: "monkeyPowerLevel2",
+    display: "high",
+    configValue: "2",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("2");
+    }
+  }, {
+    id: "monkeyPowerLevel3",
+    display: "ultra",
+    configValue: "3",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("3");
+    }
+  }, {
+    id: "monkeyPowerLevel4",
+    display: "over 9000",
+    configValue: "4",
+    exec: function exec() {
+      return UpdateConfig.setMonkeyPowerLevel("4");
+    }
+  }]
+};
 var defaultCommands = {
   title: "",
   list: [{
-    id: "togglePunctuation",
-    display: "Toggle punctuation",
-    exec: function exec() {
-      UpdateConfig.togglePunctuation();
-      TestLogic.restart();
+    id: "changePunctuation",
+    display: "Punctuation...",
+    subgroup: commandsPunctuation,
+    icon: "!?",
+    shift: {
+      display: "Toggle punctuation",
+      exec: function exec() {
+        UpdateConfig.togglePunctuation();
+      }
     }
   }, {
     id: "changeMode",
-    display: "Change mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsMode);
-      Commandline.show();
-    }
+    display: "Mode...",
+    icon: "fa-bars",
+    subgroup: commandsMode
   }, {
     id: "changeTimeConfig",
-    display: "Change time config...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimeConfig);
-      Commandline.show();
-    }
+    display: "Time...",
+    icon: "fa-clock",
+    subgroup: commandsTimeConfig
   }, {
     id: "changeWordCount",
-    display: "Change word count...",
+    display: "Words...",
     alias: "words",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsWordCount);
-      Commandline.show();
-    }
+    icon: "fa-font",
+    subgroup: commandsWordCount
   }, {
     id: "changeQuoteLength",
-    display: "Change quote length...",
+    display: "Quote length...",
+    icon: "fa-quote-right",
     alias: "quotes",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsQuoteLengthConfig);
-      Commandline.show();
-    }
+    subgroup: commandsQuoteLengthConfig
   }, {
     id: "changeConfidenceMode",
-    display: "Change confidence mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsConfidenceMode);
-      Commandline.show();
-    }
+    display: "Confidence mode...",
+    icon: "fa-backspace",
+    subgroup: commandsConfidenceMode
   }, {
     id: "changeStopOnError",
-    display: "Change stop on error...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsStopOnError);
-      Commandline.show();
-    }
+    display: "Stop on error...",
+    icon: "fa-hand-paper",
+    subgroup: commandsStopOnError
   }, {
     id: "changeSoundOnClick",
-    display: "Change sound on click...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsSoundOnClick);
-      Commandline.show();
-    }
+    display: "Sound on click...",
+    icon: "fa-volume-up",
+    subgroup: commandsSoundOnClick
   }, {
-    id: "toggleNumbers",
-    display: "Toggle numbers",
-    exec: function exec() {
-      UpdateConfig.toggleNumbers();
-      TestLogic.restart();
-    }
+    id: "changeNumbers",
+    display: "Numbers...",
+    icon: "15",
+    subgroup: commandsNumbers
   }, {
-    id: "toggleSmoothCaret",
-    display: "Toggle smooth caret",
-    exec: function exec() {
-      UpdateConfig.toggleSmoothCaret();
-    }
+    id: "changeSmoothCaret",
+    display: "Smooth caret...",
+    icon: "fa-i-cursor",
+    subgroup: commandsSmoothCaret
   }, {
-    id: "toggleQuickTab",
-    display: "Toggle quick tab mode",
-    exec: function exec() {
-      console.log("before command");
-      console.log(UpdateConfig["default"].quickTab);
-      UpdateConfig.toggleQuickTabMode();
-      console.log("after command");
-      console.log(UpdateConfig["default"].quickTab);
-    }
+    id: "changeQuickTab",
+    display: "Quick tab...",
+    icon: "fa-redo-alt",
+    subgroup: commandsQuickTab
   }, {
     id: "changeRepeatQuotes",
-    display: "Change repeat quotes...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsRepeatQuotes);
-      Commandline.show();
-    }
+    display: "Repeat quotes...",
+    icon: "fa-sync-alt",
+    subgroup: commandsRepeatQuotes
   }, {
-    id: "toggleShowLiveWpm",
-    display: "Toggle live wpm display",
-    exec: function exec() {
-      UpdateConfig.toggleShowLiveWpm();
-    }
+    id: "changeLiveWpm",
+    display: "Live WPM...",
+    icon: "fa-tachometer-alt",
+    subgroup: commandsLiveWpm
   }, {
-    id: "toggleShowLiveAcc",
-    display: "Toggle live accuracy display",
-    exec: function exec() {
-      UpdateConfig.toggleLiveAcc();
-    }
+    id: "changeLiveAcc",
+    display: "Live accuracy...",
+    icon: "fa-percentage",
+    subgroup: commandsLiveAcc
   }, {
-    id: "toggleTimerBar",
-    display: "Toggle timer display",
-    exec: function exec() {
-      UpdateConfig.toggleShowTimerProgress();
-    }
+    id: "changeLiveBurst",
+    display: "Live burst...",
+    icon: "fa-fire-alt",
+    subgroup: commandsLiveBurst
   }, {
-    id: "toggleKeyTips",
-    display: "Toggle keybind tips",
-    exec: function exec() {
-      UpdateConfig.toggleKeyTips();
-    }
+    id: "changeShowTimer",
+    display: "Timer/progress...",
+    icon: "fa-clock",
+    subgroup: commandsShowTimer
   }, {
-    id: "toggleFreedom",
-    display: "Toggle freedom mode",
-    exec: function exec() {
-      UpdateConfig.toggleFreedomMode();
-    }
+    id: "changeKeyTips",
+    display: "Key tips...",
+    icon: "fa-question",
+    subgroup: commandsKeyTips
   }, {
-    id: "toggleStrictSpace",
-    display: "Toggle strict space",
-    exec: function exec() {
-      UpdateConfig.toggleStrictSpace();
-    }
+    id: "changeFreedomMode",
+    display: "Freedom mode...",
+    subgroup: commandsFreedomMode
   }, {
-    id: "toggleBlindMode",
-    display: "Toggle blind mode",
-    exec: function exec() {
-      UpdateConfig.toggleBlindMode();
-    }
+    id: "changeStrictSpace",
+    display: "Strict space...",
+    icon: "fa-minus",
+    subgroup: commandsStrictSpace
   }, {
-    id: "toggleAlwaysShowWordsHistory",
-    display: "Toggle always show words history",
-    exec: function exec() {
-      UpdateConfig.toggleAlwaysShowWordsHistory();
-    }
+    id: "changeBlindMode",
+    display: "Blind mode...",
+    icon: "fa-eye-slash",
+    subgroup: commandsBlindMode
   }, {
-    id: "toggleIndicateTypos",
-    display: "Toggle indicate typos",
-    exec: function exec() {
-      UpdateConfig.toggleIndicateTypos();
-    }
+    id: "changeShowWordsHistory",
+    display: "Always show words history...",
+    icon: "fa-align-left",
+    subgroup: commandsShowWordsHistory
   }, {
-    id: "toggleHideExtraLetters",
-    display: "Toggle hide extra letters",
-    exec: function exec() {
-      UpdateConfig.toggleHideExtraLetters();
-    }
+    id: "changeIndicateTypos",
+    display: "Indicate typos...",
+    icon: "fa-exclamation",
+    subgroup: commandsIndicateTypos
   }, {
-    id: "toggleQuickEnd",
-    display: "Toggle quick end",
-    exec: function exec() {
-      UpdateConfig.toggleQuickEnd();
-    }
+    id: "changeHideExtraLetters",
+    display: "Hide extra letters...",
+    icon: "fa-eye-slash",
+    subgroup: commandsHideExtraLetters
+  }, {
+    id: "changeQuickEnd",
+    display: "Quick end...",
+    icon: "fa-step-forward",
+    subgroup: commandsQuickEnd
   }, {
     id: "singleListCommandLine",
     display: "Single list command line...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsSingleListCommandLine);
-      Commandline.show();
-    }
+    icon: "fa-list",
+    subgroup: commandsSingleListCommandLine
   }, {
     id: "changeMinWpm",
-    display: "Change min wpm mode...",
+    display: "Minimum wpm...",
     alias: "minimum",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsMinWpm);
-      Commandline.show();
-    }
+    icon: "fa-bomb",
+    subgroup: commandsMinWpm
   }, {
     id: "changeMinAcc",
-    display: "Change min accuracy mode...",
+    display: "Minimum accuracy...",
     alias: "minimum",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsMinAcc);
-      Commandline.show();
-    }
+    icon: "fa-bomb",
+    subgroup: commandsMinAcc
+  }, {
+    id: "changeMinBurst",
+    display: "Minimum burst...",
+    alias: "minimum",
+    icon: "fa-bomb",
+    subgroup: commandsMinBurst
   }, {
     id: "changeOppositeShiftMode",
     display: "Change opposite shift mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsOppositeShiftMode);
-      Commandline.show();
-    }
+    icon: "fa-exchange-alt",
+    subgroup: commandsOppositeShiftMode
   }, {
-    id: "togglePlaySoundOnError",
-    display: "Toggle play sound on error",
-    exec: function exec() {
-      UpdateConfig.togglePlaySoundOnError();
-    }
+    id: "changeSoundOnError",
+    display: "Sound on error...",
+    icon: "fa-volume-mute",
+    subgroup: commandsSoundOnError
   }, {
-    id: "toggleFlipTestColors",
-    display: "Toggle flip test colors",
-    exec: function exec() {
-      UpdateConfig.toggleFlipTestColors();
-    }
+    id: "changeFlipTestColors",
+    display: "Flip test colors...",
+    icon: "fa-adjust",
+    subgroup: commandsFlipTestColors
   }, {
-    id: "toggleSmoothLineScroll",
-    display: "Toggle smooth line scroll",
-    exec: function exec() {
-      UpdateConfig.toggleSmoothLineScroll();
-    }
+    id: "changeSmoothLineScroll",
+    display: "Smooth line scroll...",
+    icon: "fa-align-left",
+    subgroup: commandsSmoothLineScroll
   }, {
-    id: "toggleAlwaysShowDecimalPlaces",
-    display: "Toggle always show decimal places",
-    exec: function exec() {
-      UpdateConfig.toggleAlwaysShowDecimalPlaces();
-    }
+    id: "changeAlwaysShowDecimal",
+    display: "Always show decimal places...",
+    icon: "00",
+    subgroup: commandsAlwaysShowDecimal
   }, {
-    id: "toggleAlwaysShowCPM",
-    display: "Toggle always show CPM",
-    exec: function exec() {
-      UpdateConfig.toggleAlwaysShowCPM();
-    }
+    id: "changeAlwaysShowCPM",
+    display: "Always show CPM...",
+    icon: "fa-tachometer-alt",
+    subgroup: commandsAlwaysShowCPM
   }, {
-    id: "toggleStartGraphsAtZero",
-    display: "Toggle start graphs at zero",
-    exec: function exec() {
-      UpdateConfig.toggleStartGraphsAtZero();
-    }
+    id: "changeStartGraphsAtZero",
+    display: "Start graphs at zero...",
+    icon: "fa-chart-line",
+    subgroup: commandsStartGraphsAtZero
   }, {
-    id: "toggleSwapEscAndTab",
-    display: "Toggle swap esc and tab",
-    exec: function exec() {
-      UpdateConfig.toggleSwapEscAndTab();
-    }
+    id: "changeSwapEscAndTab",
+    display: "Swap esc and tab...",
+    icon: "fa-exchange-alt",
+    subgroup: commandsSwapEscAndTab
   }, {
-    id: "toggleShowAllLines",
-    display: "Toggle show all lines",
-    exec: function exec() {
-      UpdateConfig.toggleShowAllLines();
-    }
+    id: "changeShowAllLines",
+    display: "Show all lines...",
+    icon: "fa-align-left",
+    subgroup: commandsShowAllLines
   }, {
-    id: "toggleColorfulMode",
-    display: "Toggle colorful mode",
-    exec: function exec() {
-      UpdateConfig.toggleColorfulMode();
-    }
+    id: "changeColorfulMode",
+    display: "Colorful mode...",
+    icon: "fa-fill-drip",
+    subgroup: commandsColorfulMode
   }, {
-    id: "toggleShowOutOfFocusWarning",
-    display: "Toggle out of focus warning",
-    exec: function exec() {
-      UpdateConfig.toggleShowOutOfFocusWarning();
-    }
+    id: "changeOutOfFocusWarning",
+    display: "Out of focus warning...",
+    icon: "fa-exclamation",
+    subgroup: commandsOutOfFocusWarning
   }, {
-    id: "toggleCustomTheme",
-    display: "Toggle preset/custom theme",
+    id: "changeTheme",
+    display: "Theme...",
+    icon: "fa-palette",
+    subgroup: themeCommands
+  }, {
+    id: "setCustomTheme",
+    display: "Custom theme...",
+    icon: "fa-palette",
+    subgroup: commandsCustomTheme
+  }, {
+    id: "changeRandomTheme",
+    display: "Random theme...",
+    icon: "fa-random",
+    subgroup: commandsRandomTheme
+  }, {
+    id: "randomizeTheme",
+    display: "Next random theme",
+    icon: "fa-random",
     exec: function exec() {
-      UpdateConfig.toggleCustomTheme();
+      return ThemeController.randomizeTheme();
     }
   }, {
     id: "changeDifficulty",
-    display: "Change difficulty...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsDifficulty);
-      Commandline.show();
-    }
+    display: "Difficulty...",
+    icon: "fa-star",
+    subgroup: commandsDifficulty
   }, {
     id: "changeCaretStyle",
-    display: "Change caret style...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsCaretStyle);
-      Commandline.show();
-    }
+    display: "Caret style...",
+    icon: "fa-i-cursor",
+    subgroup: commandsCaretStyle
   }, {
     id: "changePaceCaret",
-    display: "Change pace caret mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsPaceCaret);
-      Commandline.show();
-    }
+    display: "Pace caret mode...",
+    icon: "fa-i-cursor",
+    subgroup: commandsPaceCaret
   }, {
     id: "changePaceCaretStyle",
-    display: "Change pace caret style...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsPaceCaretStyle);
-      Commandline.show();
-    }
+    display: "Pace caret style...",
+    icon: "fa-i-cursor",
+    subgroup: commandsPaceCaretStyle
+  }, {
+    id: "changeRepeatedPace",
+    display: "Repeated pace...",
+    icon: "fa-i-cursor",
+    subgroup: commandsRepeatedPace
   }, {
     id: "changeTimerStyle",
-    display: "Change timer/progress style...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimerStyle);
-      Commandline.show();
-    }
+    display: "Timer/progress style...",
+    icon: "fa-clock",
+    subgroup: commandsTimerStyle
   }, {
     id: "changeTimerColor",
-    display: "Change timer/progress color...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimerColor);
-      Commandline.show();
-    }
+    display: "Timer/progress color...",
+    icon: "fa-clock",
+    subgroup: commandsTimerColor
   }, {
     id: "changeTimerOpacity",
-    display: "Change timer/progress opacity...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsTimerOpacity);
-      Commandline.show();
-    }
+    display: "Timer/progress opacity...",
+    icon: "fa-clock",
+    subgroup: commandsTimerOpacity
   }, {
     id: "changeHighlightMode",
-    display: "Change highlight mode...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsHighlightMode);
-      Commandline.show();
-    }
+    display: "Highlight mode...",
+    icon: "fa-highlighter",
+    subgroup: commandsHighlightMode
   }, {
     id: "changeCustomBackground",
-    display: "Change custom background...",
+    display: "Custom background...",
+    icon: "fa-image",
     defaultValue: "",
     input: true,
     exec: function exec(input) {
       UpdateConfig.setCustomBackground(input);
     }
   }, {
-    id: "changeTheme",
-    display: "Change theme...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(themeCommands);
-      Commandline.show();
-    }
-  }, {
-    id: "changeRandomTheme",
-    display: "Change random theme...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsRandomTheme);
-      Commandline.show();
-    }
-  }, {
     id: "changeLanguage",
-    display: "Change language...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsLanguages);
-      Commandline.show();
-    }
+    display: "Language...",
+    icon: "fa-language",
+    subgroup: commandsLanguages
   }, {
     id: "changeFunbox",
-    display: "Change funbox...",
+    display: "Funbox...",
     alias: "fun box",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsFunbox);
-      Commandline.show();
-    }
+    icon: "fa-gamepad",
+    subgroup: commandsFunbox
   }, {
-    id: "toggleCapsLockBackspace",
-    display: "Toggle caps lock backspace",
-    exec: function exec() {
-      UpdateConfig.toggleCapsLockBackspace();
-    }
+    id: "changeCapsLockBackspace",
+    display: "Caps lock backspace...",
+    icon: "fa-backspace",
+    subgroup: commandsCapsLockBackspace
   }, {
     id: "changeLayout",
-    display: "Change layout...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsLayouts);
-      Commandline.show();
-    }
+    display: "Layout...",
+    icon: "fa-keyboard",
+    subgroup: commandsLayouts
   }, {
     id: "toggleKeymap",
-    display: "Change keymap mode...",
-    subgroup: true,
+    display: "Keymap mode...",
+    icon: "fa-keyboard",
     alias: "keyboard",
-    exec: function exec() {
-      current.push(commandsKeymapMode);
-      Commandline.show();
-    }
+    subgroup: commandsKeymapMode
   }, {
     id: "changeKeymapStyle",
-    display: "Change keymap style...",
+    display: "Keymap style...",
     alias: "keyboard",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsKeymapStyle);
-      Commandline.show();
-    }
+    icon: "fa-keyboard",
+    subgroup: commandsKeymapStyle
   }, {
     id: "changeKeymapLegendStyle",
-    display: "Change keymap legend style...",
+    display: "Keymap legend style...",
     alias: "keyboard",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsKeymapLegendStyle);
-      Commandline.show();
-    }
+    icon: "fa-keyboard",
+    subgroup: commandsKeymapLegendStyle
   }, {
     id: "changeKeymapLayout",
-    display: "Change keymap layout...",
+    display: "Keymap layout...",
     alias: "keyboard",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsKeymapLayouts);
-      Commandline.show();
+    icon: "fa-keyboard",
+    subgroup: commandsKeymapLayouts
+  }, {
+    id: "changeCustomLayoutfluid",
+    display: "Custom layoutfluid...",
+    defaultValue: "qwerty dvorak colemak",
+    input: true,
+    icon: "fa-tint",
+    exec: function exec(input) {
+      UpdateConfig.setCustomLayoutfluid(input);
+      if (UpdateConfig["default"].funbox === "layoutfluid") TestLogic.restart(); // UpdateConfig.setLayout(
+      //   Config.customLayoutfluid
+      //     ? Config.customLayoutfluid.split("_")[0]
+      //     : "qwerty"
+      // );
+      // UpdateConfig.setKeymapLayout(
+      //   Config.customLayoutfluid
+      //     ? Config.customLayoutfluid.split("_")[0]
+      //     : "qwerty"
+      // );
     }
   }, {
     id: "changeFontSize",
-    display: "Change font size...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsFontSize);
-      Commandline.show();
-    }
+    display: "Font size...",
+    icon: "fa-font",
+    subgroup: commandsFontSize
   }, {
     id: "changeFontFamily",
-    display: "Change font family...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsFonts);
-      Commandline.show();
-    }
+    display: "Font family...",
+    icon: "fa-font",
+    subgroup: commandsFonts
   }, {
     id: "changePageWidth",
-    display: "Change page width...",
-    subgroup: true,
-    exec: function exec() {
-      current.push(commandsPageWidth);
-      Commandline.show();
-    }
-  }, {
-    id: "randomiseTheme",
-    display: "Next random theme",
-    exec: function exec() {
-      return ThemeController.randomiseTheme();
-    }
+    display: "Page width...",
+    icon: "fa-arrows-alt-h",
+    subgroup: commandsPageWidth
   }, {
     id: "viewTypingPage",
     display: "View Typing Page",
     alias: "start begin type test",
+    icon: "fa-keyboard",
     exec: function exec() {
       return $("#top #menu .icon-button.view-start").click();
     }
   }, {
     id: "viewAbout",
     display: "View About Page",
+    icon: "fa-info",
     exec: function exec() {
       return $("#top #menu .icon-button.view-about").click();
     }
   }, {
     id: "viewSettings",
     display: "View Settings Page",
+    icon: "fa-cog",
     exec: function exec() {
       return $("#top #menu .icon-button.view-settings").click();
     }
   }, {
     id: "toggleFullscreen",
     display: "Toggle Fullscreen",
+    icon: "fa-expand",
     exec: function exec() {
       Misc.toggleFullscreen();
     }
   }, {
     id: "bailOut",
     display: "Bail out...",
-    subgroup: true,
-    visible: false,
-    exec: function exec() {
-      current.push({
-        title: "Are you sure...",
-        list: [{
-          id: "bailOutNo",
-          display: "Nevermind",
-          exec: function exec() {
-            Commandline.hide();
-          },
-          available: function available() {
-            return canBailOut();
-          }
-        }, {
-          id: "bailOutForSure",
-          display: "Yes, I am sure",
-          exec: function exec() {
-            TestLogic.setBailout(true);
-            TestLogic.finish();
-          },
-          available: function available() {
-            return canBailOut();
-          }
-        }]
-      });
-      Commandline.show();
+    icon: "fa-running",
+    subgroup: {
+      title: "Are you sure...",
+      list: [{
+        id: "bailOutNo",
+        display: "Nevermind",
+        exec: function exec() {},
+        available: function available() {
+          return canBailOut();
+        }
+      }, {
+        id: "bailOutForSure",
+        display: "Yes, I am sure",
+        exec: function exec() {
+          TestLogic.setBailout(true);
+          TestLogic.finish();
+        },
+        available: function available() {
+          return canBailOut();
+        }
+      }]
     },
+    visible: false,
     available: function available() {
       return canBailOut();
     }
   }, {
     id: "joinDiscord",
     display: "Join the Discord server",
+    icon: "fa-users",
     exec: function exec() {
       window.open("https://discord.gg/monkeytype");
     }
   }, {
     id: "repeatTest",
     display: "Repeat test",
+    icon: "fa-sync-alt",
     exec: function exec() {
       TestLogic.restart(true);
     },
@@ -1946,6 +2709,7 @@ var defaultCommands = {
   }, {
     id: "practiceMissedWords",
     display: "Practice missed words",
+    icon: "fa-exclamation-triangle",
     exec: function exec() {
       PractiseMissed.init();
     },
@@ -1955,6 +2719,7 @@ var defaultCommands = {
   }, {
     id: "toggleWordHistory",
     display: "Toggle word history",
+    icon: "fa-align-left",
     exec: function exec() {
       TestUI.toggleResultWords();
     },
@@ -1964,6 +2729,7 @@ var defaultCommands = {
   }, {
     id: "saveScreenshot",
     display: "Save screenshot",
+    icon: "fa-image",
     alias: "ss picture",
     exec: function exec() {
       setTimeout(function () {
@@ -1976,12 +2742,14 @@ var defaultCommands = {
   }, {
     id: "changeCustomModeText",
     display: "Change custom text",
+    icon: "fa-align-left",
     exec: function exec() {
       CustomTextPopup.show();
     }
   }, {
     id: "toggleMonkey",
     display: "Toggle Monkey",
+    icon: "fa-egg",
     visible: false,
     exec: function exec() {
       UpdateConfig.toggleMonkey();
@@ -1989,11 +2757,41 @@ var defaultCommands = {
   }, {
     id: "copyWordsToClipboard",
     display: "Copy words to clipboard",
+    icon: "fa-copy",
     subgroup: true,
     exec: function exec() {
       current.push(commandsCopyWordsToClipboard);
       Commandline.show();
     }
+  }, {
+    id: "importSettingsJSON",
+    display: "Import settings JSON",
+    icon: "fa-cog",
+    input: true,
+    exec: function exec(input) {
+      try {
+        UpdateConfig.apply(JSON.parse(input));
+        UpdateConfig.saveToLocalStorage();
+        Settings.update();
+        Notifications.add("Done", 1);
+      } catch (e) {
+        Notifications.add("An error occured while importing settings: " + e, -1);
+      }
+    }
+  }, {
+    id: "exportSettingsJSON",
+    display: "Export settings JSON",
+    icon: "fa-cog",
+    input: true,
+    defaultValue: "",
+    exec: function exec(input) {}
+  }, {
+    id: "monkeyPower",
+    display: "Power mode...",
+    alias: "powermode",
+    icon: "fa-egg",
+    visible: false,
+    subgroup: commandsMonkeyPowerLevel
   }]
 };
 exports.defaultCommands = defaultCommands;
@@ -2011,12 +2809,12 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./commandline":5,"./config":6,"./custom-text":10,"./custom-text-popup":9,"./funbox":14,"./layouts":21,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./practise-missed":32,"./sound":40,"./test-logic":43,"./test-stats":44,"./test-ui":46,"./theme-controller":48,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],5:[function(require,module,exports){
+},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./practise-missed":36,"./settings":42,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],6:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -2036,11 +2834,7 @@ var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var TestUI = _interopRequireWildcard(require("./test-ui"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -2068,7 +2862,32 @@ function showFound() {
   var list = CommandlineLists.current[CommandlineLists.current.length - 1];
   $.each(list.list, function (index, obj) {
     if (obj.found && (obj.available !== undefined ? obj.available() : true)) {
-      commandsHTML += '<div class="entry" command="' + obj.id + '">' + obj.display + "</div>";
+      var _obj$icon;
+
+      var icon = (_obj$icon = obj.icon) !== null && _obj$icon !== void 0 ? _obj$icon : "fa-chevron-right";
+      var faIcon = /^fa-/g.test(icon);
+
+      if (!faIcon) {
+        icon = "<div class=\"textIcon\">".concat(icon, "</div>");
+      } else {
+        icon = "<i class=\"fas fa-fw ".concat(icon, "\"></i>");
+      }
+
+      if (list.configKey) {
+        if (obj.configValueMode && obj.configValueMode === "include" && UpdateConfig["default"][list.configKey].includes(obj.configValue) || UpdateConfig["default"][list.configKey] === obj.configValue) {
+          icon = "<i class=\"fas fa-fw fa-check\"></i>";
+        } else {
+          icon = "<i class=\"fas fa-fw\"></i>";
+        }
+      }
+
+      var iconHTML = "<div class=\"icon\">".concat(icon, "</div>");
+
+      if (obj.noIcon && !isSingleListCommandLineActive()) {
+        iconHTML = "";
+      }
+
+      commandsHTML += "<div class=\"entry\" command=\"".concat(obj.id, "\">").concat(iconHTML, "<div>").concat(obj.display, "</div></div>");
     }
   });
   $("#commandLine .suggestions").html(commandsHTML);
@@ -2093,8 +2912,8 @@ function showFound() {
     try {
       $.each(list.list, function (index, obj) {
         if (obj.found) {
-          if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") ThemeController.clearPreview();
-          if (!/font/gi.test(obj.id)) UpdateConfig["default"].previewFontFamily(UpdateConfig["default"].fontFamily);
+          if ((!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") && !ThemeController.randomTheme) ThemeController.clearPreview();
+          if (!/font/gi.test(obj.id)) UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily);
           obj.hover();
           return false;
         }
@@ -2135,11 +2954,7 @@ function updateSuggested() {
         var escaped = obj2.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
         var re = new RegExp("\\b" + escaped, "g");
         var res = obj.display.toLowerCase().match(re);
-        var res2 = null;
-
-        if (obj.alias !== undefined) {
-          res2 = obj.alias.toLowerCase().match(re);
-        }
+        var res2 = obj.alias !== undefined ? obj.alias.toLowerCase().match(re) : null;
 
         if (res != null && res.length > 0 || res2 != null && res2.length > 0) {
           foundcount++;
@@ -2148,7 +2963,7 @@ function updateSuggested() {
         }
       });
 
-      if (foundcount > 0) {
+      if (foundcount > inputVal.length - 1) {
         obj.found = true;
       } else {
         obj.found = false;
@@ -2162,7 +2977,10 @@ function updateSuggested() {
 function hide() {
   UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily); // applyCustomThemeColors();
 
-  ThemeController.clearPreview();
+  if (!ThemeController.randomTheme) {
+    ThemeController.clearPreview();
+  }
+
   $("#commandLineWrapper").stop(true, true).css("opacity", 1).animate({
     opacity: 0
   }, 100, function () {
@@ -2181,14 +2999,22 @@ function trigger(command) {
   $.each(list.list, function (i, obj) {
     if (obj.id == command) {
       if (obj.input) {
+        var _obj$display$split$;
+
         input = true;
-        showInput(obj.id, obj.display, obj.defaultValue);
+        var escaped = (_obj$display$split$ = obj.display.split("</i>")[1]) !== null && _obj$display$split$ !== void 0 ? _obj$display$split$ : obj.display;
+        showInput(obj.id, escaped, obj.defaultValue);
+      } else if (obj.subgroup) {
+        subgroup = true;
+
+        if (obj.beforeSubgroup) {
+          obj.beforeSubgroup();
+        }
+
+        CommandlineLists.current.push(obj.subgroup);
+        show();
       } else {
         obj.exec();
-
-        if (obj.subgroup !== null && obj.subgroup !== undefined) {
-          subgroup = obj.subgroup;
-        }
 
         if (obj.sticky === true) {
           sticky = true;
@@ -2222,22 +3048,39 @@ exports.show = show;
 
 function addChildCommands(unifiedCommands, commandItem) {
   var parentCommandDisplay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+  var parentCommand = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
   var commandItemDisplay = commandItem.display.replace(/\s?\.\.\.$/g, "");
-  if (parentCommandDisplay) commandItemDisplay = parentCommandDisplay + " > " + commandItemDisplay;
+  var icon = "<i class=\"fas fa-fw\"></i>";
+
+  if (commandItem.configValue !== undefined && UpdateConfig["default"][parentCommand.configKey] === commandItem.configValue) {
+    icon = "<i class=\"fas fa-fw fa-check\"></i>";
+  }
+
+  if (commandItem.noIcon) {
+    icon = "";
+  }
+
+  if (parentCommandDisplay) commandItemDisplay = parentCommandDisplay + " > " + icon + commandItemDisplay;
 
   if (commandItem.subgroup) {
+    if (commandItem.beforeSubgroup) commandItem.beforeSubgroup();
+
     try {
-      commandItem.exec();
-      var currentCommandsIndex = CommandlineLists.current.length - 1;
-      CommandlineLists.current[currentCommandsIndex].list.forEach(function (cmd) {
-        if (cmd.alias === undefined) cmd.alias = commandItem.alias;
-        addChildCommands(unifiedCommands, cmd, commandItemDisplay);
-      });
-      CommandlineLists.current.pop();
+      commandItem.subgroup.list.forEach(function (cmd) {
+        commandItem.configKey = commandItem.subgroup.configKey;
+        addChildCommands(unifiedCommands, cmd, commandItemDisplay, commandItem);
+      }); // commandItem.exec();
+      // const currentCommandsIndex = CommandlineLists.current.length - 1;
+      // CommandlineLists.current[currentCommandsIndex].list.forEach((cmd) => {
+      //   if (cmd.alias === undefined) cmd.alias = commandItem.alias;
+      //   addChildCommands(unifiedCommands, cmd, commandItemDisplay);
+      // });
+      // CommandlineLists.current.pop();
     } catch (e) {}
   } else {
     var tempCommandItem = _objectSpread({}, commandItem);
 
+    tempCommandItem.icon = parentCommand.icon;
     if (parentCommandDisplay) tempCommandItem.display = commandItemDisplay;
     unifiedCommands.push(tempCommandItem);
   }
@@ -2358,8 +3201,8 @@ $(document).on("mouseleave", "#commandLineWrapper #commandLine .suggestions .ent
   $(e.target).removeClass("activeMouse");
 });
 $("#commandLineWrapper #commandLine .suggestions").on("mouseover", function (e) {
-  if (!commandLineMouseMode) return;
-  console.log("clearing keyboard active");
+  if (!commandLineMouseMode) return; // console.log("clearing keyboard active");
+
   $("#commandLineWrapper #commandLine .suggestions .entry").removeClass("activeKeyboard");
   var hoverId = $(e.target).attr("command");
 
@@ -2367,16 +3210,16 @@ $("#commandLineWrapper #commandLine .suggestions").on("mouseover", function (e) 
     var list = CommandlineLists.current[CommandlineLists.current.length - 1];
     $.each(list.list, function (index, obj) {
       if (obj.id == hoverId) {
-        if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") ThemeController.clearPreview();
-        if (!/font/gi.test(obj.id)) UpdateConfig["default"].previewFontFamily(UpdateConfig["default"].fontFamily);
+        if ((!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") && !ThemeController.randomTheme) ThemeController.clearPreview();
+        if (!/font/gi.test(obj.id)) UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily);
         obj.hover();
       }
     });
   } catch (e) {}
 });
-$("#commandLineWrapper #commandLine .suggestions").click(function (e) {
+$(document).on("click", "#commandLineWrapper #commandLine .suggestions .entry", function (e) {
   $(".suggestions .entry").removeClass("activeKeyboard");
-  trigger($(e.target).attr("command"));
+  trigger($(e.currentTarget).attr("command"));
 });
 $("#commandLineWrapper").click(function (e) {
   if ($(e.target).attr("id") === "commandLineWrapper") {
@@ -2387,7 +3230,37 @@ $("#commandLineWrapper").click(function (e) {
     //   setTheme(Config.theme, true);
     // }
   }
-});
+}); //might come back to it later
+// function shiftCommand(){
+//   let activeEntries = $("#commandLineWrapper #commandLine .suggestions .entry.activeKeyboard, #commandLineWrapper #commandLine .suggestions .entry.activeMouse");
+//   activeEntries.each((index, activeEntry) => {
+//     let commandId = activeEntry.getAttribute('command');
+//     let foundCommand = null;
+//     CommandlineLists.defaultCommands.list.forEach(command => {
+//       if(foundCommand === null && command.id === commandId){
+//         foundCommand = command;
+//       }
+//     })
+//     if(foundCommand.shift){
+//       $(activeEntry).find('div').text(foundCommand.shift.display);
+//     }
+//   })
+// }
+// let shiftedCommands = false;
+// $(document).keydown((e) => {
+//   if (e.key === "Shift") {
+//     if(shiftedCommands === false){
+//       shiftedCommands = true;
+//       shiftCommand();
+//     }
+//   }
+// });
+// $(document).keyup((e) => {
+//   if (e.key === "Shift") {
+//     shiftedCommands = false;
+//   }
+// });
+
 $(document).keydown(function (e) {
   // if (isPreviewingTheme) {
   // console.log("applying theme");
@@ -2464,8 +3337,8 @@ $(document).keydown(function (e) {
         var list = CommandlineLists.current[CommandlineLists.current.length - 1];
         $.each(list.list, function (index, obj) {
           if (obj.id == hoverId) {
-            if (!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") ThemeController.clearPreview();
-            if (!/font/gi.test(obj.id)) UpdateConfig["default"].previewFontFamily(UpdateConfig["default"].fontFamily);
+            if ((!/theme/gi.test(obj.id) || obj.id === "toggleCustomTheme") && !ThemeController.randomTheme) ThemeController.clearPreview();
+            if (!/font/gi.test(obj.id)) UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily);
             obj.hover();
           }
         });
@@ -2480,12 +3353,12 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":4,"./config":6,"./focus":13,"./test-ui":46,"./theme-controller":48,"@babel/runtime/helpers/defineProperty":59,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],6:[function(require,module,exports){
+},{"./commandline-lists":5,"./config":7,"./focus":14,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/defineProperty":66,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],7:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -2502,6 +3375,7 @@ exports.setPlaySoundOnClick = setPlaySoundOnClick;
 exports.togglePlaySoundOnError = togglePlaySoundOnError;
 exports.setDifficulty = setDifficulty;
 exports.setFavThemes = setFavThemes;
+exports.setFunbox = setFunbox;
 exports.toggleBlindMode = toggleBlindMode;
 exports.setBlindMode = setBlindMode;
 exports.setStopOnError = setStopOnError;
@@ -2515,10 +3389,14 @@ exports.toggleSwapEscAndTab = toggleSwapEscAndTab;
 exports.setSwapEscAndTab = setSwapEscAndTab;
 exports.setPaceCaret = setPaceCaret;
 exports.setPaceCaretCustomSpeed = setPaceCaretCustomSpeed;
+exports.toggleRepeatedPace = toggleRepeatedPace;
+exports.setRepeatedPace = setRepeatedPace;
 exports.setMinWpm = setMinWpm;
 exports.setMinWpmCustomSpeed = setMinWpmCustomSpeed;
 exports.setMinAcc = setMinAcc;
 exports.setMinAccCustom = setMinAccCustom;
+exports.setMinBurst = setMinBurst;
+exports.setMinBurstCustomSpeed = setMinBurstCustomSpeed;
 exports.setAlwaysShowWordsHistory = setAlwaysShowWordsHistory;
 exports.toggleAlwaysShowWordsHistory = toggleAlwaysShowWordsHistory;
 exports.setSingleListCommandLine = setSingleListCommandLine;
@@ -2543,6 +3421,8 @@ exports.setShowLiveWpm = setShowLiveWpm;
 exports.toggleShowLiveWpm = toggleShowLiveWpm;
 exports.setShowLiveAcc = setShowLiveAcc;
 exports.toggleLiveAcc = toggleLiveAcc;
+exports.setShowLiveBurst = setShowLiveBurst;
+exports.toggleShowLiveBurst = toggleShowLiveBurst;
 exports.setHighlightMode = setHighlightMode;
 exports.setHideExtraLetters = setHideExtraLetters;
 exports.toggleHideExtraLetters = toggleHideExtraLetters;
@@ -2586,11 +3466,15 @@ exports.setKeymapLayout = setKeymapLayout;
 exports.setLayout = setLayout;
 exports.setFontSize = setFontSize;
 exports.setCustomBackground = setCustomBackground;
+exports.setCustomLayoutfluid = setCustomLayoutfluid;
 exports.setCustomBackgroundSize = setCustomBackgroundSize;
 exports.setCustomBackgroundFilter = setCustomBackgroundFilter;
+exports.setMonkeyPowerLevel = setMonkeyPowerLevel;
+exports.setBurstHeatmap = setBurstHeatmap;
 exports.apply = apply;
 exports.reset = reset;
 exports.loadFromLocalStorage = loadFromLocalStorage;
+exports.getConfigChanges = getConfigChanges;
 exports.setConfig = setConfig;
 exports["default"] = exports.loadPromise = exports.localStorageConfig = void 0;
 
@@ -2612,6 +3496,8 @@ var LiveWpm = _interopRequireWildcard(require("./live-wpm"));
 
 var LiveAcc = _interopRequireWildcard(require("./live-acc"));
 
+var LiveBurst = _interopRequireWildcard(require("./live-burst"));
+
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
@@ -2632,11 +3518,9 @@ var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var BackgroundFilter = _interopRequireWildcard(require("./custom-background-filter"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var _layouts = _interopRequireDefault(require("./layouts"));
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -2676,6 +3560,7 @@ var defaultConfig = {
   flipTestColors: false,
   capsLockBackspace: false,
   layout: "default",
+  funbox: "none",
   confidenceMode: "off",
   indicateTypos: false,
   timerStyle: "mini",
@@ -2701,6 +3586,7 @@ var defaultConfig = {
   showOutOfFocusWarning: true,
   paceCaret: "off",
   paceCaretCustomSpeed: 100,
+  repeatedPace: true,
   pageWidth: "100",
   minWpm: "off",
   minWpmCustomSpeed: 100,
@@ -2716,7 +3602,12 @@ var defaultConfig = {
   oppositeShiftMode: "off",
   customBackground: "",
   customBackgroundSize: "cover",
-  customBackgroundFilter: [0, 1, 1, 1, 1]
+  customBackgroundFilter: [0, 1, 1, 1, 1],
+  customLayoutfluid: "qwerty#dvorak#colemak",
+  monkeyPowerLevel: "off",
+  minBurst: "off",
+  minBurstCustomSpeed: 100,
+  burstHeatmap: false
 };
 
 function isConfigKeyValid(name) {
@@ -2736,6 +3627,7 @@ function _saveToLocalStorage() {
   _saveToLocalStorage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
     var noDbCheck,
         save,
+        stringified,
         _args = arguments;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -2750,9 +3642,13 @@ function _saveToLocalStorage() {
             // });
             save = config;
             delete save.resultFilters;
-            window.localStorage.setItem("config", JSON.stringify(save)); // restartCount = 0;
+            stringified = JSON.stringify(save);
+            window.localStorage.setItem("config", stringified);
+            CommandlineLists.defaultCommands.list.filter(function (command) {
+              return command.id == "exportSettingsJSON";
+            })[0].defaultValue = stringified; // restartCount = 0;
 
-          case 4:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -2830,7 +3726,7 @@ function togglePunctuation() {
 function setMode(mode, nosave) {
   if (TestUI.testRestarting) return;
 
-  if (mode !== "words" && Funbox.active === "memory") {
+  if (mode !== "words" && config.funbox === "memory") {
     Notifications.add("Memory funbox can only be used with words mode.", 0);
     return;
   }
@@ -2858,8 +3754,8 @@ function setMode(mode, nosave) {
     $("#top .config .numbersMode").removeClass("hidden");
     $("#top .config .quoteLength").addClass("hidden");
   } else if (config.mode == "custom") {
-    if (Funbox.active === "58008" || Funbox.active === "gibberish" || Funbox.active === "ascii") {
-      Funbox.setAcitve("none");
+    if (config.funbox === "58008" || config.funbox === "gibberish" || config.funbox === "ascii") {
+      Funbox.setActive("none");
       TestUI.updateModesNotice();
     }
 
@@ -2944,6 +3840,14 @@ function setDifficulty(diff, nosave) {
 
 function setFavThemes(themes, nosave) {
   config.favThemes = themes;
+
+  if (!nosave) {
+    saveToLocalStorage();
+  }
+}
+
+function setFunbox(funbox, nosave) {
+  config.funbox = funbox ? funbox : "none";
 
   if (!nosave) {
     saveToLocalStorage();
@@ -3082,6 +3986,27 @@ function setPaceCaretCustomSpeed(val, nosave) {
 
   config.paceCaretCustomSpeed = val;
   if (!nosave) saveToLocalStorage();
+} //repeated pace
+
+
+function toggleRepeatedPace() {
+  var pace = !config.repeatedPace;
+
+  if (pace == undefined) {
+    pace = true;
+  }
+
+  config.repeatedPace = pace;
+  saveToLocalStorage();
+}
+
+function setRepeatedPace(pace, nosave) {
+  if (pace == undefined) {
+    pace = true;
+  }
+
+  config.repeatedPace = pace;
+  if (!nosave) saveToLocalStorage();
 } //min wpm
 
 
@@ -3121,6 +4046,26 @@ function setMinAccCustom(val, nosave) {
   }
 
   config.minAccCustom = val;
+  if (!nosave) saveToLocalStorage();
+} //min burst
+
+
+function setMinBurst(min, nosave) {
+  if (min == undefined) {
+    min = "off";
+  }
+
+  config.minBurst = min;
+  TestUI.updateModesNotice();
+  if (!nosave) saveToLocalStorage();
+}
+
+function setMinBurstCustomSpeed(val, nosave) {
+  if (val == undefined || Number.isNaN(parseInt(val))) {
+    val = 100;
+  }
+
+  config.minBurstCustomSpeed = val;
   if (!nosave) saveToLocalStorage();
 } //always show words history
 
@@ -3332,9 +4277,7 @@ function setPaceCaretStyle(caretStyle, nosave) {
   $("#paceCaret").removeClass("carrot");
   $("#paceCaret").removeClass("banana");
 
-  if (caretStyle == "off") {
-    $("#paceCaret").addClass("off");
-  } else if (caretStyle == "default") {
+  if (caretStyle == "default") {
     $("#paceCaret").addClass("default");
   } else if (caretStyle == "block") {
     $("#paceCaret").addClass("block");
@@ -3435,8 +4378,36 @@ function toggleLiveAcc() {
   saveToLocalStorage();
 }
 
+function setShowLiveBurst(live, nosave) {
+  if (live == null || live == undefined) {
+    live = false;
+  }
+
+  config.showLiveBurst = live;
+
+  if (live) {
+    LiveBurst.show();
+  } else {
+    LiveAcc.hide();
+  }
+
+  if (!nosave) saveToLocalStorage();
+}
+
+function toggleShowLiveBurst() {
+  config.showLiveBurst = !config.showLiveBurst;
+
+  if (config.showLiveBurst) {
+    LiveBurst.show();
+  } else {
+    LiveBurst.hide();
+  }
+
+  saveToLocalStorage();
+}
+
 function setHighlightMode(mode, nosave) {
-  if (mode === "word" && (Funbox.active === "nospace" || Funbox.active === "read_ahead" || Funbox.active === "read_ahead_easy" || Funbox.active === "read_ahead_hard")) {
+  if (mode === "word" && (config.funbox === "nospace" || config.funbox === "read_ahead" || config.funbox === "read_ahead_easy" || config.funbox === "read_ahead_hard")) {
     Notifications.add("Can't use word highlight with this funbox", 0);
     return;
   }
@@ -3445,7 +4416,13 @@ function setHighlightMode(mode, nosave) {
     mode = "letter";
   }
 
-  config.highlightMode = mode;
+  config.highlightMode = mode; // if(TestLogic.active){
+
+  try {
+    if (!nosave) TestUI.updateWordElement(config.blindMode);
+  } catch (_unused) {} // }
+
+
   if (!nosave) saveToLocalStorage();
 }
 
@@ -3715,7 +4692,7 @@ function setFontFamily(font, nosave) {
   }
 
   config.fontFamily = font;
-  document.documentElement.style.setProperty("--font", '"' + font.replace(/_/g, " ") + '"');
+  document.documentElement.style.setProperty("--font", "\"".concat(font.replace(/_/g, " "), "\", \"Roboto Mono\""));
   if (!nosave) saveToLocalStorage();
 } //freedom
 
@@ -3977,10 +4954,16 @@ function setFontSize(fontSize, nosave) {
   $("#caret, #paceCaret").removeClass("size2");
   $("#words").removeClass("size3");
   $("#caret, #paceCaret").removeClass("size3");
+  $("#words").removeClass("size35");
+  $("#caret, #paceCaret").removeClass("size35");
+  $("#words").removeClass("size4");
+  $("#caret, #paceCaret").removeClass("size4");
   $("#miniTimerAndLiveWpm").removeClass("size125");
   $("#miniTimerAndLiveWpm").removeClass("size15");
   $("#miniTimerAndLiveWpm").removeClass("size2");
   $("#miniTimerAndLiveWpm").removeClass("size3");
+  $("#miniTimerAndLiveWpm").removeClass("size35");
+  $("#miniTimerAndLiveWpm").removeClass("size4");
 
   if (fontSize == 125) {
     $("#words").addClass("size125");
@@ -3998,6 +4981,14 @@ function setFontSize(fontSize, nosave) {
     $("#words").addClass("size3");
     $("#caret, #paceCaret").addClass("size3");
     $("#miniTimerAndLiveWpm").addClass("size3");
+  } else if (fontSize == 35) {
+    $("#words").addClass("size34");
+    $("#caret, #paceCaret").addClass("size35");
+    $("#miniTimerAndLiveWpm").addClass("size35");
+  } else if (fontSize == 4) {
+    $("#words").addClass("size4");
+    $("#caret, #paceCaret").addClass("size4");
+    $("#miniTimerAndLiveWpm").addClass("size4");
   }
 
   if (!nosave) saveToLocalStorage();
@@ -4022,6 +5013,33 @@ function setCustomBackground(value, nosave) {
   }
 }
 
+function setCustomLayoutfluid(value, nosave) {
+  if (value == null || value == undefined) {
+    value = "qwerty#dvorak#colemak";
+  }
+
+  value = value.replace(/ /g, "#"); //validate the layouts
+
+  var allGood = true;
+  var list = Object.keys(_layouts["default"]);
+  value.split("#").forEach(function (customLayout) {
+    if (!list.includes(customLayout)) allGood = false;
+  });
+
+  if (!allGood) {
+    Notifications.add("One of the layouts was not found. Make sure the name matches exactly. Reverting to default", 0, 4);
+    value = "qwerty#dvorak#colemak";
+    nosave = false;
+  }
+
+  config.customLayoutfluid = value;
+  CommandlineLists.defaultCommands.list.filter(function (command) {
+    return command.id == "changeCustomLayoutfluid";
+  })[0].defaultValue = value.replace(/#/g, " ");
+  $(".pageSettings .section.customLayoutfluid input").val(value.replace(/#/g, " "));
+  if (!nosave) saveToLocalStorage();
+}
+
 function setCustomBackgroundSize(value, nosave) {
   if (value != "cover" && value != "contain" && value != "max") {
     value = "cover";
@@ -4036,6 +5054,22 @@ function setCustomBackgroundFilter(array, nosave) {
   config.customBackgroundFilter = array;
   BackgroundFilter.loadConfig(config.customBackgroundFilter);
   BackgroundFilter.apply();
+  if (!nosave) saveToLocalStorage();
+}
+
+function setMonkeyPowerLevel(level, nosave) {
+  if (!["off", "1", "2", "3", "4"].includes(level)) level = "off";
+  config.monkeyPowerLevel = level;
+  if (!nosave) saveToLocalStorage();
+}
+
+function setBurstHeatmap(value, nosave) {
+  if (!value) {
+    value = false;
+  }
+
+  config.burstHeatmap = value;
+  TestUI.applyBurstHeatmap();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -4055,6 +5089,7 @@ function apply(configObj) {
     setTheme(configObj.theme, true);
     setCustomThemeColors(configObj.customThemeColors, true);
     setCustomTheme(configObj.customTheme, true, true);
+    setCustomLayoutfluid(configObj.customLayoutfluid, true);
     setCustomBackground(configObj.customBackground, true);
     setCustomBackgroundSize(configObj.customBackgroundSize, true);
     setCustomBackgroundFilter(configObj.customBackgroundFilter, true);
@@ -4090,6 +5125,7 @@ function apply(configObj) {
     setSmoothLineScroll(configObj.smoothLineScroll, true);
     setShowLiveWpm(configObj.showLiveWpm, true);
     setShowLiveAcc(configObj.showLiveAcc, true);
+    setShowLiveBurst(configObj.showLiveBurst, true);
     setShowTimerProgress(configObj.showTimerProgress, true);
     setAlwaysShowDecimalPlaces(configObj.alwaysShowDecimalPlaces, true);
     setAlwaysShowWordsHistory(configObj.alwaysShowWordsHistory, true);
@@ -4098,13 +5134,17 @@ function apply(configObj) {
     setPlaySoundOnClick(configObj.playSoundOnClick, true);
     setStopOnError(configObj.stopOnError, true);
     setFavThemes(configObj.favThemes, true);
+    setFunbox(configObj.funbox, true);
     setRandomTheme(configObj.randomTheme, true);
     setShowAllLines(configObj.showAllLines, true);
     setSwapEscAndTab(configObj.swapEscAndTab, true);
     setShowOutOfFocusWarning(configObj.showOutOfFocusWarning, true);
     setPaceCaret(configObj.paceCaret, true);
     setPaceCaretCustomSpeed(configObj.paceCaretCustomSpeed, true);
+    setRepeatedPace(configObj.repeatedPace, true);
     setPageWidth(configObj.pageWidth, true);
+    setMinBurst(configObj.minBurst, true);
+    setMinBurstCustomSpeed(configObj.minBurstCustomSpeed, true);
     setMinWpm(configObj.minWpm, true);
     setMinWpmCustomSpeed(configObj.minWpmCustomSpeed, true);
     setMinAcc(configObj.minAcc, true);
@@ -4120,6 +5160,8 @@ function apply(configObj) {
     setMode(configObj.mode, true);
     setMonkey(configObj.monkey, true);
     setRepeatQuotes(configObj.repeatQuotes, true);
+    setMonkeyPowerLevel(configObj.monkeyPowerLevel, true);
+    setBurstHeatmap(configObj.burstHeatmap, true);
     LanguagePicker.setActiveGroup();
   }
 
@@ -4127,8 +5169,7 @@ function apply(configObj) {
 }
 
 function reset() {
-  config = _objectSpread({}, defaultConfig);
-  apply();
+  apply(defaultConfig);
   saveToLocalStorage();
 }
 
@@ -4155,6 +5196,16 @@ function loadFromLocalStorage() {
   loadDone();
 }
 
+function getConfigChanges() {
+  var configChanges = {};
+  Object.keys(config).filter(function (key) {
+    return config[key] != defaultConfig[key];
+  }).forEach(function (key) {
+    configChanges[key] = config[key];
+  });
+  return configChanges;
+}
+
 function setConfig(newConfig) {
   config = newConfig;
 }
@@ -4166,10 +5217,10 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./commandline-lists":4,"./custom-background-filter":7,"./funbox":14,"./keymap":18,"./language-picker":19,"./live-acc":22,"./live-wpm":23,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./sound":40,"./test-logic":43,"./test-ui":46,"./theme-controller":48,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/defineProperty":59,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],7:[function(require,module,exports){
+},{"./commandline-lists":5,"./custom-background-filter":8,"./funbox":15,"./keymap":19,"./language-picker":20,"./layouts":22,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./sound":45,"./test-logic":48,"./test-ui":51,"./theme-controller":53,"./timer-progress":55,"./ui":57,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/defineProperty":66,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],8:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4181,10 +5232,6 @@ exports.loadConfig = loadConfig;
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var filters = {
   blur: {
@@ -4217,9 +5264,15 @@ function getCSS() {
 
 function apply() {
   var filterCSS = getCSS();
-  $(".customBackground").css({
-    filter: filterCSS
-  });
+  var css = {
+    filter: filterCSS,
+    width: "calc(100% + ".concat(filters.blur.value * 4, "rem)"),
+    height: "calc(100% + ".concat(filters.blur.value * 4, "rem)"),
+    left: "-".concat(filters.blur.value * 2, "rem"),
+    top: "-".concat(filters.blur.value * 2, "rem"),
+    position: "absolute"
+  };
+  $(".customBackground img").css(css);
 }
 
 function syncSliders() {
@@ -4274,12 +5327,12 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   Notifications.add("Custom background filters saved", 1);
 });
 
-},{"./config":6,"./notifications":28,"@babel/runtime/helpers/typeof":64}],8:[function(require,module,exports){
+},{"./config":7,"./notifications":31,"@babel/runtime/helpers/interopRequireWildcard":68}],9:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4295,10 +5348,6 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function parseInput(input) {
   var re = /((-\s*)?\d+(\.\d+)?\s*[hms]?)/g;
@@ -4420,10 +5469,10 @@ $("#customTestDurationPopup .button").click(function () {
   apply();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/toConsumableArray":63,"@babel/runtime/helpers/typeof":64}],9:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71}],10:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4444,16 +5493,12 @@ var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var WordFilterPopup = _interopRequireWildcard(require("./word-filter-popup"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 var wrapper = "#customTextPopupWrapper";
 var popup = "#customTextPopup";
 
 function show() {
   if ($(wrapper).hasClass("hidden")) {
-    if ($("".concat(popup, " .check input")).prop("checked")) {
+    if ($("".concat(popup, " .checkbox input")).prop("checked")) {
       $("".concat(popup, " .inputs .randomInputFields")).removeClass("hidden");
     } else {
       $("".concat(popup, " .inputs .randomInputFields")).addClass("hidden");
@@ -4495,8 +5540,8 @@ $(wrapper).mousedown(function (e) {
     hide();
   }
 });
-$("".concat(popup, " .inputs .check input")).change(function () {
-  if ($("".concat(popup, " .check input")).prop("checked")) {
+$("".concat(popup, " .inputs .checkbox input")).change(function () {
+  if ($("".concat(popup, " .checkbox input")).prop("checked")) {
     $("".concat(popup, " .inputs .randomInputFields")).removeClass("hidden");
   } else {
     $("".concat(popup, " .inputs .randomInputFields")).addClass("hidden");
@@ -4537,8 +5582,8 @@ $("#customTextPopup .apply").click(function () {
   CustomText.setText(text);
   CustomText.setWord(parseInt($("#customTextPopup .wordcount input").val()));
   CustomText.setTime(parseInt($("#customTextPopup .time input").val()));
-  CustomText.setIsWordRandom($("#customTextPopup .check input").prop("checked") && !isNaN(CustomText.word));
-  CustomText.setIsTimeRandom($("#customTextPopup .check input").prop("checked") && !isNaN(CustomText.time));
+  CustomText.setIsWordRandom($("#customTextPopup .checkbox input").prop("checked") && !isNaN(CustomText.word));
+  CustomText.setIsTimeRandom($("#customTextPopup .checkbox input").prop("checked") && !isNaN(CustomText.time));
 
   if (isNaN(CustomText.word) && isNaN(CustomText.time) && (CustomText.isTimeRandom || CustomText.isWordRandom)) {
     Notifications.add("You need to specify word count or time in seconds to start a random custom test.", 0, 5);
@@ -4562,7 +5607,7 @@ $("#customTextPopup .wordfilter").click(function () {
   WordFilterPopup.show();
 });
 
-},{"./custom-text":10,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":43,"./word-filter-popup":53,"@babel/runtime/helpers/typeof":64}],10:[function(require,module,exports){
+},{"./custom-text":11,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./test-logic":48,"./word-filter-popup":60,"@babel/runtime/helpers/interopRequireWildcard":68}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4605,20 +5650,16 @@ function setWord(val) {
   exports.word = word = val;
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var ThemePicker = _interopRequireWildcard(require("./theme-picker"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   if ($("#customThemeShareWrapper").hasClass("hidden")) {
@@ -4671,10 +5712,10 @@ $("#shareCustomThemeButton").click(function (e) {
   }
 });
 
-},{"./config":6,"./notifications":28,"./theme-picker":49,"@babel/runtime/helpers/typeof":64}],12:[function(require,module,exports){
+},{"./config":7,"./notifications":31,"./theme-picker":54,"@babel/runtime/helpers/interopRequireWildcard":68}],13:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4688,10 +5729,6 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   if ($("#customWordAmountPopupWrapper").hasClass("hidden")) {
@@ -4747,10 +5784,10 @@ $("#customWordAmountPopup .button").click(function () {
   apply();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./notifications":28,"./test-logic":43,"@babel/runtime/helpers/typeof":64}],13:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/interopRequireWildcard":68}],14:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4758,10 +5795,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.set = set;
 
 var Caret = _interopRequireWildcard(require("./caret"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var state = false;
 
@@ -4789,12 +5822,12 @@ $(document).mousemove(function (event) {
   }
 });
 
-},{"./caret":2,"@babel/runtime/helpers/typeof":64}],14:[function(require,module,exports){
+},{"./caret":3,"@babel/runtime/helpers/interopRequireWildcard":68}],15:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -4805,7 +5838,6 @@ exports.reset = reset;
 exports.toggleScript = toggleScript;
 exports.activate = activate;
 exports.setFunbox = setFunbox;
-exports.modeSaved = exports.funboxSaved = exports.active = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -4825,16 +5857,7 @@ var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-var active = "none";
-exports.active = active;
-var funboxSaved = "none";
-exports.funboxSaved = funboxSaved;
 var modeSaved = null;
-exports.modeSaved = modeSaved;
 var memoryTimer = null;
 var memoryInterval = null;
 var settingsMemory = {};
@@ -4896,13 +5919,13 @@ function startMemoryTimer() {
 }
 
 function reset() {
-  exports.active = active = "none";
   resetMemoryTimer();
 }
 
 function toggleScript() {
-  if (active === "tts") {
+  if (UpdateConfig["default"].funbox === "tts") {
     var msg = new SpeechSynthesisUtterance();
+    console.log("Speaking");
     msg.text = arguments.length <= 0 ? undefined : arguments[0];
     msg.lang = "en-US";
     window.speechSynthesis.cancel();
@@ -4910,36 +5933,53 @@ function toggleScript() {
   }
 }
 
-function activate(_x, _x2) {
+function activate(_x) {
   return _activate.apply(this, arguments);
 }
 
 function _activate() {
-  _activate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(funbox, mode) {
-    var list;
+  _activate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(funbox) {
+    var mode, list;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            mode = modeSaved;
+
             if (funbox === undefined || funbox === null) {
-              funbox = funboxSaved;
+              funbox = UpdateConfig["default"].funbox;
             }
 
-            if (!Misc.getCurrentLanguage().ligatures) {
-              _context.next = 6;
+            _context.next = 4;
+            return Misc.getCurrentLanguage().ligatures;
+
+          case 4:
+            if (!_context.sent) {
+              _context.next = 9;
               break;
             }
 
             if (!(funbox == "choo_choo" || funbox == "earthquake")) {
-              _context.next = 6;
+              _context.next = 9;
               break;
             }
 
             Notifications.add("Current language does not support this funbox mode", 0);
-            activate("none", null);
+            setFunbox("none", null);
             return _context.abrupt("return");
 
-          case 6:
+          case 9:
+            if (!(UpdateConfig["default"].mode === "zen" && funbox == "layoutfluid")) {
+              _context.next = 14;
+              break;
+            }
+
+            Notifications.add("Zen mode does not support the ".concat(funbox, " funbox"), 0);
+            setFunbox("none", null);
+            TestLogic.restart();
+            return _context.abrupt("return");
+
+          case 14:
             $("#funBoxTheme").attr("href", "");
             $("#words").removeClass("nospace"); // if (funbox === "none") {
 
@@ -4947,37 +5987,34 @@ function _activate() {
             $("#wordsWrapper").removeClass("hidden"); // }
 
             if (!(funbox === "none" && mode === undefined)) {
-              _context.next = 14;
+              _context.next = 22;
               break;
             }
 
             mode = null;
-            _context.next = 19;
+            _context.next = 27;
             break;
 
-          case 14:
+          case 22:
             if (!(funbox !== "none" && mode === undefined || funbox !== "none" && mode === null)) {
-              _context.next = 19;
+              _context.next = 27;
               break;
             }
 
-            _context.next = 17;
+            _context.next = 25;
             return Misc.getFunboxList();
 
-          case 17:
+          case 25:
             list = _context.sent;
             mode = list.filter(function (f) {
               return f.name === funbox;
             })[0].type;
 
-          case 19:
+          case 27:
             ManualRestart.set();
 
             if (mode === "style") {
-              if (funbox != undefined) {
-                $("#funBoxTheme").attr("href", "funbox/".concat(funbox, ".css"));
-                exports.active = active = funbox;
-              }
+              if (funbox != undefined) $("#funBoxTheme").attr("href", "funbox/".concat(funbox, ".css"));
 
               if (funbox === "simon_says") {
                 rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
@@ -5004,10 +6041,10 @@ function _activate() {
                 Settings.groups.keymapMode.updateButton(); // UpdateConfig.setSavedLayout(Config.layout);
 
                 rememberSetting("layout", UpdateConfig["default"].layout, UpdateConfig.setLayout);
-                UpdateConfig.setLayout("qwerty");
+                UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
                 Settings.groups.layout.updateButton();
                 rememberSetting("keymapLayout", UpdateConfig["default"].keymapLayout, UpdateConfig.setKeymapLayout);
-                UpdateConfig.setKeymapLayout("qwerty");
+                UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
                 Settings.groups.keymapLayout.updateButton();
                 TestLogic.restart();
               } else if (funbox === "memory") {
@@ -5027,8 +6064,6 @@ function _activate() {
                 UpdateConfig.setHighlightMode("letter", true);
                 TestLogic.restart(false, true);
               }
-
-              exports.active = active = funbox;
             } // if (funbox !== "layoutfluid" || mode !== "script") {
             //   if (Config.layout !== Config.savedLayout) {
             //     UpdateConfig.setLayout(Config.savedLayout);
@@ -5040,7 +6075,7 @@ function _activate() {
             TestUI.updateModesNotice();
             return _context.abrupt("return", true);
 
-          case 23:
+          case 31:
           case "end":
             return _context.stop();
         }
@@ -5051,32 +6086,22 @@ function _activate() {
 }
 
 function setFunbox(funbox, mode) {
-  if (TestLogic.active || TestUI.resultVisible) {
-    Notifications.add("You can only change the funbox before starting a test.", 0);
-    return false;
-  }
-
   if (funbox === "none") loadMemory();
-  exports.funboxSaved = funboxSaved = funbox;
-  exports.modeSaved = modeSaved = mode;
-  exports.active = active = funbox;
+  modeSaved = mode;
+  UpdateConfig.setFunbox(funbox);
   return true;
 }
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./settings":37,"./test-logic":43,"./test-ui":46,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],15:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./settings":42,"./test-logic":48,"./test-ui":51,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],16:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   if ($("#settingsImportWrapper").hasClass("hidden")) {
@@ -5123,13 +6148,13 @@ $("#settingsImportWrapper").click(function (e) {
   }
 });
 
-},{"./config":6,"./notifications":28,"./settings":37,"@babel/runtime/helpers/typeof":64}],16:[function(require,module,exports){
+},{"./config":7,"./notifications":31,"./settings":42,"@babel/runtime/helpers/interopRequireWildcard":68}],17:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _chart = _interopRequireDefault(require("chart.js"));
 
@@ -5142,6 +6167,8 @@ var Misc = _interopRequireWildcard(require("./misc"));
 var _config = _interopRequireDefault(require("./config"));
 
 var SimplePopups = _interopRequireWildcard(require("./simple-popups"));
+
+var _testLogic = require("./test-logic");
 
 require("./caps-warning");
 
@@ -5157,9 +6184,7 @@ require("./input-controller");
 
 require("./ready");
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+require("./about-page");
 
 //this file should be concatenated at the top of the legacy js files
 _chart["default"].plugins.register(_chartjsPluginTrendline["default"]);
@@ -5172,11 +6197,13 @@ global.simplePopups = SimplePopups.simplePopups; //these exports are just for de
 
 global.config = _config["default"]; // global.addnotif = Notifications.add;
 
+global.glarsesMode = _testLogic.toggleGlarses;
+
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./caps-warning":1,"./config":6,"./custom-theme-popup":11,"./import-settings-popup":15,"./input-controller":17,"./misc":26,"./ready":34,"./simple-popups":39,"./support-popup":41,"./version-popup":52,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"chart.js":67,"chartjs-plugin-annotation":72,"chartjs-plugin-trendline":75}],17:[function(require,module,exports){
+},{"./about-page":1,"./caps-warning":2,"./config":7,"./custom-theme-popup":12,"./import-settings-popup":16,"./input-controller":18,"./misc":28,"./ready":38,"./simple-popups":44,"./support-popup":46,"./test-logic":48,"./version-popup":58,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"chart.js":75,"chartjs-plugin-annotation":80,"chartjs-plugin-trendline":83}],18:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
@@ -5193,6 +6220,8 @@ var Keymap = _interopRequireWildcard(require("./keymap"));
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var LiveAcc = _interopRequireWildcard(require("./live-acc"));
+
+var LiveBurst = _interopRequireWildcard(require("./live-burst"));
 
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
@@ -5222,9 +6251,11 @@ var Focus = _interopRequireWildcard(require("./focus"));
 
 var ShiftTracker = _interopRequireWildcard(require("./shift-tracker"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var Replay = _interopRequireWildcard(require("./replay.js"));
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
+
+var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
 
 $("#wordsInput").keypress(function (event) {
   event.preventDefault();
@@ -5250,7 +6281,7 @@ function handleTab(event) {
     // );
 
     return;
-  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden")) {
+  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden") && !$(".page.pageLogin").hasClass("active")) {
     if ($(".pageTest").hasClass("active")) {
       if (UpdateConfig["default"].quickTab) {
         if (UpdateConfig["default"].mode == "zen" && !event.shiftKey || TestLogic.hasTab && !event.shiftKey) {//ignore
@@ -5295,12 +6326,13 @@ function handleBackspace(event) {
         TestLogic.input.setCurrent(TestLogic.input.popHistory());
         TestLogic.corrected.setCurrent(TestLogic.corrected.popHistory());
 
-        if (Funbox.active === "nospace") {
+        if (UpdateConfig["default"].funbox === "nospace") {
           TestLogic.input.setCurrent(TestLogic.input.current.substring(0, TestLogic.input.current.length - 1));
         }
       }
 
       TestLogic.words.decreaseCurrentIndex();
+      Replay.addReplayEvent("backWord");
       TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex - 1);
       TestUI.updateActiveElement(true);
       Funbox.toggleScript(TestLogic.words.getCurrent());
@@ -5309,31 +6341,59 @@ function handleBackspace(event) {
   } else {
     if (UpdateConfig["default"].confidenceMode === "max") return;
 
-    if (event["ctrlKey"] || event["altKey"]) {
-      var limiter = " ";
-      if (TestLogic.input.current.lastIndexOf("-") > TestLogic.input.current.lastIndexOf(" ")) limiter = "-";
-      var split = TestLogic.input.current.replace(/ +/g, " ").split(limiter);
+    if (event["ctrlKey"] || event["altKey"] || event.metaKey) {
+      Replay.addReplayEvent("clearWord"); // let limiter = " ";
+      // if (
+      //   TestLogic.input.current.lastIndexOf("-") >
+      //   TestLogic.input.current.lastIndexOf(" ")
+      // )
+      //   limiter = "-";
+      // let split = TestLogic.input.current.replace(/ +/g, " ").split(limiter);
+      // if (split[split.length - 1] == "") {
+      //   split.pop();
+      // }
+      // let addlimiter = false;
+      // if (split.length > 1) {
+      //   addlimiter = true;
+      // }
+      // split.pop();
+      // TestLogic.input.setCurrent(split.join(limiter));
+      // if (addlimiter) {
+      //   TestLogic.input.appendCurrent(limiter);
+      // }
 
-      if (split[split.length - 1] == "") {
-        split.pop();
+      if (/^[ £§`~!@#$%^&*()_+\\\-=[\]{};':"|,./<>?]*$/g.test(TestLogic.input.getCurrent())) {
+        //pop current and previous
+        TestLogic.input.resetCurrent();
+        TestLogic.input.popHistory();
+        TestLogic.corrected.popHistory();
+        TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
+        TestLogic.words.decreaseCurrentIndex();
+        Replay.addReplayEvent("backWord");
+        TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex - 1);
+        TestUI.updateActiveElement(true);
+        Funbox.toggleScript(TestLogic.words.getCurrent());
+        TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
+        TestLogic.input.resetCurrent();
+        TestLogic.input.popHistory();
+        TestLogic.corrected.popHistory();
+      } else {
+        var regex = new RegExp(/[ £§`~!@#$%^&*()_+\\\-=[\]{};':"|,./<>?]/, "g");
+        var input = TestLogic.input.getCurrent();
+        regex.test(input); // let puncIndex = regex.lastIndex;
+
+        var puncIndex = input.lastIndexOfRegex(/[ £§`~!@#$%^&*()_+\\\-=[\]{};':"|,./<>?]/g);
+
+        while (/[ £§`~!@#$%^&*()_+\\\-=[\]{};':"|,./<>?]/g.test(input.slice(-1))) {
+          input = input.substring(0, input.length - 1);
+        }
+
+        puncIndex = input.lastIndexOfRegex(/[ £§`~!@#$%^&*()_+\\\-=[\]{};':"|,./<>?]/g);
+        TestLogic.input.setCurrent(input.substring(0, puncIndex == 0 ? 0 : puncIndex + 1));
       }
-
-      var addlimiter = false;
-
-      if (split.length > 1) {
-        addlimiter = true;
-      }
-
-      split.pop();
-      TestLogic.input.setCurrent(split.join(limiter));
-
-      if (addlimiter) {
-        TestLogic.input.appendCurrent(limiter);
-      }
-    } else if (event.metaKey) {
-      TestLogic.input.resetCurrent();
     } else {
       TestLogic.input.setCurrent(TestLogic.input.current.substring(0, TestLogic.input.current.length - 1));
+      Replay.addReplayEvent("deleteLetter");
     }
 
     TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
@@ -5353,7 +6413,7 @@ function handleBackspace(event) {
 function handleSpace(event, isEnter) {
   if (!TestLogic.active) return;
   if (TestLogic.input.current === "") return; // let nextWord = wordsList[TestLogic.words.currentIndex + 1];
-  // if ((isEnter && nextWord !== "\n") && (isEnter && Funbox.active !== "58008")) return;
+  // if ((isEnter && nextWord !== "\n") && (isEnter && Config.funbox !== "58008")) return;
   // if (!isEnter && nextWord === "\n") return;
 
   event.preventDefault();
@@ -5365,11 +6425,12 @@ function handleSpace(event, isEnter) {
 
   var currentWord = TestLogic.words.getCurrent();
 
-  if (Funbox.active === "layoutfluid" && UpdateConfig["default"].mode !== "time") {
-    var layouts = ["qwerty", "dvorak", "colemak"];
+  if (UpdateConfig["default"].funbox === "layoutfluid" && UpdateConfig["default"].mode !== "time") {
+    // here I need to check if Config.customLayoutFluid exists because of my scuffed solution of returning whenever value is undefined in the setCustomLayoutfluid function
+    var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
     var index = 0;
     var outof = TestLogic.words.length;
-    index = Math.floor((TestLogic.input.history.length + 1) / (outof / 3));
+    index = Math.floor((TestLogic.input.history.length + 1) / (outof / layouts.length));
 
     if (UpdateConfig["default"].layout !== layouts[index] && layouts[index] !== undefined) {
       Notifications.add("--- !!! ".concat(layouts[index], " !!! ---"), 0);
@@ -5382,9 +6443,13 @@ function handleSpace(event, isEnter) {
   }
 
   dontInsertSpace = true;
+  var burst = TestStats.calculateBurst();
+  LiveBurst.update(Math.round(burst));
+  TestStats.pushBurstToHistory(burst);
 
   if (currentWord == TestLogic.input.current || UpdateConfig["default"].mode == "zen") {
     //correct word or in zen mode
+    MonkeyPower.addPower(true, true);
     PaceCaret.handleSpace(true, currentWord);
     TestStats.incrementAccuracy(true);
     TestLogic.input.pushHistory();
@@ -5397,14 +6462,16 @@ function handleSpace(event, isEnter) {
     TestStats.pushKeypressWord(TestLogic.words.currentIndex); // currentKeypress.count++;
     // currentKeypress.words.push(TestLogic.words.currentIndex);
 
-    if (Funbox.active !== "nospace") {
+    if (UpdateConfig["default"].funbox !== "nospace") {
       Sound.playClick(UpdateConfig["default"].playSoundOnClick);
     }
+
+    Replay.addReplayEvent("submitCorrectWord");
   } else {
     //incorrect word
-    PaceCaret.handleSpace(false, currentWord);
+    MonkeyPower.addPower(false, true);
 
-    if (Funbox.active !== "nospace") {
+    if (UpdateConfig["default"].funbox !== "nospace") {
       if (!UpdateConfig["default"].playSoundOnError || UpdateConfig["default"].blindMode) {
         Sound.playClick(UpdateConfig["default"].playSoundOnClick);
       } else {
@@ -5412,6 +6479,7 @@ function handleSpace(event, isEnter) {
       }
     }
 
+    TestStats.pushMissedWord(TestLogic.words.getCurrent());
     TestStats.incrementAccuracy(false);
     TestStats.incrementKeypressErrors();
     var cil = TestLogic.input.current.length;
@@ -5427,12 +6495,13 @@ function handleSpace(event, isEnter) {
     if (UpdateConfig["default"].stopOnError != "off") {
       if (UpdateConfig["default"].difficulty == "expert" || UpdateConfig["default"].difficulty == "master") {
         //failed due to diff when pressing space
-        TestLogic.fail();
+        TestLogic.fail("difficulty");
         return;
       }
 
       if (UpdateConfig["default"].stopOnError == "word") {
         TestLogic.input.appendCurrent(" ");
+        Replay.addReplayEvent("incorrectLetter", "_");
         TestUI.updateWordElement(true);
         Caret.updatePosition();
       }
@@ -5440,6 +6509,7 @@ function handleSpace(event, isEnter) {
       return;
     }
 
+    PaceCaret.handleSpace(false, currentWord);
     if (UpdateConfig["default"].blindMode) $("#words .word.active letter").addClass("correct");
     TestLogic.input.pushHistory();
     TestUI.highlightBadWord(TestUI.currentWordElementIndex, !UpdateConfig["default"].blindMode);
@@ -5452,16 +6522,33 @@ function handleSpace(event, isEnter) {
 
     TestStats.incrementKeypressCount();
     TestStats.pushKeypressWord(TestLogic.words.currentIndex);
+    TestStats.updateLastKeypress();
 
     if (UpdateConfig["default"].difficulty == "expert" || UpdateConfig["default"].difficulty == "master") {
-      TestLogic.fail();
+      TestLogic.fail("difficulty");
       return;
     } else if (TestLogic.words.currentIndex == TestLogic.words.length) {
       //submitted last word that is incorrect
-      TestStats.setLastSecondNotRound();
       TestLogic.finish();
       return;
     }
+
+    Replay.addReplayEvent("submitErrorWord");
+  }
+
+  var wordLength;
+
+  if (UpdateConfig["default"].mode === "zen") {
+    wordLength = TestLogic.input.getCurrent().length;
+  } else {
+    wordLength = TestLogic.words.getCurrent().length;
+  }
+
+  var flex = Misc.whorf(UpdateConfig["default"].minBurstCustomSpeed, wordLength);
+
+  if (UpdateConfig["default"].minBurst === "fixed" && burst < UpdateConfig["default"].minBurstCustomSpeed || UpdateConfig["default"].minBurst === "flex" && burst < flex) {
+    TestLogic.fail("min burst");
+    return;
   }
 
   TestLogic.corrected.pushHistory();
@@ -5480,9 +6567,8 @@ function handleSpace(event, isEnter) {
       TestUI.lineJump(currentTop);
     }
   } //end of line wrap
+  // Caret.updatePosition();
 
-
-  Caret.updatePosition();
 
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey(event.code, true);
@@ -5500,7 +6586,7 @@ function handleSpace(event, isEnter) {
 }
 
 function handleAlpha(event) {
-  if (["ContextMenu", "Escape", "Shift", "Control", "Meta", "Alt", "AltGraph", "CapsLock", "Backspace", "PageUp", "PageDown", "Home", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown", "OS", "Insert", "Home", "Undefined", "Control", "Fn", "FnLock", "Hyper", "NumLock", "ScrollLock", "Symbol", "SymbolLock", "Super", "Unidentified", "Process", "Delete", "KanjiMode", "Pause", "PrintScreen", "Clear", "End", undefined].includes(event.key)) {
+  if (["ContextMenu", "Escape", "Shift", "Control", "Meta", "Alt", "AltGraph", "CapsLock", "Backspace", "PageUp", "PageDown", "Home", "ArrowUp", "ArrowLeft", "ArrowRight", "ArrowDown", "OS", "Insert", "Home", "Undefined", "Control", "Fn", "FnLock", "Hyper", "NumLock", "ScrollLock", "Symbol", "SymbolLock", "Super", "Unidentified", "Process", "Delete", "KanjiMode", "Pause", "PrintScreen", "Clear", "End", "GroupPrevious", "GroupNext", undefined].includes(event.key)) {
     TestStats.incrementKeypressMod(); // currentKeypress.mod++;
 
     return;
@@ -5555,8 +6641,13 @@ function handleAlpha(event) {
 
   if (TestLogic.input.current == "" && TestLogic.input.history.length == 0 && !TestLogic.active) {
     if (!TestLogic.startTest()) return;
+    MonkeyPower.addPower();
   } else {
     if (!TestLogic.active) return;
+  }
+
+  if (TestLogic.input.current == "") {
+    TestStats.setBurstStart(performance.now());
   }
 
   Focus.set(true);
@@ -5627,6 +6718,8 @@ function handleAlpha(event) {
     thisCharCorrect = false;
   }
 
+  MonkeyPower.addPower(thisCharCorrect);
+
   if (!thisCharCorrect) {
     TestStats.incrementAccuracy(false);
     TestStats.incrementKeypressErrors(); // currentError.count++;
@@ -5643,6 +6736,8 @@ function handleAlpha(event) {
       $("#words .active").append("<letter class=\"correct\">".concat(event.key, "</letter>"));
     }
   }
+
+  WeakSpot.updateScore(nextCharInWord, thisCharCorrect);
 
   if (thisCharCorrect) {
     Sound.playClick(UpdateConfig["default"].playSoundOnClick);
@@ -5669,25 +6764,27 @@ function handleAlpha(event) {
   }
 
   TestStats.incrementKeypressCount();
+  TestStats.updateLastKeypress();
   TestStats.pushKeypressWord(TestLogic.words.currentIndex); // currentKeypress.count++;
   // currentKeypress.words.push(TestLogic.words.currentIndex);
 
   if (UpdateConfig["default"].stopOnError == "letter" && !thisCharCorrect) {
     return;
-  } //update the active word top, but only once
+  }
 
+  Replay.addReplayEvent(thisCharCorrect ? "correctLetter" : "incorrectLetter", event.key); //update the active word top, but only once
 
   if (TestLogic.input.current.length === 1 && TestLogic.words.currentIndex === 0) {
     TestUI.setActiveWordTop(document.querySelector("#words .active").offsetTop);
-  } //max length of the input is 20 unless in zen mode
+  } //max length of the input is 20 unless in zen mode then its 30
 
 
-  if (UpdateConfig["default"].mode == "zen" || TestLogic.input.current.length < TestLogic.words.getCurrent().length + 20) {
+  if (UpdateConfig["default"].mode == "zen" && TestLogic.input.current.length < 30 || UpdateConfig["default"].mode !== "zen" && TestLogic.input.current.length < TestLogic.words.getCurrent().length + 20) {
     TestLogic.input.appendCurrent(event["key"]);
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
-    TestLogic.fail();
+    TestLogic.fail("difficulty");
     return;
   } //keymap
 
@@ -5710,13 +6807,12 @@ function handleAlpha(event) {
     if ((currentWord == TestLogic.input.current || UpdateConfig["default"].quickEnd && currentWord.length == TestLogic.input.current.length && UpdateConfig["default"].stopOnError == "off") && lastindex == TestLogic.words.length - 1) {
       TestLogic.input.pushHistory();
       TestLogic.corrected.pushHistory();
-      TestStats.setLastSecondNotRound();
       TestLogic.finish();
     }
   } //simulate space press in nospace funbox
 
 
-  if (Funbox.active === "nospace" && TestLogic.input.current.length === TestLogic.words.getCurrent().length || event.key === "\n" && thisCharCorrect) {
+  if (UpdateConfig["default"].funbox === "nospace" && TestLogic.input.current.length === TestLogic.words.getCurrent().length || event.key === "\n" && thisCharCorrect) {
     $.event.trigger({
       type: "keydown",
       which: " ".charCodeAt(0),
@@ -5736,7 +6832,7 @@ function handleAlpha(event) {
     }
   }
 
-  Caret.updatePosition();
+  if (originalEvent.code !== "Enter") Caret.updatePosition();
 }
 
 $(document).keyup(function (event) {
@@ -5780,7 +6876,9 @@ $(document).keydown(function (event) {
 
 
   if (event.key === "Backspace" && wordsFocused) {
-    if (event.target.disabled || event.target.readOnly) {
+    var t = /INPUT|SELECT|TEXTAREA/i;
+
+    if (!t.test(event.target.tagName) || event.target.disabled || event.target.readOnly) {
       event.preventDefault();
     }
   } // keypressStats.duration.current = performance.now();
@@ -5799,7 +6897,7 @@ $(document).keydown(function (event) {
     handleBackspace(event);
   }
 
-  if (event.key === "Enter" && Funbox.active === "58008" && wordsFocused) {
+  if (event.key === "Enter" && UpdateConfig["default"].funbox === "58008" && wordsFocused) {
     event.key = " ";
   } //space or enter
 
@@ -5816,12 +6914,12 @@ $(document).keydown(function (event) {
   LiveAcc.update(acc);
 });
 
-},{"./caret":2,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./layout-emulator":20,"./live-acc":22,"./manual-restart-tracker":25,"./misc":26,"./monkey":27,"./notifications":28,"./pace-caret":30,"./settings":37,"./shift-tracker":38,"./sound":40,"./test-logic":43,"./test-stats":44,"./test-timer":45,"./test-ui":46,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/typeof":64}],18:[function(require,module,exports){
+},{"./caret":3,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./layout-emulator":21,"./live-acc":23,"./live-burst":24,"./manual-restart-tracker":27,"./misc":28,"./monkey":30,"./monkey-power":29,"./notifications":31,"./pace-caret":33,"./replay.js":39,"./settings":42,"./shift-tracker":43,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./timer-progress":55,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/interopRequireWildcard":68}],19:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -5841,10 +6939,6 @@ var _layouts = _interopRequireDefault(require("./layouts"));
 var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var Commandline = _interopRequireWildcard(require("./commandline"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function highlightKey(currentKey) {
   if (UpdateConfig["default"].mode === "zen") return;
@@ -6104,12 +7198,12 @@ $(document).on("click", ".keymap .r5 #KeySpace", function (e) {
   Commandline.show();
 });
 
-},{"./commandline":5,"./commandline-lists":4,"./config":6,"./layouts":21,"./theme-colors":47,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],19:[function(require,module,exports){
+},{"./commandline":6,"./commandline-lists":5,"./config":7,"./layouts":22,"./theme-colors":52,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],20:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6123,10 +7217,6 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function setActiveGroup(_x) {
   return _setActiveGroup.apply(this, arguments);
@@ -6195,12 +7285,12 @@ function _setActiveGroup() {
   return _setActiveGroup.apply(this, arguments);
 }
 
-},{"./config":6,"./misc":26,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],20:[function(require,module,exports){
+},{"./config":7,"./misc":28,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],21:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6212,10 +7302,6 @@ var _config = _interopRequireDefault(require("./config"));
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var _layouts = _interopRequireDefault(require("./layouts"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function updateEvent(event) {
   function emulatedLayoutShouldShiftKey(event, newKeyPreview) {
@@ -6267,7 +7353,7 @@ function updateEvent(event) {
   return newEvent;
 }
 
-},{"./config":6,"./layouts":21,"./misc":26,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],21:[function(require,module,exports){
+},{"./config":7,"./layouts":22,"./misc":28,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6373,6 +7459,10 @@ var layouts = {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "aA", "bB", "cC", "dD", "eE", "fF", "gG", "hH", "iI", "jJ", "[{", "]}", "\\|", "kK", "lL", "mM", "nN", "oO", "pP", "qQ", "rR", "sS", ";:", "'\"", "\\|", "tT", "uU", "vV", "wW", "xX", "yY", "zZ", ",<", ".>", "/?", " "]
   },
+  handsdown: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "cC", "hH", "pP", "vV", "kK", "yY", "oO", "jJ", "/?", "[{", "]}", "\\|", "rR", "sS", "nN", "tT", "gG", "wW", "uU", "eE", "iI", "aA", ";:", "\\|", "xX", "mM", "lL", "dD", "bB", "zZ", "fF", "'\"", ",<", ".>", " "]
+  },
   handsdown_alt: {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "wW", "gG", "hH", "mM", "kK", "qQ", "cC", "uU", "jJ", "'\"", "[{", "]}", "\\|", "rR", "sS", "nN", "tT", "fF", "yY", "aA", "eE", "oO", "iI", ";:", "\\|", "xX", "bB", "lL", "dD", "vV", "zZ", "pP", ",<", ".>", "/?", " "]
@@ -6396,17 +7486,49 @@ var layouts = {
   JCUKEN: {
     keymapShowTopRow: true,
     keys: ["ёЁ", "1!", "2\"", "3№", "4;", "5%", "6:", "7?", "8*", "9(", "0)", "-_", "=+", "йЙ", "цЦ", "уУ", "кК", "еЕ", "нН", "гГ", "шШ", "щЩ", "зЗ", "хХ", "ъЪ", "\\/", "фФ", "ыЫ", "вВ", "аА", "пП", "рР", "оО", "лЛ", "дД", "жЖ", "эЭ", "\\|", "яЯ", "чЧ", "сС", "мМ", "иИ", "тТ", "ьЬ", "бБ", "юЮ", ".,", " "]
+  },
+  ISRT: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "cC", "lL", "mM", "kK", "zZ", "fF", "uU", ",<", "'\"", "[{", "]}", "\\|", "iI", "sS", "rR", "tT", "gG", "pP", "nN", "eE", "aA", "oO", ";:", "\\|", "qQ", "vV", "wW", "dD", "jJ", "bB", "hH", "/?", ".>", "xX", " "]
+  },
+  colemak_Qix: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "=+", "[{", ";:", "lL", "cC", "mM", "kK", "jJ", "fF", "uU", "yY", "qQ", "-_", "]}", "\\|", "aA", "rR", "sS", "tT", "gG", "pP", "nN", "eE", "iI", "oO", "'\"", "\\|", "xX", "wW", "dD", "vV", "zZ", "bB", "hH", "/?", ".>", ",<", " "]
+  },
+  colemaQ: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "=+", "[{", ";:", "wW", "fF", "pP", "bB", "jJ", "lL", "uU", "yY", "qQ", "-_", "]}", "\\|", "aA", "rR", "sS", "tT", "gG", "mM", "nN", "eE", "iI", "oO", "'\"", "\\|", "xX", "cC", "dD", "kK", "zZ", "vV", "hH", "/?", ".>", ",<", " "]
+  },
+  engram: {
+    keymapShowTopRow: true,
+    keys: ["[{", "1|", "2=", "3~", "4+", "5<", "6>", "7^", "8&", "9%", "0*", "]}", "/\\", "bB", "yY", "oO", "uU", "'(", "\")", "lL", "dD", "wW", "vV", "zZ", "#$", "@`", "cC", "iI", "eE", "aA", ",;", ".:", "hH", "tT", "sS", "nN", "qQ", "\\|", "gG", "xX", "jJ", "kK", "-_", "?!", "rR", "mM", "fF", "pP", " "]
+  },
+  semimak: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "fF", "lL", "hH", "vV", "zZ", "qQ", "wW", "uU", "oO", "yY", "[{", "]}", "\\|", "sS", "rR", "nN", "tT", "kK", "cC", "dD", "eE", "aA", "iI", ";:", "\\|", "xX", "'\"", "bB", "mM", "jJ", "pP", "gG", ",<", ".>", "/?", " "]
+  },
+  boo: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "zZ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "pP", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "jJ", "bB", "hH", "mM", "kK", "qQ", " "]
+  },
+  APT: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "wW", "cC", "dD", "lL", "'\"", "/?", "yY", "oO", "uU", "qQ", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "vV", "bB", "gG", "mM", ",<", ".>", "fF", "jJ", "xX", "zZ", " "]
+  },
+  Thai_Kedmanee: {
+    keymapShowTopRow: true,
+    keys: ["-%", "ๅ+", "/๑", "_๒", "ภ๓", "ถ๔", "ุู", "ึ฿", "ค๕", "ต๖", "จ๗", "ข๘", "ช๙", "ๆ๐", "ไ\"", "ำฎ", "พฑ", "ะธ", "ัํ", "ี๊", "รณ", "นฯ", "ยญ", "บฐ", "ล,", "ฃฅ", "ฟฤ", "หฆ", "กฏ", "ดโ", "เฌ", "้็", "่๋", "าษ", "สศ", "วซ", "ง.", "ฃฅ", "ผ(", "ป)", "แฉ", "อฮ", "ิฺ", "ื์", "ท?", "มฒ", "ใฬ", "ฝฦ", " "]
   }
 };
 var _default = layouts;
 exports["default"] = _default;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6418,10 +7540,6 @@ exports.hide = hide;
 var _config = _interopRequireDefault(require("./config"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function update(acc) {
   var number = Math.floor(acc);
@@ -6468,12 +7586,12 @@ function hide() {
   });
 }
 
-},{"./config":6,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],23:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],24:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6486,9 +7604,64 @@ var _config = _interopRequireDefault(require("./config"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function update(burst) {
+  var number = burst;
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+  if (_config["default"].blindMode) {
+    number = 0;
+  }
+
+  document.querySelector("#miniTimerAndLiveWpm .burst").innerHTML = number;
+  document.querySelector("#liveBurst").innerHTML = number;
+}
+
+function show() {
+  if (!_config["default"].showLiveBurst) return;
+  if (!TestLogic.active) return;
+
+  if (_config["default"].timerStyle === "mini") {
+    if (!$("#miniTimerAndLiveWpm .burst").hasClass("hidden")) return;
+    $("#miniTimerAndLiveWpm .burst").removeClass("hidden").css("opacity", 0).animate({
+      opacity: _config["default"].timerOpacity
+    }, 125);
+  } else {
+    if (!$("#liveBurst").hasClass("hidden")) return;
+    $("#liveBurst").removeClass("hidden").css("opacity", 0).animate({
+      opacity: _config["default"].timerOpacity
+    }, 125);
+  }
+}
+
+function hide() {
+  $("#liveBurst").animate({
+    opacity: _config["default"].timerOpacity
+  }, 125, function () {
+    $("#liveBurst").addClass("hidden");
+  });
+  $("#miniTimerAndLiveWpm .burst").animate({
+    opacity: _config["default"].timerOpacity
+  }, 125, function () {
+    $("#miniTimerAndLiveWpm .burst").addClass("hidden");
+  });
+}
+
+},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],25:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.update = update;
+exports.show = show;
+exports.hide = hide;
+
+var _config = _interopRequireDefault(require("./config"));
+
+var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 function update(wpm, raw) {
   // if (!TestLogic.active || !Config.showLiveWpm) {
@@ -6542,7 +7715,7 @@ function hide() {
   });
 }
 
-},{"./config":6,"./test-logic":43,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],24:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],26:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6559,7 +7732,7 @@ function hide() {
   $("#backgroundLoader").stop(true, true).fadeOut(125);
 }
 
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6582,12 +7755,12 @@ function get() {
   return state;
 }
 
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6608,11 +7781,13 @@ exports.migrateFromCookies = migrateFromCookies;
 exports.smooth = smooth;
 exports.stdDev = stdDev;
 exports.mean = mean;
+exports.median = median;
 exports.getReleasesFromGitHub = getReleasesFromGitHub;
 exports.getLastChar = getLastChar;
 exports.capitalizeFirstLetter = capitalizeFirstLetter;
 exports.isASCIILetter = isASCIILetter;
 exports.kogasa = kogasa;
+exports.whorf = whorf;
 exports.roundTo2 = roundTo2;
 exports.findLineByLeastSquares = findLineByLeastSquares;
 exports.getGibberish = getGibberish;
@@ -6632,8 +7807,12 @@ exports.isUsernameValid = isUsernameValid;
 exports.mapRange = mapRange;
 exports.canQuickRestart = canQuickRestart;
 exports.clearTimeouts = clearTimeouts;
+exports.setCharAt = setCharAt;
+exports.regexIndexOf = regexIndexOf;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -6641,9 +7820,7 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var Loader = _interopRequireWildcard(require("./loader"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var _config = _interopRequireDefault(require("./config"));
 
 function hexToHSL(H) {
   // Convert hex to RGB first
@@ -7100,10 +8277,32 @@ function showNotification(text, time) {
   });
 }
 
-var currentLanguage = null;
+var currentLanguage;
 
 function getCurrentLanguage() {
-  return currentLanguage;
+  return _getCurrentLanguage.apply(this, arguments);
+}
+
+function _getCurrentLanguage() {
+  _getCurrentLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            _context10.next = 2;
+            return getLanguage(_config["default"].language);
+
+          case 2:
+            return _context10.abrupt("return", _context10.sent);
+
+          case 3:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+  return _getCurrentLanguage.apply(this, arguments);
 }
 
 function getLanguage(_x3) {
@@ -7111,47 +8310,47 @@ function getLanguage(_x3) {
 }
 
 function _getLanguage() {
-  _getLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(lang) {
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
+  _getLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(lang) {
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
       while (1) {
-        switch (_context10.prev = _context10.next) {
+        switch (_context11.prev = _context11.next) {
           case 0:
-            _context10.prev = 0;
+            _context11.prev = 0;
 
             if (!(currentLanguage == null || currentLanguage.name !== lang)) {
-              _context10.next = 5;
+              _context11.next = 5;
               break;
             }
 
             console.log("getting language json");
-            _context10.next = 5;
+            _context11.next = 5;
             return $.getJSON("languages/".concat(lang, ".json"), function (data) {
               currentLanguage = data;
             });
 
           case 5:
-            return _context10.abrupt("return", currentLanguage);
+            return _context11.abrupt("return", currentLanguage);
 
           case 8:
-            _context10.prev = 8;
-            _context10.t0 = _context10["catch"](0);
+            _context11.prev = 8;
+            _context11.t0 = _context11["catch"](0);
             console.error("error getting language");
-            console.error(_context10.t0);
-            showNotification("Error getting language: ".concat(_context10.t0.message), 4000);
-            _context10.next = 15;
+            console.error(_context11.t0);
+            showNotification("Error getting language: ".concat(_context11.t0.message), 4000);
+            _context11.next = 15;
             return $.getJSON("languages/english.json", function (data) {
               currentLanguage = data;
             });
 
           case 15:
-            return _context10.abrupt("return", currentLanguage);
+            return _context11.abrupt("return", currentLanguage);
 
           case 16:
           case "end":
-            return _context10.stop();
+            return _context11.stop();
         }
       }
-    }, _callee10, null, [[0, 8]]);
+    }, _callee11, null, [[0, 8]]);
   }));
   return _getLanguage.apply(this, arguments);
 }
@@ -7234,6 +8433,19 @@ function mean(array) {
   } catch (e) {
     return 0;
   }
+} //https://www.w3resource.com/javascript-exercises/fundamental/javascript-fundamental-exercise-88.php
+
+
+function median(arr) {
+  try {
+    var mid = Math.floor(arr.length / 2),
+        nums = (0, _toConsumableArray2["default"])(arr).sort(function (a, b) {
+      return a - b;
+    });
+    return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  } catch (e) {
+    return 0;
+  }
 }
 
 function getReleasesFromGitHub() {
@@ -7266,6 +8478,10 @@ function isASCIILetter(c) {
 
 function kogasa(cov) {
   return 100 * (1 - Math.tanh(cov + Math.pow(cov, 3) / 3 + Math.pow(cov, 5) / 5));
+}
+
+function whorf(speed, wordlen) {
+  return Math.min(speed, Math.floor(speed * Math.pow(1.03, -2 * (wordlen - 3))));
 }
 
 function roundTo2(num) {
@@ -7331,6 +8547,7 @@ function getGibberish() {
 }
 
 function secondsToString(sec) {
+  var full = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var hours = Math.floor(sec / 3600);
   var minutes = Math.floor(sec % 3600 / 60);
   var seconds = roundTo2(sec % 3600 % 60);
@@ -7339,10 +8556,10 @@ function secondsToString(sec) {
   var secondsString;
   hours < 10 ? hoursString = "0" + hours : hoursString = hours;
   minutes < 10 ? minutesString = "0" + minutes : minutesString = minutes;
-  seconds < 10 && (minutes > 0 || hours > 0) ? secondsString = "0" + seconds : secondsString = seconds;
+  seconds < 10 && (minutes > 0 || hours > 0 || full) ? secondsString = "0" + seconds : secondsString = seconds;
   var ret = "";
-  if (hours > 0) ret += hoursString + ":";
-  if (minutes > 0 || hours > 0) ret += minutesString + ":";
+  if (hours > 0 || full) ret += hoursString + ":";
+  if (minutes > 0 || hours > 0 || full) ret += minutesString + ":";
   ret += secondsString;
   return ret;
 }
@@ -7536,9 +8753,249 @@ function clearTimeouts(timeouts) {
     clearTimeout(to);
     to = null;
   });
+} //https://stackoverflow.com/questions/1431094/how-do-i-replace-a-character-at-a-particular-index-in-javascript
+
+
+function setCharAt(str, index, chr) {
+  if (index > str.length - 1) return str;
+  return str.substring(0, index) + chr + str.substring(index + 1);
+} //https://www.reddit.com/r/learnjavascript/comments/8ohug3/how_to_recursively_count_keys_in_an_object/e03fytn/
+
+
+function countAllKeys(obj) {
+  if ((0, _typeof2["default"])(obj) !== "object" || obj === null) {
+    return 0;
+  }
+
+  var keys = Object.keys(obj);
+  var sum = keys.length;
+  keys.forEach(function (key) {
+    return sum += countAllKeys(obj[key]);
+  });
+  return sum;
+} //https://stackoverflow.com/questions/273789/is-there-a-version-of-javascripts-string-indexof-that-allows-for-regular-expr
+
+
+function regexIndexOf(string, regex, startpos) {
+  var indexOf = string.substring(startpos || 0).search(regex);
+  return indexOf >= 0 ? indexOf + (startpos || 0) : indexOf;
 }
 
-},{"./loader":24,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/toConsumableArray":63,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],27:[function(require,module,exports){
+String.prototype.lastIndexOfRegex = function (regex) {
+  var match = this.match(regex);
+  return match ? this.lastIndexOf(match[match.length - 1]) : -1;
+};
+
+},{"./config":7,"./loader":26,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],29:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.init = init;
+exports.reset = reset;
+exports.addPower = addPower;
+
+var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
+
+var UI = _interopRequireWildcard(require("./ui"));
+
+var _config = _interopRequireDefault(require("./config"));
+
+/**
+ * @typedef {{ x: number, y: number }} vec2
+ * @typedef {vec2 & { prev: vec2, vel: vec2, alpha: number, color: string }} Particle
+ * @typedef {{ particles: Particle[], caret: any, canvas: HTMLCanvasElement, context2d: CanvasRenderingContext2D, rendering: boolean, lastFrame: number, deltaTime: number, resetTimeOut: number }} CTX
+ */
+
+/**
+ * @type {CTX} ctx
+ */
+var ctx = {
+  particles: [],
+  rendering: false
+};
+var gravity = 1000;
+var drag = 0.05;
+var particleSize = 4;
+var particleFade = 0.6;
+var particleInitVel = 1500;
+var particleBounceMod = 0.3;
+var particleCreateCount = [6, 3];
+var shakeAmount = 10;
+
+function createCanvas() {
+  var canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:fixed;top:0;left:0;pointer-events:none;z-index:999999";
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  window.addEventListener("resize", function () {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+  });
+  document.body.appendChild(canvas);
+  return canvas;
+}
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {string} color
+ * @returns {Particle}
+ */
+
+
+function createParticle(x, y, color) {
+  return {
+    x: x,
+    y: y,
+    color: color,
+    alpha: 1,
+    prev: {
+      x: x,
+      y: y
+    },
+    vel: {
+      x: particleInitVel - Math.random() * particleInitVel * 2,
+      y: particleInitVel - Math.random() * particleInitVel * 2
+    }
+  };
+}
+/**
+ * @param {Particle} particle
+ */
+
+
+function updateParticle(particle) {
+  particle.prev.x = particle.x;
+  particle.prev.y = particle.y; // Update pos
+
+  particle.x += particle.vel.x * ctx.deltaTime;
+  particle.y += particle.vel.y * ctx.deltaTime;
+
+  if (particle.x > ctx.canvas.width) {
+    particle.vel.x *= -particleBounceMod;
+    particle.x = ctx.canvas.width - (particle.x - ctx.canvas.width) * particleBounceMod;
+  } else if (particle.x < 0) {
+    particle.vel.x *= -particleBounceMod;
+    particle.x *= -particleBounceMod;
+  }
+
+  if (particle.y > ctx.canvas.height) {
+    particle.vel.y *= -particleBounceMod;
+    particle.y = ctx.canvas.height - (particle.y - ctx.canvas.height) * particleBounceMod;
+  } else if (particle.y < 0) {
+    particle.vel.y *= -1;
+    particle.y *= -1;
+  }
+
+  particle.vel.y += gravity * ctx.deltaTime;
+  particle.vel.x *= 1 - drag * ctx.deltaTime;
+  particle.alpha *= 1 - particleFade * ctx.deltaTime;
+}
+
+function init() {
+  ctx.caret = $("#caret");
+  ctx.canvas = createCanvas();
+  ctx.context2d = ctx.canvas.getContext("2d");
+}
+
+function render() {
+  ctx.rendering = true;
+  var time = Date.now();
+  ctx.deltaTime = (time - ctx.lastFrame) / 1000;
+  ctx.lastFrame = time;
+  ctx.context2d.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  var keep = [];
+
+  for (var i = 0; i < ctx.particles.length; i++) {
+    var particle = ctx.particles[i];
+    if (particle.alpha < 0.1) continue;
+    updateParticle(particle);
+    ctx.context2d.globalAlpha = particle.alpha;
+    ctx.context2d.strokeStyle = particle.color;
+    ctx.context2d.lineWidth = particleSize;
+    ctx.context2d.beginPath();
+    ctx.context2d.moveTo(Math.round(particle.prev.x), Math.round(particle.prev.y));
+    ctx.context2d.lineTo(Math.round(particle.x), Math.round(particle.y));
+    ctx.context2d.stroke();
+    keep.push(particle);
+  }
+
+  ctx.particles = keep;
+
+  if (ctx.particles.length) {
+    requestAnimationFrame(render);
+  } else {
+    ctx.context2d.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.rendering = false;
+  }
+}
+
+function reset() {
+  var immediate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!ctx.resetTimeOut) return;
+  delete ctx.resetTimeOut;
+  clearTimeout(ctx.resetTimeOut);
+  var body = $(document.body);
+  body.css("transition", "all .25s, transform 0.8s");
+  body.css("transform", "translate(0,0)");
+  setTimeout(function () {
+    body.css("transition", "all .25s, transform .05s");
+    $("html").css("overflow", "inherit");
+    $("html").css("overflow-y", "scroll");
+  }, immediate || UI.pageTransition ? 0 : 1000);
+}
+
+function startRender() {
+  if (!ctx.rendering) {
+    ctx.lastFrame = Date.now();
+    render();
+  }
+}
+
+function randomColor() {
+  var r = Math.floor(Math.random() * 256).toString(16);
+  var g = Math.floor(Math.random() * 256).toString(16);
+  var b = Math.floor(Math.random() * 256).toString(16);
+  return "#".concat(r).concat(g).concat(b);
+}
+/**
+ * @param {boolean} good Good power or not?
+ */
+
+
+function addPower() {
+  var good = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (!TestLogic.active || _config["default"].monkeyPowerLevel === "off") return; // Shake
+
+  if (["3", "4"].includes(_config["default"].monkeyPowerLevel)) {
+    $("html").css("overflow", "hidden");
+    var shake = [Math.round(shakeAmount - Math.random() * shakeAmount), Math.round(shakeAmount - Math.random() * shakeAmount)];
+    $(document.body).css("transform", "translate(".concat(shake[0], "px, ").concat(shake[1], "px)"));
+    if (ctx.resetTimeOut) clearTimeout(ctx.resetTimeOut);
+    ctx.resetTimeOut = setTimeout(reset, 2000);
+  } // Sparks
+
+
+  var offset = ctx.caret.offset();
+  var coords = [offset.left, offset.top + ctx.caret.height()];
+
+  for (var i = Math.round((particleCreateCount[0] + Math.random() * particleCreateCount[1]) * (extra ? 2 : 1)); i > 0; i--) {
+    var color = ["2", "4"].includes(_config["default"].monkeyPowerLevel) ? randomColor() : good ? ThemeColors.caret : ThemeColors.error;
+    ctx.particles.push(createParticle.apply(void 0, coords.concat([color])));
+  }
+
+  startRender();
+}
+
+},{"./config":7,"./test-logic":48,"./theme-colors":52,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7616,7 +9073,7 @@ function stop() {
   update();
 }
 
-},{"./misc":26}],28:[function(require,module,exports){
+},{"./misc":28}],31:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -7739,10 +9196,10 @@ function add(message, level, duration, customTitle, customIcon) {
   notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon).show());
 }
 
-},{"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60}],29:[function(require,module,exports){
+},{"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67}],32:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -7751,10 +9208,6 @@ exports.hide = hide;
 exports.show = show;
 
 var Misc = _interopRequireWildcard(require("./misc"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var outOfFocusTimeouts = [];
 
@@ -7771,12 +9224,12 @@ function show() {
   }, 1000));
 }
 
-},{"./misc":26,"@babel/runtime/helpers/typeof":64}],30:[function(require,module,exports){
+},{"./misc":28,"@babel/runtime/helpers/interopRequireWildcard":68}],33:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -7798,15 +9251,11 @@ var TestUI = _interopRequireWildcard(require("./test-ui"));
 
 var _config = _interopRequireDefault(require("./config"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 var settings = null;
 exports.settings = settings;
 
 function resetCaretPosition() {
-  if (_config["default"].paceCaret === "off") return;
+  if (_config["default"].paceCaret === "off" && !TestLogic.isPaceRepeat) return;
 
   if (!$("#paceCaret").hasClass("hidden")) {
     $("#paceCaret").addClass("hidden");
@@ -7832,6 +9281,7 @@ function _init() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            $("#paceCaret").addClass("hidden");
             mode2 = "";
 
             if (_config["default"].mode === "time") {
@@ -7846,17 +9296,19 @@ function _init() {
 
             if (_config["default"].paceCaret === "pb") {} else if (_config["default"].paceCaret === "average") {} else if (_config["default"].paceCaret === "custom") {
               wpm = _config["default"].paceCaretCustomSpeed;
+            } else if (TestLogic.isPaceRepeat == true) {
+              wpm = TestLogic.lastTestWpm;
             }
 
             if (!(wpm < 1 || wpm == false || wpm == undefined || Number.isNaN(wpm))) {
-              _context.next = 6;
+              _context.next = 7;
               break;
             }
 
             exports.settings = settings = null;
             return _context.abrupt("return");
 
-          case 6:
+          case 7:
             characters = wpm * 5;
             cps = characters / 60; //characters per step
 
@@ -7875,7 +9327,7 @@ function _init() {
             resetCaretPosition();
             TestUI.updateModesNotice();
 
-          case 12:
+          case 13:
           case "end":
             return _context.stop();
         }
@@ -7892,10 +9344,6 @@ function update(expectedStepEnd) {
 
   if ($("#paceCaret").hasClass("hidden")) {
     $("#paceCaret").removeClass("hidden");
-  }
-
-  if ($("#paceCaret").hasClass("off")) {
-    return;
   }
 
   try {
@@ -8024,7 +9472,7 @@ function start() {
   update(performance.now() + settings.spc * 1000);
 }
 
-},{"./config":6,"./test-logic":43,"./test-ui":46,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],31:[function(require,module,exports){
+},{"./config":7,"./test-logic":48,"./test-ui":51,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],34:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8043,10 +9491,115 @@ function show() {
   }, 250, "easeOutCubic");
 }
 
-},{}],32:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getPoem = getPoem;
+exports.Poem = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var bannedChars = ["—", "_", " "];
+var maxWords = 100;
+var apiURL = "https://poetrydb.org/random";
+
+var Poem = /*#__PURE__*/function () {
+  function Poem(title, author, words) {
+    (0, _classCallCheck2["default"])(this, Poem);
+    this.title = title;
+    this.author = author;
+    this.words = words;
+    this.cleanUpText();
+  }
+
+  (0, _createClass2["default"])(Poem, [{
+    key: "cleanUpText",
+    value: function cleanUpText() {
+      var count = 0;
+      var scrubbedWords = [];
+
+      for (var i = 0; i < this.words.length; i++) {
+        var scrubbed = "";
+
+        for (var j = 0; j < this.words[i].length; j++) {
+          if (!bannedChars.includes(this.words[i][j])) scrubbed += this.words[i][j];
+        }
+
+        if (scrubbed == "") continue;
+        scrubbedWords.push(scrubbed);
+        count++;
+        if (count == maxWords) break;
+      }
+
+      this.words = scrubbedWords;
+    }
+  }]);
+  return Poem;
+}();
+
+exports.Poem = Poem;
+
+function getPoem() {
+  return _getPoem.apply(this, arguments);
+}
+
+function _getPoem() {
+  _getPoem = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            return _context.abrupt("return", new Promise(function (res, rej) {
+              console.log("Getting poem");
+              var poemReq = new XMLHttpRequest();
+
+              poemReq.onload = function () {
+                if (poemReq.readyState == 4) {
+                  if (poemReq.status == 200) {
+                    var poemObj = JSON.parse(poemReq.responseText)[0];
+                    var words = [];
+                    poemObj.lines.forEach(function (line) {
+                      line.split(" ").forEach(function (word) {
+                        words.push(word);
+                      });
+                    });
+                    var poem = new Poem(poemObj.title, poemObj.author, words);
+                    res(poem);
+                  } else {
+                    rej(poemReq.status);
+                  }
+                }
+              };
+
+              poemReq.open("GET", apiURL);
+              poemReq.send();
+            }));
+
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _getPoem.apply(this, arguments);
+}
+
+},{"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/regenerator":74}],36:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8064,10 +9617,6 @@ var UpdateConfig = _interopRequireWildcard(require("./config"));
 var CustomText = _interopRequireWildcard(require("./custom-text"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var before = {
   mode: null,
@@ -8094,8 +9643,8 @@ function init() {
   });
   CustomText.setText(newCustomText);
   CustomText.setIsWordRandom(true);
-  CustomText.setWord(50);
-  TestLogic.restart();
+  CustomText.setWord(Object.keys(TestStats.missedWords).length * 5);
+  TestLogic.restart(false, false, false, true);
   before.mode = mode;
   before.punctuation = punctuation;
   before.numbers = numbers;
@@ -8107,12 +9656,12 @@ function resetBefore() {
   before.numbers = null;
 }
 
-},{"./config":6,"./custom-text":10,"./notifications":28,"./test-logic":43,"./test-stats":44,"@babel/runtime/helpers/typeof":64}],33:[function(require,module,exports){
+},{"./config":7,"./custom-text":11,"./notifications":31,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireWildcard":68}],37:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8134,10 +9683,6 @@ var _config = _interopRequireDefault(require("./config"));
 var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var selectedId = 1;
 exports.selectedId = selectedId;
@@ -8321,10 +9866,10 @@ $("#quoteSearchPopup input").keypress(function (e) {
   }
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./test-logic":43,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],34:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],38:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
 
@@ -8338,22 +9883,19 @@ var RouteController = _interopRequireWildcard(require("./route-controller"));
 
 var UI = _interopRequireWildcard(require("./ui"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 
 ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
+RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(function () {
-  RouteController.handleInitialPageClasses(window.location.hash);
-
   if (window.location.hash === "") {
     $("#top .config").removeClass("hidden");
   }
 
-  $("body").css("transition", ".25s");
+  $("body").css("transition", "all .25s, transform .05s");
 
   if (UpdateConfig["default"].quickTab) {
     $("#restartTestButton").addClass("hidden");
@@ -8375,12 +9917,366 @@ $(document).ready(function () {
     }
   });
   Settings.settingsFillPromise.then(Settings.update);
+  MonkeyPower.init();
 });
 
-},{"./config":6,"./manual-restart-tracker":25,"./misc":26,"./route-controller":35,"./settings":37,"./ui":51,"@babel/runtime/helpers/typeof":64}],35:[function(require,module,exports){
+},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./route-controller":40,"./settings":42,"./ui":57,"@babel/runtime/helpers/interopRequireWildcard":68}],39:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.pauseReplay = pauseReplay;
+exports.startReplayRecording = startReplayRecording;
+exports.stopReplayRecording = stopReplayRecording;
+exports.addReplayEvent = addReplayEvent;
+exports.replayGetWordsList = replayGetWordsList;
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _config = _interopRequireDefault(require("./config"));
+
+var Sound = _interopRequireWildcard(require("./sound"));
+
+/*
+TODO:
+  Export replay as video
+  Export replay as typing test file?
+    .ttr file extension (stands for typing test record)
+      Should just be json, but fields should be specified by some format
+        metadata field with rules, website source, mode, name of typist
+        data field should be a list of objects, like monkeytype replay uses
+        signature or verfication field should be able to check file validity with server
+    And add ability to upload file to watch replay
+*/
+var wordsList = [];
+var replayData = [];
+var replayStartTime = 0;
+var replayRecording = true;
+var wordPos = 0;
+var curPos = 0;
+var targetWordPos = 0;
+var targetCurPos = 0;
+var timeoutList = [];
+var stopwatchList = [];
+var toggleButton = document.getElementById("playpauseReplayButton").children[0];
+
+function replayGetWordsList(wordsListFromScript) {
+  wordsList = wordsListFromScript;
+}
+
+function initializeReplayPrompt() {
+  var replayWordsElement = document.getElementById("replayWords");
+  replayWordsElement.innerHTML = "";
+  var wordCount = 0;
+  replayData.forEach(function (item) {
+    //trim wordsList for timed tests
+    if (item.action === "backWord") {
+      wordCount--;
+    } else if (item.action === "submitCorrectWord" || item.action === "submitErrorWord") {
+      wordCount++;
+    }
+  });
+  wordsList.forEach(function (item, i) {
+    if (i > wordCount) return;
+    var x = document.createElement("div");
+    x.className = "word";
+
+    for (i = 0; i < item.length; i++) {
+      var letter = document.createElement("LETTER");
+      letter.innerHTML = item[i];
+      x.appendChild(letter);
+    }
+
+    replayWordsElement.appendChild(x);
+  });
+}
+
+function pauseReplay() {
+  timeoutList.forEach(function (item) {
+    clearTimeout(item);
+  });
+  timeoutList = [];
+  stopwatchList.forEach(function (item) {
+    clearTimeout(item);
+  });
+  stopwatchList = [];
+  targetCurPos = curPos;
+  targetWordPos = wordPos;
+  toggleButton.className = "fas fa-play";
+  toggleButton.parentNode.setAttribute("aria-label", "Resume replay");
+}
+
+function playSound() {
+  var error = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+  if (error) {
+    if (_config["default"].playSoundOnError) {
+      Sound.playError();
+    } else {
+      Sound.playClick();
+    }
+  } else {
+    Sound.playClick();
+  }
+}
+
+function handleDisplayLogic(item) {
+  var nosound = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var activeWord = document.getElementById("replayWords").children[wordPos];
+
+  if (item.action === "correctLetter") {
+    if (!nosound) playSound();
+    activeWord.children[curPos].classList.add("correct");
+    curPos++;
+  } else if (item.action === "incorrectLetter") {
+    if (!nosound) playSound(true);
+    var myElement;
+
+    if (curPos >= activeWord.children.length) {
+      //if letter is an extra
+      myElement = document.createElement("letter");
+      myElement.classList.add("extra");
+      myElement.innerHTML = item.letter;
+      activeWord.appendChild(myElement);
+    }
+
+    myElement = activeWord.children[curPos];
+    myElement.classList.add("incorrect");
+    curPos++;
+  } else if (item.action === "deleteLetter") {
+    if (!nosound) playSound();
+    var _myElement = activeWord.children[curPos - 1];
+
+    if (_myElement.classList.contains("extra")) {
+      _myElement.remove();
+    } else {
+      _myElement.className = "";
+    }
+
+    curPos--;
+  } else if (item.action === "submitCorrectWord") {
+    if (!nosound) playSound();
+    wordPos++;
+    curPos = 0;
+  } else if (item.action === "submitErrorWord") {
+    if (!nosound) playSound(true);
+    activeWord.classList.add("error");
+    wordPos++;
+    curPos = 0;
+  } else if (item.action === "clearWord") {
+    if (!nosound) playSound();
+    var promptWord = document.createElement("div");
+    var wordArr = wordsList[wordPos].split("");
+    wordArr.forEach(function (letter) {
+      promptWord.innerHTML += "<letter>".concat(letter, "</letter>");
+    });
+    activeWord.innerHTML = promptWord.innerHTML;
+    curPos = 0;
+  } else if (item.action === "backWord") {
+    if (!nosound) playSound();
+    wordPos--;
+    activeWord = document.getElementById("replayWords").children[wordPos];
+    curPos = activeWord.children.length;
+
+    while (activeWord.children[curPos - 1].className === "") {
+      curPos--;
+    }
+
+    activeWord.classList.remove("error");
+  }
+}
+
+function loadOldReplay() {
+  var startingIndex = 0;
+  curPos = 0;
+  wordPos = 0;
+  replayData.forEach(function (item, i) {
+    if (wordPos < targetWordPos || wordPos === targetWordPos && curPos < targetCurPos) {
+      //quickly display everything up to the target
+      handleDisplayLogic(item, true);
+      startingIndex = i + 1;
+    }
+  });
+  var time = Math.floor(replayData[startingIndex].time / 1000);
+  $("#replayStopwatch").text(time + "s");
+  return startingIndex;
+}
+
+function toggleReplayDisplay() {
+  if ($("#resultReplay").stop(true, true).hasClass("hidden")) {
+    initializeReplayPrompt();
+    loadOldReplay(); //show
+
+    if (!$("#watchReplayButton").hasClass("loaded")) {
+      $("#words").html("<div class=\"preloader\"><i class=\"fas fa-fw fa-spin fa-circle-notch\"></i></div>");
+      $("#resultReplay").removeClass("hidden").css("display", "none").slideDown(250);
+    } else {
+      $("#resultReplay").removeClass("hidden").css("display", "none").slideDown(250);
+    }
+  } else {
+    //hide
+    if (toggleButton.parentNode.getAttribute("aria-label") != "Start replay") {
+      pauseReplay();
+    }
+
+    $("#resultReplay").slideUp(250, function () {
+      $("#resultReplay").addClass("hidden");
+    });
+  }
+}
+
+function startReplayRecording() {
+  if (!$("#resultReplay").stop(true, true).hasClass("hidden")) {
+    //hide replay display if user left it open
+    toggleReplayDisplay();
+  }
+
+  $("#replayStopwatch").text(0 + "s");
+  replayData = [];
+  replayStartTime = performance.now();
+  replayRecording = true;
+  targetCurPos = 0;
+  targetWordPos = 0;
+}
+
+function stopReplayRecording() {
+  replayRecording = false;
+}
+
+function addReplayEvent(action) {
+  var letter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+  if (replayRecording === false) {
+    return;
+  }
+
+  var timeDelta = performance.now() - replayStartTime;
+
+  if (action === "incorrectLetter" || action === "correctLetter") {
+    replayData.push({
+      action: action,
+      letter: letter,
+      time: timeDelta
+    });
+  } else {
+    replayData.push({
+      action: action,
+      time: timeDelta
+    });
+  }
+}
+
+function playReplay() {
+  curPos = 0;
+  wordPos = 0;
+  toggleButton.className = "fas fa-pause";
+  toggleButton.parentNode.setAttribute("aria-label", "Pause replay");
+  initializeReplayPrompt();
+  var startingIndex = loadOldReplay();
+  var lastTime = replayData[startingIndex].time;
+  var swTime = Math.round(lastTime / 1000); //starting time
+
+  var swEndTime = Math.round(replayData[replayData.length - 1].time / 1000);
+
+  var _loop = function _loop() {
+    var time = swTime;
+    stopwatchList.push(setTimeout(function () {
+      $("#replayStopwatch").text(time + "s");
+    }, time * 1000 - lastTime));
+    swTime++;
+  };
+
+  while (swTime <= swEndTime) {
+    _loop();
+  }
+
+  replayData.forEach(function (item, i) {
+    if (i < startingIndex) return;
+    timeoutList.push(setTimeout(function () {
+      handleDisplayLogic(item);
+    }, item.time - lastTime));
+  });
+  timeoutList.push(setTimeout(function () {
+    //after the replay has finished, this will run
+    targetCurPos = 0;
+    targetWordPos = 0;
+    toggleButton.className = "fas fa-play";
+    toggleButton.parentNode.setAttribute("aria-label", "Start replay");
+  }, replayData[replayData.length - 1].time - lastTime));
+}
+
+$(".pageTest #playpauseReplayButton").click( /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(event) {
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (toggleButton.className === "fas fa-play") {
+              playReplay();
+            } else if (toggleButton.className === "fas fa-pause") {
+              pauseReplay();
+            }
+
+          case 1:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}());
+$("#replayWords").click(function (event) {
+  //allows user to click on the place they want to start their replay at
+  pauseReplay();
+  var replayWords = document.querySelector("#replayWords");
+  var range;
+  var textNode;
+
+  if (document.caretPositionFromPoint) {
+    // standard
+    range = document.caretPositionFromPoint(event.pageX, event.pageY);
+    textNode = range.offsetNode;
+  } else if (document.caretRangeFromPoint) {
+    // WebKit
+    range = document.caretRangeFromPoint(event.pageX, event.pageY);
+    textNode = range.startContainer;
+  }
+
+  var words = (0, _toConsumableArray2["default"])(replayWords.children);
+  targetWordPos = words.indexOf(textNode.parentNode.parentNode);
+  var letters = (0, _toConsumableArray2["default"])(words[targetWordPos].children);
+  targetCurPos = letters.indexOf(textNode.parentNode);
+  initializeReplayPrompt();
+  loadOldReplay();
+});
+$(document).on("keypress", "#watchReplayButton", function (event) {
+  if (event.keyCode == 13) {
+    toggleReplayDisplay();
+  }
+});
+$(document.body).on("click", "#watchReplayButton", function () {
+  toggleReplayDisplay();
+});
+
+},{"./config":7,"./sound":45,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],40:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8391,9 +10287,7 @@ var Funbox = _interopRequireWildcard(require("./funbox"));
 
 var UI = _interopRequireWildcard(require("./ui"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var _config = _interopRequireDefault(require("./config"));
 
 var mappedRoutes = {
   "": "pageTest",
@@ -8413,7 +10307,7 @@ function handleInitialPageClasses(hash) {
   var pushState = history.pushState;
 
   history.pushState = function (state) {
-    if (Funbox.active === "memory" && state !== "/") {
+    if (_config["default"].funbox === "memory" && state !== "/") {
       Funbox.resetMemoryTimer();
     }
 
@@ -8433,7 +10327,7 @@ $(window).on("popstate", function (e) {
   }
 });
 
-},{"./funbox":14,"./ui":51,"@babel/runtime/helpers/typeof":64}],36:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],41:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -8523,17 +10417,16 @@ var SettingsGroup = /*#__PURE__*/function () {
 
 exports["default"] = SettingsGroup;
 
-},{"./config":6,"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/toConsumableArray":63}],37:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/toConsumableArray":71}],42:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.hideAccountSection = hideAccountSection;
 exports.update = update;
 exports.settingsFillPromise = exports.groups = void 0;
 
@@ -8563,10 +10456,6 @@ var SimplePopups = _interopRequireWildcard(require("./simple-popups"));
 
 var ThemePicker = _interopRequireWildcard(require("./theme-picker"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 var groups = {};
 exports.groups = groups;
 
@@ -8591,6 +10480,7 @@ function _initGroups() {
               groups.keymapMode.updateButton();
             });
             groups.showLiveAcc = new _settingsGroup["default"]("showLiveAcc", UpdateConfig.setShowLiveAcc);
+            groups.showLiveBurst = new _settingsGroup["default"]("showLiveBurst", UpdateConfig.setShowLiveBurst);
             groups.showTimerProgress = new _settingsGroup["default"]("showTimerProgress", UpdateConfig.setShowTimerProgress);
             groups.keymapMode = new _settingsGroup["default"]("keymapMode", UpdateConfig.setKeymapMode, function () {
               groups.showLiveWpm.updateButton();
@@ -8645,27 +10535,11 @@ function _initGroups() {
               if (UpdateConfig["default"].playSoundOnClick !== "off") Sound.playClick(UpdateConfig["default"].playSoundOnClick);
             });
             groups.showAllLines = new _settingsGroup["default"]("showAllLines", UpdateConfig.setShowAllLines);
-            groups.paceCaret = new _settingsGroup["default"]("paceCaret", UpdateConfig.setPaceCaret, function () {
-              if (UpdateConfig["default"].paceCaret === "custom") {
-                $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").removeClass("hidden");
-              } else {
-                $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").addClass("hidden");
-              }
-            });
-            groups.minWpm = new _settingsGroup["default"]("minWpm", UpdateConfig.setMinWpm, function () {
-              if (UpdateConfig["default"].minWpm === "custom") {
-                $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass("hidden");
-              } else {
-                $(".pageSettings .section.minWpm input.customMinWpmSpeed").addClass("hidden");
-              }
-            });
-            groups.minAcc = new _settingsGroup["default"]("minAcc", UpdateConfig.setMinAcc, function () {
-              if (UpdateConfig["default"].minAcc === "custom") {
-                $(".pageSettings .section.minAcc input.customMinAcc").removeClass("hidden");
-              } else {
-                $(".pageSettings .section.minAcc input.customMinAcc").addClass("hidden");
-              }
-            });
+            groups.paceCaret = new _settingsGroup["default"]("paceCaret", UpdateConfig.setPaceCaret);
+            groups.repeatedPace = new _settingsGroup["default"]("repeatedPace", UpdateConfig.setRepeatedPace);
+            groups.minWpm = new _settingsGroup["default"]("minWpm", UpdateConfig.setMinWpm);
+            groups.minAcc = new _settingsGroup["default"]("minAcc", UpdateConfig.setMinAcc);
+            groups.minBurst = new _settingsGroup["default"]("minBurst", UpdateConfig.setMinBurst);
             groups.smoothLineScroll = new _settingsGroup["default"]("smoothLineScroll", UpdateConfig.setSmoothLineScroll);
             groups.capsLockBackspace = new _settingsGroup["default"]("capsLockBackspace", UpdateConfig.setCapsLockBackspace);
             groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.setLayout);
@@ -8690,9 +10564,12 @@ function _initGroups() {
             });
             groups.alwaysShowDecimalPlaces = new _settingsGroup["default"]("alwaysShowDecimalPlaces", UpdateConfig.setAlwaysShowDecimalPlaces);
             groups.alwaysShowCPM = new _settingsGroup["default"]("alwaysShowCPM", UpdateConfig.setAlwaysShowCPM);
-            groups.customBackgroundSize = new _settingsGroup["default"]("customBackgroundSize", UpdateConfig.setCustomBackgroundSize);
+            groups.customBackgroundSize = new _settingsGroup["default"]("customBackgroundSize", UpdateConfig.setCustomBackgroundSize); // groups.customLayoutfluid = new SettingsGroup(
+            //   "customLayoutfluid",
+            //   UpdateConfig.setCustomLayoutfluid
+            // );
 
-          case 53:
+          case 56:
           case "end":
             return _context.stop();
         }
@@ -8767,8 +10644,9 @@ function _fillSettingsPage() {
               }).appendTo(fontsEl);
             });
             $(".pageSettings .section.customBackgroundSize input").val(UpdateConfig["default"].customBackground);
+            $(".pageSettings .section.customLayoutfluid input").val(UpdateConfig["default"].customLayoutfluid.replace(/#/g, " "));
 
-          case 22:
+          case 23:
           case "end":
             return _context2.stop();
         }
@@ -8781,14 +10659,9 @@ function _fillSettingsPage() {
 var settingsFillPromise = fillSettingsPage();
 exports.settingsFillPromise = settingsFillPromise;
 
-function hideAccountSection() {
-  $(".sectionGroupTitle[group='account']").addClass("hidden");
-  $(".settingsGroup.account").addClass("hidden");
-}
-
 function setActiveFunboxButton() {
   $(".pageSettings .section.funbox .button").removeClass("active");
-  $(".pageSettings .section.funbox .button[funbox='".concat(Funbox.funboxSaved, "']")).addClass("active");
+  $(".pageSettings .section.funbox .button[funbox='".concat(UpdateConfig["default"].funbox, "']")).addClass("active");
 }
 
 function update() {
@@ -8800,37 +10673,63 @@ function update() {
   ThemePicker.updateActiveTab();
   ThemePicker.setCustomInputs();
   ThemePicker.refreshButtons();
+  $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val(UpdateConfig["default"].paceCaretCustomSpeed);
+  $(".pageSettings .section.minWpm input.customMinWpmSpeed").val(UpdateConfig["default"].minWpmCustomSpeed);
+  $(".pageSettings .section.minAcc input.customMinAcc").val(UpdateConfig["default"].minAccCustom);
+  $(".pageSettings .section.minBurst input.customMinBurst").val(UpdateConfig["default"].minBurstCustomSpeed);
+}
 
-  if (UpdateConfig["default"].paceCaret === "custom") {
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").removeClass("hidden");
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val(UpdateConfig["default"].paceCaretCustomSpeed);
-  } else {
-    $(".pageSettings .section.paceCaret input.customPaceCaretSpeed").addClass("hidden");
-  }
+function toggleSettingsGroup(groupName) {
+  $(".pageSettings .settingsGroup.".concat(groupName)).stop(true, true).slideToggle(250).toggleClass("slideup");
 
-  if (UpdateConfig["default"].minWpm === "custom") {
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").removeClass("hidden");
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").val(UpdateConfig["default"].minWpmCustomSpeed);
+  if ($(".pageSettings .settingsGroup.".concat(groupName)).hasClass("slideup")) {
+    $(".pageSettings .sectionGroupTitle[group=".concat(groupName, "] .fas")).stop(true, true).animate({
+      deg: -90
+    }, {
+      duration: 250,
+      step: function step(now) {
+        $(this).css({
+          transform: "rotate(" + now + "deg)"
+        });
+      }
+    });
   } else {
-    $(".pageSettings .section.minWpm input.customMinWpmSpeed").addClass("hidden");
-  }
-
-  if (UpdateConfig["default"].minAcc === "custom") {
-    $(".pageSettings .section.minAcc input.customMinAcc").removeClass("hidden");
-    $(".pageSettings .section.minAcc input.customMinAcc").val(UpdateConfig["default"].minAccCustom);
-  } else {
-    $(".pageSettings .section.minAcc input.customMinAcc").addClass("hidden");
+    $(".pageSettings .sectionGroupTitle[group=".concat(groupName, "] .fas")).stop(true, true).animate({
+      deg: 0
+    }, {
+      duration: 250,
+      step: function step(now) {
+        $(this).css({
+          transform: "rotate(" + now + "deg)"
+        });
+      }
+    });
   }
 }
 
 $(document).on("focusout", ".pageSettings .section.paceCaret input.customPaceCaretSpeed", function (e) {
   UpdateConfig.setPaceCaretCustomSpeed(parseInt($(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val()));
 });
+$(document).on("click", ".pageSettings .section.paceCaret .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.paceCaret input.customPaceCaretSpeed").val()));
+});
 $(document).on("focusout", ".pageSettings .section.minWpm input.customMinWpmSpeed", function (e) {
   UpdateConfig.setMinWpmCustomSpeed(parseInt($(".pageSettings .section.minWpm input.customMinWpmSpeed").val()));
 });
+$(document).on("click", ".pageSettings .section.minWpm .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minWpm input.customMinWpmSpeed").val()));
+});
 $(document).on("focusout", ".pageSettings .section.minAcc input.customMinAcc", function (e) {
   UpdateConfig.setMinAccCustom(parseInt($(".pageSettings .section.minAcc input.customMinAcc").val()));
+});
+$(document).on("click", ".pageSettings .section.minAcc .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minAcc input.customMinAcc").val()));
+});
+$(document).on("focusout", ".pageSettings .section.minBurst input.customMinBurst", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minBurst input.customMinBurst").val()));
+});
+$(document).on("click", ".pageSettings .section.minBurst .button.save", function (e) {
+  UpdateConfig.setMinBurstCustomSpeed(parseInt($(".pageSettings .section.minBurst input.customMinBurst").val()));
 });
 $(document).on("click", ".pageSettings .section.languageGroups .button", function (e) {
   var group = $(e.currentTarget).attr("group");
@@ -8844,12 +10743,7 @@ $(document).on("click", ".pageSettings .section.funbox .button", function (e) {
   setActiveFunboxButton();
 });
 $("#resetSettingsButton").click(function (e) {
-  if (confirm("Press OK to confirm.")) {
-    UpdateConfig.reset();
-    setTimeout(function () {
-      location.reload();
-    }, 1000);
-  }
+  SimplePopups.list.resetSettings.show();
 });
 $("#exportSettingsButton").click(function (e) {
   var configJSON = JSON.stringify(UpdateConfig["default"]);
@@ -8860,49 +10754,33 @@ $("#exportSettingsButton").click(function (e) {
   });
 });
 $(".pageSettings .sectionGroupTitle").click(function (e) {
-  var group = $(e.currentTarget).attr("group");
-  $(".pageSettings .settingsGroup.".concat(group)).stop(true, true).slideToggle(250).toggleClass("slideup");
-
-  if ($(".pageSettings .settingsGroup.".concat(group)).hasClass("slideup")) {
-    $(".pageSettings .sectionGroupTitle[group=".concat(group, "] .fas")).stop(true, true).animate({
-      deg: -90
-    }, {
-      duration: 250,
-      step: function step(now) {
-        $(this).css({
-          transform: "rotate(" + now + "deg)"
-        });
-      }
-    });
-  } else {
-    $(".pageSettings .sectionGroupTitle[group=".concat(group, "] .fas")).stop(true, true).animate({
-      deg: 0
-    }, {
-      duration: 250,
-      step: function step(now) {
-        $(this).css({
-          transform: "rotate(" + now + "deg)"
-        });
-      }
-    });
-  }
+  toggleSettingsGroup($(e.currentTarget).attr("group"));
 });
-$(".pageSettings #resetPersonalBestsButton").on("click", function (e) {
-  SimplePopups.list.resetPersonalBests.show();
+$(".pageSettings .section.customBackgroundSize .inputAndSave .save").on("click", function (e) {
+  UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndSave input").val());
 });
-$(".pageSettings #updateAccountEmail").on("click", function (e) {
-  SimplePopups.list.updateEmail.show();
-});
-$(".pageSettings .section.customBackgroundSize .inputAndButton .save").on("click", function (e) {
-  UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
-});
-$(".pageSettings .section.customBackgroundSize .inputAndButton input").keypress(function (e) {
+$(".pageSettings .section.customBackgroundSize .inputAndSave input").keypress(function (e) {
   if (e.keyCode == 13) {
-    UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndButton input").val());
+    UpdateConfig.setCustomBackground($(".pageSettings .section.customBackgroundSize .inputAndSave input").val());
   }
 });
+$(".pageSettings .section.customLayoutfluid .inputAndSave .save").on("click", function (e) {
+  UpdateConfig.setCustomLayoutfluid($(".pageSettings .section.customLayoutfluid .inputAndSave input").val());
+  Notifications.add("Custom layoutfluid saved", 1);
+});
+$(".pageSettings .section.customLayoutfluid .inputAndSave .input").keypress(function (e) {
+  if (e.keyCode == 13) {
+    UpdateConfig.setCustomLayoutfluid($(".pageSettings .section.customLayoutfluid .inputAndSave input").val());
+    Notifications.add("Custom layoutfluid saved", 1);
+  }
+});
+$(".quickNav .links a").on("click", function (e) {
+  var settingsGroup = e.target.innerText;
+  var isOpen = $(".pageSettings .settingsGroup.".concat(settingsGroup)).hasClass("slideup");
+  isOpen && toggleSettingsGroup(settingsGroup);
+});
 
-},{"./config":6,"./funbox":14,"./language-picker":19,"./layouts":21,"./loader":24,"./misc":26,"./notifications":28,"./settings-group":36,"./simple-popups":39,"./sound":40,"./theme-picker":49,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],38:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./language-picker":20,"./layouts":22,"./loader":26,"./misc":28,"./notifications":31,"./settings-group":41,"./simple-popups":44,"./sound":45,"./theme-picker":54,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],43:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8918,14 +10796,15 @@ exports.rightState = rightState;
 $(document).keydown(function (e) {
   if (e.code === "ShiftLeft") {
     exports.leftState = leftState = true;
+    exports.rightState = rightState = false;
   } else if (e.code === "ShiftRight") {
+    exports.leftState = leftState = false;
     exports.rightState = rightState = true;
   }
 });
 $(document).keyup(function (e) {
-  if (e.code === "ShiftLeft") {
+  if (e.code === "ShiftLeft" || e.code === "ShiftRight") {
     exports.leftState = leftState = false;
-  } else if (e.code === "ShiftRight") {
     exports.rightState = rightState = false;
   }
 });
@@ -8949,12 +10828,12 @@ function isUsingOppositeShift(event) {
   }
 }
 
-},{}],39:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8971,9 +10850,7 @@ var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var list = {};
 exports.list = list;
@@ -9015,7 +10892,13 @@ var SimplePopup = /*#__PURE__*/function () {
       el.find(".title").text(this.title);
       el.find(".text").text(this.text);
       this.initInputs();
-      el.find(".button").text(this.buttonText); // }
+
+      if (!this.buttonText) {
+        el.find(".button").remove();
+      } else {
+        el.find(".button").text(this.buttonText);
+      } // }
+
     }
   }, {
     key: "initInputs",
@@ -9025,11 +10908,15 @@ var SimplePopup = /*#__PURE__*/function () {
       if (this.inputs.length > 0) {
         if (this.type === "number") {
           this.inputs.forEach(function (input) {
-            el.find(".inputs").append("\n        <input type=\"number\" min=\"1\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required>\n        "));
+            el.find(".inputs").append("\n        <input type=\"number\" min=\"1\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n        "));
           });
         } else if (this.type === "text") {
           this.inputs.forEach(function (input) {
-            el.find(".inputs").append("\n        <input type=\"text\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required>\n        "));
+            if (input.type) {
+              el.find(".inputs").append("\n            <input type=\"".concat(input.type, "\" val=\"").concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n            "));
+            } else {
+              el.find(".inputs").append("\n            <input type=\"text\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n            "));
+            }
           });
         }
 
@@ -9075,7 +10962,7 @@ var SimplePopup = /*#__PURE__*/function () {
   return SimplePopup;
 }();
 
-$("#simplePopupWrapper").click(function (e) {
+$("#simplePopupWrapper").mousedown(function (e) {
   if ($(e.target).attr("id") === "simplePopupWrapper") {
     $("#simplePopupWrapper").stop(true, true).css("opacity", 1).removeClass("hidden").animate({
       opacity: 0
@@ -9103,7 +10990,7 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
 }, function () {});
 
-},{"./loader":24,"./notifications":28,"./settings":37,"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],40:[function(require,module,exports){
+},{"./config":7,"./loader":26,"./notifications":31,"./settings":42,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9117,59 +11004,123 @@ exports.playError = playError;
 
 var _config = _interopRequireDefault(require("./config"));
 
-var errorSound = new Audio("../sound/error.wav");
+var _howler = require("howler");
+
+var errorSound = new _howler.Howl({
+  src: ["sound/error.wav"]
+});
 var clickSounds = null;
 
 function init() {
   if (clickSounds !== null) return;
   clickSounds = {
     1: [{
-      sounds: [new Audio("../sound/click1/click1_1.wav"), new Audio("../sound/click1/click1_1.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click1/click1_1.wav"
+      }), new _howler.Howl({
+        src: "sound/click1/click1_1.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click1/click1_2.wav"), new Audio("../sound/click1/click1_2.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click1/click1_2.wav"
+      }), new _howler.Howl({
+        src: "sound/click1/click1_2.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click1/click1_3.wav"), new Audio("../sound/click1/click1_3.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click1/click1_3.wav"
+      }), new _howler.Howl({
+        src: "sound/click1/click1_3.wav"
+      })],
       counter: 0
     }],
     2: [{
-      sounds: [new Audio("../sound/click2/click2_1.wav"), new Audio("../sound/click2/click2_1.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click2/click2_1.wav"
+      }), new _howler.Howl({
+        src: "sound/click2/click2_1.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click2/click2_2.wav"), new Audio("../sound/click2/click2_2.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click2/click2_2.wav"
+      }), new _howler.Howl({
+        src: "sound/click2/click2_2.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click2/click2_3.wav"), new Audio("../sound/click2/click2_3.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click2/click2_3.wav"
+      }), new _howler.Howl({
+        src: "sound/click2/click2_3.wav"
+      })],
       counter: 0
     }],
     3: [{
-      sounds: [new Audio("../sound/click3/click3_1.wav"), new Audio("../sound/click3/click3_1.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click3/click3_1.wav"
+      }), new _howler.Howl({
+        src: "sound/click3/click3_1.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click3/click3_2.wav"), new Audio("../sound/click3/click3_2.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click3/click3_2.wav"
+      }), new _howler.Howl({
+        src: "sound/click3/click3_2.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click3/click3_3.wav"), new Audio("../sound/click3/click3_3.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click3/click3_3.wav"
+      }), new _howler.Howl({
+        src: "sound/click3/click3_3.wav"
+      })],
       counter: 0
     }],
     4: [{
-      sounds: [new Audio("../sound/click4/click4_1.wav"), new Audio("../sound/click4/click4_11.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click4/click4_1.wav"
+      }), new _howler.Howl({
+        src: "sound/click4/click4_11.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_2.wav"), new Audio("../sound/click4/click4_22.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click4/click4_2.wav"
+      }), new _howler.Howl({
+        src: "sound/click4/click4_22.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_3.wav"), new Audio("../sound/click4/click4_33.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click4/click4_3.wav"
+      }), new _howler.Howl({
+        src: "sound/click4/click4_33.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_4.wav"), new Audio("../sound/click4/click4_44.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click4/click4_4.wav"
+      }), new _howler.Howl({
+        src: "sound/click4/click4_44.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_5.wav"), new Audio("../sound/click4/click4_55.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click4/click4_5.wav"
+      }), new _howler.Howl({
+        src: "sound/click4/click4_55.wav"
+      })],
       counter: 0
     }, {
-      sounds: [new Audio("../sound/click4/click4_6.wav"), new Audio("../sound/click4/click4_66.wav")],
+      sounds: [new _howler.Howl({
+        src: "sound/click4/click4_6.wav"
+      }), new _howler.Howl({
+        src: "sound/click4/click4_66.wav"
+      })],
       counter: 0
     }]
   };
@@ -9182,28 +11133,24 @@ function playClick() {
   var randomSound = clickSounds[_config["default"].playSoundOnClick][rand];
   randomSound.counter++;
   if (randomSound.counter === 2) randomSound.counter = 0;
-  randomSound.sounds[randomSound.counter].currentTime = 0;
+  randomSound.sounds[randomSound.counter].seek(0);
   randomSound.sounds[randomSound.counter].play();
 }
 
 function playError() {
   if (!_config["default"].playSoundOnError) return;
-  errorSound.currentTime = 0;
+  errorSound.seek(0);
   errorSound.play();
 }
 
-},{"./config":6,"@babel/runtime/helpers/interopRequireDefault":60}],41:[function(require,module,exports){
+},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":67,"howler":84}],46:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 var Commandline = _interopRequireWildcard(require("./commandline"));
 
 var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 $(document.body).on("click", "#supportMeButton", function () {
   $("#supportMeWrapper").css("opacity", 0).removeClass("hidden").animate({
@@ -9225,10 +11172,10 @@ $(document.body).on("click", "#supportMeWrapper a.button", function () {
   });
 });
 
-},{"./commandline":5,"./commandline-lists":4,"@babel/runtime/helpers/typeof":64}],42:[function(require,module,exports){
+},{"./commandline":6,"./commandline-lists":5,"@babel/runtime/helpers/interopRequireWildcard":68}],47:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -9249,10 +11196,6 @@ var TestLogic = _interopRequireWildcard(require("./test-logic"));
 var QuoteSearchPopup = _interopRequireWildcard(require("./quote-search-popup"));
 
 var CustomTextPopup = _interopRequireWildcard(require("./custom-text-popup"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 // export function show() {
 //   $("#top .config").removeClass("hidden").css("opacity", 1);
@@ -9333,19 +11276,21 @@ $(document).on("click", "#top .config .mode .text-button", function (e) {
   TestLogic.restart();
 });
 
-},{"./config":6,"./custom-test-duration-popup":8,"./custom-text-popup":9,"./custom-word-amount-popup":12,"./manual-restart-tracker":25,"./quote-search-popup":33,"./test-logic":43,"@babel/runtime/helpers/typeof":64}],43:[function(require,module,exports){
+},{"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./manual-restart-tracker":27,"./quote-search-popup":37,"./test-logic":48,"@babel/runtime/helpers/interopRequireWildcard":68}],48:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.toggleGlarses = toggleGlarses;
 exports.setNotSignedInUid = setNotSignedInUid;
 exports.setActive = setActive;
 exports.setRepeated = setRepeated;
+exports.setPaceRepeat = setPaceRepeat;
 exports.setHasTab = setHasTab;
 exports.setBailout = setBailout;
 exports.setRandomQuote = setRandomQuote;
@@ -9357,11 +11302,11 @@ exports.calculateWpmAndRaw = calculateWpmAndRaw;
 exports.addWord = addWord;
 exports.finish = finish;
 exports.fail = fail;
-exports.bailout = exports.randomQuote = exports.hasTab = exports.isRepeated = exports.currentWordIndex = exports.corrected = exports.input = exports.words = exports.active = exports.notSignedInLastResult = void 0;
-
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+exports.bailout = exports.randomQuote = exports.hasTab = exports.lastTestWpm = exports.isPaceRepeat = exports.isRepeated = exports.currentWordIndex = exports.corrected = exports.input = exports.words = exports.active = exports.notSignedInLastResult = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -9403,6 +11348,8 @@ var LiveWpm = _interopRequireWildcard(require("./live-wpm"));
 
 var LiveAcc = _interopRequireWildcard(require("./live-acc"));
 
+var LiveBurst = _interopRequireWildcard(require("./live-burst"));
+
 var TimerProgress = _interopRequireWildcard(require("./timer-progress"));
 
 var ChartController = _interopRequireWildcard(require("./chart-controller"));
@@ -9419,9 +11366,23 @@ var OutOfFocus = _interopRequireWildcard(require("./out-of-focus"));
 
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var Replay = _interopRequireWildcard(require("./replay.js"));
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
+
+var Poetry = _interopRequireWildcard(require("./poetry.js"));
+
+var TodayTracker = _interopRequireWildcard(require("./today-tracker"));
+
+var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
+
+var glarsesMode = false;
+
+function toggleGlarses() {
+  glarsesMode = true;
+  console.log("Glarses Mode On - test result will be hidden. You can check the stats in the console (here)");
+  console.log("To disable Glarses Mode refresh the page.");
+}
 
 var notSignedInLastResult = null;
 exports.notSignedInLastResult = notSignedInLastResult;
@@ -9525,6 +11486,11 @@ var Input = /*#__PURE__*/function () {
       this.current = "";
     }
   }, {
+    key: "getCurrent",
+    value: function getCurrent() {
+      return this.current;
+    }
+  }, {
     key: "pushHistory",
     value: function pushHistory() {
       this.history.push(this.current);
@@ -9539,7 +11505,11 @@ var Input = /*#__PURE__*/function () {
   }, {
     key: "getHistory",
     value: function getHistory(i) {
-      return this.history[i];
+      if (i === undefined) {
+        return this.history;
+      } else {
+        return this.history[i];
+      }
     }
   }]);
   return Input;
@@ -9610,6 +11580,10 @@ var currentWordIndex = 0;
 exports.currentWordIndex = currentWordIndex;
 var isRepeated = false;
 exports.isRepeated = isRepeated;
+var isPaceRepeat = false;
+exports.isPaceRepeat = isPaceRepeat;
+var lastTestWpm = 0;
+exports.lastTestWpm = lastTestWpm;
 var hasTab = false;
 exports.hasTab = hasTab;
 var randomQuote = null;
@@ -9619,10 +11593,15 @@ exports.bailout = bailout;
 
 function setActive(tf) {
   exports.active = active = tf;
+  if (!tf) MonkeyPower.reset();
 }
 
 function setRepeated(tf) {
   exports.isRepeated = isRepeated = tf;
+}
+
+function setPaceRepeat(tf) {
+  exports.isPaceRepeat = isPaceRepeat = tf;
 }
 
 function setHasTab(tf) {
@@ -9637,69 +11616,116 @@ function setRandomQuote(rq) {
   exports.randomQuote = randomQuote = rq;
 }
 
+var spanishSentenceTracker = "";
+
 function punctuateWord(previousWord, currentWord, index, maxindex) {
   var word = currentWord;
+  var currentLanguage = UpdateConfig["default"].language.split("_")[0];
 
-  if ((index == 0 || Misc.getLastChar(previousWord) == "." || Misc.getLastChar(previousWord) == "?" || Misc.getLastChar(previousWord) == "!") && UpdateConfig["default"].language.split("_")[0] != "code") {
-    //always capitalise the first word or if there was a dot unless using a code alphabet
-    word = Misc.capitalizeFirstLetter(word);
-  } else if (Math.random() < 0.1 && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != "," && index != maxindex - 2 || index == maxindex - 1) {
-    var rand = Math.random();
-
-    if (rand <= 0.8) {
-      word += ".";
-    } else if (rand > 0.8 && rand < 0.9) {
-      if (UpdateConfig["default"].language.split("_")[0] == "french") {
-        word = "?";
-      } else {
-        word += "?";
-      }
-    } else {
-      if (UpdateConfig["default"].language.split("_")[0] == "french") {
-        word = "!";
-      } else {
-        word += "!";
+  if (UpdateConfig["default"].funbox === "58008") {
+    if (currentWord.length > 3) {
+      if (Math.random() < 0.75) {
+        var special = ["/", "*", "-", "+"][Math.floor(Math.random() * 4)];
+        word = Misc.setCharAt(word, Math.floor(word.length / 2), special);
       }
     }
-  } else if (Math.random() < 0.01 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
-    word = "\"".concat(word, "\"");
-  } else if (Math.random() < 0.011 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && UpdateConfig["default"].language.split("_")[0] !== "russian") {
-    word = "'".concat(word, "'");
-  } else if (Math.random() < 0.012 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != ".") {
-    if (UpdateConfig["default"].language.split("_")[0] == "code") {
-      var r = Math.random();
+  } else {
+    if ((index == 0 || Misc.getLastChar(previousWord) == "." || Misc.getLastChar(previousWord) == "?" || Misc.getLastChar(previousWord) == "!") && currentLanguage != "code") {
+      //always capitalise the first word or if there was a dot unless using a code alphabet
+      word = Misc.capitalizeFirstLetter(word);
 
-      if (r < 0.25) {
+      if (currentLanguage == "spanish" || currentLanguage == "catalan") {
+        var rand = Math.random();
+
+        if (rand > 0.9) {
+          word = "¿" + word;
+          spanishSentenceTracker = "?";
+        } else if (rand > 0.8) {
+          word = "¡" + word;
+          spanishSentenceTracker = "!";
+        }
+      }
+    } else if (Math.random() < 0.1 && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != "," && index != maxindex - 2 || index == maxindex - 1) {
+      if (currentLanguage == "spanish" || currentLanguage == "catalan") {
+        if (spanishSentenceTracker == "?" || spanishSentenceTracker == "!") {
+          word += spanishSentenceTracker;
+          spanishSentenceTracker = "";
+        }
+      } else {
+        var _rand = Math.random();
+
+        if (_rand <= 0.8) {
+          word += ".";
+        } else if (_rand > 0.8 && _rand < 0.9) {
+          if (currentLanguage == "french") {
+            word = "?";
+          } else if (currentLanguage == "arabic" || currentLanguage == "persian" || currentLanguage == "urdu") {
+            word += "؟";
+          } else if (currentLanguage == "greek") {
+            word += ";";
+          } else {
+            word += "?";
+          }
+        } else {
+          if (currentLanguage == "french") {
+            word = "!";
+          } else {
+            word += "!";
+          }
+        }
+      }
+    } else if (Math.random() < 0.01 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && currentLanguage !== "russian") {
+      word = "\"".concat(word, "\"");
+    } else if (Math.random() < 0.011 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && currentLanguage !== "russian" && currentLanguage !== "ukrainian") {
+      word = "'".concat(word, "'");
+    } else if (Math.random() < 0.012 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != ".") {
+      if (currentLanguage == "code") {
+        var r = Math.random();
+
+        if (r < 0.25) {
+          word = "(".concat(word, ")");
+        } else if (r < 0.5) {
+          word = "{".concat(word, "}");
+        } else if (r < 0.75) {
+          word = "[".concat(word, "]");
+        } else {
+          word = "<".concat(word, ">");
+        }
+      } else {
         word = "(".concat(word, ")");
-      } else if (r < 0.5) {
-        word = "{".concat(word, "}");
-      } else if (r < 0.75) {
-        word = "[".concat(word, "]");
-      } else {
-        word = "<".concat(word, ">");
       }
-    } else {
-      word = "(".concat(word, ")");
+    } else if (Math.random() < 0.013) {
+      if (currentLanguage == "french") {
+        word = ":";
+      }
+
+      if (currentLanguage == "greek") {
+        word = "·";
+      } else {
+        word += ":";
+      }
+    } else if (Math.random() < 0.014 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && previousWord != "-") {
+      word = "-";
+    } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";") {
+      if (currentLanguage == "french") {
+        word = ";";
+      }
+
+      if (currentLanguage == "greek") {
+        word = "·";
+      } else {
+        word += ";";
+      }
+    } else if (Math.random() < 0.2 && Misc.getLastChar(previousWord) != ",") {
+      if (currentLanguage == "arabic" || currentLanguage == "urdu" || currentLanguage == "persian") {
+        word += "،";
+      } else {
+        word += ",";
+      }
+    } else if (Math.random() < 0.25 && currentLanguage == "code") {
+      var specials = ["{", "}", "[", "]", "(", ")", ";", "=", "+", "%", "/"];
+      word = specials[Math.floor(Math.random() * 10)];
     }
-  } else if (Math.random() < 0.013) {
-    if (UpdateConfig["default"].language.split("_")[0] == "french") {
-      word = ":";
-    } else {
-      word += ":";
-    }
-  } else if (Math.random() < 0.014 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && previousWord != "-") {
-    word = "-";
-  } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";") {
-    if (UpdateConfig["default"].language.split("_")[0] == "french") {
-      word = ";";
-    } else {
-      word += ";";
-    }
-  } else if (Math.random() < 0.2 && Misc.getLastChar(previousWord) != ",") {
-    word += ",";
-  } else if (Math.random() < 0.25 && UpdateConfig["default"].language.split("_")[0] == "code") {
-    var specials = ["{", "}", "[", "]", "(", ")", ";", "=", "%", "/"];
-    word = specials[Math.floor(Math.random() * 10)];
   }
 
   return word;
@@ -9711,22 +11737,25 @@ function startTest() {
   }
 
   setActive(true);
+  Replay.startReplayRecording();
+  Replay.replayGetWordsList(words.list);
   TestStats.resetKeypressTimings();
   TimerProgress.restart();
   TimerProgress.show();
   $("#liveWpm").text("0");
   LiveWpm.show();
   LiveAcc.show();
+  LiveBurst.show();
   TimerProgress.update(TestTimer.time);
   TestTimer.clear();
 
-  if (Funbox.active === "memory") {
+  if (UpdateConfig["default"].funbox === "memory") {
     Funbox.resetMemoryTimer();
     $("#wordsWrapper").addClass("hidden");
   }
 
   try {
-    if (UpdateConfig["default"].paceCaret !== "off") PaceCaret.start();
+    if (UpdateConfig["default"].paceCaret !== "off" || UpdateConfig["default"].repeatedPace && isPaceRepeat) PaceCaret.start();
   } catch (e) {} //use a recursive self-adjusting timer to avoid time drift
 
 
@@ -9741,13 +11770,14 @@ function init() {
 
 function _init() {
   _init = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-    var language, wordsBound, wordset, i, randomWord, previousWord, previousWord2, randomcaseword, _i2, quotes, rq, quoteLengths, groupIndex, w, _i3;
+    var language, wordsBound, wordset, poem, i, randomWord, previousWord, previousWord2, regenarationCount, randomcaseword, _i2, quotes, rq, quoteLengths, groupIndex, w, _i3;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             setActive(false);
+            Replay.stopReplayRecording();
             words.reset();
             TestUI.setCurrentWordElementIndex(0); // accuracy = {
             //   correct: 0,
@@ -9756,10 +11786,10 @@ function _init() {
 
             input.resetHistory();
             input.resetCurrent();
-            _context2.next = 7;
+            _context2.next = 8;
             return Misc.getLanguage(UpdateConfig["default"].language);
 
-          case 7:
+          case 8:
             language = _context2.sent;
 
             if (language && language.name !== UpdateConfig["default"].language) {
@@ -9767,20 +11797,20 @@ function _init() {
             }
 
             if (language) {
-              _context2.next = 14;
+              _context2.next = 15;
               break;
             }
 
             UpdateConfig.setLanguage("english");
-            _context2.next = 13;
+            _context2.next = 14;
             return Misc.getLanguage(UpdateConfig["default"].language);
 
-          case 13:
+          case 14:
             language = _context2.sent;
 
-          case 14:
+          case 15:
             if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
-              _context2.next = 25;
+              _context2.next = 34;
               break;
             }
 
@@ -9824,8 +11854,12 @@ function _init() {
               wordsBound = 100;
             }
 
-            if (Funbox.active === "plus_one") {
+            if (UpdateConfig["default"].funbox === "plus_one") {
               wordsBound = 2;
+            }
+
+            if (UpdateConfig["default"].funbox === "plus_two") {
+              wordsBound = 3;
             }
 
             wordset = language.words;
@@ -9834,22 +11868,46 @@ function _init() {
               wordset = CustomText.text;
             }
 
+            if (!(UpdateConfig["default"].funbox == "poetry")) {
+              _context2.next = 31;
+              break;
+            }
+
+            _context2.next = 27;
+            return Poetry.getPoem();
+
+          case 27:
+            poem = _context2.sent;
+            poem.words.forEach(function (word) {
+              words.push(word);
+            });
+            _context2.next = 32;
+            break;
+
+          case 31:
             for (i = 0; i < wordsBound; i++) {
               randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               previousWord = words.get(i - 1);
               previousWord2 = words.get(i - 2);
 
-              if (UpdateConfig["default"].mode == "custom" && (CustomText.isWordRandom || CustomText.isTimeRandom)) {
-                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-              } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom) {
+              if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
                 randomWord = CustomText.text[i];
+              } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseMissed.before.mode !== null)) {
+                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               } else {
-                while (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I" || randomWord.indexOf(" ") > -1) {
+                regenarationCount = 0; //infinite loop emergency stop button
+
+                while (regenarationCount < 100 && (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I" || randomWord.indexOf(" ") > -1)) {
+                  regenarationCount++;
                   randomWord = wordset[Math.floor(Math.random() * wordset.length)];
                 }
               }
 
-              if (Funbox.funboxSaved === "rAnDoMcAsE") {
+              if (randomWord === undefined) {
+                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+              }
+
+              if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
                 randomcaseword = "";
 
                 for (_i2 = 0; _i2 < randomWord.length; _i2++) {
@@ -9861,20 +11919,22 @@ function _init() {
                 }
 
                 randomWord = randomcaseword;
-              } else if (Funbox.funboxSaved === "gibberish") {
+              } else if (UpdateConfig["default"].funbox === "gibberish") {
                 randomWord = Misc.getGibberish();
-              } else if (Funbox.funboxSaved === "58008") {
-                UpdateConfig.setPunctuation(false, true);
+              } else if (UpdateConfig["default"].funbox === "58008") {
+                // UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getNumbers(7);
-              } else if (Funbox.funboxSaved === "specials") {
+              } else if (UpdateConfig["default"].funbox === "specials") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getSpecials();
-              } else if (Funbox.funboxSaved === "ascii") {
+              } else if (UpdateConfig["default"].funbox === "ascii") {
                 UpdateConfig.setPunctuation(false, true);
                 UpdateConfig.setNumbers(false, true);
                 randomWord = Misc.getASCII();
+              } else if (UpdateConfig["default"].funbox === "weakspot") {
+                randomWord = WeakSpot.getWord(wordset);
               }
 
               if (UpdateConfig["default"].punctuation) {
@@ -9898,23 +11958,24 @@ function _init() {
               words.push(randomWord);
             }
 
-            _context2.next = 62;
+          case 32:
+            _context2.next = 71;
             break;
 
-          case 25:
+          case 34:
             if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 62;
+              _context2.next = 71;
               break;
             }
 
-            _context2.next = 28;
+            _context2.next = 37;
             return Misc.getQuotes(UpdateConfig["default"].language.replace(/_\d*k$/g, ""));
 
-          case 28:
+          case 37:
             quotes = _context2.sent;
 
             if (!(quotes.length === 0)) {
-              _context2.next = 35;
+              _context2.next = 44;
               break;
             }
 
@@ -9924,16 +11985,16 @@ function _init() {
             restart();
             return _context2.abrupt("return");
 
-          case 35:
+          case 44:
             if (!(UpdateConfig["default"].quoteLength != -2)) {
-              _context2.next = 51;
+              _context2.next = 60;
               break;
             }
 
             quoteLengths = UpdateConfig["default"].quoteLength;
 
             if (!(quoteLengths.length > 1)) {
-              _context2.next = 42;
+              _context2.next = 51;
               break;
             }
 
@@ -9943,14 +12004,14 @@ function _init() {
               groupIndex = quoteLengths[Math.floor(Math.random() * quoteLengths.length)];
             }
 
-            _context2.next = 47;
+            _context2.next = 56;
             break;
 
-          case 42:
+          case 51:
             groupIndex = quoteLengths[0];
 
             if (!(quotes.groups[groupIndex].length === 0)) {
-              _context2.next = 47;
+              _context2.next = 56;
               break;
             }
 
@@ -9958,17 +12019,17 @@ function _init() {
             TestUI.setTestRestarting(false);
             return _context2.abrupt("return");
 
-          case 47:
+          case 56:
             rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
 
             if (randomQuote != null && rq.id === randomQuote.id) {
               rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
             }
 
-            _context2.next = 53;
+            _context2.next = 62;
             break;
 
-          case 51:
+          case 60:
             quotes.groups.forEach(function (group) {
               var filtered = group.filter(function (quote) {
                 return quote.id == QuoteSearchPopup.selectedId;
@@ -9984,7 +12045,7 @@ function _init() {
               Notifications.add("Quote Id Does Not Exist", 0);
             }
 
-          case 53:
+          case 62:
             rq.text = rq.text.replace(/ +/gm, " ");
             rq.text = rq.text.replace(/\\\\t/gm, "\t");
             rq.text = rq.text.replace(/\\\\n/gm, "\n");
@@ -10002,7 +12063,7 @@ function _init() {
               words.push(w[_i3]);
             }
 
-          case 62:
+          case 71:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -10012,8 +12073,12 @@ function _init() {
 
             if (language.ligatures) {
               $("#words").addClass("withLigatures");
+              $("#resultWordsHistory .words").addClass("withLigatures");
+              $("#resultReplay .words").addClass("withLigatures");
             } else {
               $("#words").removeClass("withLigatures");
+              $("#resultWordsHistory .words").removeClass("withLigatures");
+              $("#resultReplay .words").removeClass("withLigatures");
             } // if (Config.mode == "zen") {
             //   // Creating an empty active word element for zen mode
             //   $("#words").append('<div class="word active"></div>');
@@ -10022,13 +12087,18 @@ function _init() {
             // } else {
 
 
-            TestUI.showWords(); // }
-
-            if ($(".pageTest").hasClass("active")) {
-              Funbox.activate();
+            if (!$(".pageTest").hasClass("active")) {
+              _context2.next = 76;
+              break;
             }
 
-          case 66:
+            _context2.next = 76;
+            return Funbox.activate();
+
+          case 76:
+            TestUI.showWords(); // }
+
+          case 77:
           case "end":
             return _context2.stop();
         }
@@ -10042,6 +12112,7 @@ function restart() {
   var withSameWordset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var nosave = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   var event = arguments.length > 2 ? arguments[2] : undefined;
+  var practiseMissed = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
   if (TestUI.testRestarting || TestUI.resultCalculating) {
     try {
@@ -10078,22 +12149,36 @@ function restart() {
   if (active) {
     TestStats.pushKeypressesToHistory();
     var testSeconds = TestStats.calculateTestSeconds(performance.now());
-    var afkseconds = TestStats.calculateAfkSeconds(); // incompleteTestSeconds += ;
+    var afkseconds = TestStats.calculateAfkSeconds(testSeconds); // incompleteTestSeconds += ;
 
-    TestStats.incrementIncompleteSeconds(testSeconds - afkseconds);
-    TestStats.incrementRestartCount(); // restartCount++;
+    var tt = testSeconds - afkseconds;
+    if (tt < 0) tt = 0;
+    console.log("increasing incomplete time by ".concat(tt, "s (").concat(testSeconds, "s - ").concat(afkseconds, "s afk)"));
+    TestStats.incrementIncompleteSeconds(tt);
+    TestStats.incrementRestartCount();
+
+    if (tt > 600) {
+      Notifications.add("Your time typing just increased by ".concat(Misc.roundTo2(tt / 60), " minutes. If you think this is incorrect please contact Miodec and dont refresh the website."), -1);
+    } // restartCount++;
+
   }
 
   if (UpdateConfig["default"].mode == "zen") {
     $("#words").empty();
   }
 
-  if (PractiseMissed.before.mode !== null && !withSameWordset) {
+  if (PractiseMissed.before.mode !== null && !withSameWordset && !practiseMissed) {
     Notifications.add("Reverting to previous settings.", 0);
     UpdateConfig.setMode(PractiseMissed.before.mode);
     UpdateConfig.setPunctuation(PractiseMissed.before.punctuation);
     UpdateConfig.setNumbers(PractiseMissed.before.numbers);
     PractiseMissed.resetBefore();
+  }
+
+  var repeatWithPace = false;
+
+  if (TestUI.resultVisible && UpdateConfig["default"].repeatedPace && withSameWordset) {
+    repeatWithPace = true;
   }
 
   ManualRestart.reset();
@@ -10104,9 +12189,12 @@ function restart() {
   Focus.set(false);
   Caret.hide();
   setActive(false);
+  Replay.stopReplayRecording();
   LiveWpm.hide();
   LiveAcc.hide();
+  LiveBurst.hide();
   TimerProgress.hide();
+  Replay.pauseReplay();
   setBailout(false);
   PaceCaret.reset();
   $("#showWordHistoryButton").removeClass("loaded");
@@ -10126,7 +12214,7 @@ function restart() {
 
   if (TestUI.resultVisible) {
     if (UpdateConfig["default"].randomTheme !== "off" && !UI.pageTransition && !UpdateConfig["default"].customTheme) {
-      ThemeController.randomiseTheme();
+      ThemeController.randomizeTheme();
     }
   }
 
@@ -10148,30 +12236,36 @@ function restart() {
             $("#typingTest").css("opacity", 0).removeClass("hidden");
 
             if (withSameWordset) {
-              _context.next = 11;
+              _context.next = 12;
               break;
             }
 
             setRepeated(false);
+            setPaceRepeat(repeatWithPace);
             setHasTab(false);
-            _context.next = 8;
+            _context.next = 9;
             return init();
 
-          case 8:
+          case 9:
             PaceCaret.init(nosave);
-            _context.next = 18;
+            _context.next = 22;
             break;
 
-          case 11:
+          case 12:
             setRepeated(true);
+            setPaceRepeat(repeatWithPace);
             setActive(false);
+            Replay.stopReplayRecording();
             words.resetCurrentIndex();
             input.reset();
-            PaceCaret.init();
-            TestUI.showWords();
-            Funbox.activate();
+            _context.next = 20;
+            return Funbox.activate();
 
-          case 18:
+          case 20:
+            TestUI.showWords();
+            PaceCaret.init();
+
+          case 22:
             if (UpdateConfig["default"].mode === "quote") {
               setRepeated(false);
             }
@@ -10184,10 +12278,12 @@ function restart() {
 
             document.querySelector("#miniTimerAndLiveWpm .wpm").innerHTML = "0";
             document.querySelector("#miniTimerAndLiveWpm .acc").innerHTML = "100%";
+            document.querySelector("#miniTimerAndLiveWpm .burst").innerHTML = "0";
             document.querySelector("#liveWpm").innerHTML = "0";
             document.querySelector("#liveAcc").innerHTML = "100%";
+            document.querySelector("#liveBurst").innerHTML = "0";
 
-            if (Funbox.active === "memory") {
+            if (UpdateConfig["default"].funbox === "memory") {
               Funbox.startMemoryTimer();
 
               if (UpdateConfig["default"].keymapMode === "next") {
@@ -10209,16 +12305,16 @@ function restart() {
 
             fbtext = "";
 
-            if (Funbox.active !== "none") {
-              fbtext = " " + Funbox.active;
+            if (UpdateConfig["default"].funbox !== "none") {
+              fbtext = " " + UpdateConfig["default"].funbox;
             }
 
-            $(".pageTest #premidTestMode").text("".concat(UpdateConfig["default"].mode, " ").concat(mode2, " ").concat(UpdateConfig["default"].language).concat(fbtext));
+            $(".pageTest #premidTestMode").text("".concat(UpdateConfig["default"].mode, " ").concat(mode2, " ").concat(UpdateConfig["default"].language.replace(/_/g, " ")).concat(fbtext));
             $(".pageTest #premidSecondsLeft").text(UpdateConfig["default"].time);
 
-            if (Funbox.active === "layoutfluid") {
-              UpdateConfig.setLayout("qwerty");
-              UpdateConfig.setKeymapLayout("qwerty");
+            if (UpdateConfig["default"].funbox === "layoutfluid") {
+              UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
+              UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
               Keymap.highlightKey(words.getCurrent().substring(input.current.length, input.current.length + 1).toString().toUpperCase());
             }
 
@@ -10241,7 +12337,7 @@ function restart() {
               // console.log(TestStats.restartCount);
             });
 
-          case 35:
+          case 41:
           case "end":
             return _context.stop();
         }
@@ -10275,7 +12371,7 @@ function calculateWpmAndRaw() {
     correctWordChars += input.current.length;
   }
 
-  if (Funbox.active === "nospace") {
+  if (UpdateConfig["default"].funbox === "nospace") {
     spaces = 0;
   }
 
@@ -10290,64 +12386,118 @@ function calculateWpmAndRaw() {
 }
 
 function addWord() {
-  var bound = 100;
-  if (Funbox.active === "plus_one") bound = 1;
-  if (words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length) return;
-  var language = UpdateConfig["default"].mode !== "custom" ? Misc.getCurrentLanguage() : {
-    //borrow the direction of the current language
-    leftToRight: Misc.getCurrentLanguage().leftToRight,
-    words: CustomText.text
-  };
-  var wordset = language.words;
-  var randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-  var previousWord = words.getLast();
-  var previousWordStripped = previousWord.replace(/[.?!":\-,]/g, "").toLowerCase();
-  var previousWord2Stripped = words.get(words.length - 2).replace(/[.?!":\-,]/g, "").toLowerCase();
+  return _addWord.apply(this, arguments);
+}
 
-  if (UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && wordset.length < 3) {
-    randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-  } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom) {
-    randomWord = CustomText.text[words.length];
-  } else {
-    while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
-      randomWord = wordset[Math.floor(Math.random() * wordset.length)];
-    }
-  }
+function _addWord() {
+  _addWord = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+    var bound, language, wordset, randomWord, previousWord, previousWordStripped, previousWord2Stripped, randomcaseword, i;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            bound = 100;
+            if (UpdateConfig["default"].funbox === "plus_one") bound = 1;
+            if (UpdateConfig["default"].funbox === "plus_two") bound = 2;
 
-  if (Funbox.active === "rAnDoMcAsE") {
-    var randomcaseword = "";
+            if (!(words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length)) {
+              _context3.next = 5;
+              break;
+            }
 
-    for (var i = 0; i < randomWord.length; i++) {
-      if (i % 2 != 0) {
-        randomcaseword += randomWord[i].toUpperCase();
-      } else {
-        randomcaseword += randomWord[i];
+            return _context3.abrupt("return");
+
+          case 5:
+            if (!(UpdateConfig["default"].mode !== "custom")) {
+              _context3.next = 11;
+              break;
+            }
+
+            _context3.next = 8;
+            return Misc.getCurrentLanguage();
+
+          case 8:
+            _context3.t0 = _context3.sent;
+            _context3.next = 16;
+            break;
+
+          case 11:
+            _context3.next = 13;
+            return Misc.getCurrentLanguage().leftToRight;
+
+          case 13:
+            _context3.t1 = _context3.sent;
+            _context3.t2 = CustomText.text;
+            _context3.t0 = {
+              leftToRight: _context3.t1,
+              words: _context3.t2
+            };
+
+          case 16:
+            language = _context3.t0;
+            wordset = language.words;
+            randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            previousWord = words.getLast();
+            previousWordStripped = previousWord.replace(/[.?!":\-,]/g, "").toLowerCase();
+            previousWord2Stripped = words.get(words.length - 2).replace(/[.?!":\-,]/g, "").toLowerCase();
+
+            if (UpdateConfig["default"].mode === "custom" && (CustomText.isWordRandom || CustomText.isTimeRandom) && wordset.length < 3) {
+              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
+              randomWord = CustomText.text[words.length];
+            } else {
+              while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
+                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+              }
+            }
+
+            if (randomWord === undefined) {
+              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            }
+
+            if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
+              randomcaseword = "";
+
+              for (i = 0; i < randomWord.length; i++) {
+                if (i % 2 != 0) {
+                  randomcaseword += randomWord[i].toUpperCase();
+                } else {
+                  randomcaseword += randomWord[i];
+                }
+              }
+
+              randomWord = randomcaseword;
+            } else if (UpdateConfig["default"].funbox === "gibberish") {
+              randomWord = Misc.getGibberish();
+            } else if (UpdateConfig["default"].funbox === "58008") {
+              randomWord = Misc.getNumbers(7);
+            } else if (UpdateConfig["default"].funbox === "specials") {
+              randomWord = Misc.getSpecials();
+            } else if (UpdateConfig["default"].funbox === "ascii") {
+              randomWord = Misc.getASCII();
+            }
+
+            if (UpdateConfig["default"].punctuation) {
+              randomWord = punctuateWord(previousWord, randomWord, words.length, 0);
+            }
+
+            if (UpdateConfig["default"].numbers) {
+              if (Math.random() < 0.1) {
+                randomWord = Misc.getNumbers(4);
+              }
+            }
+
+            words.push(randomWord);
+            TestUI.addWord(randomWord);
+
+          case 29:
+          case "end":
+            return _context3.stop();
+        }
       }
-    }
-
-    randomWord = randomcaseword;
-  } else if (Funbox.active === "gibberish") {
-    randomWord = Misc.getGibberish();
-  } else if (Funbox.active === "58008") {
-    randomWord = Misc.getNumbers(7);
-  } else if (Funbox.active === "specials") {
-    randomWord = Misc.getSpecials();
-  } else if (Funbox.active === "ascii") {
-    randomWord = Misc.getASCII();
-  }
-
-  if (UpdateConfig["default"].punctuation && UpdateConfig["default"].mode != "custom") {
-    randomWord = punctuateWord(previousWord, randomWord, words.length, 0);
-  }
-
-  if (UpdateConfig["default"].numbers && UpdateConfig["default"].mode != "custom") {
-    if (Math.random() < 0.1) {
-      randomWord = Misc.getNumbers(4);
-    }
-  }
-
-  words.push(randomWord);
-  TestUI.addWord(randomWord);
+    }, _callee3);
+  }));
+  return _addWord.apply(this, arguments);
 }
 
 function finish() {
@@ -10357,6 +12507,7 @@ function finish() {
   if (UpdateConfig["default"].mode == "zen" && input.current.length != 0) {
     input.pushHistory();
     corrected.pushHistory();
+    Replay.replayGetWordsList(input.history);
   }
 
   TestStats.recordKeypressSpacing();
@@ -10364,14 +12515,30 @@ function finish() {
   TestUI.setResultVisible(true);
   TestStats.setEnd(performance.now());
   setActive(false);
+  Replay.stopReplayRecording();
   Focus.set(false);
   Caret.hide();
   LiveWpm.hide();
   PbCrown.hide();
   LiveAcc.hide();
+  LiveBurst.hide();
   TimerProgress.hide();
-  Keymap.hide();
   Funbox.activate("none", null);
+
+  if (TestStats.burstHistory.length !== input.getHistory().length) {
+    //auto ended test, need one more calculation for the last word
+    var burst = TestStats.calculateBurst();
+    TestStats.pushBurstToHistory(burst);
+  }
+
+  if (Misc.roundTo2(TestStats.calculateTestSeconds()) % 1 != 0 && UpdateConfig["default"].mode !== "time") {
+    TestStats.setLastSecondNotRound();
+  }
+
+  if (UpdateConfig["default"].mode == "zen" || bailout) {
+    TestStats.removeAfkData();
+  }
+
   var stats = TestStats.calculateStats();
 
   if (stats === undefined) {
@@ -10396,8 +12563,21 @@ function finish() {
   }
 
   TestTimer.clear();
+  exports.lastTestWpm = lastTestWpm = stats.wpm;
   var testtime = stats.time;
-  var afkseconds = TestStats.calculateAfkSeconds();
+
+  if (TestStats.lastSecondNotRound && !difficultyFailed) {
+    var wpmAndRaw = calculateWpmAndRaw();
+    TestStats.pushToWpmHistory(wpmAndRaw.wpm);
+    TestStats.pushToRawHistory(wpmAndRaw.raw);
+    TestStats.pushKeypressesToHistory(); // errorsPerSecond.push(currentError);
+    // currentError = {
+    //   count: 0,
+    //   words: [],
+    // };
+  }
+
+  var afkseconds = TestStats.calculateAfkSeconds(testtime);
   var afkSecondsPercent = Misc.roundTo2(afkseconds / testtime * 100);
   ChartController.result.options.annotation.annotations = [];
   $("#result #resultWordsHistory").addClass("hidden");
@@ -10485,6 +12665,11 @@ function finish() {
     $("#result .stats .time .bottom .afk").text(afkSecondsPercent + "% afk");
   }
 
+  if (!difficultyFailed) {
+    TodayTracker.addSeconds(testtime + (TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds)) - afkseconds);
+  }
+
+  $("#result .stats .time .bottom .timeToday").text(TodayTracker.getString());
   $("#result .stats .key .bottom").text(testtime + "s");
   $("#words").removeClass("blurred");
   OutOfFocus.hide();
@@ -10494,7 +12679,7 @@ function finish() {
       opacity: 1
     }, 125);
   }, 125);
-  $("#testModesNotice").addClass("hidden");
+  $("#testModesNotice").css("opacity", 0);
   var mode2 = "";
 
   if (UpdateConfig["default"].mode === "time") {
@@ -10507,17 +12692,6 @@ function finish() {
     mode2 = randomQuote.id;
   } else if (UpdateConfig["default"].mode === "zen") {
     mode2 = "zen";
-  }
-
-  if (TestStats.lastSecondNotRound) {
-    var wpmAndRaw = calculateWpmAndRaw();
-    TestStats.pushToWpmHistory(wpmAndRaw.wpm);
-    TestStats.pushToRawHistory(wpmAndRaw.raw);
-    TestStats.pushKeypressesToHistory(); // errorsPerSecond.push(currentError);
-    // currentError = {
-    //   count: 0,
-    //   words: [],
-    // };
   }
 
   var labels = [];
@@ -10597,7 +12771,7 @@ function finish() {
   }
 
   if (difficultyFailed) {
-    Notifications.add("Test failed", 0, 1);
+    Notifications.add("Test failed - ".concat(failReason), 0, 1);
   } else if (afkDetected) {
     Notifications.add("Test invalid - AFK detected", 0);
   } else if (isRepeated) {
@@ -10652,7 +12826,7 @@ function finish() {
       keyDuration: TestStats.keypressTimings.duration.array,
       consistency: consistency,
       keyConsistency: keyConsistency,
-      funbox: Funbox.funboxSaved,
+      funbox: UpdateConfig["default"].funbox,
       bailedOut: bailout,
       chartData: chartData,
       customText: cdata
@@ -10695,8 +12869,8 @@ function finish() {
     testType += " " + UpdateConfig["default"].words;
   }
 
-  if (UpdateConfig["default"].mode != "custom" && Funbox.funboxSaved !== "gibberish" && Funbox.funboxSaved !== "ascii" && Funbox.funboxSaved !== "58008") {
-    testType += "<br>" + lang;
+  if (UpdateConfig["default"].mode != "custom" && UpdateConfig["default"].funbox !== "gibberish" && UpdateConfig["default"].funbox !== "ascii" && UpdateConfig["default"].funbox !== "58008") {
+    testType += "<br>" + lang.replace(/_/g, " ");
   }
 
   if (UpdateConfig["default"].punctuation) {
@@ -10711,8 +12885,8 @@ function finish() {
     testType += "<br>blind";
   }
 
-  if (Funbox.funboxSaved !== "none") {
-    testType += "<br>" + Funbox.funboxSaved.replace(/_/g, " ");
+  if (UpdateConfig["default"].funbox !== "none") {
+    testType += "<br>" + UpdateConfig["default"].funbox.replace(/_/g, " ");
   }
 
   if (UpdateConfig["default"].difficulty == "expert") {
@@ -10722,14 +12896,12 @@ function finish() {
   }
 
   $("#result .stats .testType .bottom").html(testType);
-  var otherText = "";
-
-  if (UpdateConfig["default"].layout !== "default") {
-    otherText += "<br>" + UpdateConfig["default"].layout;
-  }
+  var otherText = ""; // if (Config.layout !== "default") {
+  //   otherText += "<br>" + Config.layout;
+  // }
 
   if (difficultyFailed) {
-    otherText += "<br>failed";
+    otherText += "<br>failed (".concat(failReason, ")");
   }
 
   if (afkDetected) {
@@ -10769,7 +12941,13 @@ function finish() {
     $("#result .stats .source").addClass("hidden");
   }
 
-  if (Funbox.funboxSaved !== "none") {
+  if (UpdateConfig["default"].funbox !== "none") {
+    var content = UpdateConfig["default"].funbox;
+
+    if (UpdateConfig["default"].funbox === "layoutfluid") {
+      content += " " + UpdateConfig["default"].customLayoutfluid.replace(/#/g, " ");
+    }
+
     ChartController.result.options.annotation.annotations.push({
       enabled: false,
       type: "line",
@@ -10790,7 +12968,7 @@ function finish() {
         cornerRadius: 3,
         position: "left",
         enabled: true,
-        content: "".concat(Funbox.funboxSaved),
+        content: "".concat(content),
         yAdjust: -11
       }
     });
@@ -10802,35 +12980,59 @@ function finish() {
     duration: 0
   });
   ChartController.result.resize();
+
+  if (glarsesMode) {
+    $("#middle #result .glarsesmessage").remove();
+    $("#middle #result").prepend("\n\n      <div class='glarsesmessage' style=\"\n        text-align: center;\n        grid-column: 1/3;\n        font-size: 2rem;\n        padding: 2rem 0;\n      \">Test completed</div>\n    \n    ");
+    $("#middle #result .stats").remove();
+    $("#middle #result .chart").remove();
+    $("#middle #result #resultWordsHistory").remove();
+    $("#middle #result #resultReplay").remove();
+    $("#middle #result .loginTip").remove();
+    console.log("Test Completed: ".concat(stats.wpm, " wpm ").concat(stats.acc, "% acc ").concat(stats.wpmRaw, " raw ").concat(consistency, "% consistency"));
+  }
+
   UI.swapElements($("#typingTest"), $("#result"), 250, function () {
     TestUI.setResultCalculating(false);
     $("#words").empty();
     ChartController.result.resize();
 
+    if (UpdateConfig["default"].burstHeatmap) {
+      TestUI.applyBurstHeatmap();
+    }
+
+    $("#testModesNotice").addClass("hidden");
+  }, function () {
     if (UpdateConfig["default"].alwaysShowWordsHistory) {
       TestUI.toggleResultWords();
     }
+
+    Keymap.hide();
   });
 }
 
-function fail() {
+var failReason = "";
+
+function fail(reason) {
+  failReason = reason;
   input.pushHistory();
   corrected.pushHistory();
   TestStats.pushKeypressesToHistory();
-  TestStats.setLastSecondNotRound();
   finish(true);
   var testSeconds = TestStats.calculateTestSeconds(performance.now());
-  var afkseconds = TestStats.calculateAfkSeconds();
-  TestStats.incrementIncompleteSeconds(testSeconds - afkseconds);
+  var afkseconds = TestStats.calculateAfkSeconds(testSeconds);
+  var tt = testSeconds - afkseconds;
+  if (tt < 0) tt = 0;
+  TestStats.incrementIncompleteSeconds(tt);
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":2,"./chart-controller":3,"./config":6,"./custom-text":10,"./focus":13,"./funbox":14,"./keymap":18,"./live-acc":22,"./live-wpm":23,"./manual-restart-tracker":25,"./misc":26,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./pb-crown":31,"./practise-missed":32,"./quote-search-popup":33,"./shift-tracker":38,"./test-stats":44,"./test-timer":45,"./test-ui":46,"./theme-colors":47,"./theme-controller":48,"./timer-progress":50,"./ui":51,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/classCallCheck":57,"@babel/runtime/helpers/createClass":58,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/toConsumableArray":63,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],44:[function(require,module,exports){
+},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./pb-crown":34,"./poetry.js":35,"./practise-missed":36,"./quote-search-popup":37,"./replay.js":39,"./shift-tracker":43,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./theme-colors":52,"./theme-controller":53,"./timer-progress":55,"./today-tracker":56,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -10843,6 +13045,7 @@ exports.setInvalid = setInvalid;
 exports.calculateTestSeconds = calculateTestSeconds;
 exports.setEnd = setEnd;
 exports.setStart = setStart;
+exports.updateLastKeypress = updateLastKeypress;
 exports.pushToWpmHistory = pushToWpmHistory;
 exports.pushToRawHistory = pushToRawHistory;
 exports.incrementKeypressCount = incrementKeypressCount;
@@ -10852,6 +13055,9 @@ exports.pushKeypressWord = pushKeypressWord;
 exports.pushKeypressesToHistory = pushKeypressesToHistory;
 exports.calculateAfkSeconds = calculateAfkSeconds;
 exports.setLastSecondNotRound = setLastSecondNotRound;
+exports.setBurstStart = setBurstStart;
+exports.calculateBurst = calculateBurst;
+exports.pushBurstToHistory = pushBurstToHistory;
 exports.calculateAccuracy = calculateAccuracy;
 exports.incrementAccuracy = incrementAccuracy;
 exports.setKeypressTimingsTooLong = setKeypressTimingsTooLong;
@@ -10862,8 +13068,9 @@ exports.setKeypressSpacing = setKeypressSpacing;
 exports.recordKeypressSpacing = recordKeypressSpacing;
 exports.resetKeypressTimings = resetKeypressTimings;
 exports.pushMissedWord = pushMissedWord;
+exports.removeAfkData = removeAfkData;
 exports.calculateStats = calculateStats;
-exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exports.accuracy = exports.missedWords = exports.lastSecondNotRound = exports.currentKeypress = exports.keypressPerSecond = exports.rawHistory = exports.wpmHistory = exports.end = exports.start = exports.invalid = void 0;
+exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exports.accuracy = exports.missedWords = exports.lastSecondNotRound = exports.currentBurstStart = exports.lastKeypress = exports.currentKeypress = exports.keypressPerSecond = exports.burstHistory = exports.rawHistory = exports.wpmHistory = exports.end = exports.start = exports.invalid = void 0;
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
@@ -10875,10 +13082,6 @@ var Misc = _interopRequireWildcard(require("./misc"));
 
 var TestStats = _interopRequireWildcard(require("./test-stats"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 var invalid = false;
 exports.invalid = invalid;
 var start, end;
@@ -10888,6 +13091,8 @@ var wpmHistory = [];
 exports.wpmHistory = wpmHistory;
 var rawHistory = [];
 exports.rawHistory = rawHistory;
+var burstHistory = [];
+exports.burstHistory = burstHistory;
 var keypressPerSecond = [];
 exports.keypressPerSecond = keypressPerSecond;
 var currentKeypress = {
@@ -10895,13 +13100,17 @@ var currentKeypress = {
   mod: 0,
   errors: 0,
   words: []
-}; // export let errorsPerSecond = [];
+};
+exports.currentKeypress = currentKeypress;
+var lastKeypress;
+exports.lastKeypress = lastKeypress;
+var currentBurstStart = 0; // export let errorsPerSecond = [];
 // export let currentError = {
 //   count: 0,
 //   words: [],
 // };
 
-exports.currentKeypress = currentKeypress;
+exports.currentBurstStart = currentBurstStart;
 var lastSecondNotRound = false;
 exports.lastSecondNotRound = lastSecondNotRound;
 var missedWords = {};
@@ -10929,13 +13138,15 @@ function restart() {
   exports.invalid = invalid = false;
   exports.wpmHistory = wpmHistory = [];
   exports.rawHistory = rawHistory = [];
+  exports.burstHistory = burstHistory = [];
   exports.keypressPerSecond = keypressPerSecond = [];
   exports.currentKeypress = currentKeypress = {
     count: 0,
     mod: 0,
     errors: 0,
     words: []
-  }; // errorsPerSecond = [];
+  };
+  exports.currentBurstStart = currentBurstStart = 0; // errorsPerSecond = [];
   // currentError = {
   //   count: 0,
   //   words: [],
@@ -10983,7 +13194,13 @@ function setInvalid() {
 
 function calculateTestSeconds(now) {
   if (now === undefined) {
-    return (end - start) / 1000;
+    var endAfkSeconds = (end - lastKeypress) / 1000;
+
+    if ((_config["default"].mode == "zen" || TestLogic.bailout) && endAfkSeconds < 7) {
+      return (lastKeypress - start) / 1000;
+    } else {
+      return (end - start) / 1000;
+    }
   } else {
     return (now - start) / 1000;
   }
@@ -10995,6 +13212,10 @@ function setEnd(e) {
 
 function setStart(s) {
   exports.start = start = s;
+}
+
+function updateLastKeypress() {
+  exports.lastKeypress = lastKeypress = performance.now();
 }
 
 function pushToWpmHistory(word) {
@@ -11031,14 +13252,59 @@ function pushKeypressesToHistory() {
   };
 }
 
-function calculateAfkSeconds() {
-  return keypressPerSecond.filter(function (x) {
+function calculateAfkSeconds(testSeconds) {
+  var extraAfk = 0;
+
+  if (testSeconds !== undefined) {
+    if (_config["default"].mode === "time") {
+      extraAfk = Math.round(testSeconds) - keypressPerSecond.length;
+    } else {
+      extraAfk = Math.ceil(testSeconds) - keypressPerSecond.length;
+    }
+
+    if (extraAfk < 0) extraAfk = 0; // console.log("-- extra afk debug");
+    // console.log("should be " + Math.ceil(testSeconds));
+    // console.log(keypressPerSecond.length);
+    // console.log(
+    //   `gonna add extra ${extraAfk} seconds of afk because of no keypress data`
+    // );
+  }
+
+  var ret = keypressPerSecond.filter(function (x) {
     return x.count == 0 && x.mod == 0;
   }).length;
+  return ret + extraAfk;
 }
 
 function setLastSecondNotRound() {
   exports.lastSecondNotRound = lastSecondNotRound = true;
+}
+
+function setBurstStart(time) {
+  exports.currentBurstStart = currentBurstStart = time;
+}
+
+function calculateBurst() {
+  var timeToWrite = (performance.now() - currentBurstStart) / 1000;
+  var wordLength;
+
+  if (_config["default"].mode === "zen") {
+    wordLength = TestLogic.input.getCurrent().length;
+  } else {
+    wordLength = TestLogic.words.getCurrent().length;
+  }
+
+  var speed = Misc.roundTo2(wordLength * (60 / timeToWrite) / 5);
+  return Math.round(speed);
+}
+
+function pushBurstToHistory(speed) {
+  if (burstHistory[TestLogic.words.currentIndex] === undefined) {
+    burstHistory.push(speed);
+  } else {
+    //repeated word - override
+    burstHistory[TestLogic.words.currentIndex] = speed;
+  }
 }
 
 function calculateAccuracy() {
@@ -11104,6 +13370,14 @@ function pushMissedWord(word) {
   } else {
     missedWords[word]++;
   }
+}
+
+function removeAfkData() {
+  var testSeconds = calculateTestSeconds();
+  keypressPerSecond.splice(testSeconds);
+  keypressTimings.duration.array.splice(testSeconds);
+  keypressTimings.spacing.array.splice(testSeconds);
+  wpmHistory.splice(testSeconds);
 }
 
 function countChars() {
@@ -11184,7 +13458,7 @@ function countChars() {
     }
   }
 
-  if (Funbox.active === "nospace") {
+  if (_config["default"].funbox === "nospace") {
     spaces = 0;
     correctspaces = 0;
   }
@@ -11221,10 +13495,10 @@ function calculateStats() {
   };
 }
 
-},{"./config":6,"./funbox":14,"./misc":26,"./test-logic":43,"./test-stats":44,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],45:[function(require,module,exports){
+},{"./config":7,"./funbox":15,"./misc":28,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],50:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -11257,10 +13531,6 @@ var Caret = _interopRequireWildcard(require("./caret"));
 
 var Keymap = _interopRequireWildcard(require("./keymap"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
 var time = 0;
 exports.time = time;
 var timer = null;
@@ -11289,20 +13559,23 @@ function start() {
       Monkey.updateFastOpacity(wpmAndRaw.wpm);
       var acc = Misc.roundTo2(TestStats.calculateAccuracy());
 
-      if (Funbox.active === "layoutfluid" && UpdateConfig["default"].mode === "time") {
-        var layouts = ["qwerty", "dvorak", "colemak"];
+      if (UpdateConfig["default"].funbox === "layoutfluid" && UpdateConfig["default"].mode === "time") {
+        var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
+        console.log(UpdateConfig["default"].customLayoutfluid);
+        console.log(layouts);
+        var numLayouts = layouts.length;
         var index = 0;
-        index = Math.floor(time / (UpdateConfig["default"].time / 3));
+        index = Math.floor(time / (UpdateConfig["default"].time / numLayouts));
 
-        if (time == Math.floor(UpdateConfig["default"].time / 3) - 3 || time == UpdateConfig["default"].time / 3 * 2 - 3) {
+        if (time == Math.floor(UpdateConfig["default"].time / numLayouts) - 3 || time == UpdateConfig["default"].time / numLayouts * 2 - 3) {
           Notifications.add("3", 0, 1);
         }
 
-        if (time == Math.floor(UpdateConfig["default"].time / 3) - 2 || time == Math.floor(UpdateConfig["default"].time / 3) * 2 - 2) {
+        if (time == Math.floor(UpdateConfig["default"].time / numLayouts) - 2 || time == Math.floor(UpdateConfig["default"].time / numLayouts) * 2 - 2) {
           Notifications.add("2", 0, 1);
         }
 
-        if (time == Math.floor(UpdateConfig["default"].time / 3) - 1 || time == Math.floor(UpdateConfig["default"].time / 3) * 2 - 1) {
+        if (time == Math.floor(UpdateConfig["default"].time / numLayouts) - 1 || time == Math.floor(UpdateConfig["default"].time / numLayouts) * 2 - 1) {
           Notifications.add("1", 0, 1);
         }
 
@@ -11317,9 +13590,15 @@ function start() {
 
       TestStats.pushKeypressesToHistory();
 
-      if (UpdateConfig["default"].minWpm === "custom" && wpmAndRaw.wpm < parseInt(UpdateConfig["default"].minWpmCustomSpeed) && TestLogic.words.currentIndex > 3 || UpdateConfig["default"].minAcc === "custom" && acc < parseInt(UpdateConfig["default"].minAccCustom)) {
+      if (UpdateConfig["default"].minWpm === "custom" && wpmAndRaw.wpm < parseInt(UpdateConfig["default"].minWpmCustomSpeed) && TestLogic.words.currentIndex > 3) {
         clearTimeout(timer);
-        TestLogic.fail();
+        TestLogic.fail("min wpm");
+        return;
+      }
+
+      if (UpdateConfig["default"].minAcc === "custom" && acc < parseInt(UpdateConfig["default"].minAccCustom) && TestLogic.words.currentIndex > 3) {
+        clearTimeout(timer);
+        TestLogic.fail("min accuracy");
         return;
       }
 
@@ -11340,12 +13619,12 @@ function start() {
   })(TestStats.start + stepIntervalMS);
 }
 
-},{"./caret":2,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./live-wpm":23,"./misc":26,"./monkey":27,"./notifications":28,"./test-logic":43,"./test-stats":44,"./timer-progress":50,"@babel/runtime/helpers/typeof":64}],46:[function(require,module,exports){
+},{"./caret":3,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./live-wpm":25,"./misc":28,"./monkey":30,"./notifications":31,"./test-logic":48,"./test-stats":49,"./timer-progress":55,"@babel/runtime/helpers/interopRequireWildcard":68}],51:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -11369,10 +13648,13 @@ exports.updateModesNotice = updateModesNotice;
 exports.arrangeCharactersRightToLeft = arrangeCharactersRightToLeft;
 exports.arrangeCharactersLeftToRight = arrangeCharactersLeftToRight;
 exports.toggleResultWords = toggleResultWords;
+exports.applyBurstHeatmap = applyBurstHeatmap;
 exports.highlightBadWord = highlightBadWord;
 exports.resultCalculating = exports.currentTestLine = exports.lineTransition = exports.testRestarting = exports.activeWordTop = exports.resultVisible = exports.currentWordElementIndex = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -11404,9 +13686,11 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 
 var PractiseMissed = _interopRequireWildcard(require("./practise-missed"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var Replay = _interopRequireWildcard(require("./replay"));
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var TestStats = _interopRequireWildcard(require("./test-stats"));
+
+var Misc = _interopRequireWildcard(require("./misc"));
 
 var currentWordElementIndex = 0;
 exports.currentWordElementIndex = currentWordElementIndex;
@@ -11570,6 +13854,23 @@ function colorful(tc) {
 }
 
 function screenshot() {
+  var revealReplay = false;
+
+  function revertScreenshot() {
+    $("#notificationCenter").removeClass("hidden");
+    $("#commandLineMobileButton").removeClass("hidden");
+    $(".pageTest .ssWatermark").addClass("hidden");
+    $(".pageTest .ssWatermark").text("monkeytype.com");
+    $(".pageTest .buttons").removeClass("hidden");
+    if (revealReplay) $("#resultReplay").removeClass("hidden");
+  }
+
+  if (!$("#resultReplay").hasClass("hidden")) {
+    revealReplay = true;
+    Replay.pauseReplay();
+  }
+
+  $("#resultReplay").addClass("hidden");
   $(".pageTest .ssWatermark").removeClass("hidden");
   $(".pageTest .buttons").addClass("hidden");
   var src = $("#middle");
@@ -11600,44 +13901,29 @@ function screenshot() {
         try {
           if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
             open(URL.createObjectURL(blob));
-            $("#notificationCenter").removeClass("hidden");
-            $("#commandLineMobileButton").removeClass("hidden");
-            $(".pageTest .ssWatermark").addClass("hidden");
-            $(".pageTest .buttons").removeClass("hidden");
+            revertScreenshot();
           } else {
             navigator.clipboard.write([new ClipboardItem(Object.defineProperty({}, blob.type, {
               value: blob,
               enumerable: true
             }))]).then(function () {
-              $("#notificationCenter").removeClass("hidden");
-              $("#commandLineMobileButton").removeClass("hidden");
               Notifications.add("Copied to clipboard", 1, 2);
-              $(".pageTest .ssWatermark").addClass("hidden");
-              $(".pageTest .buttons").removeClass("hidden");
+              revertScreenshot();
             });
           }
         } catch (e) {
-          $("#notificationCenter").removeClass("hidden");
-          $("#commandLineMobileButton").removeClass("hidden");
           Notifications.add("Error saving image to clipboard: " + e.message, -1);
-          $(".pageTest .ssWatermark").addClass("hidden");
-          $(".pageTest .buttons").removeClass("hidden");
+          revertScreenshot();
         }
       });
     });
   } catch (e) {
-    $("#notificationCenter").removeClass("hidden");
-    $("#commandLineMobileButton").removeClass("hidden");
     Notifications.add("Error creating image: " + e.message, -1);
-    $(".pageTest .ssWatermark").addClass("hidden");
-    $(".pageTest .buttons").removeClass("hidden");
+    revertScreenshot();
   }
 
   setTimeout(function () {
-    $("#notificationCenter").removeClass("hidden");
-    $("#commandLineMobileButton").removeClass("hidden");
-    $(".pageTest .ssWatermark").addClass("hidden");
-    $(".pageTest .buttons").removeClass("hidden");
+    revertScreenshot();
   }, 3000);
 }
 
@@ -11663,95 +13949,88 @@ function updateWordElement(showError) {
       }
     }
   } else {
-    if (UpdateConfig["default"].highlightMode == "word") {
-      //only for word highlight
-      var correctSoFar = false;
+    var correctSoFar = false;
 
-      if (currentWord.slice(0, input.length) == input) {
-        // this is when input so far is correct
-        correctSoFar = true;
+    if (currentWord.slice(0, input.length) == input) {
+      // this is when input so far is correct
+      correctSoFar = true;
+    }
+
+    var wordHighlightClassString = correctSoFar ? "correct" : "incorrect";
+
+    if (UpdateConfig["default"].blindMode) {
+      wordHighlightClassString = "correct";
+    }
+
+    for (var _i = 0; _i < input.length; _i++) {
+      var charCorrect = void 0;
+
+      if (currentWord[_i] == input[_i]) {
+        charCorrect = true;
+      } else {
+        charCorrect = false;
       }
 
-      var classString = correctSoFar ? "correct" : "incorrect";
+      var correctClass = "correct";
 
-      if (UpdateConfig["default"].blindMode) {
-        classString = "correct";
-      } //show letters in the current word
+      if (UpdateConfig["default"].highlightMode == "off") {
+        correctClass = "";
+      }
 
+      var currentLetter = currentWord[_i];
+      var tabChar = "";
+      var nlChar = "";
 
-      for (var _i = 0; _i < currentWord.length; _i++) {
-        ret += "<letter class=\"".concat(classString, "\">") + currentWord[_i] + "</letter>";
-      } //show any extra letters if hide extra letters is disabled
+      if (currentLetter === "\t") {
+        tabChar = "tabChar";
+        currentLetter = "<i class=\"fas fa-long-arrow-alt-right\"></i>";
+      } else if (currentLetter === "\n") {
+        nlChar = "nlChar";
+        currentLetter = "<i class=\"fas fa-angle-down\"></i>";
+      }
 
-
-      if (TestLogic.input.current.length > currentWord.length && !UpdateConfig["default"].hideExtraLetters) {
-        for (var _i2 = currentWord.length; _i2 < TestLogic.input.current.length; _i2++) {
-          var letter = TestLogic.input.current[_i2];
-
-          if (letter == " ") {
-            letter = "_";
+      if (charCorrect) {
+        ret += "<letter class=\"".concat(UpdateConfig["default"].highlightMode == "word" ? wordHighlightClassString : correctClass, " ").concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
+      } else {
+        if (!showError) {
+          if (currentLetter !== undefined) {
+            ret += "<letter class=\"".concat(UpdateConfig["default"].highlightMode == "word" ? wordHighlightClassString : correctClass, " ").concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
           }
-
-          ret += "<letter class=\"".concat(classString, "\">").concat(letter, "</letter>");
-        }
-      }
-    } else {
-      for (var _i3 = 0; _i3 < input.length; _i3++) {
-        var charCorrect = void 0;
-
-        if (currentWord[_i3] == input[_i3]) {
-          charCorrect = true;
         } else {
-          charCorrect = false;
-        }
+          if (currentLetter == undefined) {
+            if (!UpdateConfig["default"].hideExtraLetters) {
+              var letter = input[_i];
 
-        var currentLetter = currentWord[_i3];
-        var tabChar = "";
-        var nlChar = "";
-
-        if (currentLetter === "\t") {
-          tabChar = "tabChar";
-          currentLetter = "<i class=\"fas fa-long-arrow-alt-right\"></i>";
-        } else if (currentLetter === "\n") {
-          nlChar = "nlChar";
-          currentLetter = "<i class=\"fas fa-angle-down\"></i>";
-        }
-
-        if (charCorrect) {
-          ret += "<letter class=\"correct ".concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
-        } else {
-          if (!showError) {
-            if (currentLetter !== undefined) {
-              ret += "<letter class=\"correct ".concat(tabChar).concat(nlChar, "\">").concat(currentLetter, "</letter>");
-            }
-          } else {
-            if (currentLetter == undefined) {
-              if (!UpdateConfig["default"].hideExtraLetters) {
-                var _letter = input[_i3];
-
-                if (_letter == " " || _letter == "\t" || _letter == "\n") {
-                  _letter = "_";
-                }
-
-                ret += "<letter class=\"incorrect extra ".concat(tabChar).concat(nlChar, "\">").concat(_letter, "</letter>");
+              if (letter == " " || letter == "\t" || letter == "\n") {
+                letter = "_";
               }
-            } else {
-              ret += "<letter class=\"incorrect ".concat(tabChar).concat(nlChar, "\">") + currentLetter + (UpdateConfig["default"].indicateTypos ? "<hint>".concat(input[_i3], "</hint>") : "") + "</letter>";
+
+              ret += "<letter class=\"".concat(UpdateConfig["default"].highlightMode == "word" ? wordHighlightClassString : "incorrect", " extra ").concat(tabChar).concat(nlChar, "\">").concat(letter, "</letter>");
             }
+          } else {
+            ret += "<letter class=\"".concat(UpdateConfig["default"].highlightMode == "word" ? wordHighlightClassString : "incorrect", " ").concat(tabChar).concat(nlChar, "\">") + currentLetter + (UpdateConfig["default"].indicateTypos ? "<hint>".concat(input[_i], "</hint>") : "") + "</letter>";
           }
         }
       }
+    }
 
-      if (input.length < currentWord.length) {
-        for (var _i4 = input.length; _i4 < currentWord.length; _i4++) {
-          if (currentWord[_i4] === "\t") {
-            ret += "<letter class='tabChar'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
-          } else if (currentWord[_i4] === "\n") {
-            ret += "<letter class='nlChar'><i class=\"fas fa-angle-down\"></i></letter>";
-          } else {
-            ret += "<letter>" + currentWord[_i4] + "</letter>";
-          }
+    if (input.length < currentWord.length) {
+      for (var _i2 = input.length; _i2 < currentWord.length; _i2++) {
+        if (currentWord[_i2] === "\t") {
+          ret += "<letter class='tabChar'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
+        } else if (currentWord[_i2] === "\n") {
+          ret += "<letter class='nlChar'><i class=\"fas fa-angle-down\"></i></letter>";
+        } else {
+          ret += "<letter class=\"".concat(UpdateConfig["default"].highlightMode == "word" ? wordHighlightClassString : "", "\">") + currentWord[_i2] + "</letter>";
         }
+      }
+    }
+
+    if (UpdateConfig["default"].highlightMode === "letter" && UpdateConfig["default"].hideExtraLetters) {
+      if (input.length > currentWord.length) {
+        $(wordAtIndex).addClass("error");
+      } else if (input.length == currentWord.length) {
+        $(wordAtIndex).removeClass("error");
       }
     }
   }
@@ -11819,7 +14098,7 @@ function updateModesNotice() {
   if ($(".pageTest #testModesNotice").text() === "") anim = true;
   $(".pageTest #testModesNotice").empty();
 
-  if (TestLogic.isRepeated) {
+  if (TestLogic.isRepeated && UpdateConfig["default"].mode !== "quote") {
     $(".pageTest #testModesNotice").append("<div class=\"text-button restart\" style=\"color:var(--error-color);\"><i class=\"fas fa-sync-alt\"></i>repeated</div>");
   }
 
@@ -11846,7 +14125,7 @@ function updateModesNotice() {
     $(".pageTest #testModesNotice").append("<div class=\"text-button blind\"><i class=\"fas fa-eye-slash\"></i>blind</div>");
   }
 
-  if (UpdateConfig["default"].paceCaret !== "off") {
+  if (UpdateConfig["default"].paceCaret !== "off" || UpdateConfig["default"].repeatedPace && TestLogic.isPaceRepeat) {
     var speed = "";
 
     try {
@@ -11864,8 +14143,12 @@ function updateModesNotice() {
     $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsMinAcc\"><i class=\"fas fa-bomb\"></i>min ".concat(UpdateConfig["default"].minAccCustom, "% acc</div>"));
   }
 
-  if (Funbox.active !== "none") {
-    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsFunbox\"><i class=\"fas fa-gamepad\"></i>".concat(Funbox.active.replace(/_/g, " "), "</div>"));
+  if (UpdateConfig["default"].minBurst !== "off") {
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsMinBurst\"><i class=\"fas fa-bomb\"></i>min ".concat(UpdateConfig["default"].minBurstCustomSpeed, " burst ").concat(UpdateConfig["default"].minBurst === "flex" ? "(flex)" : "", "</div>"));
+  }
+
+  if (UpdateConfig["default"].funbox !== "none") {
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsFunbox\"><i class=\"fas fa-gamepad\"></i>".concat(UpdateConfig["default"].funbox.replace(/_/g, " "), "</div>"));
   }
 
   if (UpdateConfig["default"].confidenceMode === "on") {
@@ -11899,10 +14182,14 @@ function updateModesNotice() {
 
 function arrangeCharactersRightToLeft() {
   $("#words").addClass("rightToLeftTest");
+  $("#resultWordsHistory .words").addClass("rightToLeftTest");
+  $("#resultReplay .words").addClass("rightToLeftTest");
 }
 
 function arrangeCharactersLeftToRight() {
   $("#words").removeClass("rightToLeftTest");
+  $("#resultWordsHistory .words").removeClass("rightToLeftTest");
+  $("#resultReplay .words").removeClass("rightToLeftTest");
 }
 
 function loadWordsHistory() {
@@ -11910,12 +14197,12 @@ function loadWordsHistory() {
 }
 
 function _loadWordsHistory() {
-  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
+  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
     var wordsHTML, i, input, word, wordEl, wordstats, length, c, loop, _c, correctedChar, extraCorrected, _c2;
 
-    return _regenerator["default"].wrap(function _callee2$(_context2) {
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             $("#resultWordsHistory .words").empty();
             wordsHTML = "";
@@ -11923,17 +14210,17 @@ function _loadWordsHistory() {
 
           case 3:
             if (!(i < TestLogic.input.history.length + 2)) {
-              _context2.next = 25;
+              _context3.next = 25;
               break;
             }
 
             input = TestLogic.input.getHistory(i);
             word = TestLogic.words.get(i);
             wordEl = "";
-            _context2.prev = 7;
+            _context3.prev = 7;
 
             if (!(input === "")) {
-              _context2.next = 10;
+              _context3.next = 10;
               break;
             }
 
@@ -11941,9 +14228,9 @@ function _loadWordsHistory() {
 
           case 10:
             if (TestLogic.corrected.getHistory(i) !== undefined && TestLogic.corrected.getHistory(i) !== "") {
-              wordEl = "<div class='word' input=\"".concat(TestLogic.corrected.getHistory(i).replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+              wordEl = "<div class='word' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(TestLogic.corrected.getHistory(i).replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
             } else {
-              wordEl = "<div class='word' input=\"".concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+              wordEl = "<div class='word' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
             }
 
             if (i === TestLogic.input.history.length - 1) {
@@ -11971,12 +14258,12 @@ function _loadWordsHistory() {
 
               if (wordstats.incorrect !== 0 || UpdateConfig["default"].mode !== "time") {
                 if (UpdateConfig["default"].mode != "zen" && input !== word) {
-                  wordEl = "<div class='word error' input=\"".concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+                  wordEl = "<div class='word error' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
                 }
               }
             } else {
               if (UpdateConfig["default"].mode != "zen" && input !== word) {
-                wordEl = "<div class='word error' input=\"".concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
+                wordEl = "<div class='word error' burst=\"".concat(TestStats.burstHistory[i], "\" input=\"").concat(input.replace(/"/g, "&quot;").replace(/ /g, "_"), "\">");
               }
             }
 
@@ -12027,12 +14314,12 @@ function _loadWordsHistory() {
             }
 
             wordEl += "</div>";
-            _context2.next = 21;
+            _context3.next = 21;
             break;
 
           case 18:
-            _context2.prev = 18;
-            _context2.t0 = _context2["catch"](7);
+            _context3.prev = 18;
+            _context3.t0 = _context3["catch"](7);
 
             try {
               wordEl = "<div class='word'>";
@@ -12049,20 +14336,20 @@ function _loadWordsHistory() {
 
           case 22:
             i++;
-            _context2.next = 3;
+            _context3.next = 3;
             break;
 
           case 25:
             $("#resultWordsHistory .words").html(wordsHTML);
             $("#showWordHistoryButton").addClass("loaded");
-            return _context2.abrupt("return", true);
+            return _context3.abrupt("return", true);
 
           case 28:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
       }
-    }, _callee2, null, [[7, 18]]);
+    }, _callee3, null, [[7, 18]]);
   }));
   return _loadWordsHistory.apply(this, arguments);
 }
@@ -12088,12 +14375,81 @@ function toggleResultWords() {
   }
 }
 
+function applyBurstHeatmap() {
+  if (UpdateConfig["default"].burstHeatmap) {
+    $("#resultWordsHistory .heatmapLegend").removeClass("hidden");
+    var min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
+    var max = Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory)); // let step = (max - min) / 5;
+    // let steps = [
+    //   {
+    //     val: min,
+    //     class: 'heatmap-0'
+    //   },
+    //   {
+    //     val: min + (step * 1),
+    //     class: 'heatmap-1'
+    //   },
+    //   {
+    //     val: min + (step * 2),
+    //     class: 'heatmap-2'
+    //   },
+    //   {
+    //     val: min + (step * 3),
+    //     class: 'heatmap-3'
+    //   },
+    //   {
+    //     val: min + (step * 4),
+    //     class: 'heatmap-4'
+    //   },
+    // ];
+
+    var median = Misc.median(TestStats.burstHistory);
+    var adatm = [];
+    TestStats.burstHistory.forEach(function (burst) {
+      adatm.push(Math.abs(median - burst));
+    });
+    var step = Misc.mean(adatm); // let step = Misc.stdDev(TestStats.burstHistory)/2;
+
+    var steps = [{
+      val: 0,
+      "class": "heatmap-0"
+    }, {
+      val: median - step * 1.5,
+      "class": "heatmap-1"
+    }, {
+      val: median - step * 0.5,
+      "class": "heatmap-2"
+    }, {
+      val: median + step * 0.5,
+      "class": "heatmap-3"
+    }, {
+      val: median + step * 1.5,
+      "class": "heatmap-4"
+    }];
+    $("#resultWordsHistory .words .word").each(function (index, word) {
+      var wordBurstVal = parseInt($(word).attr("burst"));
+      var cls = "";
+      steps.forEach(function (step) {
+        if (wordBurstVal > step.val) cls = step["class"];
+      });
+      $(word).addClass(cls);
+    });
+  } else {
+    $("#resultWordsHistory .heatmapLegend").addClass("hidden");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-0");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-1");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-2");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-3");
+    $("#resultWordsHistory .words .word").removeClass("heatmap-4");
+  }
+}
+
 function highlightBadWord(index, showError) {
   if (!showError) return;
   $($("#words .word")[index]).addClass("error");
 }
 
-$(document.body).on("click", "#copyResultToClipboardButton", function () {
+$(document.body).on("click", "#saveScreenshotButton", function () {
   screenshot();
 });
 $(document).on("click", "#testModesNotice .text-button.restart", function (event) {
@@ -12142,6 +14498,26 @@ $(".pageTest #copyWordsListButton").click( /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
+$(".pageTest #toggleBurstHeatmap").click( /*#__PURE__*/function () {
+  var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(event) {
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            UpdateConfig.setBurstHeatmap(!UpdateConfig["default"].burstHeatmap);
+
+          case 1:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function (_x2) {
+    return _ref2.apply(this, arguments);
+  };
+}());
 $(document).on("mouseleave", "#resultWordsHistory .words .word", function (e) {
   $(".wordInputAfter").remove();
 });
@@ -12151,7 +14527,8 @@ $("#wpmChart").on("mouseleave", function (e) {
 $(document).on("mouseenter", "#resultWordsHistory .words .word", function (e) {
   if (resultVisible) {
     var input = $(e.currentTarget).attr("input");
-    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">".concat(input.replace(/\t/g, "_").replace(/\n/g, "_"), "</div>"));
+    var burst = $(e.currentTarget).attr("burst");
+    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">\n          <div class=\"text\">\n          ".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "\n          </div>\n          <div class=\"speed\">\n          ").concat(burst, "wpm\n          </div>\n          </div>"));
   }
 });
 $(document).on("click", "#testModesNotice .text-button", function (event) {
@@ -12247,7 +14624,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./keymap":18,"./manual-restart-tracker":25,"./notifications":28,"./out-of-focus":29,"./pace-caret":30,"./practise-missed":32,"./test-logic":43,"./theme-colors":47,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],47:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-missed":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],52:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -12287,12 +14664,12 @@ function update() {
   exports.colorfulErrorExtra = colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
 }
 
-},{}],48:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12301,11 +14678,11 @@ exports.apply = apply;
 exports.preview = preview;
 exports.set = set;
 exports.clearPreview = clearPreview;
-exports.randomiseTheme = randomiseTheme;
+exports.randomizeTheme = randomizeTheme;
 exports.clearRandom = clearRandom;
 exports.applyCustomBackground = applyCustomBackground;
 exports.applyCustomBackgroundSize = applyCustomBackgroundSize;
-exports.colorVars = void 0;
+exports.colorVars = exports.randomTheme = void 0;
 
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
@@ -12319,12 +14696,11 @@ var _config = _interopRequireDefault(require("./config"));
 
 var UI = _interopRequireWildcard(require("./ui"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+var _tinycolor = _interopRequireDefault(require("tinycolor2"));
 
 var isPreviewingTheme = false;
 var randomTheme = null;
+exports.randomTheme = randomTheme;
 var colorVars = ["--bg-color", "--main-color", "--caret-color", "--sub-color", "--text-color", "--error-color", "--error-extra-color", "--colorful-error-color", "--colorful-error-extra-color"];
 exports.colorVars = colorVars;
 
@@ -12410,60 +14786,83 @@ function set(themeName) {
 function clearPreview() {
   if (isPreviewingTheme) {
     isPreviewingTheme = false;
-    apply(_config["default"].theme);
+
+    if (_config["default"].customTheme) {
+      apply("custom");
+    } else {
+      apply(_config["default"].theme);
+    }
   }
 }
 
-function randomiseTheme() {
+function randomizeTheme() {
   var randomList;
   Misc.getThemesList().then(function (themes) {
-    randomList = themes.map(function (t) {
-      return t.name;
-    });
-    if (_config["default"].randomTheme === "fav" && _config["default"].favThemes.length > 0) randomList = _config["default"].favThemes;
+    if (_config["default"].randomTheme === "fav" && _config["default"].favThemes.length > 0) {
+      randomList = _config["default"].favThemes;
+    } else if (_config["default"].randomTheme === "light") {
+      randomList = themes.filter(function (t) {
+        return (0, _tinycolor["default"])(t.bgColor).isLight();
+      }).map(function (t) {
+        return t.name;
+      });
+    } else if (_config["default"].randomTheme === "dark") {
+      randomList = themes.filter(function (t) {
+        return (0, _tinycolor["default"])(t.bgColor).isDark();
+      }).map(function (t) {
+        return t.name;
+      });
+    } else {
+      randomList = themes.map(function (t) {
+        return t.name;
+      });
+    }
+
     var previousTheme = randomTheme;
-    randomTheme = randomList[Math.floor(Math.random() * randomList.length)];
+    exports.randomTheme = randomTheme = randomList[Math.floor(Math.random() * randomList.length)];
     preview(randomTheme);
 
-    if (previousTheme != randomTheme) {
-      Notifications.add(randomTheme.replace(/_/g, " "), 0);
+    if (previousTheme != randomTheme) {// Notifications.add(randomTheme.replace(/_/g, " "), 0);
     }
   });
 }
 
 function clearRandom() {
-  randomTheme = null;
+  exports.randomTheme = randomTheme = null;
 }
 
 function applyCustomBackground() {
-  $(".customBackground").css({
-    backgroundImage: "url(".concat(_config["default"].customBackground, ")"),
-    backgroundAttachment: "fixed"
-  });
-
+  // $(".customBackground").css({
+  //   backgroundImage: `url(${Config.customBackground})`,
+  //   backgroundAttachment: "fixed",
+  // });
   if (_config["default"].customBackground === "") {
     $("#words").removeClass("noErrorBorder");
+    $(".customBackground img").remove();
   } else {
     $("#words").addClass("noErrorBorder");
+    $(".customBackground").html("<img src=\"".concat(_config["default"].customBackground, "\"></img>"));
   }
 }
 
 function applyCustomBackgroundSize() {
   if (_config["default"].customBackgroundSize == "max") {
-    $(".customBackground").css({
-      backgroundSize: "100% 100%"
+    $(".customBackground img").css({
+      // width: "calc(100%)",
+      // height: "calc(100%)",
+      objectFit: ""
     });
   } else if (_config["default"].customBackgroundSize != "") {
-    $(".customBackground").css({
-      backgroundSize: _config["default"].customBackgroundSize
+    $(".customBackground img").css({
+      objectFit: _config["default"].customBackgroundSize
     });
   }
 }
 
-},{"./chart-controller":3,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":47,"./ui":51,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],49:[function(require,module,exports){
+},{"./chart-controller":4,"./config":7,"./misc":28,"./notifications":31,"./theme-colors":52,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"tinycolor2":87}],54:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12488,10 +14887,6 @@ var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 var ChartController = _interopRequireWildcard(require("./chart-controller"));
 
 var UI = _interopRequireWildcard(require("./ui"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function updateActiveButton() {
   $(".pageSettings .section.themes .theme").removeClass("active");
@@ -12686,12 +15081,12 @@ $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   }, 250);
 });
 
-},{"./chart-controller":3,"./commandline-lists":4,"./config":6,"./misc":26,"./notifications":28,"./theme-colors":47,"./theme-controller":48,"./ui":51,"@babel/runtime/helpers/typeof":64}],50:[function(require,module,exports){
+},{"./chart-controller":4,"./commandline-lists":5,"./config":7,"./misc":28,"./notifications":31,"./theme-colors":52,"./theme-controller":53,"./ui":57,"@babel/runtime/helpers/interopRequireWildcard":68}],55:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12710,10 +15105,6 @@ var Misc = _interopRequireWildcard(require("./misc"));
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var TestTimer = _interopRequireWildcard(require("./test-timer"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function show() {
   var op = _config["default"].showTimerProgress ? _config["default"].timerOpacity : 0;
@@ -12866,10 +15257,46 @@ function update() {
   }
 }
 
-},{"./config":6,"./custom-text":10,"./misc":26,"./test-logic":43,"./test-timer":45,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64}],51:[function(require,module,exports){
+},{"./config":7,"./custom-text":11,"./misc":28,"./test-logic":48,"./test-timer":50,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],56:[function(require,module,exports){
 "use strict";
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.addSeconds = addSeconds;
+exports.getString = getString;
+
+var Misc = _interopRequireWildcard(require("./misc"));
+
+var seconds = 0;
+var addedAllToday = false;
+var dayToday = null;
+
+function addSeconds(s) {
+  if (addedAllToday) {
+    var nowDate = new Date();
+    nowDate = nowDate.getDate();
+
+    if (nowDate > dayToday) {
+      seconds = s;
+      return;
+    }
+  }
+
+  seconds += s;
+}
+
+function getString() {
+  var secString = Misc.secondsToString(Math.round(seconds), true);
+  return secString + (addedAllToday === true ? " today" : " session");
+}
+
+},{"./misc":28,"@babel/runtime/helpers/interopRequireWildcard":68}],57:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -12905,10 +15332,6 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 var Settings = _interopRequireWildcard(require("./settings"));
 
 var Funbox = _interopRequireWildcard(require("./funbox"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var pageTransition = false;
 exports.pageTransition = pageTransition;
@@ -12966,6 +15389,8 @@ function swapElements(el1, el2, totalDuration) {
 }
 
 function changePage(page) {
+  console.log('change');
+
   if (pageTransition) {
     return;
   }
@@ -12989,7 +15414,7 @@ function changePage(page) {
     TestStats.resetIncomplete();
     ManualRestart.set();
     TestLogic.restart();
-    Funbox.activate(Funbox.funboxSaved, Funbox.modeSaved);
+    Funbox.activate(UpdateConfig["default"].funbox);
   } else if (page == "about") {
     setPageTransition(true);
     TestLogic.restart();
@@ -12998,7 +15423,7 @@ function changePage(page) {
       history.pushState("#about", null, "#about");
       $(".page.pageAbout").addClass("active");
     });
-    Funbox.activate("none", null);
+    Funbox.activate("none");
     TestConfig.hide();
   } else if (page == "settings") {
     setPageTransition(true);
@@ -13008,7 +15433,7 @@ function changePage(page) {
       history.pushState("#settings", null, "#settings");
       $(".page.pageSettings").addClass("active");
     });
-    Funbox.activate("none", null);
+    Funbox.activate("none");
     Settings.update();
     TestConfig.hide();
   }
@@ -13076,7 +15501,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":2,"./commandline":5,"./commandline-lists":4,"./config":6,"./custom-text":10,"./funbox":14,"./manual-restart-tracker":25,"./notifications":28,"./settings":37,"./test-config":42,"./test-logic":43,"./test-stats":44,"./test-ui":46,"@babel/runtime/helpers/typeof":64}],52:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./manual-restart-tracker":27,"./notifications":31,"./settings":42,"./test-config":47,"./test-logic":48,"./test-stats":49,"./test-ui":51,"@babel/runtime/helpers/interopRequireWildcard":68}],58:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
@@ -13092,12 +15517,103 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
   });
 });
 
-},{}],53:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
-var _typeof = require("@babel/runtime/helpers/typeof");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.updateScore = updateScore;
+exports.getWord = getWord;
+
+var TestStats = _interopRequireWildcard(require("./test-stats"));
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+// Changes how quickly it 'learns' scores - very roughly the score for a char
+// is based on last 1/adjustRate occurrences. Make it larger to adjust faster.
+// Should be between 0 and 1.
+var adjustRate = 0.02; // Choose the highest scoring word from this many random words. Higher values
+// will choose words with more weak letters on average.
+
+var wordSamples = 20; // The score that every character starts on. The ideal value would be the
+// average spacing in milliseconds, but since we don't know that at the start,
+// pick something little high and it'll converge as the user types.
+
+var defaultScore = 500; // Score penatly (in milliseconds) for getting a letter wrong.
+
+var incorrectPenalty = 5000;
+var scores = {};
+
+function updateScore(_char, isCorrect) {
+  var score = 0.0;
+  var timings = TestStats.keypressTimings.spacing.array;
+
+  if (timings.length > 0) {
+    score += timings[timings.length - 1];
+  }
+
+  if (!isCorrect) {
+    score += incorrectPenalty;
+  }
+
+  if (!(_char in scores)) {
+    scores[_char] = defaultScore;
+  } // Keep an exponential moving average of the score over time.
+
+
+  scores[_char] = score * adjustRate + scores[_char] * (1 - adjustRate);
+}
+
+function getWord(wordset) {
+  var highScore;
+  var randomWord;
+
+  for (var i = 0; i < wordSamples; i++) {
+    var newWord = wordset[Math.floor(Math.random() * wordset.length)];
+    var newScore = score(newWord);
+
+    if (i == 0 || newScore > highScore) {
+      randomWord = newWord;
+      highScore = newScore;
+    }
+  }
+
+  return randomWord;
+}
+
+function score(word) {
+  var total = 0.0;
+
+  var _iterator = _createForOfIteratorHelper(word),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var c = _step.value;
+      total += c in scores ? scores[c] : defaultScore;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  return total / word.length;
+}
+
+},{"./test-stats":49,"@babel/runtime/helpers/interopRequireWildcard":68}],60:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -13109,10 +15625,6 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var initialised = false;
 
@@ -13248,12 +15760,12 @@ function _filter() {
   return _filter.apply(this, arguments);
 }
 
-function apply() {
+function apply(_x2) {
   return _apply.apply(this, arguments);
 }
 
 function _apply() {
-  _apply = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+  _apply = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(set) {
     var language, filteredWords, customText;
     return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
@@ -13265,14 +15777,13 @@ function _apply() {
 
           case 3:
             filteredWords = _context4.sent;
-            customText = "";
-            filteredWords.forEach(function (word) {
-              customText += word + " ";
+            customText = filteredWords.join(" ");
+            $("#customTextPopup textarea").val(function (index, val) {
+              return (set ? "" : val + " ") + customText;
             });
             hide();
-            $("#customTextPopup textarea").val(customText);
 
-          case 8:
+          case 7:
           case "end":
             return _context4.stop();
         }
@@ -13294,13 +15805,14 @@ $("#wordFilterPopupWrapper .button").mousedown(function (e) {
   $("#wordFilterPopupWrapper .loadingIndicator").removeClass("hidden");
   $("#wordFilterPopupWrapper .button").addClass("hidden");
   setTimeout(function () {
-    apply();
-    $("#wordFilterPopupWrapper .loadingIndicator").addClass("hidden");
-    $("#wordFilterPopupWrapper .button").removeClass("hidden");
+    apply($(e.target).is("#set")).then(function () {
+      $("#wordFilterPopupWrapper .loadingIndicator").addClass("hidden");
+      $("#wordFilterPopupWrapper .button").removeClass("hidden");
+    });
   }, 1);
 });
 
-},{"./misc":26,"@babel/runtime/helpers/asyncToGenerator":56,"@babel/runtime/helpers/interopRequireDefault":60,"@babel/runtime/helpers/typeof":64,"@babel/runtime/regenerator":66}],54:[function(require,module,exports){
+},{"./misc":28,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],61:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -13312,17 +15824,15 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],55:[function(require,module,exports){
-var arrayLikeToArray = require("./arrayLikeToArray.js");
+},{}],62:[function(require,module,exports){
+var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _arrayWithoutHoles(arr) {
   if (Array.isArray(arr)) return arrayLikeToArray(arr);
 }
 
 module.exports = _arrayWithoutHoles;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayLikeToArray.js":54}],56:[function(require,module,exports){
+},{"./arrayLikeToArray":61}],63:[function(require,module,exports){
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -13360,8 +15870,7 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],57:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -13369,8 +15878,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 module.exports = _classCallCheck;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],58:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -13388,8 +15896,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 }
 
 module.exports = _createClass;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],59:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -13406,8 +15913,7 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],60:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -13415,37 +15921,89 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],61:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+function _getRequireWildcardCache() {
+  if (typeof WeakMap !== "function") return null;
+  var cache = new WeakMap();
+
+  _getRequireWildcardCache = function _getRequireWildcardCache() {
+    return cache;
+  };
+
+  return cache;
+}
+
+function _interopRequireWildcard(obj) {
+  if (obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") {
+    return {
+      "default": obj
+    };
+  }
+
+  var cache = _getRequireWildcardCache();
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj["default"] = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
+}
+
+module.exports = _interopRequireWildcard;
+},{"@babel/runtime/helpers/typeof":72}],69:[function(require,module,exports){
 function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
 }
 
 module.exports = _iterableToArray;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],62:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableSpread;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],63:[function(require,module,exports){
-var arrayWithoutHoles = require("./arrayWithoutHoles.js");
+},{}],71:[function(require,module,exports){
+var arrayWithoutHoles = require("./arrayWithoutHoles");
 
-var iterableToArray = require("./iterableToArray.js");
+var iterableToArray = require("./iterableToArray");
 
-var unsupportedIterableToArray = require("./unsupportedIterableToArray.js");
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
 
-var nonIterableSpread = require("./nonIterableSpread.js");
+var nonIterableSpread = require("./nonIterableSpread");
 
 function _toConsumableArray(arr) {
   return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
 }
 
 module.exports = _toConsumableArray;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayWithoutHoles.js":55,"./iterableToArray.js":61,"./nonIterableSpread.js":62,"./unsupportedIterableToArray.js":65}],64:[function(require,module,exports){
+},{"./arrayWithoutHoles":62,"./iterableToArray":69,"./nonIterableSpread":70,"./unsupportedIterableToArray":73}],72:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -13453,23 +16011,18 @@ function _typeof(obj) {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
     };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _typeof = function _typeof(obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _typeof(obj);
 }
 
 module.exports = _typeof;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{}],65:[function(require,module,exports){
-var arrayLikeToArray = require("./arrayLikeToArray.js");
+},{}],73:[function(require,module,exports){
+var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _unsupportedIterableToArray(o, minLen) {
   if (!o) return;
@@ -13481,11 +16034,10 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-},{"./arrayLikeToArray.js":54}],66:[function(require,module,exports){
+},{"./arrayLikeToArray":61}],74:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":77}],67:[function(require,module,exports){
+},{"regenerator-runtime":86}],75:[function(require,module,exports){
 /*!
  * Chart.js v2.9.4
  * https://www.chartjs.org
@@ -29659,7 +32211,7 @@ return src;
 
 })));
 
-},{"moment":76}],68:[function(require,module,exports){
+},{"moment":85}],76:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 
@@ -29787,7 +32339,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./events.js":70,"./helpers.js":71}],69:[function(require,module,exports){
+},{"./events.js":78,"./helpers.js":79}],77:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	
@@ -29812,7 +32364,7 @@ module.exports = function(Chart) {
 	return AnnotationElement;
 };
 
-},{}],70:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	var helpers = require('./helpers.js')(Chart);
@@ -29922,7 +32474,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./helpers.js":71}],71:[function(require,module,exports){
+},{"./helpers.js":79}],79:[function(require,module,exports){
 function noop() {}
 
 function elements(chartInstance) {
@@ -30109,7 +32661,7 @@ module.exports = function(Chart) {
 };
 
 
-},{}],72:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 // Get the chart variable
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
@@ -30158,7 +32710,7 @@ var annotationPlugin = require('./annotation.js')(Chart);
 module.exports = annotationPlugin;
 Chart.pluginService.register(annotationPlugin);
 
-},{"./annotation.js":68,"./element.js":69,"./types/box.js":73,"./types/line.js":74,"chart.js":67}],73:[function(require,module,exports){
+},{"./annotation.js":76,"./element.js":77,"./types/box.js":81,"./types/line.js":82,"chart.js":75}],81:[function(require,module,exports){
 // Box Annotation implementation
 module.exports = function(Chart) {
 	var helpers = require('../helpers.js')(Chart);
@@ -30306,7 +32858,7 @@ module.exports = function(Chart) {
 	return BoxAnnotation;
 };
 
-},{"../helpers.js":71}],74:[function(require,module,exports){
+},{"../helpers.js":79}],82:[function(require,module,exports){
 // Line Annotation implementation
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
@@ -30575,7 +33127,7 @@ module.exports = function(Chart) {
 	return LineAnnotation;
 };
 
-},{"../helpers.js":71}],75:[function(require,module,exports){
+},{"../helpers.js":79}],83:[function(require,module,exports){
 /*!
  * chartjs-plugin-trendline.js
  * Version: 0.2.2
@@ -30723,7 +33275,3253 @@ try {
     module.exports = exports = pluginTrendlineLinear;
 } catch (e) {}
 
-},{}],76:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
+(function (global){(function (){
+/*!
+ *  howler.js v2.2.3
+ *  howlerjs.com
+ *
+ *  (c) 2013-2020, James Simpson of GoldFire Studios
+ *  goldfirestudios.com
+ *
+ *  MIT License
+ */
+
+(function() {
+
+  'use strict';
+
+  /** Global Methods **/
+  /***************************************************************************/
+
+  /**
+   * Create the global controller. All contained methods and properties apply
+   * to all sounds that are currently playing or will be in the future.
+   */
+  var HowlerGlobal = function() {
+    this.init();
+  };
+  HowlerGlobal.prototype = {
+    /**
+     * Initialize the global Howler object.
+     * @return {Howler}
+     */
+    init: function() {
+      var self = this || Howler;
+
+      // Create a global ID counter.
+      self._counter = 1000;
+
+      // Pool of unlocked HTML5 Audio objects.
+      self._html5AudioPool = [];
+      self.html5PoolSize = 10;
+
+      // Internal properties.
+      self._codecs = {};
+      self._howls = [];
+      self._muted = false;
+      self._volume = 1;
+      self._canPlayEvent = 'canplaythrough';
+      self._navigator = (typeof window !== 'undefined' && window.navigator) ? window.navigator : null;
+
+      // Public properties.
+      self.masterGain = null;
+      self.noAudio = false;
+      self.usingWebAudio = true;
+      self.autoSuspend = true;
+      self.ctx = null;
+
+      // Set to false to disable the auto audio unlocker.
+      self.autoUnlock = true;
+
+      // Setup the various state values for global tracking.
+      self._setup();
+
+      return self;
+    },
+
+    /**
+     * Get/set the global volume for all sounds.
+     * @param  {Float} vol Volume from 0.0 to 1.0.
+     * @return {Howler/Float}     Returns self or current volume.
+     */
+    volume: function(vol) {
+      var self = this || Howler;
+      vol = parseFloat(vol);
+
+      // If we don't have an AudioContext created yet, run the setup.
+      if (!self.ctx) {
+        setupAudioContext();
+      }
+
+      if (typeof vol !== 'undefined' && vol >= 0 && vol <= 1) {
+        self._volume = vol;
+
+        // Don't update any of the nodes if we are muted.
+        if (self._muted) {
+          return self;
+        }
+
+        // When using Web Audio, we just need to adjust the master gain.
+        if (self.usingWebAudio) {
+          self.masterGain.gain.setValueAtTime(vol, Howler.ctx.currentTime);
+        }
+
+        // Loop through and change volume for all HTML5 audio nodes.
+        for (var i=0; i<self._howls.length; i++) {
+          if (!self._howls[i]._webAudio) {
+            // Get all of the sounds in this Howl group.
+            var ids = self._howls[i]._getSoundIds();
+
+            // Loop through all sounds and change the volumes.
+            for (var j=0; j<ids.length; j++) {
+              var sound = self._howls[i]._soundById(ids[j]);
+
+              if (sound && sound._node) {
+                sound._node.volume = sound._volume * vol;
+              }
+            }
+          }
+        }
+
+        return self;
+      }
+
+      return self._volume;
+    },
+
+    /**
+     * Handle muting and unmuting globally.
+     * @param  {Boolean} muted Is muted or not.
+     */
+    mute: function(muted) {
+      var self = this || Howler;
+
+      // If we don't have an AudioContext created yet, run the setup.
+      if (!self.ctx) {
+        setupAudioContext();
+      }
+
+      self._muted = muted;
+
+      // With Web Audio, we just need to mute the master gain.
+      if (self.usingWebAudio) {
+        self.masterGain.gain.setValueAtTime(muted ? 0 : self._volume, Howler.ctx.currentTime);
+      }
+
+      // Loop through and mute all HTML5 Audio nodes.
+      for (var i=0; i<self._howls.length; i++) {
+        if (!self._howls[i]._webAudio) {
+          // Get all of the sounds in this Howl group.
+          var ids = self._howls[i]._getSoundIds();
+
+          // Loop through all sounds and mark the audio node as muted.
+          for (var j=0; j<ids.length; j++) {
+            var sound = self._howls[i]._soundById(ids[j]);
+
+            if (sound && sound._node) {
+              sound._node.muted = (muted) ? true : sound._muted;
+            }
+          }
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Handle stopping all sounds globally.
+     */
+    stop: function() {
+      var self = this || Howler;
+
+      // Loop through all Howls and stop them.
+      for (var i=0; i<self._howls.length; i++) {
+        self._howls[i].stop();
+      }
+
+      return self;
+    },
+
+    /**
+     * Unload and destroy all currently loaded Howl objects.
+     * @return {Howler}
+     */
+    unload: function() {
+      var self = this || Howler;
+
+      for (var i=self._howls.length-1; i>=0; i--) {
+        self._howls[i].unload();
+      }
+
+      // Create a new AudioContext to make sure it is fully reset.
+      if (self.usingWebAudio && self.ctx && typeof self.ctx.close !== 'undefined') {
+        self.ctx.close();
+        self.ctx = null;
+        setupAudioContext();
+      }
+
+      return self;
+    },
+
+    /**
+     * Check for codec support of specific extension.
+     * @param  {String} ext Audio file extention.
+     * @return {Boolean}
+     */
+    codecs: function(ext) {
+      return (this || Howler)._codecs[ext.replace(/^x-/, '')];
+    },
+
+    /**
+     * Setup various state values for global tracking.
+     * @return {Howler}
+     */
+    _setup: function() {
+      var self = this || Howler;
+
+      // Keeps track of the suspend/resume state of the AudioContext.
+      self.state = self.ctx ? self.ctx.state || 'suspended' : 'suspended';
+
+      // Automatically begin the 30-second suspend process
+      self._autoSuspend();
+
+      // Check if audio is available.
+      if (!self.usingWebAudio) {
+        // No audio is available on this system if noAudio is set to true.
+        if (typeof Audio !== 'undefined') {
+          try {
+            var test = new Audio();
+
+            // Check if the canplaythrough event is available.
+            if (typeof test.oncanplaythrough === 'undefined') {
+              self._canPlayEvent = 'canplay';
+            }
+          } catch(e) {
+            self.noAudio = true;
+          }
+        } else {
+          self.noAudio = true;
+        }
+      }
+
+      // Test to make sure audio isn't disabled in Internet Explorer.
+      try {
+        var test = new Audio();
+        if (test.muted) {
+          self.noAudio = true;
+        }
+      } catch (e) {}
+
+      // Check for supported codecs.
+      if (!self.noAudio) {
+        self._setupCodecs();
+      }
+
+      return self;
+    },
+
+    /**
+     * Check for browser support for various codecs and cache the results.
+     * @return {Howler}
+     */
+    _setupCodecs: function() {
+      var self = this || Howler;
+      var audioTest = null;
+
+      // Must wrap in a try/catch because IE11 in server mode throws an error.
+      try {
+        audioTest = (typeof Audio !== 'undefined') ? new Audio() : null;
+      } catch (err) {
+        return self;
+      }
+
+      if (!audioTest || typeof audioTest.canPlayType !== 'function') {
+        return self;
+      }
+
+      var mpegTest = audioTest.canPlayType('audio/mpeg;').replace(/^no$/, '');
+
+      // Opera version <33 has mixed MP3 support, so we need to check for and block it.
+      var ua = self._navigator ? self._navigator.userAgent : '';
+      var checkOpera = ua.match(/OPR\/([0-6].)/g);
+      var isOldOpera = (checkOpera && parseInt(checkOpera[0].split('/')[1], 10) < 33);
+      var checkSafari = ua.indexOf('Safari') !== -1 && ua.indexOf('Chrome') === -1;
+      var safariVersion = ua.match(/Version\/(.*?) /);
+      var isOldSafari = (checkSafari && safariVersion && parseInt(safariVersion[1], 10) < 15);
+
+      self._codecs = {
+        mp3: !!(!isOldOpera && (mpegTest || audioTest.canPlayType('audio/mp3;').replace(/^no$/, ''))),
+        mpeg: !!mpegTest,
+        opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ''),
+        ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''),
+        oga: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''),
+        wav: !!(audioTest.canPlayType('audio/wav; codecs="1"') || audioTest.canPlayType('audio/wav')).replace(/^no$/, ''),
+        aac: !!audioTest.canPlayType('audio/aac;').replace(/^no$/, ''),
+        caf: !!audioTest.canPlayType('audio/x-caf;').replace(/^no$/, ''),
+        m4a: !!(audioTest.canPlayType('audio/x-m4a;') || audioTest.canPlayType('audio/m4a;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/, ''),
+        m4b: !!(audioTest.canPlayType('audio/x-m4b;') || audioTest.canPlayType('audio/m4b;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/, ''),
+        mp4: !!(audioTest.canPlayType('audio/x-mp4;') || audioTest.canPlayType('audio/mp4;') || audioTest.canPlayType('audio/aac;')).replace(/^no$/, ''),
+        weba: !!(!isOldSafari && audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')),
+        webm: !!(!isOldSafari && audioTest.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, '')),
+        dolby: !!audioTest.canPlayType('audio/mp4; codecs="ec-3"').replace(/^no$/, ''),
+        flac: !!(audioTest.canPlayType('audio/x-flac;') || audioTest.canPlayType('audio/flac;')).replace(/^no$/, '')
+      };
+
+      return self;
+    },
+
+    /**
+     * Some browsers/devices will only allow audio to be played after a user interaction.
+     * Attempt to automatically unlock audio on the first user interaction.
+     * Concept from: http://paulbakaus.com/tutorials/html5/web-audio-on-ios/
+     * @return {Howler}
+     */
+    _unlockAudio: function() {
+      var self = this || Howler;
+
+      // Only run this if Web Audio is supported and it hasn't already been unlocked.
+      if (self._audioUnlocked || !self.ctx) {
+        return;
+      }
+
+      self._audioUnlocked = false;
+      self.autoUnlock = false;
+
+      // Some mobile devices/platforms have distortion issues when opening/closing tabs and/or web views.
+      // Bugs in the browser (especially Mobile Safari) can cause the sampleRate to change from 44100 to 48000.
+      // By calling Howler.unload(), we create a new AudioContext with the correct sampleRate.
+      if (!self._mobileUnloaded && self.ctx.sampleRate !== 44100) {
+        self._mobileUnloaded = true;
+        self.unload();
+      }
+
+      // Scratch buffer for enabling iOS to dispose of web audio buffers correctly, as per:
+      // http://stackoverflow.com/questions/24119684
+      self._scratchBuffer = self.ctx.createBuffer(1, 1, 22050);
+
+      // Call this method on touch start to create and play a buffer,
+      // then check if the audio actually played to determine if
+      // audio has now been unlocked on iOS, Android, etc.
+      var unlock = function(e) {
+        // Create a pool of unlocked HTML5 Audio objects that can
+        // be used for playing sounds without user interaction. HTML5
+        // Audio objects must be individually unlocked, as opposed
+        // to the WebAudio API which only needs a single activation.
+        // This must occur before WebAudio setup or the source.onended
+        // event will not fire.
+        while (self._html5AudioPool.length < self.html5PoolSize) {
+          try {
+            var audioNode = new Audio();
+
+            // Mark this Audio object as unlocked to ensure it can get returned
+            // to the unlocked pool when released.
+            audioNode._unlocked = true;
+
+            // Add the audio node to the pool.
+            self._releaseHtml5Audio(audioNode);
+          } catch (e) {
+            self.noAudio = true;
+            break;
+          }
+        }
+
+        // Loop through any assigned audio nodes and unlock them.
+        for (var i=0; i<self._howls.length; i++) {
+          if (!self._howls[i]._webAudio) {
+            // Get all of the sounds in this Howl group.
+            var ids = self._howls[i]._getSoundIds();
+
+            // Loop through all sounds and unlock the audio nodes.
+            for (var j=0; j<ids.length; j++) {
+              var sound = self._howls[i]._soundById(ids[j]);
+
+              if (sound && sound._node && !sound._node._unlocked) {
+                sound._node._unlocked = true;
+                sound._node.load();
+              }
+            }
+          }
+        }
+
+        // Fix Android can not play in suspend state.
+        self._autoResume();
+
+        // Create an empty buffer.
+        var source = self.ctx.createBufferSource();
+        source.buffer = self._scratchBuffer;
+        source.connect(self.ctx.destination);
+
+        // Play the empty buffer.
+        if (typeof source.start === 'undefined') {
+          source.noteOn(0);
+        } else {
+          source.start(0);
+        }
+
+        // Calling resume() on a stack initiated by user gesture is what actually unlocks the audio on Android Chrome >= 55.
+        if (typeof self.ctx.resume === 'function') {
+          self.ctx.resume();
+        }
+
+        // Setup a timeout to check that we are unlocked on the next event loop.
+        source.onended = function() {
+          source.disconnect(0);
+
+          // Update the unlocked state and prevent this check from happening again.
+          self._audioUnlocked = true;
+
+          // Remove the touch start listener.
+          document.removeEventListener('touchstart', unlock, true);
+          document.removeEventListener('touchend', unlock, true);
+          document.removeEventListener('click', unlock, true);
+          document.removeEventListener('keydown', unlock, true);
+
+          // Let all sounds know that audio has been unlocked.
+          for (var i=0; i<self._howls.length; i++) {
+            self._howls[i]._emit('unlock');
+          }
+        };
+      };
+
+      // Setup a touch start listener to attempt an unlock in.
+      document.addEventListener('touchstart', unlock, true);
+      document.addEventListener('touchend', unlock, true);
+      document.addEventListener('click', unlock, true);
+      document.addEventListener('keydown', unlock, true);
+
+      return self;
+    },
+
+    /**
+     * Get an unlocked HTML5 Audio object from the pool. If none are left,
+     * return a new Audio object and throw a warning.
+     * @return {Audio} HTML5 Audio object.
+     */
+    _obtainHtml5Audio: function() {
+      var self = this || Howler;
+
+      // Return the next object from the pool if one exists.
+      if (self._html5AudioPool.length) {
+        return self._html5AudioPool.pop();
+      }
+
+      //.Check if the audio is locked and throw a warning.
+      var testPlay = new Audio().play();
+      if (testPlay && typeof Promise !== 'undefined' && (testPlay instanceof Promise || typeof testPlay.then === 'function')) {
+        testPlay.catch(function() {
+          console.warn('HTML5 Audio pool exhausted, returning potentially locked audio object.');
+        });
+      }
+
+      return new Audio();
+    },
+
+    /**
+     * Return an activated HTML5 Audio object to the pool.
+     * @return {Howler}
+     */
+    _releaseHtml5Audio: function(audio) {
+      var self = this || Howler;
+
+      // Don't add audio to the pool if we don't know if it has been unlocked.
+      if (audio._unlocked) {
+        self._html5AudioPool.push(audio);
+      }
+
+      return self;
+    },
+
+    /**
+     * Automatically suspend the Web Audio AudioContext after no sound has played for 30 seconds.
+     * This saves processing/energy and fixes various browser-specific bugs with audio getting stuck.
+     * @return {Howler}
+     */
+    _autoSuspend: function() {
+      var self = this;
+
+      if (!self.autoSuspend || !self.ctx || typeof self.ctx.suspend === 'undefined' || !Howler.usingWebAudio) {
+        return;
+      }
+
+      // Check if any sounds are playing.
+      for (var i=0; i<self._howls.length; i++) {
+        if (self._howls[i]._webAudio) {
+          for (var j=0; j<self._howls[i]._sounds.length; j++) {
+            if (!self._howls[i]._sounds[j]._paused) {
+              return self;
+            }
+          }
+        }
+      }
+
+      if (self._suspendTimer) {
+        clearTimeout(self._suspendTimer);
+      }
+
+      // If no sound has played after 30 seconds, suspend the context.
+      self._suspendTimer = setTimeout(function() {
+        if (!self.autoSuspend) {
+          return;
+        }
+
+        self._suspendTimer = null;
+        self.state = 'suspending';
+
+        // Handle updating the state of the audio context after suspending.
+        var handleSuspension = function() {
+          self.state = 'suspended';
+
+          if (self._resumeAfterSuspend) {
+            delete self._resumeAfterSuspend;
+            self._autoResume();
+          }
+        };
+
+        // Either the state gets suspended or it is interrupted.
+        // Either way, we need to update the state to suspended.
+        self.ctx.suspend().then(handleSuspension, handleSuspension);
+      }, 30000);
+
+      return self;
+    },
+
+    /**
+     * Automatically resume the Web Audio AudioContext when a new sound is played.
+     * @return {Howler}
+     */
+    _autoResume: function() {
+      var self = this;
+
+      if (!self.ctx || typeof self.ctx.resume === 'undefined' || !Howler.usingWebAudio) {
+        return;
+      }
+
+      if (self.state === 'running' && self.ctx.state !== 'interrupted' && self._suspendTimer) {
+        clearTimeout(self._suspendTimer);
+        self._suspendTimer = null;
+      } else if (self.state === 'suspended' || self.state === 'running' && self.ctx.state === 'interrupted') {
+        self.ctx.resume().then(function() {
+          self.state = 'running';
+
+          // Emit to all Howls that the audio has resumed.
+          for (var i=0; i<self._howls.length; i++) {
+            self._howls[i]._emit('resume');
+          }
+        });
+
+        if (self._suspendTimer) {
+          clearTimeout(self._suspendTimer);
+          self._suspendTimer = null;
+        }
+      } else if (self.state === 'suspending') {
+        self._resumeAfterSuspend = true;
+      }
+
+      return self;
+    }
+  };
+
+  // Setup the global audio controller.
+  var Howler = new HowlerGlobal();
+
+  /** Group Methods **/
+  /***************************************************************************/
+
+  /**
+   * Create an audio group controller.
+   * @param {Object} o Passed in properties for this group.
+   */
+  var Howl = function(o) {
+    var self = this;
+
+    // Throw an error if no source is provided.
+    if (!o.src || o.src.length === 0) {
+      console.error('An array of source files must be passed with any new Howl.');
+      return;
+    }
+
+    self.init(o);
+  };
+  Howl.prototype = {
+    /**
+     * Initialize a new Howl group object.
+     * @param  {Object} o Passed in properties for this group.
+     * @return {Howl}
+     */
+    init: function(o) {
+      var self = this;
+
+      // If we don't have an AudioContext created yet, run the setup.
+      if (!Howler.ctx) {
+        setupAudioContext();
+      }
+
+      // Setup user-defined default properties.
+      self._autoplay = o.autoplay || false;
+      self._format = (typeof o.format !== 'string') ? o.format : [o.format];
+      self._html5 = o.html5 || false;
+      self._muted = o.mute || false;
+      self._loop = o.loop || false;
+      self._pool = o.pool || 5;
+      self._preload = (typeof o.preload === 'boolean' || o.preload === 'metadata') ? o.preload : true;
+      self._rate = o.rate || 1;
+      self._sprite = o.sprite || {};
+      self._src = (typeof o.src !== 'string') ? o.src : [o.src];
+      self._volume = o.volume !== undefined ? o.volume : 1;
+      self._xhr = {
+        method: o.xhr && o.xhr.method ? o.xhr.method : 'GET',
+        headers: o.xhr && o.xhr.headers ? o.xhr.headers : null,
+        withCredentials: o.xhr && o.xhr.withCredentials ? o.xhr.withCredentials : false,
+      };
+
+      // Setup all other default properties.
+      self._duration = 0;
+      self._state = 'unloaded';
+      self._sounds = [];
+      self._endTimers = {};
+      self._queue = [];
+      self._playLock = false;
+
+      // Setup event listeners.
+      self._onend = o.onend ? [{fn: o.onend}] : [];
+      self._onfade = o.onfade ? [{fn: o.onfade}] : [];
+      self._onload = o.onload ? [{fn: o.onload}] : [];
+      self._onloaderror = o.onloaderror ? [{fn: o.onloaderror}] : [];
+      self._onplayerror = o.onplayerror ? [{fn: o.onplayerror}] : [];
+      self._onpause = o.onpause ? [{fn: o.onpause}] : [];
+      self._onplay = o.onplay ? [{fn: o.onplay}] : [];
+      self._onstop = o.onstop ? [{fn: o.onstop}] : [];
+      self._onmute = o.onmute ? [{fn: o.onmute}] : [];
+      self._onvolume = o.onvolume ? [{fn: o.onvolume}] : [];
+      self._onrate = o.onrate ? [{fn: o.onrate}] : [];
+      self._onseek = o.onseek ? [{fn: o.onseek}] : [];
+      self._onunlock = o.onunlock ? [{fn: o.onunlock}] : [];
+      self._onresume = [];
+
+      // Web Audio or HTML5 Audio?
+      self._webAudio = Howler.usingWebAudio && !self._html5;
+
+      // Automatically try to enable audio.
+      if (typeof Howler.ctx !== 'undefined' && Howler.ctx && Howler.autoUnlock) {
+        Howler._unlockAudio();
+      }
+
+      // Keep track of this Howl group in the global controller.
+      Howler._howls.push(self);
+
+      // If they selected autoplay, add a play event to the load queue.
+      if (self._autoplay) {
+        self._queue.push({
+          event: 'play',
+          action: function() {
+            self.play();
+          }
+        });
+      }
+
+      // Load the source file unless otherwise specified.
+      if (self._preload && self._preload !== 'none') {
+        self.load();
+      }
+
+      return self;
+    },
+
+    /**
+     * Load the audio file.
+     * @return {Howler}
+     */
+    load: function() {
+      var self = this;
+      var url = null;
+
+      // If no audio is available, quit immediately.
+      if (Howler.noAudio) {
+        self._emit('loaderror', null, 'No audio support.');
+        return;
+      }
+
+      // Make sure our source is in an array.
+      if (typeof self._src === 'string') {
+        self._src = [self._src];
+      }
+
+      // Loop through the sources and pick the first one that is compatible.
+      for (var i=0; i<self._src.length; i++) {
+        var ext, str;
+
+        if (self._format && self._format[i]) {
+          // If an extension was specified, use that instead.
+          ext = self._format[i];
+        } else {
+          // Make sure the source is a string.
+          str = self._src[i];
+          if (typeof str !== 'string') {
+            self._emit('loaderror', null, 'Non-string found in selected audio sources - ignoring.');
+            continue;
+          }
+
+          // Extract the file extension from the URL or base64 data URI.
+          ext = /^data:audio\/([^;,]+);/i.exec(str);
+          if (!ext) {
+            ext = /\.([^.]+)$/.exec(str.split('?', 1)[0]);
+          }
+
+          if (ext) {
+            ext = ext[1].toLowerCase();
+          }
+        }
+
+        // Log a warning if no extension was found.
+        if (!ext) {
+          console.warn('No file extension was found. Consider using the "format" property or specify an extension.');
+        }
+
+        // Check if this extension is available.
+        if (ext && Howler.codecs(ext)) {
+          url = self._src[i];
+          break;
+        }
+      }
+
+      if (!url) {
+        self._emit('loaderror', null, 'No codec support for selected audio sources.');
+        return;
+      }
+
+      self._src = url;
+      self._state = 'loading';
+
+      // If the hosting page is HTTPS and the source isn't,
+      // drop down to HTML5 Audio to avoid Mixed Content errors.
+      if (window.location.protocol === 'https:' && url.slice(0, 5) === 'http:') {
+        self._html5 = true;
+        self._webAudio = false;
+      }
+
+      // Create a new sound object and add it to the pool.
+      new Sound(self);
+
+      // Load and decode the audio data for playback.
+      if (self._webAudio) {
+        loadBuffer(self);
+      }
+
+      return self;
+    },
+
+    /**
+     * Play a sound or resume previous playback.
+     * @param  {String/Number} sprite   Sprite name for sprite playback or sound id to continue previous.
+     * @param  {Boolean} internal Internal Use: true prevents event firing.
+     * @return {Number}          Sound ID.
+     */
+    play: function(sprite, internal) {
+      var self = this;
+      var id = null;
+
+      // Determine if a sprite, sound id or nothing was passed
+      if (typeof sprite === 'number') {
+        id = sprite;
+        sprite = null;
+      } else if (typeof sprite === 'string' && self._state === 'loaded' && !self._sprite[sprite]) {
+        // If the passed sprite doesn't exist, do nothing.
+        return null;
+      } else if (typeof sprite === 'undefined') {
+        // Use the default sound sprite (plays the full audio length).
+        sprite = '__default';
+
+        // Check if there is a single paused sound that isn't ended.
+        // If there is, play that sound. If not, continue as usual.
+        if (!self._playLock) {
+          var num = 0;
+          for (var i=0; i<self._sounds.length; i++) {
+            if (self._sounds[i]._paused && !self._sounds[i]._ended) {
+              num++;
+              id = self._sounds[i]._id;
+            }
+          }
+
+          if (num === 1) {
+            sprite = null;
+          } else {
+            id = null;
+          }
+        }
+      }
+
+      // Get the selected node, or get one from the pool.
+      var sound = id ? self._soundById(id) : self._inactiveSound();
+
+      // If the sound doesn't exist, do nothing.
+      if (!sound) {
+        return null;
+      }
+
+      // Select the sprite definition.
+      if (id && !sprite) {
+        sprite = sound._sprite || '__default';
+      }
+
+      // If the sound hasn't loaded, we must wait to get the audio's duration.
+      // We also need to wait to make sure we don't run into race conditions with
+      // the order of function calls.
+      if (self._state !== 'loaded') {
+        // Set the sprite value on this sound.
+        sound._sprite = sprite;
+
+        // Mark this sound as not ended in case another sound is played before this one loads.
+        sound._ended = false;
+
+        // Add the sound to the queue to be played on load.
+        var soundId = sound._id;
+        self._queue.push({
+          event: 'play',
+          action: function() {
+            self.play(soundId);
+          }
+        });
+
+        return soundId;
+      }
+
+      // Don't play the sound if an id was passed and it is already playing.
+      if (id && !sound._paused) {
+        // Trigger the play event, in order to keep iterating through queue.
+        if (!internal) {
+          self._loadQueue('play');
+        }
+
+        return sound._id;
+      }
+
+      // Make sure the AudioContext isn't suspended, and resume it if it is.
+      if (self._webAudio) {
+        Howler._autoResume();
+      }
+
+      // Determine how long to play for and where to start playing.
+      var seek = Math.max(0, sound._seek > 0 ? sound._seek : self._sprite[sprite][0] / 1000);
+      var duration = Math.max(0, ((self._sprite[sprite][0] + self._sprite[sprite][1]) / 1000) - seek);
+      var timeout = (duration * 1000) / Math.abs(sound._rate);
+      var start = self._sprite[sprite][0] / 1000;
+      var stop = (self._sprite[sprite][0] + self._sprite[sprite][1]) / 1000;
+      sound._sprite = sprite;
+
+      // Mark the sound as ended instantly so that this async playback
+      // doesn't get grabbed by another call to play while this one waits to start.
+      sound._ended = false;
+
+      // Update the parameters of the sound.
+      var setParams = function() {
+        sound._paused = false;
+        sound._seek = seek;
+        sound._start = start;
+        sound._stop = stop;
+        sound._loop = !!(sound._loop || self._sprite[sprite][2]);
+      };
+
+      // End the sound instantly if seek is at the end.
+      if (seek >= stop) {
+        self._ended(sound);
+        return;
+      }
+
+      // Begin the actual playback.
+      var node = sound._node;
+      if (self._webAudio) {
+        // Fire this when the sound is ready to play to begin Web Audio playback.
+        var playWebAudio = function() {
+          self._playLock = false;
+          setParams();
+          self._refreshBuffer(sound);
+
+          // Setup the playback params.
+          var vol = (sound._muted || self._muted) ? 0 : sound._volume;
+          node.gain.setValueAtTime(vol, Howler.ctx.currentTime);
+          sound._playStart = Howler.ctx.currentTime;
+
+          // Play the sound using the supported method.
+          if (typeof node.bufferSource.start === 'undefined') {
+            sound._loop ? node.bufferSource.noteGrainOn(0, seek, 86400) : node.bufferSource.noteGrainOn(0, seek, duration);
+          } else {
+            sound._loop ? node.bufferSource.start(0, seek, 86400) : node.bufferSource.start(0, seek, duration);
+          }
+
+          // Start a new timer if none is present.
+          if (timeout !== Infinity) {
+            self._endTimers[sound._id] = setTimeout(self._ended.bind(self, sound), timeout);
+          }
+
+          if (!internal) {
+            setTimeout(function() {
+              self._emit('play', sound._id);
+              self._loadQueue();
+            }, 0);
+          }
+        };
+
+        if (Howler.state === 'running' && Howler.ctx.state !== 'interrupted') {
+          playWebAudio();
+        } else {
+          self._playLock = true;
+
+          // Wait for the audio context to resume before playing.
+          self.once('resume', playWebAudio);
+
+          // Cancel the end timer.
+          self._clearTimer(sound._id);
+        }
+      } else {
+        // Fire this when the sound is ready to play to begin HTML5 Audio playback.
+        var playHtml5 = function() {
+          node.currentTime = seek;
+          node.muted = sound._muted || self._muted || Howler._muted || node.muted;
+          node.volume = sound._volume * Howler.volume();
+          node.playbackRate = sound._rate;
+
+          // Some browsers will throw an error if this is called without user interaction.
+          try {
+            var play = node.play();
+
+            // Support older browsers that don't support promises, and thus don't have this issue.
+            if (play && typeof Promise !== 'undefined' && (play instanceof Promise || typeof play.then === 'function')) {
+              // Implements a lock to prevent DOMException: The play() request was interrupted by a call to pause().
+              self._playLock = true;
+
+              // Set param values immediately.
+              setParams();
+
+              // Releases the lock and executes queued actions.
+              play
+                .then(function() {
+                  self._playLock = false;
+                  node._unlocked = true;
+                  if (!internal) {
+                    self._emit('play', sound._id);
+                  } else {
+                    self._loadQueue();
+                  }
+                })
+                .catch(function() {
+                  self._playLock = false;
+                  self._emit('playerror', sound._id, 'Playback was unable to start. This is most commonly an issue ' +
+                    'on mobile devices and Chrome where playback was not within a user interaction.');
+
+                  // Reset the ended and paused values.
+                  sound._ended = true;
+                  sound._paused = true;
+                });
+            } else if (!internal) {
+              self._playLock = false;
+              setParams();
+              self._emit('play', sound._id);
+            }
+
+            // Setting rate before playing won't work in IE, so we set it again here.
+            node.playbackRate = sound._rate;
+
+            // If the node is still paused, then we can assume there was a playback issue.
+            if (node.paused) {
+              self._emit('playerror', sound._id, 'Playback was unable to start. This is most commonly an issue ' +
+                'on mobile devices and Chrome where playback was not within a user interaction.');
+              return;
+            }
+
+            // Setup the end timer on sprites or listen for the ended event.
+            if (sprite !== '__default' || sound._loop) {
+              self._endTimers[sound._id] = setTimeout(self._ended.bind(self, sound), timeout);
+            } else {
+              self._endTimers[sound._id] = function() {
+                // Fire ended on this audio node.
+                self._ended(sound);
+
+                // Clear this listener.
+                node.removeEventListener('ended', self._endTimers[sound._id], false);
+              };
+              node.addEventListener('ended', self._endTimers[sound._id], false);
+            }
+          } catch (err) {
+            self._emit('playerror', sound._id, err);
+          }
+        };
+
+        // If this is streaming audio, make sure the src is set and load again.
+        if (node.src === 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA') {
+          node.src = self._src;
+          node.load();
+        }
+
+        // Play immediately if ready, or wait for the 'canplaythrough'e vent.
+        var loadedNoReadyState = (window && window.ejecta) || (!node.readyState && Howler._navigator.isCocoonJS);
+        if (node.readyState >= 3 || loadedNoReadyState) {
+          playHtml5();
+        } else {
+          self._playLock = true;
+          self._state = 'loading';
+
+          var listener = function() {
+            self._state = 'loaded';
+            
+            // Begin playback.
+            playHtml5();
+
+            // Clear this listener.
+            node.removeEventListener(Howler._canPlayEvent, listener, false);
+          };
+          node.addEventListener(Howler._canPlayEvent, listener, false);
+
+          // Cancel the end timer.
+          self._clearTimer(sound._id);
+        }
+      }
+
+      return sound._id;
+    },
+
+    /**
+     * Pause playback and save current position.
+     * @param  {Number} id The sound ID (empty to pause all in group).
+     * @return {Howl}
+     */
+    pause: function(id) {
+      var self = this;
+
+      // If the sound hasn't loaded or a play() promise is pending, add it to the load queue to pause when capable.
+      if (self._state !== 'loaded' || self._playLock) {
+        self._queue.push({
+          event: 'pause',
+          action: function() {
+            self.pause(id);
+          }
+        });
+
+        return self;
+      }
+
+      // If no id is passed, get all ID's to be paused.
+      var ids = self._getSoundIds(id);
+
+      for (var i=0; i<ids.length; i++) {
+        // Clear the end timer.
+        self._clearTimer(ids[i]);
+
+        // Get the sound.
+        var sound = self._soundById(ids[i]);
+
+        if (sound && !sound._paused) {
+          // Reset the seek position.
+          sound._seek = self.seek(ids[i]);
+          sound._rateSeek = 0;
+          sound._paused = true;
+
+          // Stop currently running fades.
+          self._stopFade(ids[i]);
+
+          if (sound._node) {
+            if (self._webAudio) {
+              // Make sure the sound has been created.
+              if (!sound._node.bufferSource) {
+                continue;
+              }
+
+              if (typeof sound._node.bufferSource.stop === 'undefined') {
+                sound._node.bufferSource.noteOff(0);
+              } else {
+                sound._node.bufferSource.stop(0);
+              }
+
+              // Clean up the buffer source.
+              self._cleanBuffer(sound._node);
+            } else if (!isNaN(sound._node.duration) || sound._node.duration === Infinity) {
+              sound._node.pause();
+            }
+          }
+        }
+
+        // Fire the pause event, unless `true` is passed as the 2nd argument.
+        if (!arguments[1]) {
+          self._emit('pause', sound ? sound._id : null);
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Stop playback and reset to start.
+     * @param  {Number} id The sound ID (empty to stop all in group).
+     * @param  {Boolean} internal Internal Use: true prevents event firing.
+     * @return {Howl}
+     */
+    stop: function(id, internal) {
+      var self = this;
+
+      // If the sound hasn't loaded, add it to the load queue to stop when capable.
+      if (self._state !== 'loaded' || self._playLock) {
+        self._queue.push({
+          event: 'stop',
+          action: function() {
+            self.stop(id);
+          }
+        });
+
+        return self;
+      }
+
+      // If no id is passed, get all ID's to be stopped.
+      var ids = self._getSoundIds(id);
+
+      for (var i=0; i<ids.length; i++) {
+        // Clear the end timer.
+        self._clearTimer(ids[i]);
+
+        // Get the sound.
+        var sound = self._soundById(ids[i]);
+
+        if (sound) {
+          // Reset the seek position.
+          sound._seek = sound._start || 0;
+          sound._rateSeek = 0;
+          sound._paused = true;
+          sound._ended = true;
+
+          // Stop currently running fades.
+          self._stopFade(ids[i]);
+
+          if (sound._node) {
+            if (self._webAudio) {
+              // Make sure the sound's AudioBufferSourceNode has been created.
+              if (sound._node.bufferSource) {
+                if (typeof sound._node.bufferSource.stop === 'undefined') {
+                  sound._node.bufferSource.noteOff(0);
+                } else {
+                  sound._node.bufferSource.stop(0);
+                }
+
+                // Clean up the buffer source.
+                self._cleanBuffer(sound._node);
+              }
+            } else if (!isNaN(sound._node.duration) || sound._node.duration === Infinity) {
+              sound._node.currentTime = sound._start || 0;
+              sound._node.pause();
+
+              // If this is a live stream, stop download once the audio is stopped.
+              if (sound._node.duration === Infinity) {
+                self._clearSound(sound._node);
+              }
+            }
+          }
+
+          if (!internal) {
+            self._emit('stop', sound._id);
+          }
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Mute/unmute a single sound or all sounds in this Howl group.
+     * @param  {Boolean} muted Set to true to mute and false to unmute.
+     * @param  {Number} id    The sound ID to update (omit to mute/unmute all).
+     * @return {Howl}
+     */
+    mute: function(muted, id) {
+      var self = this;
+
+      // If the sound hasn't loaded, add it to the load queue to mute when capable.
+      if (self._state !== 'loaded'|| self._playLock) {
+        self._queue.push({
+          event: 'mute',
+          action: function() {
+            self.mute(muted, id);
+          }
+        });
+
+        return self;
+      }
+
+      // If applying mute/unmute to all sounds, update the group's value.
+      if (typeof id === 'undefined') {
+        if (typeof muted === 'boolean') {
+          self._muted = muted;
+        } else {
+          return self._muted;
+        }
+      }
+
+      // If no id is passed, get all ID's to be muted.
+      var ids = self._getSoundIds(id);
+
+      for (var i=0; i<ids.length; i++) {
+        // Get the sound.
+        var sound = self._soundById(ids[i]);
+
+        if (sound) {
+          sound._muted = muted;
+
+          // Cancel active fade and set the volume to the end value.
+          if (sound._interval) {
+            self._stopFade(sound._id);
+          }
+
+          if (self._webAudio && sound._node) {
+            sound._node.gain.setValueAtTime(muted ? 0 : sound._volume, Howler.ctx.currentTime);
+          } else if (sound._node) {
+            sound._node.muted = Howler._muted ? true : muted;
+          }
+
+          self._emit('mute', sound._id);
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Get/set the volume of this sound or of the Howl group. This method can optionally take 0, 1 or 2 arguments.
+     *   volume() -> Returns the group's volume value.
+     *   volume(id) -> Returns the sound id's current volume.
+     *   volume(vol) -> Sets the volume of all sounds in this Howl group.
+     *   volume(vol, id) -> Sets the volume of passed sound id.
+     * @return {Howl/Number} Returns self or current volume.
+     */
+    volume: function() {
+      var self = this;
+      var args = arguments;
+      var vol, id;
+
+      // Determine the values based on arguments.
+      if (args.length === 0) {
+        // Return the value of the groups' volume.
+        return self._volume;
+      } else if (args.length === 1 || args.length === 2 && typeof args[1] === 'undefined') {
+        // First check if this is an ID, and if not, assume it is a new volume.
+        var ids = self._getSoundIds();
+        var index = ids.indexOf(args[0]);
+        if (index >= 0) {
+          id = parseInt(args[0], 10);
+        } else {
+          vol = parseFloat(args[0]);
+        }
+      } else if (args.length >= 2) {
+        vol = parseFloat(args[0]);
+        id = parseInt(args[1], 10);
+      }
+
+      // Update the volume or return the current volume.
+      var sound;
+      if (typeof vol !== 'undefined' && vol >= 0 && vol <= 1) {
+        // If the sound hasn't loaded, add it to the load queue to change volume when capable.
+        if (self._state !== 'loaded'|| self._playLock) {
+          self._queue.push({
+            event: 'volume',
+            action: function() {
+              self.volume.apply(self, args);
+            }
+          });
+
+          return self;
+        }
+
+        // Set the group volume.
+        if (typeof id === 'undefined') {
+          self._volume = vol;
+        }
+
+        // Update one or all volumes.
+        id = self._getSoundIds(id);
+        for (var i=0; i<id.length; i++) {
+          // Get the sound.
+          sound = self._soundById(id[i]);
+
+          if (sound) {
+            sound._volume = vol;
+
+            // Stop currently running fades.
+            if (!args[2]) {
+              self._stopFade(id[i]);
+            }
+
+            if (self._webAudio && sound._node && !sound._muted) {
+              sound._node.gain.setValueAtTime(vol, Howler.ctx.currentTime);
+            } else if (sound._node && !sound._muted) {
+              sound._node.volume = vol * Howler.volume();
+            }
+
+            self._emit('volume', sound._id);
+          }
+        }
+      } else {
+        sound = id ? self._soundById(id) : self._sounds[0];
+        return sound ? sound._volume : 0;
+      }
+
+      return self;
+    },
+
+    /**
+     * Fade a currently playing sound between two volumes (if no id is passed, all sounds will fade).
+     * @param  {Number} from The value to fade from (0.0 to 1.0).
+     * @param  {Number} to   The volume to fade to (0.0 to 1.0).
+     * @param  {Number} len  Time in milliseconds to fade.
+     * @param  {Number} id   The sound id (omit to fade all sounds).
+     * @return {Howl}
+     */
+    fade: function(from, to, len, id) {
+      var self = this;
+
+      // If the sound hasn't loaded, add it to the load queue to fade when capable.
+      if (self._state !== 'loaded' || self._playLock) {
+        self._queue.push({
+          event: 'fade',
+          action: function() {
+            self.fade(from, to, len, id);
+          }
+        });
+
+        return self;
+      }
+
+      // Make sure the to/from/len values are numbers.
+      from = Math.min(Math.max(0, parseFloat(from)), 1);
+      to = Math.min(Math.max(0, parseFloat(to)), 1);
+      len = parseFloat(len);
+
+      // Set the volume to the start position.
+      self.volume(from, id);
+
+      // Fade the volume of one or all sounds.
+      var ids = self._getSoundIds(id);
+      for (var i=0; i<ids.length; i++) {
+        // Get the sound.
+        var sound = self._soundById(ids[i]);
+
+        // Create a linear fade or fall back to timeouts with HTML5 Audio.
+        if (sound) {
+          // Stop the previous fade if no sprite is being used (otherwise, volume handles this).
+          if (!id) {
+            self._stopFade(ids[i]);
+          }
+
+          // If we are using Web Audio, let the native methods do the actual fade.
+          if (self._webAudio && !sound._muted) {
+            var currentTime = Howler.ctx.currentTime;
+            var end = currentTime + (len / 1000);
+            sound._volume = from;
+            sound._node.gain.setValueAtTime(from, currentTime);
+            sound._node.gain.linearRampToValueAtTime(to, end);
+          }
+
+          self._startFadeInterval(sound, from, to, len, ids[i], typeof id === 'undefined');
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Starts the internal interval to fade a sound.
+     * @param  {Object} sound Reference to sound to fade.
+     * @param  {Number} from The value to fade from (0.0 to 1.0).
+     * @param  {Number} to   The volume to fade to (0.0 to 1.0).
+     * @param  {Number} len  Time in milliseconds to fade.
+     * @param  {Number} id   The sound id to fade.
+     * @param  {Boolean} isGroup   If true, set the volume on the group.
+     */
+    _startFadeInterval: function(sound, from, to, len, id, isGroup) {
+      var self = this;
+      var vol = from;
+      var diff = to - from;
+      var steps = Math.abs(diff / 0.01);
+      var stepLen = Math.max(4, (steps > 0) ? len / steps : len);
+      var lastTick = Date.now();
+
+      // Store the value being faded to.
+      sound._fadeTo = to;
+
+      // Update the volume value on each interval tick.
+      sound._interval = setInterval(function() {
+        // Update the volume based on the time since the last tick.
+        var tick = (Date.now() - lastTick) / len;
+        lastTick = Date.now();
+        vol += diff * tick;
+
+        // Round to within 2 decimal points.
+        vol = Math.round(vol * 100) / 100;
+
+        // Make sure the volume is in the right bounds.
+        if (diff < 0) {
+          vol = Math.max(to, vol);
+        } else {
+          vol = Math.min(to, vol);
+        }
+
+        // Change the volume.
+        if (self._webAudio) {
+          sound._volume = vol;
+        } else {
+          self.volume(vol, sound._id, true);
+        }
+
+        // Set the group's volume.
+        if (isGroup) {
+          self._volume = vol;
+        }
+
+        // When the fade is complete, stop it and fire event.
+        if ((to < from && vol <= to) || (to > from && vol >= to)) {
+          clearInterval(sound._interval);
+          sound._interval = null;
+          sound._fadeTo = null;
+          self.volume(to, sound._id);
+          self._emit('fade', sound._id);
+        }
+      }, stepLen);
+    },
+
+    /**
+     * Internal method that stops the currently playing fade when
+     * a new fade starts, volume is changed or the sound is stopped.
+     * @param  {Number} id The sound id.
+     * @return {Howl}
+     */
+    _stopFade: function(id) {
+      var self = this;
+      var sound = self._soundById(id);
+
+      if (sound && sound._interval) {
+        if (self._webAudio) {
+          sound._node.gain.cancelScheduledValues(Howler.ctx.currentTime);
+        }
+
+        clearInterval(sound._interval);
+        sound._interval = null;
+        self.volume(sound._fadeTo, id);
+        sound._fadeTo = null;
+        self._emit('fade', id);
+      }
+
+      return self;
+    },
+
+    /**
+     * Get/set the loop parameter on a sound. This method can optionally take 0, 1 or 2 arguments.
+     *   loop() -> Returns the group's loop value.
+     *   loop(id) -> Returns the sound id's loop value.
+     *   loop(loop) -> Sets the loop value for all sounds in this Howl group.
+     *   loop(loop, id) -> Sets the loop value of passed sound id.
+     * @return {Howl/Boolean} Returns self or current loop value.
+     */
+    loop: function() {
+      var self = this;
+      var args = arguments;
+      var loop, id, sound;
+
+      // Determine the values for loop and id.
+      if (args.length === 0) {
+        // Return the grou's loop value.
+        return self._loop;
+      } else if (args.length === 1) {
+        if (typeof args[0] === 'boolean') {
+          loop = args[0];
+          self._loop = loop;
+        } else {
+          // Return this sound's loop value.
+          sound = self._soundById(parseInt(args[0], 10));
+          return sound ? sound._loop : false;
+        }
+      } else if (args.length === 2) {
+        loop = args[0];
+        id = parseInt(args[1], 10);
+      }
+
+      // If no id is passed, get all ID's to be looped.
+      var ids = self._getSoundIds(id);
+      for (var i=0; i<ids.length; i++) {
+        sound = self._soundById(ids[i]);
+
+        if (sound) {
+          sound._loop = loop;
+          if (self._webAudio && sound._node && sound._node.bufferSource) {
+            sound._node.bufferSource.loop = loop;
+            if (loop) {
+              sound._node.bufferSource.loopStart = sound._start || 0;
+              sound._node.bufferSource.loopEnd = sound._stop;
+
+              // If playing, restart playback to ensure looping updates.
+              if (self.playing(ids[i])) {
+                self.pause(ids[i], true);
+                self.play(ids[i], true);
+              }
+            }
+          }
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Get/set the playback rate of a sound. This method can optionally take 0, 1 or 2 arguments.
+     *   rate() -> Returns the first sound node's current playback rate.
+     *   rate(id) -> Returns the sound id's current playback rate.
+     *   rate(rate) -> Sets the playback rate of all sounds in this Howl group.
+     *   rate(rate, id) -> Sets the playback rate of passed sound id.
+     * @return {Howl/Number} Returns self or the current playback rate.
+     */
+    rate: function() {
+      var self = this;
+      var args = arguments;
+      var rate, id;
+
+      // Determine the values based on arguments.
+      if (args.length === 0) {
+        // We will simply return the current rate of the first node.
+        id = self._sounds[0]._id;
+      } else if (args.length === 1) {
+        // First check if this is an ID, and if not, assume it is a new rate value.
+        var ids = self._getSoundIds();
+        var index = ids.indexOf(args[0]);
+        if (index >= 0) {
+          id = parseInt(args[0], 10);
+        } else {
+          rate = parseFloat(args[0]);
+        }
+      } else if (args.length === 2) {
+        rate = parseFloat(args[0]);
+        id = parseInt(args[1], 10);
+      }
+
+      // Update the playback rate or return the current value.
+      var sound;
+      if (typeof rate === 'number') {
+        // If the sound hasn't loaded, add it to the load queue to change playback rate when capable.
+        if (self._state !== 'loaded' || self._playLock) {
+          self._queue.push({
+            event: 'rate',
+            action: function() {
+              self.rate.apply(self, args);
+            }
+          });
+
+          return self;
+        }
+
+        // Set the group rate.
+        if (typeof id === 'undefined') {
+          self._rate = rate;
+        }
+
+        // Update one or all volumes.
+        id = self._getSoundIds(id);
+        for (var i=0; i<id.length; i++) {
+          // Get the sound.
+          sound = self._soundById(id[i]);
+
+          if (sound) {
+            // Keep track of our position when the rate changed and update the playback
+            // start position so we can properly adjust the seek position for time elapsed.
+            if (self.playing(id[i])) {
+              sound._rateSeek = self.seek(id[i]);
+              sound._playStart = self._webAudio ? Howler.ctx.currentTime : sound._playStart;
+            }
+            sound._rate = rate;
+
+            // Change the playback rate.
+            if (self._webAudio && sound._node && sound._node.bufferSource) {
+              sound._node.bufferSource.playbackRate.setValueAtTime(rate, Howler.ctx.currentTime);
+            } else if (sound._node) {
+              sound._node.playbackRate = rate;
+            }
+
+            // Reset the timers.
+            var seek = self.seek(id[i]);
+            var duration = ((self._sprite[sound._sprite][0] + self._sprite[sound._sprite][1]) / 1000) - seek;
+            var timeout = (duration * 1000) / Math.abs(sound._rate);
+
+            // Start a new end timer if sound is already playing.
+            if (self._endTimers[id[i]] || !sound._paused) {
+              self._clearTimer(id[i]);
+              self._endTimers[id[i]] = setTimeout(self._ended.bind(self, sound), timeout);
+            }
+
+            self._emit('rate', sound._id);
+          }
+        }
+      } else {
+        sound = self._soundById(id);
+        return sound ? sound._rate : self._rate;
+      }
+
+      return self;
+    },
+
+    /**
+     * Get/set the seek position of a sound. This method can optionally take 0, 1 or 2 arguments.
+     *   seek() -> Returns the first sound node's current seek position.
+     *   seek(id) -> Returns the sound id's current seek position.
+     *   seek(seek) -> Sets the seek position of the first sound node.
+     *   seek(seek, id) -> Sets the seek position of passed sound id.
+     * @return {Howl/Number} Returns self or the current seek position.
+     */
+    seek: function() {
+      var self = this;
+      var args = arguments;
+      var seek, id;
+
+      // Determine the values based on arguments.
+      if (args.length === 0) {
+        // We will simply return the current position of the first node.
+        if (self._sounds.length) {
+          id = self._sounds[0]._id;
+        }
+      } else if (args.length === 1) {
+        // First check if this is an ID, and if not, assume it is a new seek position.
+        var ids = self._getSoundIds();
+        var index = ids.indexOf(args[0]);
+        if (index >= 0) {
+          id = parseInt(args[0], 10);
+        } else if (self._sounds.length) {
+          id = self._sounds[0]._id;
+          seek = parseFloat(args[0]);
+        }
+      } else if (args.length === 2) {
+        seek = parseFloat(args[0]);
+        id = parseInt(args[1], 10);
+      }
+
+      // If there is no ID, bail out.
+      if (typeof id === 'undefined') {
+        return 0;
+      }
+
+      // If the sound hasn't loaded, add it to the load queue to seek when capable.
+      if (typeof seek === 'number' && (self._state !== 'loaded' || self._playLock)) {
+        self._queue.push({
+          event: 'seek',
+          action: function() {
+            self.seek.apply(self, args);
+          }
+        });
+
+        return self;
+      }
+
+      // Get the sound.
+      var sound = self._soundById(id);
+
+      if (sound) {
+        if (typeof seek === 'number' && seek >= 0) {
+          // Pause the sound and update position for restarting playback.
+          var playing = self.playing(id);
+          if (playing) {
+            self.pause(id, true);
+          }
+
+          // Move the position of the track and cancel timer.
+          sound._seek = seek;
+          sound._ended = false;
+          self._clearTimer(id);
+
+          // Update the seek position for HTML5 Audio.
+          if (!self._webAudio && sound._node && !isNaN(sound._node.duration)) {
+            sound._node.currentTime = seek;
+          }
+
+          // Seek and emit when ready.
+          var seekAndEmit = function() {
+            // Restart the playback if the sound was playing.
+            if (playing) {
+              self.play(id, true);
+            }
+
+            self._emit('seek', id);
+          };
+
+          // Wait for the play lock to be unset before emitting (HTML5 Audio).
+          if (playing && !self._webAudio) {
+            var emitSeek = function() {
+              if (!self._playLock) {
+                seekAndEmit();
+              } else {
+                setTimeout(emitSeek, 0);
+              }
+            };
+            setTimeout(emitSeek, 0);
+          } else {
+            seekAndEmit();
+          }
+        } else {
+          if (self._webAudio) {
+            var realTime = self.playing(id) ? Howler.ctx.currentTime - sound._playStart : 0;
+            var rateSeek = sound._rateSeek ? sound._rateSeek - sound._seek : 0;
+            return sound._seek + (rateSeek + realTime * Math.abs(sound._rate));
+          } else {
+            return sound._node.currentTime;
+          }
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Check if a specific sound is currently playing or not (if id is provided), or check if at least one of the sounds in the group is playing or not.
+     * @param  {Number}  id The sound id to check. If none is passed, the whole sound group is checked.
+     * @return {Boolean} True if playing and false if not.
+     */
+    playing: function(id) {
+      var self = this;
+
+      // Check the passed sound ID (if any).
+      if (typeof id === 'number') {
+        var sound = self._soundById(id);
+        return sound ? !sound._paused : false;
+      }
+
+      // Otherwise, loop through all sounds and check if any are playing.
+      for (var i=0; i<self._sounds.length; i++) {
+        if (!self._sounds[i]._paused) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    /**
+     * Get the duration of this sound. Passing a sound id will return the sprite duration.
+     * @param  {Number} id The sound id to check. If none is passed, return full source duration.
+     * @return {Number} Audio duration in seconds.
+     */
+    duration: function(id) {
+      var self = this;
+      var duration = self._duration;
+
+      // If we pass an ID, get the sound and return the sprite length.
+      var sound = self._soundById(id);
+      if (sound) {
+        duration = self._sprite[sound._sprite][1] / 1000;
+      }
+
+      return duration;
+    },
+
+    /**
+     * Returns the current loaded state of this Howl.
+     * @return {String} 'unloaded', 'loading', 'loaded'
+     */
+    state: function() {
+      return this._state;
+    },
+
+    /**
+     * Unload and destroy the current Howl object.
+     * This will immediately stop all sound instances attached to this group.
+     */
+    unload: function() {
+      var self = this;
+
+      // Stop playing any active sounds.
+      var sounds = self._sounds;
+      for (var i=0; i<sounds.length; i++) {
+        // Stop the sound if it is currently playing.
+        if (!sounds[i]._paused) {
+          self.stop(sounds[i]._id);
+        }
+
+        // Remove the source or disconnect.
+        if (!self._webAudio) {
+          // Set the source to 0-second silence to stop any downloading (except in IE).
+          self._clearSound(sounds[i]._node);
+
+          // Remove any event listeners.
+          sounds[i]._node.removeEventListener('error', sounds[i]._errorFn, false);
+          sounds[i]._node.removeEventListener(Howler._canPlayEvent, sounds[i]._loadFn, false);
+          sounds[i]._node.removeEventListener('ended', sounds[i]._endFn, false);
+
+          // Release the Audio object back to the pool.
+          Howler._releaseHtml5Audio(sounds[i]._node);
+        }
+
+        // Empty out all of the nodes.
+        delete sounds[i]._node;
+
+        // Make sure all timers are cleared out.
+        self._clearTimer(sounds[i]._id);
+      }
+
+      // Remove the references in the global Howler object.
+      var index = Howler._howls.indexOf(self);
+      if (index >= 0) {
+        Howler._howls.splice(index, 1);
+      }
+
+      // Delete this sound from the cache (if no other Howl is using it).
+      var remCache = true;
+      for (i=0; i<Howler._howls.length; i++) {
+        if (Howler._howls[i]._src === self._src || self._src.indexOf(Howler._howls[i]._src) >= 0) {
+          remCache = false;
+          break;
+        }
+      }
+
+      if (cache && remCache) {
+        delete cache[self._src];
+      }
+
+      // Clear global errors.
+      Howler.noAudio = false;
+
+      // Clear out `self`.
+      self._state = 'unloaded';
+      self._sounds = [];
+      self = null;
+
+      return null;
+    },
+
+    /**
+     * Listen to a custom event.
+     * @param  {String}   event Event name.
+     * @param  {Function} fn    Listener to call.
+     * @param  {Number}   id    (optional) Only listen to events for this sound.
+     * @param  {Number}   once  (INTERNAL) Marks event to fire only once.
+     * @return {Howl}
+     */
+    on: function(event, fn, id, once) {
+      var self = this;
+      var events = self['_on' + event];
+
+      if (typeof fn === 'function') {
+        events.push(once ? {id: id, fn: fn, once: once} : {id: id, fn: fn});
+      }
+
+      return self;
+    },
+
+    /**
+     * Remove a custom event. Call without parameters to remove all events.
+     * @param  {String}   event Event name.
+     * @param  {Function} fn    Listener to remove. Leave empty to remove all.
+     * @param  {Number}   id    (optional) Only remove events for this sound.
+     * @return {Howl}
+     */
+    off: function(event, fn, id) {
+      var self = this;
+      var events = self['_on' + event];
+      var i = 0;
+
+      // Allow passing just an event and ID.
+      if (typeof fn === 'number') {
+        id = fn;
+        fn = null;
+      }
+
+      if (fn || id) {
+        // Loop through event store and remove the passed function.
+        for (i=0; i<events.length; i++) {
+          var isId = (id === events[i].id);
+          if (fn === events[i].fn && isId || !fn && isId) {
+            events.splice(i, 1);
+            break;
+          }
+        }
+      } else if (event) {
+        // Clear out all events of this type.
+        self['_on' + event] = [];
+      } else {
+        // Clear out all events of every type.
+        var keys = Object.keys(self);
+        for (i=0; i<keys.length; i++) {
+          if ((keys[i].indexOf('_on') === 0) && Array.isArray(self[keys[i]])) {
+            self[keys[i]] = [];
+          }
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Listen to a custom event and remove it once fired.
+     * @param  {String}   event Event name.
+     * @param  {Function} fn    Listener to call.
+     * @param  {Number}   id    (optional) Only listen to events for this sound.
+     * @return {Howl}
+     */
+    once: function(event, fn, id) {
+      var self = this;
+
+      // Setup the event listener.
+      self.on(event, fn, id, 1);
+
+      return self;
+    },
+
+    /**
+     * Emit all events of a specific type and pass the sound id.
+     * @param  {String} event Event name.
+     * @param  {Number} id    Sound ID.
+     * @param  {Number} msg   Message to go with event.
+     * @return {Howl}
+     */
+    _emit: function(event, id, msg) {
+      var self = this;
+      var events = self['_on' + event];
+
+      // Loop through event store and fire all functions.
+      for (var i=events.length-1; i>=0; i--) {
+        // Only fire the listener if the correct ID is used.
+        if (!events[i].id || events[i].id === id || event === 'load') {
+          setTimeout(function(fn) {
+            fn.call(this, id, msg);
+          }.bind(self, events[i].fn), 0);
+
+          // If this event was setup with `once`, remove it.
+          if (events[i].once) {
+            self.off(event, events[i].fn, events[i].id);
+          }
+        }
+      }
+
+      // Pass the event type into load queue so that it can continue stepping.
+      self._loadQueue(event);
+
+      return self;
+    },
+
+    /**
+     * Queue of actions initiated before the sound has loaded.
+     * These will be called in sequence, with the next only firing
+     * after the previous has finished executing (even if async like play).
+     * @return {Howl}
+     */
+    _loadQueue: function(event) {
+      var self = this;
+
+      if (self._queue.length > 0) {
+        var task = self._queue[0];
+
+        // Remove this task if a matching event was passed.
+        if (task.event === event) {
+          self._queue.shift();
+          self._loadQueue();
+        }
+
+        // Run the task if no event type is passed.
+        if (!event) {
+          task.action();
+        }
+      }
+
+      return self;
+    },
+
+    /**
+     * Fired when playback ends at the end of the duration.
+     * @param  {Sound} sound The sound object to work with.
+     * @return {Howl}
+     */
+    _ended: function(sound) {
+      var self = this;
+      var sprite = sound._sprite;
+
+      // If we are using IE and there was network latency we may be clipping
+      // audio before it completes playing. Lets check the node to make sure it
+      // believes it has completed, before ending the playback.
+      if (!self._webAudio && sound._node && !sound._node.paused && !sound._node.ended && sound._node.currentTime < sound._stop) {
+        setTimeout(self._ended.bind(self, sound), 100);
+        return self;
+      }
+
+      // Should this sound loop?
+      var loop = !!(sound._loop || self._sprite[sprite][2]);
+
+      // Fire the ended event.
+      self._emit('end', sound._id);
+
+      // Restart the playback for HTML5 Audio loop.
+      if (!self._webAudio && loop) {
+        self.stop(sound._id, true).play(sound._id);
+      }
+
+      // Restart this timer if on a Web Audio loop.
+      if (self._webAudio && loop) {
+        self._emit('play', sound._id);
+        sound._seek = sound._start || 0;
+        sound._rateSeek = 0;
+        sound._playStart = Howler.ctx.currentTime;
+
+        var timeout = ((sound._stop - sound._start) * 1000) / Math.abs(sound._rate);
+        self._endTimers[sound._id] = setTimeout(self._ended.bind(self, sound), timeout);
+      }
+
+      // Mark the node as paused.
+      if (self._webAudio && !loop) {
+        sound._paused = true;
+        sound._ended = true;
+        sound._seek = sound._start || 0;
+        sound._rateSeek = 0;
+        self._clearTimer(sound._id);
+
+        // Clean up the buffer source.
+        self._cleanBuffer(sound._node);
+
+        // Attempt to auto-suspend AudioContext if no sounds are still playing.
+        Howler._autoSuspend();
+      }
+
+      // When using a sprite, end the track.
+      if (!self._webAudio && !loop) {
+        self.stop(sound._id, true);
+      }
+
+      return self;
+    },
+
+    /**
+     * Clear the end timer for a sound playback.
+     * @param  {Number} id The sound ID.
+     * @return {Howl}
+     */
+    _clearTimer: function(id) {
+      var self = this;
+
+      if (self._endTimers[id]) {
+        // Clear the timeout or remove the ended listener.
+        if (typeof self._endTimers[id] !== 'function') {
+          clearTimeout(self._endTimers[id]);
+        } else {
+          var sound = self._soundById(id);
+          if (sound && sound._node) {
+            sound._node.removeEventListener('ended', self._endTimers[id], false);
+          }
+        }
+
+        delete self._endTimers[id];
+      }
+
+      return self;
+    },
+
+    /**
+     * Return the sound identified by this ID, or return null.
+     * @param  {Number} id Sound ID
+     * @return {Object}    Sound object or null.
+     */
+    _soundById: function(id) {
+      var self = this;
+
+      // Loop through all sounds and find the one with this ID.
+      for (var i=0; i<self._sounds.length; i++) {
+        if (id === self._sounds[i]._id) {
+          return self._sounds[i];
+        }
+      }
+
+      return null;
+    },
+
+    /**
+     * Return an inactive sound from the pool or create a new one.
+     * @return {Sound} Sound playback object.
+     */
+    _inactiveSound: function() {
+      var self = this;
+
+      self._drain();
+
+      // Find the first inactive node to recycle.
+      for (var i=0; i<self._sounds.length; i++) {
+        if (self._sounds[i]._ended) {
+          return self._sounds[i].reset();
+        }
+      }
+
+      // If no inactive node was found, create a new one.
+      return new Sound(self);
+    },
+
+    /**
+     * Drain excess inactive sounds from the pool.
+     */
+    _drain: function() {
+      var self = this;
+      var limit = self._pool;
+      var cnt = 0;
+      var i = 0;
+
+      // If there are less sounds than the max pool size, we are done.
+      if (self._sounds.length < limit) {
+        return;
+      }
+
+      // Count the number of inactive sounds.
+      for (i=0; i<self._sounds.length; i++) {
+        if (self._sounds[i]._ended) {
+          cnt++;
+        }
+      }
+
+      // Remove excess inactive sounds, going in reverse order.
+      for (i=self._sounds.length - 1; i>=0; i--) {
+        if (cnt <= limit) {
+          return;
+        }
+
+        if (self._sounds[i]._ended) {
+          // Disconnect the audio source when using Web Audio.
+          if (self._webAudio && self._sounds[i]._node) {
+            self._sounds[i]._node.disconnect(0);
+          }
+
+          // Remove sounds until we have the pool size.
+          self._sounds.splice(i, 1);
+          cnt--;
+        }
+      }
+    },
+
+    /**
+     * Get all ID's from the sounds pool.
+     * @param  {Number} id Only return one ID if one is passed.
+     * @return {Array}    Array of IDs.
+     */
+    _getSoundIds: function(id) {
+      var self = this;
+
+      if (typeof id === 'undefined') {
+        var ids = [];
+        for (var i=0; i<self._sounds.length; i++) {
+          ids.push(self._sounds[i]._id);
+        }
+
+        return ids;
+      } else {
+        return [id];
+      }
+    },
+
+    /**
+     * Load the sound back into the buffer source.
+     * @param  {Sound} sound The sound object to work with.
+     * @return {Howl}
+     */
+    _refreshBuffer: function(sound) {
+      var self = this;
+
+      // Setup the buffer source for playback.
+      sound._node.bufferSource = Howler.ctx.createBufferSource();
+      sound._node.bufferSource.buffer = cache[self._src];
+
+      // Connect to the correct node.
+      if (sound._panner) {
+        sound._node.bufferSource.connect(sound._panner);
+      } else {
+        sound._node.bufferSource.connect(sound._node);
+      }
+
+      // Setup looping and playback rate.
+      sound._node.bufferSource.loop = sound._loop;
+      if (sound._loop) {
+        sound._node.bufferSource.loopStart = sound._start || 0;
+        sound._node.bufferSource.loopEnd = sound._stop || 0;
+      }
+      sound._node.bufferSource.playbackRate.setValueAtTime(sound._rate, Howler.ctx.currentTime);
+
+      return self;
+    },
+
+    /**
+     * Prevent memory leaks by cleaning up the buffer source after playback.
+     * @param  {Object} node Sound's audio node containing the buffer source.
+     * @return {Howl}
+     */
+    _cleanBuffer: function(node) {
+      var self = this;
+      var isIOS = Howler._navigator && Howler._navigator.vendor.indexOf('Apple') >= 0;
+
+      if (Howler._scratchBuffer && node.bufferSource) {
+        node.bufferSource.onended = null;
+        node.bufferSource.disconnect(0);
+        if (isIOS) {
+          try { node.bufferSource.buffer = Howler._scratchBuffer; } catch(e) {}
+        }
+      }
+      node.bufferSource = null;
+
+      return self;
+    },
+
+    /**
+     * Set the source to a 0-second silence to stop any downloading (except in IE).
+     * @param  {Object} node Audio node to clear.
+     */
+    _clearSound: function(node) {
+      var checkIE = /MSIE |Trident\//.test(Howler._navigator && Howler._navigator.userAgent);
+      if (!checkIE) {
+        node.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+      }
+    }
+  };
+
+  /** Single Sound Methods **/
+  /***************************************************************************/
+
+  /**
+   * Setup the sound object, which each node attached to a Howl group is contained in.
+   * @param {Object} howl The Howl parent group.
+   */
+  var Sound = function(howl) {
+    this._parent = howl;
+    this.init();
+  };
+  Sound.prototype = {
+    /**
+     * Initialize a new Sound object.
+     * @return {Sound}
+     */
+    init: function() {
+      var self = this;
+      var parent = self._parent;
+
+      // Setup the default parameters.
+      self._muted = parent._muted;
+      self._loop = parent._loop;
+      self._volume = parent._volume;
+      self._rate = parent._rate;
+      self._seek = 0;
+      self._paused = true;
+      self._ended = true;
+      self._sprite = '__default';
+
+      // Generate a unique ID for this sound.
+      self._id = ++Howler._counter;
+
+      // Add itself to the parent's pool.
+      parent._sounds.push(self);
+
+      // Create the new node.
+      self.create();
+
+      return self;
+    },
+
+    /**
+     * Create and setup a new sound object, whether HTML5 Audio or Web Audio.
+     * @return {Sound}
+     */
+    create: function() {
+      var self = this;
+      var parent = self._parent;
+      var volume = (Howler._muted || self._muted || self._parent._muted) ? 0 : self._volume;
+
+      if (parent._webAudio) {
+        // Create the gain node for controlling volume (the source will connect to this).
+        self._node = (typeof Howler.ctx.createGain === 'undefined') ? Howler.ctx.createGainNode() : Howler.ctx.createGain();
+        self._node.gain.setValueAtTime(volume, Howler.ctx.currentTime);
+        self._node.paused = true;
+        self._node.connect(Howler.masterGain);
+      } else if (!Howler.noAudio) {
+        // Get an unlocked Audio object from the pool.
+        self._node = Howler._obtainHtml5Audio();
+
+        // Listen for errors (http://dev.w3.org/html5/spec-author-view/spec.html#mediaerror).
+        self._errorFn = self._errorListener.bind(self);
+        self._node.addEventListener('error', self._errorFn, false);
+
+        // Listen for 'canplaythrough' event to let us know the sound is ready.
+        self._loadFn = self._loadListener.bind(self);
+        self._node.addEventListener(Howler._canPlayEvent, self._loadFn, false);
+
+        // Listen for the 'ended' event on the sound to account for edge-case where
+        // a finite sound has a duration of Infinity.
+        self._endFn = self._endListener.bind(self);
+        self._node.addEventListener('ended', self._endFn, false);
+
+        // Setup the new audio node.
+        self._node.src = parent._src;
+        self._node.preload = parent._preload === true ? 'auto' : parent._preload;
+        self._node.volume = volume * Howler.volume();
+
+        // Begin loading the source.
+        self._node.load();
+      }
+
+      return self;
+    },
+
+    /**
+     * Reset the parameters of this sound to the original state (for recycle).
+     * @return {Sound}
+     */
+    reset: function() {
+      var self = this;
+      var parent = self._parent;
+
+      // Reset all of the parameters of this sound.
+      self._muted = parent._muted;
+      self._loop = parent._loop;
+      self._volume = parent._volume;
+      self._rate = parent._rate;
+      self._seek = 0;
+      self._rateSeek = 0;
+      self._paused = true;
+      self._ended = true;
+      self._sprite = '__default';
+
+      // Generate a new ID so that it isn't confused with the previous sound.
+      self._id = ++Howler._counter;
+
+      return self;
+    },
+
+    /**
+     * HTML5 Audio error listener callback.
+     */
+    _errorListener: function() {
+      var self = this;
+
+      // Fire an error event and pass back the code.
+      self._parent._emit('loaderror', self._id, self._node.error ? self._node.error.code : 0);
+
+      // Clear the event listener.
+      self._node.removeEventListener('error', self._errorFn, false);
+    },
+
+    /**
+     * HTML5 Audio canplaythrough listener callback.
+     */
+    _loadListener: function() {
+      var self = this;
+      var parent = self._parent;
+
+      // Round up the duration to account for the lower precision in HTML5 Audio.
+      parent._duration = Math.ceil(self._node.duration * 10) / 10;
+
+      // Setup a sprite if none is defined.
+      if (Object.keys(parent._sprite).length === 0) {
+        parent._sprite = {__default: [0, parent._duration * 1000]};
+      }
+
+      if (parent._state !== 'loaded') {
+        parent._state = 'loaded';
+        parent._emit('load');
+        parent._loadQueue();
+      }
+
+      // Clear the event listener.
+      self._node.removeEventListener(Howler._canPlayEvent, self._loadFn, false);
+    },
+
+    /**
+     * HTML5 Audio ended listener callback.
+     */
+    _endListener: function() {
+      var self = this;
+      var parent = self._parent;
+
+      // Only handle the `ended`` event if the duration is Infinity.
+      if (parent._duration === Infinity) {
+        // Update the parent duration to match the real audio duration.
+        // Round up the duration to account for the lower precision in HTML5 Audio.
+        parent._duration = Math.ceil(self._node.duration * 10) / 10;
+
+        // Update the sprite that corresponds to the real duration.
+        if (parent._sprite.__default[1] === Infinity) {
+          parent._sprite.__default[1] = parent._duration * 1000;
+        }
+
+        // Run the regular ended method.
+        parent._ended(self);
+      }
+
+      // Clear the event listener since the duration is now correct.
+      self._node.removeEventListener('ended', self._endFn, false);
+    }
+  };
+
+  /** Helper Methods **/
+  /***************************************************************************/
+
+  var cache = {};
+
+  /**
+   * Buffer a sound from URL, Data URI or cache and decode to audio source (Web Audio API).
+   * @param  {Howl} self
+   */
+  var loadBuffer = function(self) {
+    var url = self._src;
+
+    // Check if the buffer has already been cached and use it instead.
+    if (cache[url]) {
+      // Set the duration from the cache.
+      self._duration = cache[url].duration;
+
+      // Load the sound into this Howl.
+      loadSound(self);
+
+      return;
+    }
+
+    if (/^data:[^;]+;base64,/.test(url)) {
+      // Decode the base64 data URI without XHR, since some browsers don't support it.
+      var data = atob(url.split(',')[1]);
+      var dataView = new Uint8Array(data.length);
+      for (var i=0; i<data.length; ++i) {
+        dataView[i] = data.charCodeAt(i);
+      }
+
+      decodeAudioData(dataView.buffer, self);
+    } else {
+      // Load the buffer from the URL.
+      var xhr = new XMLHttpRequest();
+      xhr.open(self._xhr.method, url, true);
+      xhr.withCredentials = self._xhr.withCredentials;
+      xhr.responseType = 'arraybuffer';
+
+      // Apply any custom headers to the request.
+      if (self._xhr.headers) {
+        Object.keys(self._xhr.headers).forEach(function(key) {
+          xhr.setRequestHeader(key, self._xhr.headers[key]);
+        });
+      }
+
+      xhr.onload = function() {
+        // Make sure we get a successful response back.
+        var code = (xhr.status + '')[0];
+        if (code !== '0' && code !== '2' && code !== '3') {
+          self._emit('loaderror', null, 'Failed loading audio file with status: ' + xhr.status + '.');
+          return;
+        }
+
+        decodeAudioData(xhr.response, self);
+      };
+      xhr.onerror = function() {
+        // If there is an error, switch to HTML5 Audio.
+        if (self._webAudio) {
+          self._html5 = true;
+          self._webAudio = false;
+          self._sounds = [];
+          delete cache[url];
+          self.load();
+        }
+      };
+      safeXhrSend(xhr);
+    }
+  };
+
+  /**
+   * Send the XHR request wrapped in a try/catch.
+   * @param  {Object} xhr XHR to send.
+   */
+  var safeXhrSend = function(xhr) {
+    try {
+      xhr.send();
+    } catch (e) {
+      xhr.onerror();
+    }
+  };
+
+  /**
+   * Decode audio data from an array buffer.
+   * @param  {ArrayBuffer} arraybuffer The audio data.
+   * @param  {Howl}        self
+   */
+  var decodeAudioData = function(arraybuffer, self) {
+    // Fire a load error if something broke.
+    var error = function() {
+      self._emit('loaderror', null, 'Decoding audio data failed.');
+    };
+
+    // Load the sound on success.
+    var success = function(buffer) {
+      if (buffer && self._sounds.length > 0) {
+        cache[self._src] = buffer;
+        loadSound(self, buffer);
+      } else {
+        error();
+      }
+    };
+
+    // Decode the buffer into an audio source.
+    if (typeof Promise !== 'undefined' && Howler.ctx.decodeAudioData.length === 1) {
+      Howler.ctx.decodeAudioData(arraybuffer).then(success).catch(error);
+    } else {
+      Howler.ctx.decodeAudioData(arraybuffer, success, error);
+    }
+  }
+
+  /**
+   * Sound is now loaded, so finish setting everything up and fire the loaded event.
+   * @param  {Howl} self
+   * @param  {Object} buffer The decoded buffer sound source.
+   */
+  var loadSound = function(self, buffer) {
+    // Set the duration.
+    if (buffer && !self._duration) {
+      self._duration = buffer.duration;
+    }
+
+    // Setup a sprite if none is defined.
+    if (Object.keys(self._sprite).length === 0) {
+      self._sprite = {__default: [0, self._duration * 1000]};
+    }
+
+    // Fire the loaded event.
+    if (self._state !== 'loaded') {
+      self._state = 'loaded';
+      self._emit('load');
+      self._loadQueue();
+    }
+  };
+
+  /**
+   * Setup the audio context when available, or switch to HTML5 Audio mode.
+   */
+  var setupAudioContext = function() {
+    // If we have already detected that Web Audio isn't supported, don't run this step again.
+    if (!Howler.usingWebAudio) {
+      return;
+    }
+
+    // Check if we are using Web Audio and setup the AudioContext if we are.
+    try {
+      if (typeof AudioContext !== 'undefined') {
+        Howler.ctx = new AudioContext();
+      } else if (typeof webkitAudioContext !== 'undefined') {
+        Howler.ctx = new webkitAudioContext();
+      } else {
+        Howler.usingWebAudio = false;
+      }
+    } catch(e) {
+      Howler.usingWebAudio = false;
+    }
+
+    // If the audio context creation still failed, set using web audio to false.
+    if (!Howler.ctx) {
+      Howler.usingWebAudio = false;
+    }
+
+    // Check if a webview is being used on iOS8 or earlier (rather than the browser).
+    // If it is, disable Web Audio as it causes crashing.
+    var iOS = (/iP(hone|od|ad)/.test(Howler._navigator && Howler._navigator.platform));
+    var appVersion = Howler._navigator && Howler._navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
+    var version = appVersion ? parseInt(appVersion[1], 10) : null;
+    if (iOS && version && version < 9) {
+      var safari = /safari/.test(Howler._navigator && Howler._navigator.userAgent.toLowerCase());
+      if (Howler._navigator && !safari) {
+        Howler.usingWebAudio = false;
+      }
+    }
+
+    // Create and expose the master GainNode when using Web Audio (useful for plugins or advanced usage).
+    if (Howler.usingWebAudio) {
+      Howler.masterGain = (typeof Howler.ctx.createGain === 'undefined') ? Howler.ctx.createGainNode() : Howler.ctx.createGain();
+      Howler.masterGain.gain.setValueAtTime(Howler._muted ? 0 : Howler._volume, Howler.ctx.currentTime);
+      Howler.masterGain.connect(Howler.ctx.destination);
+    }
+
+    // Re-run the setup on Howler.
+    Howler._setup();
+  };
+
+  // Add support for AMD (Asynchronous Module Definition) libraries such as require.js.
+  if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      return {
+        Howler: Howler,
+        Howl: Howl
+      };
+    });
+  }
+
+  // Add support for CommonJS libraries such as browserify.
+  if (typeof exports !== 'undefined') {
+    exports.Howler = Howler;
+    exports.Howl = Howl;
+  }
+
+  // Add to global in Node.js (for testing, etc).
+  if (typeof global !== 'undefined') {
+    global.HowlerGlobal = HowlerGlobal;
+    global.Howler = Howler;
+    global.Howl = Howl;
+    global.Sound = Sound;
+  } else if (typeof window !== 'undefined') {  // Define globally in case AMD is not available or unused.
+    window.HowlerGlobal = HowlerGlobal;
+    window.Howler = Howler;
+    window.Howl = Howl;
+    window.Sound = Sound;
+  }
+})();
+
+
+/*!
+ *  Spatial Plugin - Adds support for stereo and 3D audio where Web Audio is supported.
+ *  
+ *  howler.js v2.2.3
+ *  howlerjs.com
+ *
+ *  (c) 2013-2020, James Simpson of GoldFire Studios
+ *  goldfirestudios.com
+ *
+ *  MIT License
+ */
+
+(function() {
+
+  'use strict';
+
+  // Setup default properties.
+  HowlerGlobal.prototype._pos = [0, 0, 0];
+  HowlerGlobal.prototype._orientation = [0, 0, -1, 0, 1, 0];
+
+  /** Global Methods **/
+  /***************************************************************************/
+
+  /**
+   * Helper method to update the stereo panning position of all current Howls.
+   * Future Howls will not use this value unless explicitly set.
+   * @param  {Number} pan A value of -1.0 is all the way left and 1.0 is all the way right.
+   * @return {Howler/Number}     Self or current stereo panning value.
+   */
+  HowlerGlobal.prototype.stereo = function(pan) {
+    var self = this;
+
+    // Stop right here if not using Web Audio.
+    if (!self.ctx || !self.ctx.listener) {
+      return self;
+    }
+
+    // Loop through all Howls and update their stereo panning.
+    for (var i=self._howls.length-1; i>=0; i--) {
+      self._howls[i].stereo(pan);
+    }
+
+    return self;
+  };
+
+  /**
+   * Get/set the position of the listener in 3D cartesian space. Sounds using
+   * 3D position will be relative to the listener's position.
+   * @param  {Number} x The x-position of the listener.
+   * @param  {Number} y The y-position of the listener.
+   * @param  {Number} z The z-position of the listener.
+   * @return {Howler/Array}   Self or current listener position.
+   */
+  HowlerGlobal.prototype.pos = function(x, y, z) {
+    var self = this;
+
+    // Stop right here if not using Web Audio.
+    if (!self.ctx || !self.ctx.listener) {
+      return self;
+    }
+
+    // Set the defaults for optional 'y' & 'z'.
+    y = (typeof y !== 'number') ? self._pos[1] : y;
+    z = (typeof z !== 'number') ? self._pos[2] : z;
+
+    if (typeof x === 'number') {
+      self._pos = [x, y, z];
+
+      if (typeof self.ctx.listener.positionX !== 'undefined') {
+        self.ctx.listener.positionX.setTargetAtTime(self._pos[0], Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.positionY.setTargetAtTime(self._pos[1], Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.positionZ.setTargetAtTime(self._pos[2], Howler.ctx.currentTime, 0.1);
+      } else {
+        self.ctx.listener.setPosition(self._pos[0], self._pos[1], self._pos[2]);
+      }
+    } else {
+      return self._pos;
+    }
+
+    return self;
+  };
+
+  /**
+   * Get/set the direction the listener is pointing in the 3D cartesian space.
+   * A front and up vector must be provided. The front is the direction the
+   * face of the listener is pointing, and up is the direction the top of the
+   * listener is pointing. Thus, these values are expected to be at right angles
+   * from each other.
+   * @param  {Number} x   The x-orientation of the listener.
+   * @param  {Number} y   The y-orientation of the listener.
+   * @param  {Number} z   The z-orientation of the listener.
+   * @param  {Number} xUp The x-orientation of the top of the listener.
+   * @param  {Number} yUp The y-orientation of the top of the listener.
+   * @param  {Number} zUp The z-orientation of the top of the listener.
+   * @return {Howler/Array}     Returns self or the current orientation vectors.
+   */
+  HowlerGlobal.prototype.orientation = function(x, y, z, xUp, yUp, zUp) {
+    var self = this;
+
+    // Stop right here if not using Web Audio.
+    if (!self.ctx || !self.ctx.listener) {
+      return self;
+    }
+
+    // Set the defaults for optional 'y' & 'z'.
+    var or = self._orientation;
+    y = (typeof y !== 'number') ? or[1] : y;
+    z = (typeof z !== 'number') ? or[2] : z;
+    xUp = (typeof xUp !== 'number') ? or[3] : xUp;
+    yUp = (typeof yUp !== 'number') ? or[4] : yUp;
+    zUp = (typeof zUp !== 'number') ? or[5] : zUp;
+
+    if (typeof x === 'number') {
+      self._orientation = [x, y, z, xUp, yUp, zUp];
+
+      if (typeof self.ctx.listener.forwardX !== 'undefined') {
+        self.ctx.listener.forwardX.setTargetAtTime(x, Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.forwardY.setTargetAtTime(y, Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.forwardZ.setTargetAtTime(z, Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.upX.setTargetAtTime(xUp, Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.upY.setTargetAtTime(yUp, Howler.ctx.currentTime, 0.1);
+        self.ctx.listener.upZ.setTargetAtTime(zUp, Howler.ctx.currentTime, 0.1);
+      } else {
+        self.ctx.listener.setOrientation(x, y, z, xUp, yUp, zUp);
+      }
+    } else {
+      return or;
+    }
+
+    return self;
+  };
+
+  /** Group Methods **/
+  /***************************************************************************/
+
+  /**
+   * Add new properties to the core init.
+   * @param  {Function} _super Core init method.
+   * @return {Howl}
+   */
+  Howl.prototype.init = (function(_super) {
+    return function(o) {
+      var self = this;
+
+      // Setup user-defined default properties.
+      self._orientation = o.orientation || [1, 0, 0];
+      self._stereo = o.stereo || null;
+      self._pos = o.pos || null;
+      self._pannerAttr = {
+        coneInnerAngle: typeof o.coneInnerAngle !== 'undefined' ? o.coneInnerAngle : 360,
+        coneOuterAngle: typeof o.coneOuterAngle !== 'undefined' ? o.coneOuterAngle : 360,
+        coneOuterGain: typeof o.coneOuterGain !== 'undefined' ? o.coneOuterGain : 0,
+        distanceModel: typeof o.distanceModel !== 'undefined' ? o.distanceModel : 'inverse',
+        maxDistance: typeof o.maxDistance !== 'undefined' ? o.maxDistance : 10000,
+        panningModel: typeof o.panningModel !== 'undefined' ? o.panningModel : 'HRTF',
+        refDistance: typeof o.refDistance !== 'undefined' ? o.refDistance : 1,
+        rolloffFactor: typeof o.rolloffFactor !== 'undefined' ? o.rolloffFactor : 1
+      };
+
+      // Setup event listeners.
+      self._onstereo = o.onstereo ? [{fn: o.onstereo}] : [];
+      self._onpos = o.onpos ? [{fn: o.onpos}] : [];
+      self._onorientation = o.onorientation ? [{fn: o.onorientation}] : [];
+
+      // Complete initilization with howler.js core's init function.
+      return _super.call(this, o);
+    };
+  })(Howl.prototype.init);
+
+  /**
+   * Get/set the stereo panning of the audio source for this sound or all in the group.
+   * @param  {Number} pan  A value of -1.0 is all the way left and 1.0 is all the way right.
+   * @param  {Number} id (optional) The sound ID. If none is passed, all in group will be updated.
+   * @return {Howl/Number}    Returns self or the current stereo panning value.
+   */
+  Howl.prototype.stereo = function(pan, id) {
+    var self = this;
+
+    // Stop right here if not using Web Audio.
+    if (!self._webAudio) {
+      return self;
+    }
+
+    // If the sound hasn't loaded, add it to the load queue to change stereo pan when capable.
+    if (self._state !== 'loaded') {
+      self._queue.push({
+        event: 'stereo',
+        action: function() {
+          self.stereo(pan, id);
+        }
+      });
+
+      return self;
+    }
+
+    // Check for PannerStereoNode support and fallback to PannerNode if it doesn't exist.
+    var pannerType = (typeof Howler.ctx.createStereoPanner === 'undefined') ? 'spatial' : 'stereo';
+
+    // Setup the group's stereo panning if no ID is passed.
+    if (typeof id === 'undefined') {
+      // Return the group's stereo panning if no parameters are passed.
+      if (typeof pan === 'number') {
+        self._stereo = pan;
+        self._pos = [pan, 0, 0];
+      } else {
+        return self._stereo;
+      }
+    }
+
+    // Change the streo panning of one or all sounds in group.
+    var ids = self._getSoundIds(id);
+    for (var i=0; i<ids.length; i++) {
+      // Get the sound.
+      var sound = self._soundById(ids[i]);
+
+      if (sound) {
+        if (typeof pan === 'number') {
+          sound._stereo = pan;
+          sound._pos = [pan, 0, 0];
+
+          if (sound._node) {
+            // If we are falling back, make sure the panningModel is equalpower.
+            sound._pannerAttr.panningModel = 'equalpower';
+
+            // Check if there is a panner setup and create a new one if not.
+            if (!sound._panner || !sound._panner.pan) {
+              setupPanner(sound, pannerType);
+            }
+
+            if (pannerType === 'spatial') {
+              if (typeof sound._panner.positionX !== 'undefined') {
+                sound._panner.positionX.setValueAtTime(pan, Howler.ctx.currentTime);
+                sound._panner.positionY.setValueAtTime(0, Howler.ctx.currentTime);
+                sound._panner.positionZ.setValueAtTime(0, Howler.ctx.currentTime);
+              } else {
+                sound._panner.setPosition(pan, 0, 0);
+              }
+            } else {
+              sound._panner.pan.setValueAtTime(pan, Howler.ctx.currentTime);
+            }
+          }
+
+          self._emit('stereo', sound._id);
+        } else {
+          return sound._stereo;
+        }
+      }
+    }
+
+    return self;
+  };
+
+  /**
+   * Get/set the 3D spatial position of the audio source for this sound or group relative to the global listener.
+   * @param  {Number} x  The x-position of the audio source.
+   * @param  {Number} y  The y-position of the audio source.
+   * @param  {Number} z  The z-position of the audio source.
+   * @param  {Number} id (optional) The sound ID. If none is passed, all in group will be updated.
+   * @return {Howl/Array}    Returns self or the current 3D spatial position: [x, y, z].
+   */
+  Howl.prototype.pos = function(x, y, z, id) {
+    var self = this;
+
+    // Stop right here if not using Web Audio.
+    if (!self._webAudio) {
+      return self;
+    }
+
+    // If the sound hasn't loaded, add it to the load queue to change position when capable.
+    if (self._state !== 'loaded') {
+      self._queue.push({
+        event: 'pos',
+        action: function() {
+          self.pos(x, y, z, id);
+        }
+      });
+
+      return self;
+    }
+
+    // Set the defaults for optional 'y' & 'z'.
+    y = (typeof y !== 'number') ? 0 : y;
+    z = (typeof z !== 'number') ? -0.5 : z;
+
+    // Setup the group's spatial position if no ID is passed.
+    if (typeof id === 'undefined') {
+      // Return the group's spatial position if no parameters are passed.
+      if (typeof x === 'number') {
+        self._pos = [x, y, z];
+      } else {
+        return self._pos;
+      }
+    }
+
+    // Change the spatial position of one or all sounds in group.
+    var ids = self._getSoundIds(id);
+    for (var i=0; i<ids.length; i++) {
+      // Get the sound.
+      var sound = self._soundById(ids[i]);
+
+      if (sound) {
+        if (typeof x === 'number') {
+          sound._pos = [x, y, z];
+
+          if (sound._node) {
+            // Check if there is a panner setup and create a new one if not.
+            if (!sound._panner || sound._panner.pan) {
+              setupPanner(sound, 'spatial');
+            }
+
+            if (typeof sound._panner.positionX !== 'undefined') {
+              sound._panner.positionX.setValueAtTime(x, Howler.ctx.currentTime);
+              sound._panner.positionY.setValueAtTime(y, Howler.ctx.currentTime);
+              sound._panner.positionZ.setValueAtTime(z, Howler.ctx.currentTime);
+            } else {
+              sound._panner.setPosition(x, y, z);
+            }
+          }
+
+          self._emit('pos', sound._id);
+        } else {
+          return sound._pos;
+        }
+      }
+    }
+
+    return self;
+  };
+
+  /**
+   * Get/set the direction the audio source is pointing in the 3D cartesian coordinate
+   * space. Depending on how direction the sound is, based on the `cone` attributes,
+   * a sound pointing away from the listener can be quiet or silent.
+   * @param  {Number} x  The x-orientation of the source.
+   * @param  {Number} y  The y-orientation of the source.
+   * @param  {Number} z  The z-orientation of the source.
+   * @param  {Number} id (optional) The sound ID. If none is passed, all in group will be updated.
+   * @return {Howl/Array}    Returns self or the current 3D spatial orientation: [x, y, z].
+   */
+  Howl.prototype.orientation = function(x, y, z, id) {
+    var self = this;
+
+    // Stop right here if not using Web Audio.
+    if (!self._webAudio) {
+      return self;
+    }
+
+    // If the sound hasn't loaded, add it to the load queue to change orientation when capable.
+    if (self._state !== 'loaded') {
+      self._queue.push({
+        event: 'orientation',
+        action: function() {
+          self.orientation(x, y, z, id);
+        }
+      });
+
+      return self;
+    }
+
+    // Set the defaults for optional 'y' & 'z'.
+    y = (typeof y !== 'number') ? self._orientation[1] : y;
+    z = (typeof z !== 'number') ? self._orientation[2] : z;
+
+    // Setup the group's spatial orientation if no ID is passed.
+    if (typeof id === 'undefined') {
+      // Return the group's spatial orientation if no parameters are passed.
+      if (typeof x === 'number') {
+        self._orientation = [x, y, z];
+      } else {
+        return self._orientation;
+      }
+    }
+
+    // Change the spatial orientation of one or all sounds in group.
+    var ids = self._getSoundIds(id);
+    for (var i=0; i<ids.length; i++) {
+      // Get the sound.
+      var sound = self._soundById(ids[i]);
+
+      if (sound) {
+        if (typeof x === 'number') {
+          sound._orientation = [x, y, z];
+
+          if (sound._node) {
+            // Check if there is a panner setup and create a new one if not.
+            if (!sound._panner) {
+              // Make sure we have a position to setup the node with.
+              if (!sound._pos) {
+                sound._pos = self._pos || [0, 0, -0.5];
+              }
+
+              setupPanner(sound, 'spatial');
+            }
+
+            if (typeof sound._panner.orientationX !== 'undefined') {
+              sound._panner.orientationX.setValueAtTime(x, Howler.ctx.currentTime);
+              sound._panner.orientationY.setValueAtTime(y, Howler.ctx.currentTime);
+              sound._panner.orientationZ.setValueAtTime(z, Howler.ctx.currentTime);
+            } else {
+              sound._panner.setOrientation(x, y, z);
+            }
+          }
+
+          self._emit('orientation', sound._id);
+        } else {
+          return sound._orientation;
+        }
+      }
+    }
+
+    return self;
+  };
+
+  /**
+   * Get/set the panner node's attributes for a sound or group of sounds.
+   * This method can optionall take 0, 1 or 2 arguments.
+   *   pannerAttr() -> Returns the group's values.
+   *   pannerAttr(id) -> Returns the sound id's values.
+   *   pannerAttr(o) -> Set's the values of all sounds in this Howl group.
+   *   pannerAttr(o, id) -> Set's the values of passed sound id.
+   *
+   *   Attributes:
+   *     coneInnerAngle - (360 by default) A parameter for directional audio sources, this is an angle, in degrees,
+   *                      inside of which there will be no volume reduction.
+   *     coneOuterAngle - (360 by default) A parameter for directional audio sources, this is an angle, in degrees,
+   *                      outside of which the volume will be reduced to a constant value of `coneOuterGain`.
+   *     coneOuterGain - (0 by default) A parameter for directional audio sources, this is the gain outside of the
+   *                     `coneOuterAngle`. It is a linear value in the range `[0, 1]`.
+   *     distanceModel - ('inverse' by default) Determines algorithm used to reduce volume as audio moves away from
+   *                     listener. Can be `linear`, `inverse` or `exponential.
+   *     maxDistance - (10000 by default) The maximum distance between source and listener, after which the volume
+   *                   will not be reduced any further.
+   *     refDistance - (1 by default) A reference distance for reducing volume as source moves further from the listener.
+   *                   This is simply a variable of the distance model and has a different effect depending on which model
+   *                   is used and the scale of your coordinates. Generally, volume will be equal to 1 at this distance.
+   *     rolloffFactor - (1 by default) How quickly the volume reduces as source moves from listener. This is simply a
+   *                     variable of the distance model and can be in the range of `[0, 1]` with `linear` and `[0, ∞]`
+   *                     with `inverse` and `exponential`.
+   *     panningModel - ('HRTF' by default) Determines which spatialization algorithm is used to position audio.
+   *                     Can be `HRTF` or `equalpower`.
+   *
+   * @return {Howl/Object} Returns self or current panner attributes.
+   */
+  Howl.prototype.pannerAttr = function() {
+    var self = this;
+    var args = arguments;
+    var o, id, sound;
+
+    // Stop right here if not using Web Audio.
+    if (!self._webAudio) {
+      return self;
+    }
+
+    // Determine the values based on arguments.
+    if (args.length === 0) {
+      // Return the group's panner attribute values.
+      return self._pannerAttr;
+    } else if (args.length === 1) {
+      if (typeof args[0] === 'object') {
+        o = args[0];
+
+        // Set the grou's panner attribute values.
+        if (typeof id === 'undefined') {
+          if (!o.pannerAttr) {
+            o.pannerAttr = {
+              coneInnerAngle: o.coneInnerAngle,
+              coneOuterAngle: o.coneOuterAngle,
+              coneOuterGain: o.coneOuterGain,
+              distanceModel: o.distanceModel,
+              maxDistance: o.maxDistance,
+              refDistance: o.refDistance,
+              rolloffFactor: o.rolloffFactor,
+              panningModel: o.panningModel
+            };
+          }
+
+          self._pannerAttr = {
+            coneInnerAngle: typeof o.pannerAttr.coneInnerAngle !== 'undefined' ? o.pannerAttr.coneInnerAngle : self._coneInnerAngle,
+            coneOuterAngle: typeof o.pannerAttr.coneOuterAngle !== 'undefined' ? o.pannerAttr.coneOuterAngle : self._coneOuterAngle,
+            coneOuterGain: typeof o.pannerAttr.coneOuterGain !== 'undefined' ? o.pannerAttr.coneOuterGain : self._coneOuterGain,
+            distanceModel: typeof o.pannerAttr.distanceModel !== 'undefined' ? o.pannerAttr.distanceModel : self._distanceModel,
+            maxDistance: typeof o.pannerAttr.maxDistance !== 'undefined' ? o.pannerAttr.maxDistance : self._maxDistance,
+            refDistance: typeof o.pannerAttr.refDistance !== 'undefined' ? o.pannerAttr.refDistance : self._refDistance,
+            rolloffFactor: typeof o.pannerAttr.rolloffFactor !== 'undefined' ? o.pannerAttr.rolloffFactor : self._rolloffFactor,
+            panningModel: typeof o.pannerAttr.panningModel !== 'undefined' ? o.pannerAttr.panningModel : self._panningModel
+          };
+        }
+      } else {
+        // Return this sound's panner attribute values.
+        sound = self._soundById(parseInt(args[0], 10));
+        return sound ? sound._pannerAttr : self._pannerAttr;
+      }
+    } else if (args.length === 2) {
+      o = args[0];
+      id = parseInt(args[1], 10);
+    }
+
+    // Update the values of the specified sounds.
+    var ids = self._getSoundIds(id);
+    for (var i=0; i<ids.length; i++) {
+      sound = self._soundById(ids[i]);
+
+      if (sound) {
+        // Merge the new values into the sound.
+        var pa = sound._pannerAttr;
+        pa = {
+          coneInnerAngle: typeof o.coneInnerAngle !== 'undefined' ? o.coneInnerAngle : pa.coneInnerAngle,
+          coneOuterAngle: typeof o.coneOuterAngle !== 'undefined' ? o.coneOuterAngle : pa.coneOuterAngle,
+          coneOuterGain: typeof o.coneOuterGain !== 'undefined' ? o.coneOuterGain : pa.coneOuterGain,
+          distanceModel: typeof o.distanceModel !== 'undefined' ? o.distanceModel : pa.distanceModel,
+          maxDistance: typeof o.maxDistance !== 'undefined' ? o.maxDistance : pa.maxDistance,
+          refDistance: typeof o.refDistance !== 'undefined' ? o.refDistance : pa.refDistance,
+          rolloffFactor: typeof o.rolloffFactor !== 'undefined' ? o.rolloffFactor : pa.rolloffFactor,
+          panningModel: typeof o.panningModel !== 'undefined' ? o.panningModel : pa.panningModel
+        };
+
+        // Update the panner values or create a new panner if none exists.
+        var panner = sound._panner;
+        if (panner) {
+          panner.coneInnerAngle = pa.coneInnerAngle;
+          panner.coneOuterAngle = pa.coneOuterAngle;
+          panner.coneOuterGain = pa.coneOuterGain;
+          panner.distanceModel = pa.distanceModel;
+          panner.maxDistance = pa.maxDistance;
+          panner.refDistance = pa.refDistance;
+          panner.rolloffFactor = pa.rolloffFactor;
+          panner.panningModel = pa.panningModel;
+        } else {
+          // Make sure we have a position to setup the node with.
+          if (!sound._pos) {
+            sound._pos = self._pos || [0, 0, -0.5];
+          }
+
+          // Create a new panner node.
+          setupPanner(sound, 'spatial');
+        }
+      }
+    }
+
+    return self;
+  };
+
+  /** Single Sound Methods **/
+  /***************************************************************************/
+
+  /**
+   * Add new properties to the core Sound init.
+   * @param  {Function} _super Core Sound init method.
+   * @return {Sound}
+   */
+  Sound.prototype.init = (function(_super) {
+    return function() {
+      var self = this;
+      var parent = self._parent;
+
+      // Setup user-defined default properties.
+      self._orientation = parent._orientation;
+      self._stereo = parent._stereo;
+      self._pos = parent._pos;
+      self._pannerAttr = parent._pannerAttr;
+
+      // Complete initilization with howler.js core Sound's init function.
+      _super.call(this);
+
+      // If a stereo or position was specified, set it up.
+      if (self._stereo) {
+        parent.stereo(self._stereo);
+      } else if (self._pos) {
+        parent.pos(self._pos[0], self._pos[1], self._pos[2], self._id);
+      }
+    };
+  })(Sound.prototype.init);
+
+  /**
+   * Override the Sound.reset method to clean up properties from the spatial plugin.
+   * @param  {Function} _super Sound reset method.
+   * @return {Sound}
+   */
+  Sound.prototype.reset = (function(_super) {
+    return function() {
+      var self = this;
+      var parent = self._parent;
+
+      // Reset all spatial plugin properties on this sound.
+      self._orientation = parent._orientation;
+      self._stereo = parent._stereo;
+      self._pos = parent._pos;
+      self._pannerAttr = parent._pannerAttr;
+
+      // If a stereo or position was specified, set it up.
+      if (self._stereo) {
+        parent.stereo(self._stereo);
+      } else if (self._pos) {
+        parent.pos(self._pos[0], self._pos[1], self._pos[2], self._id);
+      } else if (self._panner) {
+        // Disconnect the panner.
+        self._panner.disconnect(0);
+        self._panner = undefined;
+        parent._refreshBuffer(self);
+      }
+
+      // Complete resetting of the sound.
+      return _super.call(this);
+    };
+  })(Sound.prototype.reset);
+
+  /** Helper Methods **/
+  /***************************************************************************/
+
+  /**
+   * Create a new panner node and save it on the sound.
+   * @param  {Sound} sound Specific sound to setup panning on.
+   * @param {String} type Type of panner to create: 'stereo' or 'spatial'.
+   */
+  var setupPanner = function(sound, type) {
+    type = type || 'spatial';
+
+    // Create the new panner node.
+    if (type === 'spatial') {
+      sound._panner = Howler.ctx.createPanner();
+      sound._panner.coneInnerAngle = sound._pannerAttr.coneInnerAngle;
+      sound._panner.coneOuterAngle = sound._pannerAttr.coneOuterAngle;
+      sound._panner.coneOuterGain = sound._pannerAttr.coneOuterGain;
+      sound._panner.distanceModel = sound._pannerAttr.distanceModel;
+      sound._panner.maxDistance = sound._pannerAttr.maxDistance;
+      sound._panner.refDistance = sound._pannerAttr.refDistance;
+      sound._panner.rolloffFactor = sound._pannerAttr.rolloffFactor;
+      sound._panner.panningModel = sound._pannerAttr.panningModel;
+
+      if (typeof sound._panner.positionX !== 'undefined') {
+        sound._panner.positionX.setValueAtTime(sound._pos[0], Howler.ctx.currentTime);
+        sound._panner.positionY.setValueAtTime(sound._pos[1], Howler.ctx.currentTime);
+        sound._panner.positionZ.setValueAtTime(sound._pos[2], Howler.ctx.currentTime);
+      } else {
+        sound._panner.setPosition(sound._pos[0], sound._pos[1], sound._pos[2]);
+      }
+
+      if (typeof sound._panner.orientationX !== 'undefined') {
+        sound._panner.orientationX.setValueAtTime(sound._orientation[0], Howler.ctx.currentTime);
+        sound._panner.orientationY.setValueAtTime(sound._orientation[1], Howler.ctx.currentTime);
+        sound._panner.orientationZ.setValueAtTime(sound._orientation[2], Howler.ctx.currentTime);
+      } else {
+        sound._panner.setOrientation(sound._orientation[0], sound._orientation[1], sound._orientation[2]);
+      }
+    } else {
+      sound._panner = Howler.ctx.createStereoPanner();
+      sound._panner.pan.setValueAtTime(sound._stereo, Howler.ctx.currentTime);
+    }
+
+    sound._panner.connect(sound._node);
+
+    // Update the connections.
+    if (!sound._paused) {
+      sound._parent.pause(sound._id, true).play(sound._id, true);
+    }
+  };
+})();
+
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],85:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -36395,7 +42193,7 @@ try {
 
 })));
 
-},{}],77:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -37145,4 +42943,1201 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}]},{},[16]);
+},{}],87:[function(require,module,exports){
+// TinyColor v1.4.2
+// https://github.com/bgrins/TinyColor
+// Brian Grinstead, MIT License
+
+(function(Math) {
+
+var trimLeft = /^\s+/,
+    trimRight = /\s+$/,
+    tinyCounter = 0,
+    mathRound = Math.round,
+    mathMin = Math.min,
+    mathMax = Math.max,
+    mathRandom = Math.random;
+
+function tinycolor (color, opts) {
+
+    color = (color) ? color : '';
+    opts = opts || { };
+
+    // If input is already a tinycolor, return itself
+    if (color instanceof tinycolor) {
+       return color;
+    }
+    // If we are called as a function, call using new instead
+    if (!(this instanceof tinycolor)) {
+        return new tinycolor(color, opts);
+    }
+
+    var rgb = inputToRGB(color);
+    this._originalInput = color,
+    this._r = rgb.r,
+    this._g = rgb.g,
+    this._b = rgb.b,
+    this._a = rgb.a,
+    this._roundA = mathRound(100*this._a) / 100,
+    this._format = opts.format || rgb.format;
+    this._gradientType = opts.gradientType;
+
+    // Don't let the range of [0,255] come back in [0,1].
+    // Potentially lose a little bit of precision here, but will fix issues where
+    // .5 gets interpreted as half of the total, instead of half of 1
+    // If it was supposed to be 128, this was already taken care of by `inputToRgb`
+    if (this._r < 1) { this._r = mathRound(this._r); }
+    if (this._g < 1) { this._g = mathRound(this._g); }
+    if (this._b < 1) { this._b = mathRound(this._b); }
+
+    this._ok = rgb.ok;
+    this._tc_id = tinyCounter++;
+}
+
+tinycolor.prototype = {
+    isDark: function() {
+        return this.getBrightness() < 128;
+    },
+    isLight: function() {
+        return !this.isDark();
+    },
+    isValid: function() {
+        return this._ok;
+    },
+    getOriginalInput: function() {
+      return this._originalInput;
+    },
+    getFormat: function() {
+        return this._format;
+    },
+    getAlpha: function() {
+        return this._a;
+    },
+    getBrightness: function() {
+        //http://www.w3.org/TR/AERT#color-contrast
+        var rgb = this.toRgb();
+        return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+    },
+    getLuminance: function() {
+        //http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+        var rgb = this.toRgb();
+        var RsRGB, GsRGB, BsRGB, R, G, B;
+        RsRGB = rgb.r/255;
+        GsRGB = rgb.g/255;
+        BsRGB = rgb.b/255;
+
+        if (RsRGB <= 0.03928) {R = RsRGB / 12.92;} else {R = Math.pow(((RsRGB + 0.055) / 1.055), 2.4);}
+        if (GsRGB <= 0.03928) {G = GsRGB / 12.92;} else {G = Math.pow(((GsRGB + 0.055) / 1.055), 2.4);}
+        if (BsRGB <= 0.03928) {B = BsRGB / 12.92;} else {B = Math.pow(((BsRGB + 0.055) / 1.055), 2.4);}
+        return (0.2126 * R) + (0.7152 * G) + (0.0722 * B);
+    },
+    setAlpha: function(value) {
+        this._a = boundAlpha(value);
+        this._roundA = mathRound(100*this._a) / 100;
+        return this;
+    },
+    toHsv: function() {
+        var hsv = rgbToHsv(this._r, this._g, this._b);
+        return { h: hsv.h * 360, s: hsv.s, v: hsv.v, a: this._a };
+    },
+    toHsvString: function() {
+        var hsv = rgbToHsv(this._r, this._g, this._b);
+        var h = mathRound(hsv.h * 360), s = mathRound(hsv.s * 100), v = mathRound(hsv.v * 100);
+        return (this._a == 1) ?
+          "hsv("  + h + ", " + s + "%, " + v + "%)" :
+          "hsva(" + h + ", " + s + "%, " + v + "%, "+ this._roundA + ")";
+    },
+    toHsl: function() {
+        var hsl = rgbToHsl(this._r, this._g, this._b);
+        return { h: hsl.h * 360, s: hsl.s, l: hsl.l, a: this._a };
+    },
+    toHslString: function() {
+        var hsl = rgbToHsl(this._r, this._g, this._b);
+        var h = mathRound(hsl.h * 360), s = mathRound(hsl.s * 100), l = mathRound(hsl.l * 100);
+        return (this._a == 1) ?
+          "hsl("  + h + ", " + s + "%, " + l + "%)" :
+          "hsla(" + h + ", " + s + "%, " + l + "%, "+ this._roundA + ")";
+    },
+    toHex: function(allow3Char) {
+        return rgbToHex(this._r, this._g, this._b, allow3Char);
+    },
+    toHexString: function(allow3Char) {
+        return '#' + this.toHex(allow3Char);
+    },
+    toHex8: function(allow4Char) {
+        return rgbaToHex(this._r, this._g, this._b, this._a, allow4Char);
+    },
+    toHex8String: function(allow4Char) {
+        return '#' + this.toHex8(allow4Char);
+    },
+    toRgb: function() {
+        return { r: mathRound(this._r), g: mathRound(this._g), b: mathRound(this._b), a: this._a };
+    },
+    toRgbString: function() {
+        return (this._a == 1) ?
+          "rgb("  + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ")" :
+          "rgba(" + mathRound(this._r) + ", " + mathRound(this._g) + ", " + mathRound(this._b) + ", " + this._roundA + ")";
+    },
+    toPercentageRgb: function() {
+        return { r: mathRound(bound01(this._r, 255) * 100) + "%", g: mathRound(bound01(this._g, 255) * 100) + "%", b: mathRound(bound01(this._b, 255) * 100) + "%", a: this._a };
+    },
+    toPercentageRgbString: function() {
+        return (this._a == 1) ?
+          "rgb("  + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%)" :
+          "rgba(" + mathRound(bound01(this._r, 255) * 100) + "%, " + mathRound(bound01(this._g, 255) * 100) + "%, " + mathRound(bound01(this._b, 255) * 100) + "%, " + this._roundA + ")";
+    },
+    toName: function() {
+        if (this._a === 0) {
+            return "transparent";
+        }
+
+        if (this._a < 1) {
+            return false;
+        }
+
+        return hexNames[rgbToHex(this._r, this._g, this._b, true)] || false;
+    },
+    toFilter: function(secondColor) {
+        var hex8String = '#' + rgbaToArgbHex(this._r, this._g, this._b, this._a);
+        var secondHex8String = hex8String;
+        var gradientType = this._gradientType ? "GradientType = 1, " : "";
+
+        if (secondColor) {
+            var s = tinycolor(secondColor);
+            secondHex8String = '#' + rgbaToArgbHex(s._r, s._g, s._b, s._a);
+        }
+
+        return "progid:DXImageTransform.Microsoft.gradient("+gradientType+"startColorstr="+hex8String+",endColorstr="+secondHex8String+")";
+    },
+    toString: function(format) {
+        var formatSet = !!format;
+        format = format || this._format;
+
+        var formattedString = false;
+        var hasAlpha = this._a < 1 && this._a >= 0;
+        var needsAlphaFormat = !formatSet && hasAlpha && (format === "hex" || format === "hex6" || format === "hex3" || format === "hex4" || format === "hex8" || format === "name");
+
+        if (needsAlphaFormat) {
+            // Special case for "transparent", all other non-alpha formats
+            // will return rgba when there is transparency.
+            if (format === "name" && this._a === 0) {
+                return this.toName();
+            }
+            return this.toRgbString();
+        }
+        if (format === "rgb") {
+            formattedString = this.toRgbString();
+        }
+        if (format === "prgb") {
+            formattedString = this.toPercentageRgbString();
+        }
+        if (format === "hex" || format === "hex6") {
+            formattedString = this.toHexString();
+        }
+        if (format === "hex3") {
+            formattedString = this.toHexString(true);
+        }
+        if (format === "hex4") {
+            formattedString = this.toHex8String(true);
+        }
+        if (format === "hex8") {
+            formattedString = this.toHex8String();
+        }
+        if (format === "name") {
+            formattedString = this.toName();
+        }
+        if (format === "hsl") {
+            formattedString = this.toHslString();
+        }
+        if (format === "hsv") {
+            formattedString = this.toHsvString();
+        }
+
+        return formattedString || this.toHexString();
+    },
+    clone: function() {
+        return tinycolor(this.toString());
+    },
+
+    _applyModification: function(fn, args) {
+        var color = fn.apply(null, [this].concat([].slice.call(args)));
+        this._r = color._r;
+        this._g = color._g;
+        this._b = color._b;
+        this.setAlpha(color._a);
+        return this;
+    },
+    lighten: function() {
+        return this._applyModification(lighten, arguments);
+    },
+    brighten: function() {
+        return this._applyModification(brighten, arguments);
+    },
+    darken: function() {
+        return this._applyModification(darken, arguments);
+    },
+    desaturate: function() {
+        return this._applyModification(desaturate, arguments);
+    },
+    saturate: function() {
+        return this._applyModification(saturate, arguments);
+    },
+    greyscale: function() {
+        return this._applyModification(greyscale, arguments);
+    },
+    spin: function() {
+        return this._applyModification(spin, arguments);
+    },
+
+    _applyCombination: function(fn, args) {
+        return fn.apply(null, [this].concat([].slice.call(args)));
+    },
+    analogous: function() {
+        return this._applyCombination(analogous, arguments);
+    },
+    complement: function() {
+        return this._applyCombination(complement, arguments);
+    },
+    monochromatic: function() {
+        return this._applyCombination(monochromatic, arguments);
+    },
+    splitcomplement: function() {
+        return this._applyCombination(splitcomplement, arguments);
+    },
+    triad: function() {
+        return this._applyCombination(triad, arguments);
+    },
+    tetrad: function() {
+        return this._applyCombination(tetrad, arguments);
+    }
+};
+
+// If input is an object, force 1 into "1.0" to handle ratios properly
+// String input requires "1.0" as input, so 1 will be treated as 1
+tinycolor.fromRatio = function(color, opts) {
+    if (typeof color == "object") {
+        var newColor = {};
+        for (var i in color) {
+            if (color.hasOwnProperty(i)) {
+                if (i === "a") {
+                    newColor[i] = color[i];
+                }
+                else {
+                    newColor[i] = convertToPercentage(color[i]);
+                }
+            }
+        }
+        color = newColor;
+    }
+
+    return tinycolor(color, opts);
+};
+
+// Given a string or object, convert that input to RGB
+// Possible string inputs:
+//
+//     "red"
+//     "#f00" or "f00"
+//     "#ff0000" or "ff0000"
+//     "#ff000000" or "ff000000"
+//     "rgb 255 0 0" or "rgb (255, 0, 0)"
+//     "rgb 1.0 0 0" or "rgb (1, 0, 0)"
+//     "rgba (255, 0, 0, 1)" or "rgba 255, 0, 0, 1"
+//     "rgba (1.0, 0, 0, 1)" or "rgba 1.0, 0, 0, 1"
+//     "hsl(0, 100%, 50%)" or "hsl 0 100% 50%"
+//     "hsla(0, 100%, 50%, 1)" or "hsla 0 100% 50%, 1"
+//     "hsv(0, 100%, 100%)" or "hsv 0 100% 100%"
+//
+function inputToRGB(color) {
+
+    var rgb = { r: 0, g: 0, b: 0 };
+    var a = 1;
+    var s = null;
+    var v = null;
+    var l = null;
+    var ok = false;
+    var format = false;
+
+    if (typeof color == "string") {
+        color = stringInputToObject(color);
+    }
+
+    if (typeof color == "object") {
+        if (isValidCSSUnit(color.r) && isValidCSSUnit(color.g) && isValidCSSUnit(color.b)) {
+            rgb = rgbToRgb(color.r, color.g, color.b);
+            ok = true;
+            format = String(color.r).substr(-1) === "%" ? "prgb" : "rgb";
+        }
+        else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.v)) {
+            s = convertToPercentage(color.s);
+            v = convertToPercentage(color.v);
+            rgb = hsvToRgb(color.h, s, v);
+            ok = true;
+            format = "hsv";
+        }
+        else if (isValidCSSUnit(color.h) && isValidCSSUnit(color.s) && isValidCSSUnit(color.l)) {
+            s = convertToPercentage(color.s);
+            l = convertToPercentage(color.l);
+            rgb = hslToRgb(color.h, s, l);
+            ok = true;
+            format = "hsl";
+        }
+
+        if (color.hasOwnProperty("a")) {
+            a = color.a;
+        }
+    }
+
+    a = boundAlpha(a);
+
+    return {
+        ok: ok,
+        format: color.format || format,
+        r: mathMin(255, mathMax(rgb.r, 0)),
+        g: mathMin(255, mathMax(rgb.g, 0)),
+        b: mathMin(255, mathMax(rgb.b, 0)),
+        a: a
+    };
+}
+
+
+// Conversion Functions
+// --------------------
+
+// `rgbToHsl`, `rgbToHsv`, `hslToRgb`, `hsvToRgb` modified from:
+// <http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript>
+
+// `rgbToRgb`
+// Handle bounds / percentage checking to conform to CSS color spec
+// <http://www.w3.org/TR/css3-color/>
+// *Assumes:* r, g, b in [0, 255] or [0, 1]
+// *Returns:* { r, g, b } in [0, 255]
+function rgbToRgb(r, g, b){
+    return {
+        r: bound01(r, 255) * 255,
+        g: bound01(g, 255) * 255,
+        b: bound01(b, 255) * 255
+    };
+}
+
+// `rgbToHsl`
+// Converts an RGB color value to HSL.
+// *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
+// *Returns:* { h, s, l } in [0,1]
+function rgbToHsl(r, g, b) {
+
+    r = bound01(r, 255);
+    g = bound01(g, 255);
+    b = bound01(b, 255);
+
+    var max = mathMax(r, g, b), min = mathMin(r, g, b);
+    var h, s, l = (max + min) / 2;
+
+    if(max == min) {
+        h = s = 0; // achromatic
+    }
+    else {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+
+        h /= 6;
+    }
+
+    return { h: h, s: s, l: l };
+}
+
+// `hslToRgb`
+// Converts an HSL color value to RGB.
+// *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
+// *Returns:* { r, g, b } in the set [0, 255]
+function hslToRgb(h, s, l) {
+    var r, g, b;
+
+    h = bound01(h, 360);
+    s = bound01(s, 100);
+    l = bound01(l, 100);
+
+    function hue2rgb(p, q, t) {
+        if(t < 0) t += 1;
+        if(t > 1) t -= 1;
+        if(t < 1/6) return p + (q - p) * 6 * t;
+        if(t < 1/2) return q;
+        if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+    }
+
+    if(s === 0) {
+        r = g = b = l; // achromatic
+    }
+    else {
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return { r: r * 255, g: g * 255, b: b * 255 };
+}
+
+// `rgbToHsv`
+// Converts an RGB color value to HSV
+// *Assumes:* r, g, and b are contained in the set [0, 255] or [0, 1]
+// *Returns:* { h, s, v } in [0,1]
+function rgbToHsv(r, g, b) {
+
+    r = bound01(r, 255);
+    g = bound01(g, 255);
+    b = bound01(b, 255);
+
+    var max = mathMax(r, g, b), min = mathMin(r, g, b);
+    var h, s, v = max;
+
+    var d = max - min;
+    s = max === 0 ? 0 : d / max;
+
+    if(max == min) {
+        h = 0; // achromatic
+    }
+    else {
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+    return { h: h, s: s, v: v };
+}
+
+// `hsvToRgb`
+// Converts an HSV color value to RGB.
+// *Assumes:* h is contained in [0, 1] or [0, 360] and s and v are contained in [0, 1] or [0, 100]
+// *Returns:* { r, g, b } in the set [0, 255]
+ function hsvToRgb(h, s, v) {
+
+    h = bound01(h, 360) * 6;
+    s = bound01(s, 100);
+    v = bound01(v, 100);
+
+    var i = Math.floor(h),
+        f = h - i,
+        p = v * (1 - s),
+        q = v * (1 - f * s),
+        t = v * (1 - (1 - f) * s),
+        mod = i % 6,
+        r = [v, q, p, p, t, v][mod],
+        g = [t, v, v, q, p, p][mod],
+        b = [p, p, t, v, v, q][mod];
+
+    return { r: r * 255, g: g * 255, b: b * 255 };
+}
+
+// `rgbToHex`
+// Converts an RGB color to hex
+// Assumes r, g, and b are contained in the set [0, 255]
+// Returns a 3 or 6 character hex
+function rgbToHex(r, g, b, allow3Char) {
+
+    var hex = [
+        pad2(mathRound(r).toString(16)),
+        pad2(mathRound(g).toString(16)),
+        pad2(mathRound(b).toString(16))
+    ];
+
+    // Return a 3 character hex if possible
+    if (allow3Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1)) {
+        return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0);
+    }
+
+    return hex.join("");
+}
+
+// `rgbaToHex`
+// Converts an RGBA color plus alpha transparency to hex
+// Assumes r, g, b are contained in the set [0, 255] and
+// a in [0, 1]. Returns a 4 or 8 character rgba hex
+function rgbaToHex(r, g, b, a, allow4Char) {
+
+    var hex = [
+        pad2(mathRound(r).toString(16)),
+        pad2(mathRound(g).toString(16)),
+        pad2(mathRound(b).toString(16)),
+        pad2(convertDecimalToHex(a))
+    ];
+
+    // Return a 4 character hex if possible
+    if (allow4Char && hex[0].charAt(0) == hex[0].charAt(1) && hex[1].charAt(0) == hex[1].charAt(1) && hex[2].charAt(0) == hex[2].charAt(1) && hex[3].charAt(0) == hex[3].charAt(1)) {
+        return hex[0].charAt(0) + hex[1].charAt(0) + hex[2].charAt(0) + hex[3].charAt(0);
+    }
+
+    return hex.join("");
+}
+
+// `rgbaToArgbHex`
+// Converts an RGBA color to an ARGB Hex8 string
+// Rarely used, but required for "toFilter()"
+function rgbaToArgbHex(r, g, b, a) {
+
+    var hex = [
+        pad2(convertDecimalToHex(a)),
+        pad2(mathRound(r).toString(16)),
+        pad2(mathRound(g).toString(16)),
+        pad2(mathRound(b).toString(16))
+    ];
+
+    return hex.join("");
+}
+
+// `equals`
+// Can be called with any tinycolor input
+tinycolor.equals = function (color1, color2) {
+    if (!color1 || !color2) { return false; }
+    return tinycolor(color1).toRgbString() == tinycolor(color2).toRgbString();
+};
+
+tinycolor.random = function() {
+    return tinycolor.fromRatio({
+        r: mathRandom(),
+        g: mathRandom(),
+        b: mathRandom()
+    });
+};
+
+
+// Modification Functions
+// ----------------------
+// Thanks to less.js for some of the basics here
+// <https://github.com/cloudhead/less.js/blob/master/lib/less/functions.js>
+
+function desaturate(color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.s -= amount / 100;
+    hsl.s = clamp01(hsl.s);
+    return tinycolor(hsl);
+}
+
+function saturate(color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.s += amount / 100;
+    hsl.s = clamp01(hsl.s);
+    return tinycolor(hsl);
+}
+
+function greyscale(color) {
+    return tinycolor(color).desaturate(100);
+}
+
+function lighten (color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.l += amount / 100;
+    hsl.l = clamp01(hsl.l);
+    return tinycolor(hsl);
+}
+
+function brighten(color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var rgb = tinycolor(color).toRgb();
+    rgb.r = mathMax(0, mathMin(255, rgb.r - mathRound(255 * - (amount / 100))));
+    rgb.g = mathMax(0, mathMin(255, rgb.g - mathRound(255 * - (amount / 100))));
+    rgb.b = mathMax(0, mathMin(255, rgb.b - mathRound(255 * - (amount / 100))));
+    return tinycolor(rgb);
+}
+
+function darken (color, amount) {
+    amount = (amount === 0) ? 0 : (amount || 10);
+    var hsl = tinycolor(color).toHsl();
+    hsl.l -= amount / 100;
+    hsl.l = clamp01(hsl.l);
+    return tinycolor(hsl);
+}
+
+// Spin takes a positive or negative amount within [-360, 360] indicating the change of hue.
+// Values outside of this range will be wrapped into this range.
+function spin(color, amount) {
+    var hsl = tinycolor(color).toHsl();
+    var hue = (hsl.h + amount) % 360;
+    hsl.h = hue < 0 ? 360 + hue : hue;
+    return tinycolor(hsl);
+}
+
+// Combination Functions
+// ---------------------
+// Thanks to jQuery xColor for some of the ideas behind these
+// <https://github.com/infusion/jQuery-xcolor/blob/master/jquery.xcolor.js>
+
+function complement(color) {
+    var hsl = tinycolor(color).toHsl();
+    hsl.h = (hsl.h + 180) % 360;
+    return tinycolor(hsl);
+}
+
+function triad(color) {
+    var hsl = tinycolor(color).toHsl();
+    var h = hsl.h;
+    return [
+        tinycolor(color),
+        tinycolor({ h: (h + 120) % 360, s: hsl.s, l: hsl.l }),
+        tinycolor({ h: (h + 240) % 360, s: hsl.s, l: hsl.l })
+    ];
+}
+
+function tetrad(color) {
+    var hsl = tinycolor(color).toHsl();
+    var h = hsl.h;
+    return [
+        tinycolor(color),
+        tinycolor({ h: (h + 90) % 360, s: hsl.s, l: hsl.l }),
+        tinycolor({ h: (h + 180) % 360, s: hsl.s, l: hsl.l }),
+        tinycolor({ h: (h + 270) % 360, s: hsl.s, l: hsl.l })
+    ];
+}
+
+function splitcomplement(color) {
+    var hsl = tinycolor(color).toHsl();
+    var h = hsl.h;
+    return [
+        tinycolor(color),
+        tinycolor({ h: (h + 72) % 360, s: hsl.s, l: hsl.l}),
+        tinycolor({ h: (h + 216) % 360, s: hsl.s, l: hsl.l})
+    ];
+}
+
+function analogous(color, results, slices) {
+    results = results || 6;
+    slices = slices || 30;
+
+    var hsl = tinycolor(color).toHsl();
+    var part = 360 / slices;
+    var ret = [tinycolor(color)];
+
+    for (hsl.h = ((hsl.h - (part * results >> 1)) + 720) % 360; --results; ) {
+        hsl.h = (hsl.h + part) % 360;
+        ret.push(tinycolor(hsl));
+    }
+    return ret;
+}
+
+function monochromatic(color, results) {
+    results = results || 6;
+    var hsv = tinycolor(color).toHsv();
+    var h = hsv.h, s = hsv.s, v = hsv.v;
+    var ret = [];
+    var modification = 1 / results;
+
+    while (results--) {
+        ret.push(tinycolor({ h: h, s: s, v: v}));
+        v = (v + modification) % 1;
+    }
+
+    return ret;
+}
+
+// Utility Functions
+// ---------------------
+
+tinycolor.mix = function(color1, color2, amount) {
+    amount = (amount === 0) ? 0 : (amount || 50);
+
+    var rgb1 = tinycolor(color1).toRgb();
+    var rgb2 = tinycolor(color2).toRgb();
+
+    var p = amount / 100;
+
+    var rgba = {
+        r: ((rgb2.r - rgb1.r) * p) + rgb1.r,
+        g: ((rgb2.g - rgb1.g) * p) + rgb1.g,
+        b: ((rgb2.b - rgb1.b) * p) + rgb1.b,
+        a: ((rgb2.a - rgb1.a) * p) + rgb1.a
+    };
+
+    return tinycolor(rgba);
+};
+
+
+// Readability Functions
+// ---------------------
+// <http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef (WCAG Version 2)
+
+// `contrast`
+// Analyze the 2 colors and returns the color contrast defined by (WCAG Version 2)
+tinycolor.readability = function(color1, color2) {
+    var c1 = tinycolor(color1);
+    var c2 = tinycolor(color2);
+    return (Math.max(c1.getLuminance(),c2.getLuminance())+0.05) / (Math.min(c1.getLuminance(),c2.getLuminance())+0.05);
+};
+
+// `isReadable`
+// Ensure that foreground and background color combinations meet WCAG2 guidelines.
+// The third argument is an optional Object.
+//      the 'level' property states 'AA' or 'AAA' - if missing or invalid, it defaults to 'AA';
+//      the 'size' property states 'large' or 'small' - if missing or invalid, it defaults to 'small'.
+// If the entire object is absent, isReadable defaults to {level:"AA",size:"small"}.
+
+// *Example*
+//    tinycolor.isReadable("#000", "#111") => false
+//    tinycolor.isReadable("#000", "#111",{level:"AA",size:"large"}) => false
+tinycolor.isReadable = function(color1, color2, wcag2) {
+    var readability = tinycolor.readability(color1, color2);
+    var wcag2Parms, out;
+
+    out = false;
+
+    wcag2Parms = validateWCAG2Parms(wcag2);
+    switch (wcag2Parms.level + wcag2Parms.size) {
+        case "AAsmall":
+        case "AAAlarge":
+            out = readability >= 4.5;
+            break;
+        case "AAlarge":
+            out = readability >= 3;
+            break;
+        case "AAAsmall":
+            out = readability >= 7;
+            break;
+    }
+    return out;
+
+};
+
+// `mostReadable`
+// Given a base color and a list of possible foreground or background
+// colors for that base, returns the most readable color.
+// Optionally returns Black or White if the most readable color is unreadable.
+// *Example*
+//    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:false}).toHexString(); // "#112255"
+//    tinycolor.mostReadable(tinycolor.mostReadable("#123", ["#124", "#125"],{includeFallbackColors:true}).toHexString();  // "#ffffff"
+//    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"large"}).toHexString(); // "#faf3f3"
+//    tinycolor.mostReadable("#a8015a", ["#faf3f3"],{includeFallbackColors:true,level:"AAA",size:"small"}).toHexString(); // "#ffffff"
+tinycolor.mostReadable = function(baseColor, colorList, args) {
+    var bestColor = null;
+    var bestScore = 0;
+    var readability;
+    var includeFallbackColors, level, size ;
+    args = args || {};
+    includeFallbackColors = args.includeFallbackColors ;
+    level = args.level;
+    size = args.size;
+
+    for (var i= 0; i < colorList.length ; i++) {
+        readability = tinycolor.readability(baseColor, colorList[i]);
+        if (readability > bestScore) {
+            bestScore = readability;
+            bestColor = tinycolor(colorList[i]);
+        }
+    }
+
+    if (tinycolor.isReadable(baseColor, bestColor, {"level":level,"size":size}) || !includeFallbackColors) {
+        return bestColor;
+    }
+    else {
+        args.includeFallbackColors=false;
+        return tinycolor.mostReadable(baseColor,["#fff", "#000"],args);
+    }
+};
+
+
+// Big List of Colors
+// ------------------
+// <http://www.w3.org/TR/css3-color/#svg-color>
+var names = tinycolor.names = {
+    aliceblue: "f0f8ff",
+    antiquewhite: "faebd7",
+    aqua: "0ff",
+    aquamarine: "7fffd4",
+    azure: "f0ffff",
+    beige: "f5f5dc",
+    bisque: "ffe4c4",
+    black: "000",
+    blanchedalmond: "ffebcd",
+    blue: "00f",
+    blueviolet: "8a2be2",
+    brown: "a52a2a",
+    burlywood: "deb887",
+    burntsienna: "ea7e5d",
+    cadetblue: "5f9ea0",
+    chartreuse: "7fff00",
+    chocolate: "d2691e",
+    coral: "ff7f50",
+    cornflowerblue: "6495ed",
+    cornsilk: "fff8dc",
+    crimson: "dc143c",
+    cyan: "0ff",
+    darkblue: "00008b",
+    darkcyan: "008b8b",
+    darkgoldenrod: "b8860b",
+    darkgray: "a9a9a9",
+    darkgreen: "006400",
+    darkgrey: "a9a9a9",
+    darkkhaki: "bdb76b",
+    darkmagenta: "8b008b",
+    darkolivegreen: "556b2f",
+    darkorange: "ff8c00",
+    darkorchid: "9932cc",
+    darkred: "8b0000",
+    darksalmon: "e9967a",
+    darkseagreen: "8fbc8f",
+    darkslateblue: "483d8b",
+    darkslategray: "2f4f4f",
+    darkslategrey: "2f4f4f",
+    darkturquoise: "00ced1",
+    darkviolet: "9400d3",
+    deeppink: "ff1493",
+    deepskyblue: "00bfff",
+    dimgray: "696969",
+    dimgrey: "696969",
+    dodgerblue: "1e90ff",
+    firebrick: "b22222",
+    floralwhite: "fffaf0",
+    forestgreen: "228b22",
+    fuchsia: "f0f",
+    gainsboro: "dcdcdc",
+    ghostwhite: "f8f8ff",
+    gold: "ffd700",
+    goldenrod: "daa520",
+    gray: "808080",
+    green: "008000",
+    greenyellow: "adff2f",
+    grey: "808080",
+    honeydew: "f0fff0",
+    hotpink: "ff69b4",
+    indianred: "cd5c5c",
+    indigo: "4b0082",
+    ivory: "fffff0",
+    khaki: "f0e68c",
+    lavender: "e6e6fa",
+    lavenderblush: "fff0f5",
+    lawngreen: "7cfc00",
+    lemonchiffon: "fffacd",
+    lightblue: "add8e6",
+    lightcoral: "f08080",
+    lightcyan: "e0ffff",
+    lightgoldenrodyellow: "fafad2",
+    lightgray: "d3d3d3",
+    lightgreen: "90ee90",
+    lightgrey: "d3d3d3",
+    lightpink: "ffb6c1",
+    lightsalmon: "ffa07a",
+    lightseagreen: "20b2aa",
+    lightskyblue: "87cefa",
+    lightslategray: "789",
+    lightslategrey: "789",
+    lightsteelblue: "b0c4de",
+    lightyellow: "ffffe0",
+    lime: "0f0",
+    limegreen: "32cd32",
+    linen: "faf0e6",
+    magenta: "f0f",
+    maroon: "800000",
+    mediumaquamarine: "66cdaa",
+    mediumblue: "0000cd",
+    mediumorchid: "ba55d3",
+    mediumpurple: "9370db",
+    mediumseagreen: "3cb371",
+    mediumslateblue: "7b68ee",
+    mediumspringgreen: "00fa9a",
+    mediumturquoise: "48d1cc",
+    mediumvioletred: "c71585",
+    midnightblue: "191970",
+    mintcream: "f5fffa",
+    mistyrose: "ffe4e1",
+    moccasin: "ffe4b5",
+    navajowhite: "ffdead",
+    navy: "000080",
+    oldlace: "fdf5e6",
+    olive: "808000",
+    olivedrab: "6b8e23",
+    orange: "ffa500",
+    orangered: "ff4500",
+    orchid: "da70d6",
+    palegoldenrod: "eee8aa",
+    palegreen: "98fb98",
+    paleturquoise: "afeeee",
+    palevioletred: "db7093",
+    papayawhip: "ffefd5",
+    peachpuff: "ffdab9",
+    peru: "cd853f",
+    pink: "ffc0cb",
+    plum: "dda0dd",
+    powderblue: "b0e0e6",
+    purple: "800080",
+    rebeccapurple: "663399",
+    red: "f00",
+    rosybrown: "bc8f8f",
+    royalblue: "4169e1",
+    saddlebrown: "8b4513",
+    salmon: "fa8072",
+    sandybrown: "f4a460",
+    seagreen: "2e8b57",
+    seashell: "fff5ee",
+    sienna: "a0522d",
+    silver: "c0c0c0",
+    skyblue: "87ceeb",
+    slateblue: "6a5acd",
+    slategray: "708090",
+    slategrey: "708090",
+    snow: "fffafa",
+    springgreen: "00ff7f",
+    steelblue: "4682b4",
+    tan: "d2b48c",
+    teal: "008080",
+    thistle: "d8bfd8",
+    tomato: "ff6347",
+    turquoise: "40e0d0",
+    violet: "ee82ee",
+    wheat: "f5deb3",
+    white: "fff",
+    whitesmoke: "f5f5f5",
+    yellow: "ff0",
+    yellowgreen: "9acd32"
+};
+
+// Make it easy to access colors via `hexNames[hex]`
+var hexNames = tinycolor.hexNames = flip(names);
+
+
+// Utilities
+// ---------
+
+// `{ 'name1': 'val1' }` becomes `{ 'val1': 'name1' }`
+function flip(o) {
+    var flipped = { };
+    for (var i in o) {
+        if (o.hasOwnProperty(i)) {
+            flipped[o[i]] = i;
+        }
+    }
+    return flipped;
+}
+
+// Return a valid alpha value [0,1] with all invalid values being set to 1
+function boundAlpha(a) {
+    a = parseFloat(a);
+
+    if (isNaN(a) || a < 0 || a > 1) {
+        a = 1;
+    }
+
+    return a;
+}
+
+// Take input from [0, n] and return it as [0, 1]
+function bound01(n, max) {
+    if (isOnePointZero(n)) { n = "100%"; }
+
+    var processPercent = isPercentage(n);
+    n = mathMin(max, mathMax(0, parseFloat(n)));
+
+    // Automatically convert percentage into number
+    if (processPercent) {
+        n = parseInt(n * max, 10) / 100;
+    }
+
+    // Handle floating point rounding errors
+    if ((Math.abs(n - max) < 0.000001)) {
+        return 1;
+    }
+
+    // Convert into [0, 1] range if it isn't already
+    return (n % max) / parseFloat(max);
+}
+
+// Force a number between 0 and 1
+function clamp01(val) {
+    return mathMin(1, mathMax(0, val));
+}
+
+// Parse a base-16 hex value into a base-10 integer
+function parseIntFromHex(val) {
+    return parseInt(val, 16);
+}
+
+// Need to handle 1.0 as 100%, since once it is a number, there is no difference between it and 1
+// <http://stackoverflow.com/questions/7422072/javascript-how-to-detect-number-as-a-decimal-including-1-0>
+function isOnePointZero(n) {
+    return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
+}
+
+// Check to see if string passed in is a percentage
+function isPercentage(n) {
+    return typeof n === "string" && n.indexOf('%') != -1;
+}
+
+// Force a hex value to have 2 characters
+function pad2(c) {
+    return c.length == 1 ? '0' + c : '' + c;
+}
+
+// Replace a decimal with it's percentage value
+function convertToPercentage(n) {
+    if (n <= 1) {
+        n = (n * 100) + "%";
+    }
+
+    return n;
+}
+
+// Converts a decimal to a hex value
+function convertDecimalToHex(d) {
+    return Math.round(parseFloat(d) * 255).toString(16);
+}
+// Converts a hex value to a decimal
+function convertHexToDecimal(h) {
+    return (parseIntFromHex(h) / 255);
+}
+
+var matchers = (function() {
+
+    // <http://www.w3.org/TR/css3-values/#integers>
+    var CSS_INTEGER = "[-\\+]?\\d+%?";
+
+    // <http://www.w3.org/TR/css3-values/#number-value>
+    var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
+
+    // Allow positive/negative integer/number.  Don't capture the either/or, just the entire outcome.
+    var CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
+
+    // Actual matching.
+    // Parentheses and commas are optional, but not required.
+    // Whitespace can take the place of commas or opening paren
+    var PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+    var PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+
+    return {
+        CSS_UNIT: new RegExp(CSS_UNIT),
+        rgb: new RegExp("rgb" + PERMISSIVE_MATCH3),
+        rgba: new RegExp("rgba" + PERMISSIVE_MATCH4),
+        hsl: new RegExp("hsl" + PERMISSIVE_MATCH3),
+        hsla: new RegExp("hsla" + PERMISSIVE_MATCH4),
+        hsv: new RegExp("hsv" + PERMISSIVE_MATCH3),
+        hsva: new RegExp("hsva" + PERMISSIVE_MATCH4),
+        hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+        hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+        hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+        hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
+    };
+})();
+
+// `isValidCSSUnit`
+// Take in a single string / number and check to see if it looks like a CSS unit
+// (see `matchers` above for definition).
+function isValidCSSUnit(color) {
+    return !!matchers.CSS_UNIT.exec(color);
+}
+
+// `stringInputToObject`
+// Permissive string parsing.  Take in a number of formats, and output an object
+// based on detected format.  Returns `{ r, g, b }` or `{ h, s, l }` or `{ h, s, v}`
+function stringInputToObject(color) {
+
+    color = color.replace(trimLeft,'').replace(trimRight, '').toLowerCase();
+    var named = false;
+    if (names[color]) {
+        color = names[color];
+        named = true;
+    }
+    else if (color == 'transparent') {
+        return { r: 0, g: 0, b: 0, a: 0, format: "name" };
+    }
+
+    // Try to match string input using regular expressions.
+    // Keep most of the number bounding out of this function - don't worry about [0,1] or [0,100] or [0,360]
+    // Just return an object and let the conversion functions handle that.
+    // This way the result will be the same whether the tinycolor is initialized with string or object.
+    var match;
+    if ((match = matchers.rgb.exec(color))) {
+        return { r: match[1], g: match[2], b: match[3] };
+    }
+    if ((match = matchers.rgba.exec(color))) {
+        return { r: match[1], g: match[2], b: match[3], a: match[4] };
+    }
+    if ((match = matchers.hsl.exec(color))) {
+        return { h: match[1], s: match[2], l: match[3] };
+    }
+    if ((match = matchers.hsla.exec(color))) {
+        return { h: match[1], s: match[2], l: match[3], a: match[4] };
+    }
+    if ((match = matchers.hsv.exec(color))) {
+        return { h: match[1], s: match[2], v: match[3] };
+    }
+    if ((match = matchers.hsva.exec(color))) {
+        return { h: match[1], s: match[2], v: match[3], a: match[4] };
+    }
+    if ((match = matchers.hex8.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1]),
+            g: parseIntFromHex(match[2]),
+            b: parseIntFromHex(match[3]),
+            a: convertHexToDecimal(match[4]),
+            format: named ? "name" : "hex8"
+        };
+    }
+    if ((match = matchers.hex6.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1]),
+            g: parseIntFromHex(match[2]),
+            b: parseIntFromHex(match[3]),
+            format: named ? "name" : "hex"
+        };
+    }
+    if ((match = matchers.hex4.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1] + '' + match[1]),
+            g: parseIntFromHex(match[2] + '' + match[2]),
+            b: parseIntFromHex(match[3] + '' + match[3]),
+            a: convertHexToDecimal(match[4] + '' + match[4]),
+            format: named ? "name" : "hex8"
+        };
+    }
+    if ((match = matchers.hex3.exec(color))) {
+        return {
+            r: parseIntFromHex(match[1] + '' + match[1]),
+            g: parseIntFromHex(match[2] + '' + match[2]),
+            b: parseIntFromHex(match[3] + '' + match[3]),
+            format: named ? "name" : "hex"
+        };
+    }
+
+    return false;
+}
+
+function validateWCAG2Parms(parms) {
+    // return valid WCAG2 parms for isReadable.
+    // If input parms are invalid, return {"level":"AA", "size":"small"}
+    var level, size;
+    parms = parms || {"level":"AA", "size":"small"};
+    level = (parms.level || "AA").toUpperCase();
+    size = (parms.size || "small").toLowerCase();
+    if (level !== "AA" && level !== "AAA") {
+        level = "AA";
+    }
+    if (size !== "small" && size !== "large") {
+        size = "small";
+    }
+    return {"level":level, "size":size};
+}
+
+// Node: Export function
+if (typeof module !== "undefined" && module.exports) {
+    module.exports = tinycolor;
+}
+// AMD/requirejs: Define the module
+else if (typeof define === 'function' && define.amd) {
+    define(function () {return tinycolor;});
+}
+// Browser: Expose to window
+else {
+    window.tinycolor = tinycolor;
+}
+
+})(Math);
+
+},{}]},{},[17]);

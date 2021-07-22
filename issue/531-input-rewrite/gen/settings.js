@@ -547,10 +547,6 @@ $(".pageSettings .sectionGroupTitle").click((e) => {
   toggleSettingsGroup($(e.currentTarget).attr("group"));
 });
 
-$(".pageSettings #resetPersonalBestsButton").on("click", (e) => {
-  SimplePopups.list.resetPersonalBests.show();
-});
-
 $(".pageSettings .section.customBackgroundSize .inputAndSave .save").on(
   "click",
   (e) => {
