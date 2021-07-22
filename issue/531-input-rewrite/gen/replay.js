@@ -107,8 +107,7 @@ function handleDisplayLogic(item, nosound = false) {
     if (!nosound) playSound();
     curPos = item.value;
     // remove all letters from cursor to end of word
-    for (let i = curPos + 1; i < activeWord.children.length; i++) {
-      let myElement = activeWord.children[i];
+    for (const myElement of [...activeWord.children].slice(curPos)) {
       if (myElement.classList.contains("extra")) {
         myElement.remove();
       } else {

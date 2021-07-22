@@ -7,7 +7,7 @@ import * as ThemeController from "./theme-controller";
 import * as CustomTextPopup from "./custom-text-popup";
 import * as ManualRestart from "./manual-restart-tracker";
 import Config, * as UpdateConfig from "./config";
-import * as PractiseMissed from "./practise-missed";
+import * as PractiseWords from "./practise-words";
 import * as TestUI from "./test-ui";
 import * as TestLogic from "./test-logic";
 import * as Funbox from "./funbox";
@@ -1956,6 +1956,36 @@ let commandsPageWidth = {
   ],
 };
 
+let commandsPractiseWords = {
+  title: "Practice words...",
+  list: [
+    {
+      id: "practiseWordsMissed",
+      display: "missed",
+      noIcon: true,
+      exec: () => {
+        PractiseWords.init(true, false);
+      },
+    },
+    {
+      id: "practiseWordsSlow",
+      display: "slow",
+      noIcon: true,
+      exec: () => {
+        PractiseWords.init(false, true);
+      },
+    },
+    {
+      id: "practiseWordsBoth",
+      display: "both",
+      noIcon: true,
+      exec: () => {
+        PractiseWords.init(true, true);
+      },
+    },
+  ],
+};
+
 export let themeCommands = {
   title: "Theme...",
   configKey: "theme",
@@ -2586,16 +2616,12 @@ export let defaultCommands = {
       },
     },
     {
-      id: "practiceMissedWords",
-      display: "Practice missed words",
+      id: "practiseWords",
+      display: "Practice words...",
       icon: "fa-exclamation-triangle",
-      exec: () => {
-        PractiseMissed.init();
-      },
+      subgroup: commandsPractiseWords,
       available: () => {
-        return (
-          TestUI.resultVisible && Object.keys(TestStats.missedWords).length > 0
-        );
+        return TestUI.resultVisible;
       },
     },
     {

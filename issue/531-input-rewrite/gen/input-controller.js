@@ -728,12 +728,14 @@ $("#wordsInput").on("input", function (event) {
       event.target.value = " ";
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
-    } else if (!Misc.trailingComposeChars.test(inputValue)) {
+    } else {
       TestUI.updateWordElement();
-      Replay.addReplayEvent(
-        "setWordLetterIndex",
-        TestLogic.input.current.length - 1
-      );
+      if (!Misc.trailingComposeChars.test(inputValue)) {
+        Replay.addReplayEvent(
+          "setWordLetterIndex",
+          TestLogic.input.current.length
+        );
+      }
     }
   } else if (inputValue !== inputValueBeforeChange) {
     let diffStart = 0;

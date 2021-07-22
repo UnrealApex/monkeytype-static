@@ -1444,8 +1444,10 @@ export function setBurstHeatmap(value, nosave) {
     value = false;
   }
   config.burstHeatmap = value;
-  TestUI.applyBurstHeatmap();
-  if (!nosave) saveToLocalStorage();
+  if (!nosave) {
+    TestUI.applyBurstHeatmap();
+    saveToLocalStorage();
+  }
 }
 
 export function apply(configObj) {

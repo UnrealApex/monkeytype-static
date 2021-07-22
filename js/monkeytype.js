@@ -501,7 +501,7 @@ var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"))
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
-var PractiseMissed = _interopRequireWildcard(require("./practise-missed"));
+var PractiseWords = _interopRequireWildcard(require("./practise-words"));
 
 var TestUI = _interopRequireWildcard(require("./test-ui"));
 
@@ -2152,6 +2152,31 @@ var commandsPageWidth = {
     }
   }]
 };
+var commandsPractiseWords = {
+  title: "Practice words...",
+  list: [{
+    id: "practiseWordsMissed",
+    display: "missed",
+    noIcon: true,
+    exec: function exec() {
+      PractiseWords.init(true, false);
+    }
+  }, {
+    id: "practiseWordsSlow",
+    display: "slow",
+    noIcon: true,
+    exec: function exec() {
+      PractiseWords.init(false, true);
+    }
+  }, {
+    id: "practiseWordsBoth",
+    display: "both",
+    noIcon: true,
+    exec: function exec() {
+      PractiseWords.init(true, true);
+    }
+  }]
+};
 var themeCommands = {
   title: "Theme...",
   configKey: "theme",
@@ -2707,14 +2732,12 @@ var defaultCommands = {
       return TestUI.resultVisible;
     }
   }, {
-    id: "practiceMissedWords",
-    display: "Practice missed words",
+    id: "practiseWords",
+    display: "Practice words...",
     icon: "fa-exclamation-triangle",
-    exec: function exec() {
-      PractiseMissed.init();
-    },
+    subgroup: commandsPractiseWords,
     available: function available() {
-      return TestUI.resultVisible && Object.keys(TestStats.missedWords).length > 0;
+      return TestUI.resultVisible;
     }
   }, {
     id: "toggleWordHistory",
@@ -2809,7 +2832,7 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./practise-missed":36,"./settings":42,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],6:[function(require,module,exports){
+},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./practise-words":36,"./settings":42,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],6:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5069,8 +5092,11 @@ function setBurstHeatmap(value, nosave) {
   }
 
   config.burstHeatmap = value;
-  TestUI.applyBurstHeatmap();
-  if (!nosave) saveToLocalStorage();
+
+  if (!nosave) {
+    TestUI.applyBurstHeatmap();
+    saveToLocalStorage();
+  }
 }
 
 function apply(configObj) {
@@ -9606,6 +9632,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = init;
 exports.resetBefore = resetBefore;
+exports.showPopup = showPopup;
 exports.before = void 0;
 
 var TestStats = _interopRequireWildcard(require("./test-stats"));
@@ -9625,25 +9652,65 @@ var before = {
 };
 exports.before = before;
 
-function init() {
-  if (Object.keys(TestStats.missedWords).length == 0) {
-    Notifications.add("You haven't missed any words.", 0);
+function init(missed, slow) {
+  var limit;
+
+  if (missed && !slow || !missed && slow) {
+    limit = 20;
+  } else if (missed && slow) {
+    limit = 10;
+  }
+
+  var sortableMissedWords = [];
+
+  if (missed) {
+    Object.keys(TestStats.missedWords).forEach(function (missedWord) {
+      sortableMissedWords.push([missedWord, TestStats.missedWords[missedWord]]);
+    });
+    sortableMissedWords.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    sortableMissedWords = sortableMissedWords.slice(0, limit);
+  }
+
+  if (missed && !slow && sortableMissedWords.length == 0) {
+    Notifications.add("You haven't missed any words", 0);
     return;
   }
+
+  var sortableSlowWords = [];
+
+  if (slow) {
+    sortableSlowWords = TestLogic.words.get().map(function (e, i) {
+      return [e, TestStats.burstHistory[i]];
+    });
+    sortableSlowWords.sort(function (a, b) {
+      return a[1] - b[1];
+    });
+    sortableSlowWords = sortableSlowWords.slice(0, Math.min(limit, Math.round(TestLogic.words.length * 0.2)));
+  } // console.log(sortableMissedWords);
+  // console.log(sortableSlowWords);
+
+
+  var newCustomText = [];
+  sortableMissedWords.forEach(function (missed, index) {
+    for (var i = 0; i < missed[1]; i++) {
+      newCustomText.push(missed[0]);
+    }
+  });
+  sortableSlowWords.forEach(function (slow, index) {
+    for (var i = 0; i < sortableSlowWords.length - index; i++) {
+      newCustomText.push(slow[0]);
+    }
+  }); // console.log(newCustomText);
 
   var mode = before.mode === null ? UpdateConfig["default"].mode : before.mode;
   var punctuation = before.punctuation === null ? UpdateConfig["default"].punctuation : before.punctuation;
   var numbers = before.numbers === null ? UpdateConfig["default"].numbers : before.numbers;
   UpdateConfig.setMode("custom");
-  var newCustomText = [];
-  Object.keys(TestStats.missedWords).forEach(function (missedWord) {
-    for (var i = 0; i < TestStats.missedWords[missedWord]; i++) {
-      newCustomText.push(missedWord);
-    }
-  });
   CustomText.setText(newCustomText);
   CustomText.setIsWordRandom(true);
-  CustomText.setWord(Object.keys(TestStats.missedWords).length * 5);
+  CustomText.setWord((sortableSlowWords.length + sortableMissedWords.length) * 5);
   TestLogic.restart(false, false, false, true);
   before.mode = mode;
   before.punctuation = punctuation;
@@ -9655,6 +9722,42 @@ function resetBefore() {
   before.punctuation = null;
   before.numbers = null;
 }
+
+function showPopup() {
+  if ($("#practiseWordsPopupWrapper").hasClass("hidden")) {
+    $("#practiseWordsPopupWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
+      opacity: 1
+    }, 100);
+  }
+}
+
+function hidePopup() {
+  if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
+    $("#practiseWordsPopupWrapper").stop(true, true).css("opacity", 1).animate({
+      opacity: 0
+    }, 100, function (e) {
+      $("#practiseWordsPopupWrapper").addClass("hidden");
+    });
+  }
+}
+
+$("#practiseWordsPopupWrapper").click(function (e) {
+  if ($(e.target).attr("id") === "practiseWordsPopupWrapper") {
+    hidePopup();
+  }
+});
+$("#practiseWordsPopup .button.missed").click(function () {
+  hidePopup();
+  init(true, false);
+});
+$("#practiseWordsPopup .button.slow").click(function () {
+  hidePopup();
+  init(false, true);
+});
+$("#practiseWordsPopup .button.both").click(function () {
+  hidePopup();
+  init(true, true);
+});
 
 },{"./config":7,"./custom-text":11,"./notifications":31,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireWildcard":68}],37:[function(require,module,exports){
 "use strict";
@@ -11328,7 +11431,7 @@ var CustomText = _interopRequireWildcard(require("./custom-text"));
 
 var TestStats = _interopRequireWildcard(require("./test-stats"));
 
-var PractiseMissed = _interopRequireWildcard(require("./practise-missed"));
+var PractiseWords = _interopRequireWildcard(require("./practise-words"));
 
 var ShiftTracker = _interopRequireWildcard(require("./shift-tracker"));
 
@@ -11892,7 +11995,7 @@ function _init() {
 
               if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
                 randomWord = CustomText.text[i];
-              } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseMissed.before.mode !== null)) {
+              } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseWords.before.mode !== null)) {
                 randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               } else {
                 regenarationCount = 0; //infinite loop emergency stop button
@@ -12167,12 +12270,12 @@ function restart() {
     $("#words").empty();
   }
 
-  if (PractiseMissed.before.mode !== null && !withSameWordset && !practiseMissed) {
+  if (PractiseWords.before.mode !== null && !withSameWordset && !practiseMissed) {
     Notifications.add("Reverting to previous settings.", 0);
-    UpdateConfig.setMode(PractiseMissed.before.mode);
-    UpdateConfig.setPunctuation(PractiseMissed.before.punctuation);
-    UpdateConfig.setNumbers(PractiseMissed.before.numbers);
-    PractiseMissed.resetBefore();
+    UpdateConfig.setMode(PractiseWords.before.mode);
+    UpdateConfig.setPunctuation(PractiseWords.before.punctuation);
+    UpdateConfig.setNumbers(PractiseWords.before.numbers);
+    PractiseWords.resetBefore();
   }
 
   var repeatWithPace = false;
@@ -13027,7 +13130,7 @@ function fail(reason) {
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./pb-crown":34,"./poetry.js":35,"./practise-missed":36,"./quote-search-popup":37,"./replay.js":39,"./shift-tracker":43,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./theme-colors":52,"./theme-controller":53,"./timer-progress":55,"./today-tracker":56,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],49:[function(require,module,exports){
+},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./pb-crown":34,"./poetry.js":35,"./practise-words":36,"./quote-search-popup":37,"./replay.js":39,"./shift-tracker":43,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./theme-colors":52,"./theme-controller":53,"./timer-progress":55,"./today-tracker":56,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13684,7 +13787,7 @@ var OutOfFocus = _interopRequireWildcard(require("./out-of-focus"));
 
 var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
 
-var PractiseMissed = _interopRequireWildcard(require("./practise-missed"));
+var PractiseWords = _interopRequireWildcard(require("./practise-words"));
 
 var Replay = _interopRequireWildcard(require("./replay"));
 
@@ -14379,7 +14482,12 @@ function applyBurstHeatmap() {
   if (UpdateConfig["default"].burstHeatmap) {
     $("#resultWordsHistory .heatmapLegend").removeClass("hidden");
     var min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
-    var max = Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory)); // let step = (max - min) / 5;
+    var max = Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
+    var burstlist = TestStats.burstHistory;
+
+    if (TestLogic.input.getHistory(TestLogic.input.getHistory().length - 1).length !== TestLogic.words.getCurrent().length) {
+      burstlist = burstlist.splice(0, burstlist.length - 1);
+    } // let step = (max - min) / 5;
     // let steps = [
     //   {
     //     val: min,
@@ -14403,12 +14511,13 @@ function applyBurstHeatmap() {
     //   },
     // ];
 
-    var median = Misc.median(TestStats.burstHistory);
+
+    var median = Misc.median(burstlist);
     var adatm = [];
-    TestStats.burstHistory.forEach(function (burst) {
+    burstlist.forEach(function (burst) {
       adatm.push(Math.abs(median - burst));
     });
-    var step = Misc.mean(adatm); // let step = Misc.stdDev(TestStats.burstHistory)/2;
+    var step = Misc.mean(adatm); // let step = Misc.stdDev(burstlist)/2;
 
     var steps = [{
       val: 0,
@@ -14576,13 +14685,15 @@ $(document.body).on("click", "#restartTestButton", function () {
     TestLogic.restart();
   }
 });
-$(document).on("keypress", "#practiseMissedWordsButton", function (event) {
-  if (event.keyCode == 13) {
-    PractiseMissed.init();
-  }
+$(document).on("keypress", "#practiseWordsButton", function (event) {
+  // if (event.keyCode == 13) {
+  //   PractiseWords.init();
+  // }
+  PractiseWords.showPopup();
 });
-$(document.body).on("click", "#practiseMissedWordsButton", function () {
-  PractiseMissed.init();
+$(document.body).on("click", "#practiseWordsButton", function () {
+  // PractiseWords.init();
+  PractiseWords.showPopup();
 });
 $(document).on("keypress", "#nextTestButton", function (event) {
   if (event.keyCode == 13) {
@@ -14624,7 +14735,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-missed":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],52:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-words":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],52:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
