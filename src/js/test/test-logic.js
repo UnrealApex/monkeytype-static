@@ -46,7 +46,7 @@ export function setNotSignedInUid(uid) {
   notSignedInLastResult.uid = uid;
 }
 
-class Words {
+class WordList {
   constructor() {
     this.list = [];
     this.length = 0;
@@ -85,32 +85,14 @@ class Words {
   }
 }
 
-class Input {
+class InputWordList {
   constructor() {
-    this.current = "";
     this.history = [];
+    this.current = "";
   }
 
   reset() {
-    this.current = "";
     this.history = [];
-  }
-
-  resetHistory() {
-    this.history = [];
-  }
-
-  setCurrent(val) {
-    this.current = val;
-    this.length = this.current.length;
-  }
-
-  appendCurrent(val) {
-    this.current += val;
-    this.length = this.current.length;
-  }
-
-  resetCurrent() {
     this.current = "";
   }
 
@@ -120,12 +102,15 @@ class Input {
 
   pushHistory() {
     this.history.push(this.current);
-    this.historyLength = this.history.length;
-    this.resetCurrent();
+    this.current = "";
   }
 
   popHistory() {
     return this.history.pop();
+  }
+
+  getLastChar() {
+    return this.current[this.current.length];
   }
 
   getHistory(i) {
@@ -137,50 +122,20 @@ class Input {
   }
 }
 
-class Corrected {
-  constructor() {
-    this.current = "";
-    this.history = [];
-  }
-  setCurrent(val) {
-    this.current = val;
+class InputWordListBound extends InputWordList {
+  get current() {
+    return $("#wordsInput").val().normalize().slice(1);
   }
 
-  appendCurrent(val) {
-    this.current += val;
-  }
-
-  resetCurrent() {
-    this.current = "";
-  }
-
-  resetHistory() {
-    this.history = [];
-  }
-
-  reset() {
-    this.resetCurrent();
-    this.resetHistory();
-  }
-
-  getHistory(i) {
-    return this.history[i];
-  }
-
-  popHistory() {
-    return this.history.pop();
-  }
-
-  pushHistory() {
-    this.history.push(this.current);
-    this.current = "";
+  set current(val) {
+    $("#wordsInput").val(" " + val.normalize());
   }
 }
 
 export let active = false;
-export let words = new Words();
-export let input = new Input();
-export let corrected = new Corrected();
+export let words = new WordList();
+export let input = new InputWordListBound();
+export let corrected = new InputWordList();
 export let currentWordIndex = 0;
 export let isRepeated = false;
 export let isPaceRepeat = false;
@@ -412,8 +367,7 @@ export async function init() {
   //   incorrect: 0,
   // };
 
-  input.resetHistory();
-  input.resetCurrent();
+  input.reset();
 
   let language = await Misc.getLanguage(Config.language);
   if (language && language.name !== Config.language) {
@@ -793,6 +747,7 @@ export function restart(
   $("#showWordHistoryButton").removeClass("loaded");
   TestUI.focusWords();
   Funbox.resetMemoryTimer();
+  $("#wordsInput").val("");
 
   TestUI.reset();
 
