@@ -6685,6 +6685,8 @@ function handleCharAt(charIndex) {
 }
 
 $(document).keydown(function (event) {
+  var _event$originalEvent;
+
   //autofocus
   var wordsFocused = $("#wordsInput").is(":focus");
   var pageTestActive = !$(".pageTest").hasClass("hidden");
@@ -6708,7 +6710,7 @@ $(document).keydown(function (event) {
 
   if (!wordsFocused) return;
 
-  if (!event.originalEvent.isTrusted || TestUI.testRestarting) {
+  if (!((_event$originalEvent = event.originalEvent) === null || _event$originalEvent === void 0 ? void 0 : _event$originalEvent.isTrusted) || TestUI.testRestarting) {
     event.preventDefault();
     return;
   } //blocking firefox from going back in history with backspace
@@ -6761,7 +6763,9 @@ $(document).keydown(function (event) {
   }
 });
 $("#wordsInput").keyup(function (event) {
-  if (!event.originalEvent.isTrusted) {
+  var _event$originalEvent2;
+
+  if (!((_event$originalEvent2 = event.originalEvent) === null || _event$originalEvent2 === void 0 ? void 0 : _event$originalEvent2.isTrusted)) {
     event.preventDefault();
     return;
   }
@@ -6785,9 +6789,19 @@ function triggerInputWith(string) {
 }
 
 $("#wordsInput").on("beforeinput", function (event) {
+  var _event$originalEvent3;
+
+  if (!((_event$originalEvent3 = event.originalEvent) === null || _event$originalEvent3 === void 0 ? void 0 : _event$originalEvent3.isTrusted)) return;
   inputValueBeforeChange = event.target.value.normalize();
 });
 $("#wordsInput").on("input", function (event) {
+  var _event$originalEvent4;
+
+  if (!((_event$originalEvent4 = event.originalEvent) === null || _event$originalEvent4 === void 0 ? void 0 : _event$originalEvent4.isTrusted)) {
+    event.target.value = " ";
+    return;
+  }
+
   var inputValue = event.target.value.normalize();
 
   if (inputValue.length < inputValueBeforeChange.length) {
@@ -6800,7 +6814,7 @@ $("#wordsInput").on("input", function (event) {
       TestUI.updateWordElement();
 
       if (!Misc.trailingComposeChars.test(inputValue)) {
-        Replay.addReplayEvent("setWordLetterIndex", TestLogic.input.current.length);
+        Replay.addReplayEvent("setLetterIndex", TestLogic.input.current.length);
       }
     }
   } else if (inputValue !== inputValueBeforeChange) {
@@ -10025,7 +10039,7 @@ function handleDisplayLogic(item) {
     myElement = activeWord.children[curPos];
     myElement.classList.add("incorrect");
     curPos++;
-  } else if (item.action === "setWordLetterIndex") {
+  } else if (item.action === "setLetterIndex") {
     if (!nosound) playSound();
     curPos = item.value; // remove all letters from cursor to end of word
 

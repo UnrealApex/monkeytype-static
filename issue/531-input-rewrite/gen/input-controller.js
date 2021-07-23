@@ -627,7 +627,7 @@ $(document).keydown(function (event) {
 
   if (!wordsFocused) return;
 
-  if (!event.originalEvent.isTrusted || TestUI.testRestarting) {
+  if (!event.originalEvent?.isTrusted || TestUI.testRestarting) {
     event.preventDefault();
     return;
   }
@@ -694,7 +694,7 @@ $(document).keydown(function (event) {
 });
 
 $("#wordsInput").keyup((event) => {
-  if (!event.originalEvent.isTrusted) {
+  if (!event.originalEvent?.isTrusted) {
     event.preventDefault();
     return;
   }
@@ -716,10 +716,16 @@ function triggerInputWith(string) {
 }
 
 $("#wordsInput").on("beforeinput", function (event) {
+  if (!event.originalEvent?.isTrusted) return;
   inputValueBeforeChange = event.target.value.normalize();
 });
 
 $("#wordsInput").on("input", function (event) {
+  if (!event.originalEvent?.isTrusted) {
+    event.target.value = " ";
+    return;
+  }
+
   let inputValue = event.target.value.normalize();
 
   if (inputValue.length < inputValueBeforeChange.length) {
@@ -732,7 +738,7 @@ $("#wordsInput").on("input", function (event) {
       TestUI.updateWordElement();
       if (!Misc.trailingComposeChars.test(inputValue)) {
         Replay.addReplayEvent(
-          "setWordLetterIndex",
+          "setLetterIndex",
           TestLogic.input.current.length
         );
       }

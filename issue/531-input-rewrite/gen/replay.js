@@ -103,7 +103,7 @@ function handleDisplayLogic(item, nosound = false) {
     myElement = activeWord.children[curPos];
     myElement.classList.add("incorrect");
     curPos++;
-  } else if (item.action === "setWordLetterIndex") {
+  } else if (item.action === "setLetterIndex") {
     if (!nosound) playSound();
     curPos = item.value;
     // remove all letters from cursor to end of word
