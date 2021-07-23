@@ -4985,7 +4985,7 @@ function setCustomBackground(value, nosave) {
 
   value = value.trim();
 
-  if (/(https|http):\/\/(www\.|).+\..+\/.+(\.png|\.gif|\.jpeg|\.jpg)/gi.test(value) || value == "") {
+  if (/(https|http):\/\/(www\.|).+\..+\/.+(\.png|\.gif|\.jpeg|\.jpg)/gi.test(value) && !/[<>]/.test(value) || value == "") {
     config.customBackground = value;
     CommandlineLists.defaultCommands.list.filter(function (command) {
       return command.id == "changeCustomBackground";
@@ -14770,7 +14770,10 @@ function applyCustomBackground() {
     $(".customBackground img").remove();
   } else {
     $("#words").addClass("noErrorBorder");
-    $(".customBackground").html("<img src=\"".concat(_config["default"].customBackground, "\"></img>"));
+    var $img = $("<img>", {
+      src: _config["default"].customBackground
+    });
+    $(".customBackground").html($img);
   }
 }
 
@@ -15318,7 +15321,7 @@ function swapElements(el1, el2, totalDuration) {
 }
 
 function changePage(page) {
-  console.log('change');
+  console.log("change");
 
   if (pageTransition) {
     return;
@@ -15390,8 +15393,11 @@ $(".merchBanner a").click(function (event) {
 });
 $(".merchBanner .fas").click(function (event) {
   $(".merchBanner").remove();
-  window.localStorage.setItem("merchbannerclosed", true);
-  Notifications.add("Won't remind you anymore. Thanks for continued support <3", 0, 5);
+  window.localStorage.setItem("merchbannerclosed", true); // Notifications.add(
+  //   "Won't remind you anymore. Thanks for continued support <3",
+  //   0,
+  //   5
+  // );
 });
 $(".scrollToTopButton").click(function (event) {
   window.scrollTo(0, 0);
