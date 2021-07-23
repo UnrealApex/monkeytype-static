@@ -11,6 +11,15 @@ Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
 
+console.log("hi hello this is");
+  console.log('some code i added');
+   console.
+ .log('through the github UI');
+          console.log(         "and the formatting"          );
+console.log('is very' + " " + 'bad because');
+                                                          console
+                          .log('prettier didnt run :(');
+
 RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(() => {
   if (window.location.hash === "") {
