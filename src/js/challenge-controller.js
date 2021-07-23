@@ -7,7 +7,10 @@ import * as TestLogic from "./test-logic";
 import * as Funbox from "./funbox";
 
 export async function setup(challengeName) {
-  let list = await Misc.getChallengeList();
+  let list = await Misc.getChallengeList()
+  
+  
+  ;
   let challenge = list.filter((c) => c.name === challengeName)[0];
   let notitext;
   try {
