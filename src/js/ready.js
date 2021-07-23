@@ -6,6 +6,16 @@ import * as RouteController from "./route-controller";
 import * as UI from "./ui";
 import * as MonkeyPower from "./monkey-power";
 
+console.log("hi hello this is");
+  console.log('some code i added');
+   console.
+ log('through the github UI');
+          console.log(         "and the formatting"          );
+console.log('is very' + " " + 'bad because');
+                                                          console.
+                          log('prettier didnt run :(');
+
+
 ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
