@@ -113,6 +113,10 @@ class InputWordList {
     return this.current[this.current.length];
   }
 
+  dropLastChar() {
+    this.current = this.current.slice(0, -1);
+  }
+
   getHistory(i) {
     if (i === undefined) {
       return this.history;
