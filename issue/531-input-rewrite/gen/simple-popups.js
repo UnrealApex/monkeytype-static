@@ -154,3 +154,19 @@ list.applyCustomFont = new SimplePopup(
   },
   () => {}
 );
+
+list.resetSettings = new SimplePopup(
+  "resetSettings",
+  "text",
+  "Reset Settings",
+  [],
+  "Are you sure you want to reset all your settings?",
+  "Reset",
+  () => {
+    UpdateConfig.reset();
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  },
+  () => {}
+);

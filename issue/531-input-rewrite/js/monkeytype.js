@@ -6542,6 +6542,16 @@ function handleCharAt(charIndex) {
     return false;
   }
 
+  var now = performance.now();
+
+  if (TestStats.keypressTimings.duration.current !== -1) {
+    var diff = Math.abs(TestStats.keypressTimings.duration.current - now);
+    TestStats.pushKeypressDuration(diff);
+  }
+
+  TestStats.recordKeypressSpacing();
+  TestStats.setKeypressDuration(performance.now());
+  TestStats.setKeypressNotAfk();
   var _char2 = TestLogic.input.current[charIndex];
 
   if (_char2 === "\n" && UpdateConfig["default"].funbox === "58008") {
@@ -6725,9 +6735,6 @@ $(document).keydown(function (event) {
   }
 
   Monkey.type();
-  TestStats.recordKeypressSpacing();
-  TestStats.setKeypressDuration(performance.now());
-  TestStats.setKeypressNotAfk();
 
   if (event.key === "Backspace" && TestLogic.input.current.length === 0) {
     backspaceToPrevious();
@@ -6771,9 +6778,9 @@ $("#wordsInput").keyup(function (event) {
 
   if (TestUI.resultVisible) return;
   var now = performance.now();
-  var diff = Math.abs(TestStats.keypressTimings.duration.current - now);
 
   if (TestStats.keypressTimings.duration.current !== -1) {
+    var diff = Math.abs(TestStats.keypressTimings.duration.current - now);
     TestStats.pushKeypressDuration(diff);
   }
 
@@ -10984,6 +10991,12 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
 }], "Make sure you have the font installed on your computer before applying.", "Apply", function (fontName) {
   if (fontName === "") return;
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
+}, function () {});
+list.resetSettings = new SimplePopup("resetSettings", "text", "Reset Settings", [], "Are you sure you want to reset all your settings?", "Reset", function () {
+  UpdateConfig.reset();
+  setTimeout(function () {
+    location.reload();
+  }, 1000);
 }, function () {});
 
 },{"./config":7,"./loader":26,"./notifications":31,"./settings":42,"@babel/runtime/helpers/classCallCheck":65,"@babel/runtime/helpers/createClass":66,"@babel/runtime/helpers/interopRequireDefault":70,"@babel/runtime/helpers/interopRequireWildcard":71}],45:[function(require,module,exports){

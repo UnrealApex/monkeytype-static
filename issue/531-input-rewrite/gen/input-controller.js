@@ -396,6 +396,16 @@ function handleCharAt(charIndex) {
     return false;
   }
 
+  let now = performance.now();
+  if (TestStats.keypressTimings.duration.current !== -1) {
+    let diff = Math.abs(TestStats.keypressTimings.duration.current - now);
+    TestStats.pushKeypressDuration(diff);
+  }
+
+  TestStats.recordKeypressSpacing();
+  TestStats.setKeypressDuration(performance.now());
+  TestStats.setKeypressNotAfk();
+
   let char = TestLogic.input.current[charIndex];
 
   if (char === "\n" && Config.funbox === "58008") {
@@ -647,10 +657,6 @@ $(document).keydown(function (event) {
 
   Monkey.type();
 
-  TestStats.recordKeypressSpacing();
-  TestStats.setKeypressDuration(performance.now());
-  TestStats.setKeypressNotAfk();
-
   if (event.key === "Backspace" && TestLogic.input.current.length === 0) {
     backspaceToPrevious();
     Replay.addReplayEvent("backWord");
@@ -701,8 +707,8 @@ $("#wordsInput").keyup((event) => {
 
   if (TestUI.resultVisible) return;
   let now = performance.now();
-  let diff = Math.abs(TestStats.keypressTimings.duration.current - now);
   if (TestStats.keypressTimings.duration.current !== -1) {
+    let diff = Math.abs(TestStats.keypressTimings.duration.current - now);
     TestStats.pushKeypressDuration(diff);
   }
   TestStats.setKeypressDuration(now);
