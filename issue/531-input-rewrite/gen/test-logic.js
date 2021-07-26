@@ -113,10 +113,6 @@ class InputWordList {
     return this.current[this.current.length];
   }
 
-  dropLastChar() {
-    this.current = this.current.slice(0, -1);
-  }
-
   getHistory(i) {
     if (i === undefined) {
       return this.history;
@@ -609,6 +605,7 @@ export async function init() {
     rq.text = rq.text.replace(/\\t/gm, "\t");
     rq.text = rq.text.replace(/\\n/gm, "\n");
     rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
+    rq.text = rq.text.trim();
 
     setRandomQuote(rq);
 
@@ -1617,7 +1614,7 @@ export function finish(difficultyFailed = false) {
       $("#words").empty();
       ChartController.result.resize();
 
-      if (Config.burstHeatmap) {
+      if (Config.alwaysShowWordsHistory && Config.burstHeatmap) {
         TestUI.applyBurstHeatmap();
       }
       $("#testModesNotice").addClass("hidden");

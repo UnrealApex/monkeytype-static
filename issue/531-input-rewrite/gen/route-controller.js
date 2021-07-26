@@ -11,6 +11,9 @@ let mappedRoutes = {
 
 export function handleInitialPageClasses(hash) {
   if (hash.match(/^#group_/)) hash = "#settings";
+  if (!mappedRoutes[hash]) {
+    hash = "";
+  }
   let el = $(".page." + mappedRoutes[hash]);
   $(el).removeClass("hidden");
   $(el).addClass("active");

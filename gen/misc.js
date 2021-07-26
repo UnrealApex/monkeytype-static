@@ -351,23 +351,24 @@ export function mean(array) {
 }
 
 //https://www.w3resource.com/javascript-exercises/fundamental/javascript-fundamental-exercise-88.php
-export function median (arr) {
-  try{
+export function median(arr) {
+  try {
     const mid = Math.floor(arr.length / 2),
       nums = [...arr].sort((a, b) => a - b);
     return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-  }catch(e){
+  } catch (e) {
     return 0;
   }
 }
 
 export function getReleasesFromGitHub() {
   $.getJSON("releases.json", (data) => {
-    $("#bottom .version").text(data[0].name).css("opacity", 1);
-    $("#versionHistory .releases").empty();
-    data.forEach((release) => {
-      if (!release.draft && !release.prerelease) {
-        $("#versionHistory .releases").append(`
+      $("#bottom .version .text").text(data[0].name);
+      $("#bottom .version").css("opacity", 1);
+      $("#versionHistory .releases").empty();
+      data.forEach((release) => {
+        if (!release.draft && !release.prerelease) {
+          $("#versionHistory .releases").append(`
           <div class="release">
             <div class="title">${release.name}</div>
             <div class="date">${moment(release.published_at).format(

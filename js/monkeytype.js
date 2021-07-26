@@ -6364,7 +6364,7 @@ function handleBackspace(event) {
       Funbox.toggleScript(TestLogic.words.getCurrent());
       TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
     }
-  } else {
+  } else if (TestLogic.input.current !== "") {
     if (UpdateConfig["default"].confidenceMode === "max") return;
 
     if (event["ctrlKey"] || event["altKey"] || event.metaKey) {
@@ -8476,7 +8476,8 @@ function median(arr) {
 
 function getReleasesFromGitHub() {
   $.getJSON("releases.json", function (data) {
-    $("#bottom .version").text(data[0].name).css("opacity", 1);
+    $("#bottom .version .text").text(data[0].name);
+    $("#bottom .version").css("opacity", 1);
     $("#versionHistory .releases").empty();
     data.forEach(function (release) {
       if (!release.draft && !release.prerelease) {
@@ -9724,10 +9725,17 @@ function resetBefore() {
 }
 
 function showPopup() {
+  var focus = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
   if ($("#practiseWordsPopupWrapper").hasClass("hidden")) {
     $("#practiseWordsPopupWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
       opacity: 1
-    }, 100);
+    }, 100, function () {
+      if (focus) {
+        console.log("focusing");
+        $("#practiseWordsPopup .missed").focus();
+      }
+    });
   }
 }
 
@@ -10401,6 +10409,11 @@ var mappedRoutes = {
 
 function handleInitialPageClasses(hash) {
   if (hash.match(/^#group_/)) hash = "#settings";
+
+  if (!mappedRoutes[hash]) {
+    hash = "";
+  }
+
   var el = $(".page." + mappedRoutes[hash]);
   $(el).removeClass("hidden");
   $(el).addClass("active");
@@ -12062,12 +12075,12 @@ function _init() {
             }
 
           case 32:
-            _context2.next = 71;
+            _context2.next = 72;
             break;
 
           case 34:
             if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 71;
+              _context2.next = 72;
               break;
             }
 
@@ -12155,6 +12168,7 @@ function _init() {
             rq.text = rq.text.replace(/\\t/gm, "\t");
             rq.text = rq.text.replace(/\\n/gm, "\n");
             rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
+            rq.text = rq.text.trim();
             setRandomQuote(rq);
             w = randomQuote.text.trim().split(" ");
 
@@ -12166,7 +12180,7 @@ function _init() {
               words.push(w[_i3]);
             }
 
-          case 71:
+          case 72:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -12191,17 +12205,17 @@ function _init() {
 
 
             if (!$(".pageTest").hasClass("active")) {
-              _context2.next = 76;
+              _context2.next = 77;
               break;
             }
 
-            _context2.next = 76;
+            _context2.next = 77;
             return Funbox.activate();
 
-          case 76:
+          case 77:
             TestUI.showWords(); // }
 
-          case 77:
+          case 78:
           case "end":
             return _context2.stop();
         }
@@ -13100,7 +13114,7 @@ function finish() {
     $("#words").empty();
     ChartController.result.resize();
 
-    if (UpdateConfig["default"].burstHeatmap) {
+    if (UpdateConfig["default"].alwaysShowWordsHistory && UpdateConfig["default"].burstHeatmap) {
       TestUI.applyBurstHeatmap();
     }
 
@@ -13795,6 +13809,8 @@ var TestStats = _interopRequireWildcard(require("./test-stats"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
 
+var TestUI = _interopRequireWildcard(require("./test-ui"));
+
 var currentWordElementIndex = 0;
 exports.currentWordElementIndex = currentWordElementIndex;
 var resultVisible = false;
@@ -14464,9 +14480,21 @@ function toggleResultWords() {
       if (!$("#showWordHistoryButton").hasClass("loaded")) {
         $("#words").html("<div class=\"preloader\"><i class=\"fas fa-fw fa-spin fa-circle-notch\"></i></div>");
         loadWordsHistory().then(function () {
-          $("#resultWordsHistory").removeClass("hidden").css("display", "none").slideDown(250);
+          if (UpdateConfig["default"].burstHeatmap) {
+            TestUI.applyBurstHeatmap();
+          }
+
+          $("#resultWordsHistory").removeClass("hidden").css("display", "none").slideDown(250, function () {
+            if (UpdateConfig["default"].burstHeatmap) {
+              TestUI.applyBurstHeatmap();
+            }
+          });
         });
       } else {
+        if (UpdateConfig["default"].burstHeatmap) {
+          TestUI.applyBurstHeatmap();
+        }
+
         $("#resultWordsHistory").removeClass("hidden").css("display", "none").slideDown(250);
       }
     } else {
@@ -14483,7 +14511,7 @@ function applyBurstHeatmap() {
     $("#resultWordsHistory .heatmapLegend").removeClass("hidden");
     var min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
     var max = Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
-    var burstlist = TestStats.burstHistory;
+    var burstlist = (0, _toConsumableArray2["default"])(TestStats.burstHistory);
 
     if (TestLogic.input.getHistory(TestLogic.input.getHistory().length - 1).length !== TestLogic.words.getCurrent().length) {
       burstlist = burstlist.splice(0, burstlist.length - 1);
@@ -14686,10 +14714,9 @@ $(document.body).on("click", "#restartTestButton", function () {
   }
 });
 $(document).on("keypress", "#practiseWordsButton", function (event) {
-  // if (event.keyCode == 13) {
-  //   PractiseWords.init();
-  // }
-  PractiseWords.showPopup();
+  if (event.keyCode == 13) {
+    PractiseWords.showPopup(true);
+  }
 });
 $(document.body).on("click", "#practiseWordsButton", function () {
   // PractiseWords.init();
@@ -14735,7 +14762,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-words":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],52:[function(require,module,exports){
+},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-words":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],52:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14869,7 +14896,7 @@ function apply(themeName) {
 
   $(".keymap-key").attr("style", "");
   $("#currentTheme").attr("href", "themes/".concat(name, ".css"));
-  $(".current-theme").text(themeName.replace("_", " "));
+  $(".current-theme .text").text(themeName.replace("_", " "));
 
   if (themeName === "custom") {
     colorVars.forEach(function (e, index) {
@@ -14881,7 +14908,7 @@ function apply(themeName) {
     $(".keymap-key").attr("style", "");
     ChartController.updateAllChartColors();
     updateFavicon(32, 14);
-    $("#metaThemeColor").attr("content", ThemeColors.main);
+    $("#metaThemeColor").attr("content", ThemeColors.bg);
   }, 500);
 }
 
@@ -15639,11 +15666,17 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.updateScore = updateScore;
 exports.getWord = getWord;
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 var TestStats = _interopRequireWildcard(require("./test-stats"));
 
@@ -15654,38 +15687,55 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 // Changes how quickly it 'learns' scores - very roughly the score for a char
-// is based on last 1/adjustRate occurrences. Make it larger to adjust faster.
-// Should be between 0 and 1.
-var adjustRate = 0.02; // Choose the highest scoring word from this many random words. Higher values
+// is based on last perCharCount occurrences. Make it smaller to adjust faster.
+var perCharCount = 50; // Choose the highest scoring word from this many random words. Higher values
 // will choose words with more weak letters on average.
 
-var wordSamples = 20; // The score that every character starts on. The ideal value would be the
-// average spacing in milliseconds, but since we don't know that at the start,
-// pick something little high and it'll converge as the user types.
-
-var defaultScore = 500; // Score penatly (in milliseconds) for getting a letter wrong.
+var wordSamples = 20; // Score penatly (in milliseconds) for getting a letter wrong.
 
 var incorrectPenalty = 5000;
 var scores = {};
 
+var Score = /*#__PURE__*/function () {
+  function Score() {
+    (0, _classCallCheck2["default"])(this, Score);
+    this.average = 0.0;
+    this.count = 0;
+  }
+
+  (0, _createClass2["default"])(Score, [{
+    key: "update",
+    value: function update(score) {
+      if (this.count < perCharCount) {
+        this.count++;
+      }
+
+      var adjustRate = 1.0 / this.count; // Keep an exponential moving average of the score over time.
+
+      this.average = score * adjustRate + this.average * (1 - adjustRate);
+    }
+  }]);
+  return Score;
+}();
+
 function updateScore(_char, isCorrect) {
-  var score = 0.0;
   var timings = TestStats.keypressTimings.spacing.array;
 
-  if (timings.length > 0) {
-    score += timings[timings.length - 1];
+  if (timings.length == 0) {
+    return;
   }
+
+  var score = timings[timings.length - 1];
 
   if (!isCorrect) {
     score += incorrectPenalty;
   }
 
   if (!(_char in scores)) {
-    scores[_char] = defaultScore;
-  } // Keep an exponential moving average of the score over time.
+    scores[_char] = new Score();
+  }
 
-
-  scores[_char] = score * adjustRate + scores[_char] * (1 - adjustRate);
+  scores[_char].update(score);
 }
 
 function getWord(wordset) {
@@ -15707,6 +15757,7 @@ function getWord(wordset) {
 
 function score(word) {
   var total = 0.0;
+  var numChars = 0;
 
   var _iterator = _createForOfIteratorHelper(word),
       _step;
@@ -15714,7 +15765,11 @@ function score(word) {
   try {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var c = _step.value;
-      total += c in scores ? scores[c] : defaultScore;
+
+      if (c in scores) {
+        total += scores[c].average;
+        numChars++;
+      }
     }
   } catch (err) {
     _iterator.e(err);
@@ -15722,10 +15777,10 @@ function score(word) {
     _iterator.f();
   }
 
-  return total / word.length;
+  return numChars == 0 ? 0.0 : total / numChars;
 }
 
-},{"./test-stats":49,"@babel/runtime/helpers/interopRequireWildcard":68}],60:[function(require,module,exports){
+},{"./test-stats":49,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],60:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
