@@ -123,7 +123,6 @@ function backspaceToPrevious() {
 
   TestUI.updateWordElement();
   TestLogic.input.current = TestLogic.input.popHistory();
-  $("#wordsInput").val(" " + TestLogic.input.current + " ");
   TestLogic.corrected.popHistory();
 
   if (Config.funbox === "nospace") {
@@ -152,7 +151,9 @@ function backspaceToPrevious() {
 function handleSpace() {
   if (!TestLogic.active) return;
 
-  if (TestLogic.input.current === "") return;
+  const inputWord = TestLogic.input.current.slice(0, -1);
+
+  if (inputWord === "") return;
 
   if (Config.mode == "zen") {
     $("#words .word.active").removeClass("active");
@@ -178,7 +179,7 @@ function handleSpace() {
     Keymap.highlightKey(
       TestLogic.words
         .getCurrent()
-        .substring(TestLogic.input.current.length, TestLogic.input.current.length + 1)
+        .substring(inputWord.length, inputWord.length + 1)
         .toString()
         .toUpperCase()
     );
@@ -191,11 +192,12 @@ function handleSpace() {
   TestStats.pushBurstToHistory(burst);
 
   //correct word or in zen mode
-  const isWordCorrect = currentWord == TestLogic.input.current || Config.mode == "zen";
+  const isWordCorrect = currentWord == inputWord || Config.mode == "zen";
   MonkeyPower.addPower(isWordCorrect, true);
   TestStats.incrementAccuracy(isWordCorrect);
   if (isWordCorrect) {
     PaceCaret.handleSpace(true, currentWord);
+    TestLogic.input.current = inputWord;
     TestLogic.input.pushHistory();
     TestLogic.words.increaseCurrentIndex();
     TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex + 1);
@@ -217,7 +219,7 @@ function handleSpace() {
     }
     TestStats.pushMissedWord(TestLogic.words.getCurrent());
     TestStats.incrementKeypressErrors();
-    let cil = TestLogic.input.current.length;
+    let cil = inputWord.length;
     if (cil <= TestLogic.words.getCurrent().length) {
       if (cil >= TestLogic.corrected.current.length) {
         TestLogic.corrected.current += "_";
@@ -243,6 +245,7 @@ function handleSpace() {
     }
     PaceCaret.handleSpace(false, currentWord);
     if (Config.blindMode) $("#words .word.active letter").addClass("correct");
+    TestLogic.input.current = inputWord;
     TestLogic.input.pushHistory();
     TestUI.highlightBadWord(TestUI.currentWordElementIndex, !Config.blindMode);
     TestLogic.words.increaseCurrentIndex();
@@ -265,7 +268,7 @@ function handleSpace() {
 
   let wordLength;
   if (Config.mode === "zen") {
-    wordLength = TestLogic.input.current.length;
+    wordLength = inputWord.length;
   } else {
     wordLength = TestLogic.words.getCurrent().length;
   }
@@ -314,7 +317,7 @@ function handleSpace() {
     Keymap.highlightKey(
       TestLogic.words
         .getCurrent()
-        .substring(TestLogic.input.current.length, TestLogic.input.current.length + 1)
+        .substring(inputWord.length, inputWord.length + 1)
         .toString()
         .toUpperCase()
     );
@@ -336,7 +339,9 @@ function handleSpace() {
   }
 }
 
-function isCharCorrect(char) {
+function isCharCorrectAt(charIndex) {
+  const char = TestLogic.input.current[charIndex];
+
   if (
     Config.oppositeShiftMode === "on" &&
     ShiftTracker.isUsingOppositeShift(char) === false
@@ -348,7 +353,7 @@ function isCharCorrect(char) {
     return true;
   }
 
-  const originalChar = TestLogic.words.getCurrent()[TestLogic.input.current.length];
+  const originalChar = TestLogic.words.getCurrent()[charIndex];
 
   if (originalChar == char) {
     return true;
@@ -386,7 +391,7 @@ function isCharCorrect(char) {
   return false;
 }
 
-function handleChar(char) {
+function handleCharAt(charIndex) {
   if (TestUI.resultCalculating || TestUI.resultVisible) {
     return false;
   }
@@ -400,6 +405,8 @@ function handleChar(char) {
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
   TestStats.setKeypressNotAfk();
+
+  let char = TestLogic.input.current[charIndex];
 
   if (char === "\n" && Config.funbox === "58008") {
     char = " ";
@@ -426,16 +433,16 @@ function handleChar(char) {
     return false;
   }
 
-  if (TestLogic.input.current === "") {
+  if (TestLogic.input.current.length === 1) {
     TestStats.setBurstStart(performance.now());
   }
 
   Focus.set(true);
   Caret.stopAnimation();
 
-  let thisCharCorrect = isCharCorrect(char);
+  let thisCharCorrect = isCharCorrectAt(charIndex);
 
-  if (!thisCharCorrect && Misc.trailingComposeChars.test(TestLogic.input.current + char)) {
+  if (!thisCharCorrect && Misc.trailingComposeChars.test(char)) {
     TestUI.updateWordElement();
     return true;
   }
@@ -452,7 +459,8 @@ function handleChar(char) {
     Config.mode === "zen"
       ? char
       : TestLogic.words
-          .getCurrent()[TestLogic.input.current.length],
+          .getCurrent()
+          .charAt(TestLogic.input.current.length - 1),
     thisCharCorrect
   );
 
@@ -475,7 +483,7 @@ function handleChar(char) {
 
   //update current corrected version. if its empty then add the current char. if its not then replace the last character with the currently pressed one / add it
   if (TestLogic.corrected.current === "") {
-    TestLogic.corrected.current += TestLogic.input.current + char;
+    TestLogic.corrected.current = TestLogic.input.current;
   } else {
     let cil = TestLogic.input.current.length;
     if (cil >= TestLogic.corrected.current.length) {
@@ -503,7 +511,7 @@ function handleChar(char) {
 
   //update the active word top, but only once
   if (
-    TestLogic.input.current.length === 1 &&
+    TestLogic.input.current.length === 2 &&
     TestLogic.words.currentIndex === 0
   ) {
     TestUI.setActiveWordTop(document.querySelector("#words .active").offsetTop);
@@ -511,10 +519,10 @@ function handleChar(char) {
 
   //max length of the input is 20 unless in zen mode then its 30
   if (
-    (Config.mode === "zen" && TestLogic.input.current.length < 30) ||
-    (Config.mode !== "zen" && TestLogic.input.current.length < TestLogic.words.getCurrent().length + 20)
+    (Config.mode === "zen" && charIndex >= 30) ||
+    (Config.mode !== "zen" && charIndex >= TestLogic.words.getCurrent().length + 20)
   ) {
-    TestLogic.input.current += char;
+    return false;
   }
 
   if (!thisCharCorrect && Config.difficulty == "master") {
@@ -528,7 +536,11 @@ function handleChar(char) {
   } else if (Config.keymapMode === "next" && Config.mode !== "zen") {
     Keymap.highlightKey(
       TestLogic.words
-        .getCurrent()[TestLogic.input.current.length]
+        .getCurrent()
+        .substring(
+          TestLogic.input.current.length,
+          TestLogic.input.current.length + 1
+        )
         .toString()
         .toUpperCase()
     );
@@ -549,7 +561,6 @@ function handleChar(char) {
       TestLogic.input.pushHistory();
       TestLogic.corrected.pushHistory();
       TestLogic.finish();
-      return;
     }
   }
 
@@ -577,10 +588,11 @@ function handleChar(char) {
 
   //simulate space press in nospace funbox
   if (
-    (Config.funbox === "nospace" &&
+    charIndex === TestLogic.input.current.length &&
+    ((Config.funbox === "nospace" &&
       TestLogic.input.current.length ===
         TestLogic.words.getCurrent().length) ||
-    (char === "\n" && thisCharCorrect)
+    (char === "\n" && thisCharCorrect))
   ) {
     TestLogic.input.current += " ";
     setTimeout(handleSpace, 0);
@@ -711,9 +723,6 @@ function triggerInputWith(string) {
 
 $("#wordsInput").on("beforeinput", function (event) {
   if (!event.originalEvent?.isTrusted) return;
-  if (event.target.value === "") {
-    event.target.value = " ";
-  }
   inputValueBeforeChange = event.target.value.normalize();
 });
 
@@ -731,9 +740,8 @@ $("#wordsInput").on("input", function (event) {
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
     } else {
-      TestLogic.input.current = inputValue.slice(1);
       TestUI.updateWordElement();
-      if (!Misc.trailingComposeChars.test(TestLogic.input.current)) {
+      if (!Misc.trailingComposeChars.test(inputValue)) {
         Replay.addReplayEvent(
           "setLetterIndex",
           TestLogic.input.current.length
@@ -750,13 +758,17 @@ $("#wordsInput").on("input", function (event) {
       diffStart++;
 
     if (diffStart) {
-      for (let i = diffStart; i < inputValue.length; i++) {
-        handleChar(inputValue[i]);
+      // offset by 1 because of the padding space at the start of TestLogic.input.current
+      for (let i = diffStart - 1; i < inputValue.length - 1; i++) {
+        if (!handleCharAt(i)) {
+          TestLogic.input.current = TestLogic.input.current.slice(0, i) + TestLogic.input.current.slice(i + 1);
+          inputValue = inputValue.slice(0, i + 1) + inputValue.slice(i + 2);
+          i--;
+        }
       }
+      TestUI.updateWordElement();
     }
   }
-
-  event.target.value = " " + TestLogic.input.current;
 
   setTimeout(Caret.updatePosition, 0);
 

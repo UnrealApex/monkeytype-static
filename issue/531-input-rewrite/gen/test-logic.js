@@ -122,9 +122,19 @@ class InputWordList {
   }
 }
 
+class InputWordListBound extends InputWordList {
+  get current() {
+    return $("#wordsInput").val().normalize().slice(1);
+  }
+
+  set current(val) {
+    $("#wordsInput").val(" " + val.normalize());
+  }
+}
+
 export let active = false;
 export let words = new WordList();
-export let input = new InputWordList();
+export let input = new InputWordListBound();
 export let corrected = new InputWordList();
 export let currentWordIndex = 0;
 export let isRepeated = false;
@@ -739,7 +749,7 @@ export function restart(
   $("#showWordHistoryButton").removeClass("loaded");
   TestUI.focusWords();
   Funbox.resetMemoryTimer();
-  $("#wordsInput").val(" ");
+  $("#wordsInput").val("");
 
   TestUI.reset();
 
