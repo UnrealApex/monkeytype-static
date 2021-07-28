@@ -3,6 +3,11 @@ import Config, * as UpdateConfig from "./config";
 import * as Focus from "./focus";
 import * as CommandlineLists from "./commandline-lists";
 import * as TestUI from "./test-ui";
+import * as PractiseWords from "./practise-words";
+import * as SimplePopups from "./simple-popups";
+import * as CustomWordAmountPopup from "./custom-word-amount-popup";
+import * as CustomTestDurationPopup from "./custom-test-duration-popup";
+import * as CustomTextPopup from "./custom-text-popup";
 
 let commandLineMouseMode = false;
 
@@ -320,7 +325,22 @@ $(document).ready((e) => {
     //escape
     if (event.keyCode == 27 || (event.keyCode == 9 && Config.swapEscAndTab)) {
       event.preventDefault();
-      if (!$("#commandLineWrapper").hasClass("hidden")) {
+      if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        PractiseWords.hide();
+      } else if (!$("#simplePopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        SimplePopups.hide();
+      } else if (!$("#customWordAmountPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        CustomWordAmountPopup.hide();
+      } else if (!$("#customTestDurationPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        CustomTestDurationPopup.hide();
+      } else if (!$("#customTextPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        CustomTextPopup.hide();
+      } else if (!$("#commandLineWrapper").hasClass("hidden")) {
         if (CommandlineLists.current.length > 1) {
           CommandlineLists.current.pop();
           $("#commandLine").removeClass("allCommands");

@@ -116,6 +116,16 @@ class SimplePopup {
   }
 }
 
+export function hide() {
+  $("#simplePopupWrapper")
+    .stop(true, true)
+    .css("opacity", 1)
+    .removeClass("hidden")
+    .animate({ opacity: 0 }, 125, () => {
+      $("#simplePopupWrapper").addClass("hidden");
+    });
+}
+
 $("#simplePopupWrapper").mousedown((e) => {
   if ($(e.target).attr("id") === "simplePopupWrapper") {
     $("#simplePopupWrapper")
@@ -151,6 +161,22 @@ list.applyCustomFont = new SimplePopup(
   (fontName) => {
     if (fontName === "") return;
     Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
+  },
+  () => {}
+);
+
+list.resetSettings = new SimplePopup(
+  "resetSettings",
+  "text",
+  "Reset Settings",
+  [],
+  "Are you sure you want to reset all your settings?",
+  "Reset",
+  () => {
+    UpdateConfig.reset();
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
   },
   () => {}
 );

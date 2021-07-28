@@ -142,3 +142,14 @@ $("#practiseWordsPopup .button.both").click(() => {
   hidePopup();
   init(true, true);
 });
+
+$("#practiseWordsPopup .button").keypress((e) => {
+  if (e.key == "Enter") {
+    $(e.currentTarget).click();
+  }
+});
+
+$("#practiseWordsPopup .button.both").on("focusout", (e) => {
+  e.preventDefault();
+  $("#practiseWordsPopup .missed").focus();
+});

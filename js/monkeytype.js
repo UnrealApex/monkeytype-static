@@ -2857,6 +2857,16 @@ var CommandlineLists = _interopRequireWildcard(require("./commandline-lists"));
 
 var TestUI = _interopRequireWildcard(require("./test-ui"));
 
+var PractiseWords = _interopRequireWildcard(require("./practise-words"));
+
+var SimplePopups = _interopRequireWildcard(require("./simple-popups"));
+
+var CustomWordAmountPopup = _interopRequireWildcard(require("./custom-word-amount-popup"));
+
+var CustomTestDurationPopup = _interopRequireWildcard(require("./custom-test-duration-popup"));
+
+var CustomTextPopup = _interopRequireWildcard(require("./custom-text-popup"));
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3169,7 +3179,22 @@ $(document).ready(function (e) {
     if (event.keyCode == 27 || event.keyCode == 9 && UpdateConfig["default"].swapEscAndTab) {
       event.preventDefault();
 
-      if (!$("#commandLineWrapper").hasClass("hidden")) {
+      if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        PractiseWords.hide();
+      } else if (!$("#simplePopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        SimplePopups.hide();
+      } else if (!$("#customWordAmountPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        CustomWordAmountPopup.hide();
+      } else if (!$("#customTestDurationPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        CustomTestDurationPopup.hide();
+      } else if (!$("#customTextPopupWrapper").hasClass("hidden")) {
+        event.preventDefault();
+        CustomTextPopup.hide();
+      } else if (!$("#commandLineWrapper").hasClass("hidden")) {
         if (CommandlineLists.current.length > 1) {
           CommandlineLists.current.pop();
           $("#commandLine").removeClass("allCommands");
@@ -3376,7 +3401,7 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":5,"./config":7,"./focus":14,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/defineProperty":66,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],7:[function(require,module,exports){
+},{"./commandline-lists":5,"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./focus":14,"./practise-words":36,"./simple-popups":44,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/defineProperty":66,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9766,6 +9791,15 @@ $("#practiseWordsPopup .button.both").click(function () {
   hidePopup();
   init(true, true);
 });
+$("#practiseWordsPopup .button").keypress(function (e) {
+  if (e.key == "Enter") {
+    $(e.currentTarget).click();
+  }
+});
+$("#practiseWordsPopup .button.both").on("focusout", function (e) {
+  e.preventDefault();
+  $("#practiseWordsPopup .missed").focus();
+});
 
 },{"./config":7,"./custom-text":11,"./notifications":31,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireWildcard":68}],37:[function(require,module,exports){
 "use strict";
@@ -10349,27 +10383,14 @@ $(".pageTest #playpauseReplayButton").click( /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-$("#replayWords").click(function (event) {
+$("#replayWords").on("click", "letter", function (event) {
   //allows user to click on the place they want to start their replay at
   pauseReplay();
   var replayWords = document.querySelector("#replayWords");
-  var range;
-  var textNode;
-
-  if (document.caretPositionFromPoint) {
-    // standard
-    range = document.caretPositionFromPoint(event.pageX, event.pageY);
-    textNode = range.offsetNode;
-  } else if (document.caretRangeFromPoint) {
-    // WebKit
-    range = document.caretRangeFromPoint(event.pageX, event.pageY);
-    textNode = range.startContainer;
-  }
-
   var words = (0, _toConsumableArray2["default"])(replayWords.children);
-  targetWordPos = words.indexOf(textNode.parentNode.parentNode);
+  targetWordPos = words.indexOf(event.target.parentNode);
   var letters = (0, _toConsumableArray2["default"])(words[targetWordPos].children);
-  targetCurPos = letters.indexOf(textNode.parentNode);
+  targetCurPos = letters.indexOf(event.target);
   initializeReplayPrompt();
   loadOldReplay();
 });
@@ -10954,6 +10975,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.hide = hide;
 exports.list = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -11078,6 +11100,14 @@ var SimplePopup = /*#__PURE__*/function () {
   return SimplePopup;
 }();
 
+function hide() {
+  $("#simplePopupWrapper").stop(true, true).css("opacity", 1).removeClass("hidden").animate({
+    opacity: 0
+  }, 125, function () {
+    $("#simplePopupWrapper").addClass("hidden");
+  });
+}
+
 $("#simplePopupWrapper").mousedown(function (e) {
   if ($(e.target).attr("id") === "simplePopupWrapper") {
     $("#simplePopupWrapper").stop(true, true).css("opacity", 1).removeClass("hidden").animate({
@@ -11104,6 +11134,12 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
 }], "Make sure you have the font installed on your computer before applying.", "Apply", function (fontName) {
   if (fontName === "") return;
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
+}, function () {});
+list.resetSettings = new SimplePopup("resetSettings", "text", "Reset Settings", [], "Are you sure you want to reset all your settings?", "Reset", function () {
+  UpdateConfig.reset();
+  setTimeout(function () {
+    location.reload();
+  }, 1000);
 }, function () {});
 
 },{"./config":7,"./loader":26,"./notifications":31,"./settings":42,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],45:[function(require,module,exports){
