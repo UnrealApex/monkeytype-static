@@ -6348,7 +6348,6 @@ function backspaceToPrevious() {
 
   TestUI.updateWordElement();
   TestLogic.input.current = TestLogic.input.popHistory();
-  $("#wordsInput").val(" " + TestLogic.input.current + " ");
   TestLogic.corrected.popHistory();
 
   if (UpdateConfig["default"].funbox === "nospace") {
@@ -6783,6 +6782,7 @@ $(document).keydown(function (event) {
   if (event.key === "Backspace" && TestLogic.input.current.length === 0) {
     backspaceToPrevious();
     Replay.addReplayEvent("backWord");
+    if (TestLogic.input.current) $("#wordsInput").val(" " + TestLogic.input.current + " ");
   }
 
   if (event.key === "Enter") {
@@ -6863,6 +6863,7 @@ $("#wordsInput").on("input", function (event) {
       // fallback for when no Backspace keydown event (mobile)
       backspaceToPrevious();
       Replay.addReplayEvent("backWord");
+      Caret.updatePosition();
     } else {
       TestLogic.input.current = inputValue.slice(1);
       TestUI.updateWordElement();
