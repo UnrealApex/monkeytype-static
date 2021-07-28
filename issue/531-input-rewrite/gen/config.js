@@ -61,6 +61,7 @@ let defaultConfig = {
   caretStyle: "default",
   paceCaretStyle: "default",
   flipTestColors: false,
+  capsLockBackspace: false,
   layout: "default",
   funbox: "none",
   confidenceMode: "off",
@@ -926,7 +927,7 @@ export function setTimeConfig(time, nosave) {
     time = 15;
   }
   time = parseInt(time);
-  if (!nosave) setMode("time", nosave);
+  // if (!nosave) setMode("time", nosave);
   config.time = time;
   $("#top .config .time .text-button").removeClass("active");
   if (![15, 30, 60, 120].includes(time)) {
@@ -976,7 +977,7 @@ export function setWordCount(wordCount, nosave) {
     wordCount = 10;
   }
   wordCount = parseInt(wordCount);
-  if (!nosave) setMode("words", nosave);
+  // if (!nosave) setMode("words", nosave);
   config.words = wordCount;
   $("#top .config .wordCount .text-button").removeClass("active");
   if (![10, 25, 50, 100, 200].includes(wordCount)) {
@@ -1232,6 +1233,18 @@ export function setMonkey(monkey, nosave) {
   if (!nosave) saveToLocalStorage();
 }
 
+export function setCapsLockBackspace(capsLockBackspace, nosave) {
+  if (capsLockBackspace === null || capsLockBackspace === undefined) {
+    capsLockBackspace = false;
+  }
+  config.capsLockBackspace = capsLockBackspace;
+  if (!nosave) saveToLocalStorage();
+}
+
+export function toggleCapsLockBackspace() {
+  setCapsLockBackspace(!config.capsLockBackspace, false);
+}
+
 export function setKeymapMode(mode, nosave) {
   if (mode == null || mode == undefined) {
     mode = "off";
@@ -1475,6 +1488,7 @@ export function apply(configObj) {
     setQuoteLength(configObj.quoteLength, true);
     setWordCount(configObj.words, true);
     setLanguage(configObj.language, true);
+    setCapsLockBackspace(configObj.capsLockBackspace, true);
     // setSavedLayout(configObj.savedLayout, true);
     setLayout(configObj.layout, true);
     setFontSize(configObj.fontSize, true);

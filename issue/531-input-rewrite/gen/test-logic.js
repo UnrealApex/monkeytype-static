@@ -46,7 +46,7 @@ export function setNotSignedInUid(uid) {
   notSignedInLastResult.uid = uid;
 }
 
-class WordList {
+class Words {
   constructor() {
     this.list = [];
     this.length = 0;
@@ -85,14 +85,32 @@ class WordList {
   }
 }
 
-class InputWordList {
+class Input {
   constructor() {
-    this.history = [];
     this.current = "";
+    this.history = [];
   }
 
   reset() {
+    this.current = "";
     this.history = [];
+  }
+
+  resetHistory() {
+    this.history = [];
+  }
+
+  setCurrent(val) {
+    this.current = val;
+    this.length = this.current.length;
+  }
+
+  appendCurrent(val) {
+    this.current += val;
+    this.length = this.current.length;
+  }
+
+  resetCurrent() {
     this.current = "";
   }
 
@@ -102,15 +120,12 @@ class InputWordList {
 
   pushHistory() {
     this.history.push(this.current);
-    this.current = "";
+    this.historyLength = this.history.length;
+    this.resetCurrent();
   }
 
   popHistory() {
     return this.history.pop();
-  }
-
-  getLastChar() {
-    return this.current[this.current.length];
   }
 
   getHistory(i) {
@@ -122,10 +137,50 @@ class InputWordList {
   }
 }
 
+class Corrected {
+  constructor() {
+    this.current = "";
+    this.history = [];
+  }
+  setCurrent(val) {
+    this.current = val;
+  }
+
+  appendCurrent(val) {
+    this.current += val;
+  }
+
+  resetCurrent() {
+    this.current = "";
+  }
+
+  resetHistory() {
+    this.history = [];
+  }
+
+  reset() {
+    this.resetCurrent();
+    this.resetHistory();
+  }
+
+  getHistory(i) {
+    return this.history[i];
+  }
+
+  popHistory() {
+    return this.history.pop();
+  }
+
+  pushHistory() {
+    this.history.push(this.current);
+    this.current = "";
+  }
+}
+
 export let active = false;
-export let words = new WordList();
-export let input = new InputWordList();
-export let corrected = new InputWordList();
+export let words = new Words();
+export let input = new Input();
+export let corrected = new Corrected();
 export let currentWordIndex = 0;
 export let isRepeated = false;
 export let isPaceRepeat = false;
@@ -266,11 +321,16 @@ export function punctuateWord(previousWord, currentWord, index, maxindex) {
       } else {
         word = `(${word})`;
       }
-    } else if (Math.random() < 0.013) {
+    } else if (
+      Math.random() < 0.013 &&
+      Misc.getLastChar(previousWord) != "," &&
+      Misc.getLastChar(previousWord) != "." &&
+      Misc.getLastChar(previousWord) != ";" &&
+      Misc.getLastChar(previousWord) != ":"
+    ) {
       if (currentLanguage == "french") {
         word = ":";
-      }
-      if (currentLanguage == "greek") {
+      } else if (currentLanguage == "greek") {
         word = "·";
       } else {
         word += ":";
@@ -286,12 +346,12 @@ export function punctuateWord(previousWord, currentWord, index, maxindex) {
       Math.random() < 0.015 &&
       Misc.getLastChar(previousWord) != "," &&
       Misc.getLastChar(previousWord) != "." &&
-      Misc.getLastChar(previousWord) != ";"
+      Misc.getLastChar(previousWord) != ";" &&
+      Misc.getLastChar(previousWord) != ":"
     ) {
       if (currentLanguage == "french") {
         word = ";";
-      }
-      if (currentLanguage == "greek") {
+      } else if (currentLanguage == "greek") {
         word = "·";
       } else {
         word += ";";
@@ -357,7 +417,8 @@ export async function init() {
   //   incorrect: 0,
   // };
 
-  input.reset();
+  input.resetHistory();
+  input.resetCurrent();
 
   let language = await Misc.getLanguage(Config.language);
   if (language && language.name !== Config.language) {
@@ -739,7 +800,6 @@ export function restart(
   $("#showWordHistoryButton").removeClass("loaded");
   TestUI.focusWords();
   Funbox.resetMemoryTimer();
-  $("#wordsInput").val(" ");
 
   TestUI.reset();
 

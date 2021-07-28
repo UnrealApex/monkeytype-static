@@ -14,7 +14,10 @@ function hide() {
 
 $(document).keydown(function (event) {
   try {
-    if (event.originalEvent.getModifierState("CapsLock")) {
+    if (
+      !Config.capsLockBackspace &&
+      event.originalEvent.getModifierState("CapsLock")
+    ) {
       show();
     } else {
       hide();

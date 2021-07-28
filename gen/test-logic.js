@@ -321,11 +321,16 @@ export function punctuateWord(previousWord, currentWord, index, maxindex) {
       } else {
         word = `(${word})`;
       }
-    } else if (Math.random() < 0.013) {
+    } else if (
+      Math.random() < 0.013 &&
+      Misc.getLastChar(previousWord) != "," &&
+      Misc.getLastChar(previousWord) != "." &&
+      Misc.getLastChar(previousWord) != ";" &&
+      Misc.getLastChar(previousWord) != ":"
+    ) {
       if (currentLanguage == "french") {
         word = ":";
-      }
-      if (currentLanguage == "greek") {
+      } else if (currentLanguage == "greek") {
         word = "·";
       } else {
         word += ":";
@@ -341,12 +346,12 @@ export function punctuateWord(previousWord, currentWord, index, maxindex) {
       Math.random() < 0.015 &&
       Misc.getLastChar(previousWord) != "," &&
       Misc.getLastChar(previousWord) != "." &&
-      Misc.getLastChar(previousWord) != ";"
+      Misc.getLastChar(previousWord) != ";" &&
+      Misc.getLastChar(previousWord) != ":"
     ) {
       if (currentLanguage == "french") {
         word = ";";
-      }
-      if (currentLanguage == "greek") {
+      } else if (currentLanguage == "greek") {
         word = "·";
       } else {
         word += ";";

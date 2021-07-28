@@ -1742,6 +1742,7 @@ var commandsWordCount = {
     display: "10",
     configValue: 10,
     exec: function exec() {
+      UpdateConfig.setMode("words");
       UpdateConfig.setWordCount("10");
       TestLogic.restart();
     }
@@ -1750,6 +1751,7 @@ var commandsWordCount = {
     display: "25",
     configValue: 25,
     exec: function exec() {
+      UpdateConfig.setMode("words");
       UpdateConfig.setWordCount("25");
       TestLogic.restart();
     }
@@ -1758,6 +1760,7 @@ var commandsWordCount = {
     display: "50",
     configValue: 50,
     exec: function exec() {
+      UpdateConfig.setMode("words");
       UpdateConfig.setWordCount("50");
       TestLogic.restart();
     }
@@ -1766,6 +1769,7 @@ var commandsWordCount = {
     display: "100",
     configValue: 100,
     exec: function exec() {
+      UpdateConfig.setMode("words");
       UpdateConfig.setWordCount("100");
       TestLogic.restart();
     }
@@ -1774,6 +1778,7 @@ var commandsWordCount = {
     display: "200",
     configValue: 200,
     exec: function exec() {
+      UpdateConfig.setMode("words");
       UpdateConfig.setWordCount("200");
       TestLogic.restart();
     }
@@ -1782,6 +1787,7 @@ var commandsWordCount = {
     display: "custom...",
     input: true,
     exec: function exec(input) {
+      UpdateConfig.setMode("words");
       UpdateConfig.setWordCount(input);
       TestLogic.restart();
     }
@@ -1795,6 +1801,7 @@ var commandsQuoteLengthConfig = {
     display: "all",
     configValue: [0, 1, 2, 3],
     exec: function exec() {
+      UpdateConfig.setMode("quote");
       UpdateConfig.setQuoteLength([0, 1, 2, 3]);
       TestLogic.restart();
     }
@@ -1804,6 +1811,7 @@ var commandsQuoteLengthConfig = {
     configValue: 0,
     configValueMode: "include",
     exec: function exec() {
+      UpdateConfig.setMode("quote");
       UpdateConfig.setQuoteLength(0);
       TestLogic.restart();
     }
@@ -1813,6 +1821,7 @@ var commandsQuoteLengthConfig = {
     configValue: 1,
     configValueMode: "include",
     exec: function exec() {
+      UpdateConfig.setMode("quote");
       UpdateConfig.setQuoteLength(1);
       TestLogic.restart();
     }
@@ -1822,6 +1831,7 @@ var commandsQuoteLengthConfig = {
     configValue: 2,
     configValueMode: "include",
     exec: function exec() {
+      UpdateConfig.setMode("quote");
       UpdateConfig.setQuoteLength(2);
       TestLogic.restart();
     }
@@ -1831,6 +1841,7 @@ var commandsQuoteLengthConfig = {
     configValue: 3,
     configValueMode: "include",
     exec: function exec() {
+      UpdateConfig.setMode("quote");
       UpdateConfig.setQuoteLength(3);
       TestLogic.restart();
     }
@@ -1970,6 +1981,7 @@ var commandsTimeConfig = {
     display: "15",
     configValue: 15,
     exec: function exec() {
+      UpdateConfig.setMode("time");
       UpdateConfig.setTimeConfig("15");
       TestLogic.restart();
     }
@@ -1978,6 +1990,7 @@ var commandsTimeConfig = {
     display: "30",
     configValue: 30,
     exec: function exec() {
+      UpdateConfig.setMode("time");
       UpdateConfig.setTimeConfig("30");
       TestLogic.restart();
     }
@@ -1986,6 +1999,7 @@ var commandsTimeConfig = {
     display: "60",
     configValue: 60,
     exec: function exec() {
+      UpdateConfig.setMode("time");
       UpdateConfig.setTimeConfig("60");
       TestLogic.restart();
     }
@@ -1994,6 +2008,7 @@ var commandsTimeConfig = {
     display: "120",
     configValue: 120,
     exec: function exec() {
+      UpdateConfig.setMode("time");
       UpdateConfig.setTimeConfig("120");
       TestLogic.restart();
     }
@@ -2002,6 +2017,7 @@ var commandsTimeConfig = {
     display: "custom...",
     input: true,
     exec: function exec(input) {
+      UpdateConfig.setMode("time");
       UpdateConfig.setTimeConfig(input);
       TestLogic.restart();
     }
@@ -4576,8 +4592,8 @@ function setTimeConfig(time, nosave) {
     time = 15;
   }
 
-  time = parseInt(time);
-  if (!nosave) setMode("time", nosave);
+  time = parseInt(time); // if (!nosave) setMode("time", nosave);
+
   config.time = time;
   $("#top .config .time .text-button").removeClass("active");
 
@@ -4630,8 +4646,8 @@ function setWordCount(wordCount, nosave) {
     wordCount = 10;
   }
 
-  wordCount = parseInt(wordCount);
-  if (!nosave) setMode("words", nosave);
+  wordCount = parseInt(wordCount); // if (!nosave) setMode("words", nosave);
+
   config.words = wordCount;
   $("#top .config .wordCount .text-button").removeClass("active");
 
@@ -6426,8 +6442,6 @@ function handleBackspace(event) {
         Funbox.toggleScript(TestLogic.words.getCurrent());
         TestUI.updateWordElement(!UpdateConfig["default"].blindMode);
         TestLogic.input.resetCurrent();
-        TestLogic.input.popHistory();
-        TestLogic.corrected.popHistory();
       } else {
         var regex = new RegExp(/[ £§`~!@#$%^&*()_+\\\-=[\]{};':"|,./<>?]/, "g");
         var input = TestLogic.input.getCurrent();
@@ -11846,24 +11860,20 @@ function punctuateWord(previousWord, currentWord, index, maxindex) {
       } else {
         word = "(".concat(word, ")");
       }
-    } else if (Math.random() < 0.013) {
+    } else if (Math.random() < 0.013 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";" && Misc.getLastChar(previousWord) != ":") {
       if (currentLanguage == "french") {
         word = ":";
-      }
-
-      if (currentLanguage == "greek") {
+      } else if (currentLanguage == "greek") {
         word = "·";
       } else {
         word += ":";
       }
     } else if (Math.random() < 0.014 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && previousWord != "-") {
       word = "-";
-    } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";") {
+    } else if (Math.random() < 0.015 && Misc.getLastChar(previousWord) != "," && Misc.getLastChar(previousWord) != "." && Misc.getLastChar(previousWord) != ";" && Misc.getLastChar(previousWord) != ":") {
       if (currentLanguage == "french") {
         word = ";";
-      }
-
-      if (currentLanguage == "greek") {
+      } else if (currentLanguage == "greek") {
         word = "·";
       } else {
         word += ";";
