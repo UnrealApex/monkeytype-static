@@ -596,7 +596,7 @@ function handleChar(char, charIndex) {
   return;
 }
 
-$(document).keydown(function (event) {
+$(document).keydown((event) => {
   //autofocus
   let wordsFocused = $("#wordsInput").is(":focus");
   const pageTestActive = !$(".pageTest").hasClass("hidden");
@@ -716,7 +716,7 @@ function triggerInputWith(string) {
   $("#wordsInput").trigger("input");
 }
 
-$("#wordsInput").on("beforeinput", function (event) {
+$("#wordsInput").on("beforeinput", (event) => {
   if (!event.originalEvent?.isTrusted) return;
   if (event.target.value === "") {
     event.target.value = " ";
@@ -724,7 +724,7 @@ $("#wordsInput").on("beforeinput", function (event) {
   inputValueBeforeChange = event.target.value.normalize();
 });
 
-$("#wordsInput").on("input", function (event) {
+$("#wordsInput").on("input", (event) => {
   if (!event.originalEvent?.isTrusted) {
     event.target.value = " ";
     return;
