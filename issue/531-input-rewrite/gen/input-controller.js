@@ -638,6 +638,8 @@ $(document).keydown((event) => {
     return;
   }
 
+  TestStats.setKeypressNotAfk();
+
   //blocking firefox from going back in history with backspace
   if (event.key === "Backspace") {
     let t = /INPUT|SELECT|TEXTAREA/i;

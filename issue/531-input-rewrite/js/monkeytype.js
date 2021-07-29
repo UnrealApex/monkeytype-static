@@ -6766,8 +6766,9 @@ $(document).keydown(function (event) {
   if (!((_event$originalEvent = event.originalEvent) === null || _event$originalEvent === void 0 ? void 0 : _event$originalEvent.isTrusted) || TestUI.testRestarting) {
     event.preventDefault();
     return;
-  } //blocking firefox from going back in history with backspace
+  }
 
+  TestStats.setKeypressNotAfk(); //blocking firefox from going back in history with backspace
 
   if (event.key === "Backspace") {
     var t = /INPUT|SELECT|TEXTAREA/i;
