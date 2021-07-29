@@ -6285,7 +6285,6 @@ var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
 
 var dontInsertSpace = false;
-var inputValueBeforeChange = " ";
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -6362,6 +6361,9 @@ function backspaceToPrevious() {
   if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
     Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
   }
+
+  Caret.updatePosition();
+  Replay.addReplayEvent("backWord");
 }
 
 function handleSpace() {
@@ -6782,18 +6784,17 @@ $(document).keydown(function (event) {
 
   if (event.key === "Backspace" && TestLogic.input.current.length === 0) {
     backspaceToPrevious();
-    Replay.addReplayEvent("backWord");
     if (TestLogic.input.current) $("#wordsInput").val(" " + TestLogic.input.current + " ");
   }
 
   if (event.key === "Enter") {
     if (event.shiftKey && UpdateConfig["default"].mode == "zen") {
       TestLogic.finish();
-    }
-
-    if (event.shiftKey && (UpdateConfig["default"].mode == "time" && UpdateConfig["default"].time === 0 || UpdateConfig["default"].mode == "words" && UpdateConfig["default"].words === 0)) {
+    } else if (event.shiftKey && (UpdateConfig["default"].mode == "time" && UpdateConfig["default"].time === 0 || UpdateConfig["default"].mode == "words" && UpdateConfig["default"].words === 0)) {
       TestLogic.setBailout(true);
       TestLogic.finish();
+    } else {
+      triggerInputWith("\n");
     }
   } //show dead keys
 
@@ -6832,10 +6833,8 @@ $("#wordsInput").keyup(function (event) {
   Monkey.stop();
 });
 
-function triggerInputWith(string) {
-  $("#wordsInput").trigger("beforeinput");
-  TestLogic.input.current += string;
-  $("#wordsInput").trigger("input");
+function triggerInputWith(_char4) {
+  handleChar(_char4, TestLogic.input.current.length);
 }
 
 $("#wordsInput").on("beforeinput", function (event) {
@@ -6846,8 +6845,6 @@ $("#wordsInput").on("beforeinput", function (event) {
   if (event.target.value === "") {
     event.target.value = " ";
   }
-
-  inputValueBeforeChange = event.target.value.normalize();
 });
 $("#wordsInput").on("input", function (event) {
   var _event$originalEvent4;
@@ -6857,34 +6854,29 @@ $("#wordsInput").on("input", function (event) {
     return;
   }
 
-  var inputValue = event.target.value.normalize();
+  var realInputValue = event.target.value.normalize();
+  var inputValue = realInputValue.slice(1);
 
-  if (inputValue.length < inputValueBeforeChange.length) {
-    if (inputValue === "" && inputValueBeforeChange === " ") {
-      // fallback for when no Backspace keydown event (mobile)
-      backspaceToPrevious();
-      Replay.addReplayEvent("backWord");
-      Caret.updatePosition();
-    } else {
-      TestLogic.input.current = inputValue.slice(1);
-      TestUI.updateWordElement();
-      Caret.updatePosition();
+  if (realInputValue.length === 0 && TestLogic.input.current.length === 0) {
+    // fallback for when no Backspace keydown event (mobile)
+    backspaceToPrevious();
+  } else if (inputValue.length < TestLogic.input.current.length) {
+    TestLogic.input.current = inputValue;
+    TestUI.updateWordElement();
+    Caret.updatePosition();
 
-      if (!Misc.trailingComposeChars.test(TestLogic.input.current)) {
-        Replay.addReplayEvent("setLetterIndex", TestLogic.input.current.length);
-      }
+    if (!Misc.trailingComposeChars.test(TestLogic.input.current)) {
+      Replay.addReplayEvent("setLetterIndex", TestLogic.input.current.length);
     }
-  } else if (inputValue !== inputValueBeforeChange) {
+  } else if (inputValue !== TestLogic.input.current) {
     var diffStart = 0;
 
-    while (inputValue[diffStart] === inputValueBeforeChange[diffStart]) {
+    while (inputValue[diffStart] === TestLogic.input.current[diffStart]) {
       diffStart++;
     }
 
-    if (diffStart) {
-      for (var i = diffStart; i < inputValue.length; i++) {
-        handleChar(inputValue[i], i - 1);
-      }
+    for (var i = diffStart; i < inputValue.length; i++) {
+      handleChar(inputValue[i], i);
     }
   }
 
