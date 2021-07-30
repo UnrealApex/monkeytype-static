@@ -588,7 +588,7 @@ function handleChar(char, charIndex) {
         TestLogic.words.getCurrent().length) ||
     (char === "\n" && thisCharCorrect)
   ) {
-    setTimeout(handleSpace, 0);
+    handleSpace();
   }
 
   if (char !== "\n") {
@@ -716,6 +716,7 @@ $("#wordsInput").keyup((event) => {
 
 function triggerInputWith(char) {
   handleChar(char, TestLogic.input.current.length);
+  $("#wordsInput").val(" " + TestLogic.input.current);
 }
 
 $("#wordsInput").on("beforeinput", (event) => {

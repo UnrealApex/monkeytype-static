@@ -6729,7 +6729,7 @@ function handleChar(_char2, charIndex) {
 
 
   if (UpdateConfig["default"].funbox === "nospace" && TestLogic.input.current.length === TestLogic.words.getCurrent().length || _char2 === "\n" && thisCharCorrect) {
-    setTimeout(handleSpace, 0);
+    handleSpace();
   }
 
   if (_char2 !== "\n") {
@@ -6835,6 +6835,7 @@ $("#wordsInput").keyup(function (event) {
 
 function triggerInputWith(_char4) {
   handleChar(_char4, TestLogic.input.current.length);
+  $("#wordsInput").val(" " + TestLogic.input.current);
 }
 
 $("#wordsInput").on("beforeinput", function (event) {
