@@ -600,7 +600,7 @@ function handleChar(char, charIndex) {
 
 $(document).keydown((event) => {
   //autofocus
-  let wordsFocused = $("#wordsInput").is(":focus");
+  const wordsFocused = $("#wordsInput").is(":focus");
   const pageTestActive = !$(".pageTest").hasClass("hidden");
   const commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
   const modePopupVisible =
@@ -609,19 +609,17 @@ $(document).keydown((event) => {
     !$("#customTestDurationPopupWrapper").hasClass("hidden") ||
     !$("#quoteSearchPopupWrapper").hasClass("hidden") ||
     !$("#wordFilterPopupWrapper").hasClass("hidden");
-  if (
-    pageTestActive &&
+
+  const allowTyping = pageTestActive &&
     !commandLineVisible &&
     !modePopupVisible &&
     !TestUI.resultVisible &&
-    !wordsFocused &&
-    event.key !== "Enter"
-  ) {
+    (wordsFocused || event.key !== "Enter");
+
+  if (allowTyping && !wordsFocused) {
     TestUI.focusWords();
     if (Config.showOutOfFocusWarning) {
       event.preventDefault();
-    } else {
-      wordsFocused = true;
     }
   }
 
@@ -633,7 +631,7 @@ $(document).keydown((event) => {
     handleTab(event);
   }
 
-  if (!wordsFocused) return;
+  if (!allowTyping) return;
 
   if (!event.originalEvent?.isTrusted || TestUI.testRestarting) {
     event.preventDefault();

@@ -6747,14 +6747,13 @@ $(document).keydown(function (event) {
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
   var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
+  var allowTyping = pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && (wordsFocused || event.key !== "Enter");
 
-  if (pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && !wordsFocused && event.key !== "Enter") {
+  if (allowTyping && !wordsFocused) {
     TestUI.focusWords();
 
     if (UpdateConfig["default"].showOutOfFocusWarning) {
       event.preventDefault();
-    } else {
-      wordsFocused = true;
     }
   } //tab
 
@@ -6763,7 +6762,7 @@ $(document).keydown(function (event) {
     handleTab(event);
   }
 
-  if (!wordsFocused) return;
+  if (!allowTyping) return;
 
   if (!((_event$originalEvent = event.originalEvent) === null || _event$originalEvent === void 0 ? void 0 : _event$originalEvent.isTrusted) || TestUI.testRestarting) {
     event.preventDefault();
