@@ -75,7 +75,7 @@ function handleTab(event) {
           }
         } else {
           event.preventDefault();
-          triggerInputWith("\t");
+          handleChar("\t", TestLogic.input.current.length);
         }
       } else if (!TestUI.resultVisible) {
         if (
@@ -87,7 +87,7 @@ function handleTab(event) {
           $("#restartTestButton").focus();
         } else {
           event.preventDefault();
-          triggerInputWith("\t");
+          handleChar("\t", TestLogic.input.current.length);
         }
       }
     } else if (Config.quickTab) {
@@ -442,6 +442,7 @@ function handleChar(char, charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
+    $("#wordsInput").val(" " + TestLogic.input.current);
     TestUI.updateWordElement();
     Caret.updatePosition();
     return;
@@ -521,6 +522,7 @@ function handleChar(char, charIndex) {
     (Config.mode !== "zen" && charIndex < TestLogic.words.getCurrent().length + 20)
   ) {
     TestLogic.input.current = resultingWord;
+    $("#wordsInput").val(" " + TestLogic.input.current);
   }
 
   if (!thisCharCorrect && Config.difficulty == "master") {
@@ -534,7 +536,7 @@ function handleChar(char, charIndex) {
   } else if (Config.keymapMode === "next" && Config.mode !== "zen") {
     Keymap.highlightKey(
       TestLogic.words
-        .getCurrent()[TestLogic.input.current.length]
+        .getCurrent().charAt(TestLogic.input.current.length)
         .toString()
         .toUpperCase()
     );
@@ -577,7 +579,8 @@ function handleChar(char, charIndex) {
       );
       if (!Config.showAllLines) TestUI.lineJump(currentTop);
     } else {
-      return;
+      TestLogic.input.current = TestLogic.input.current.slice(0, -1);
+      TestUI.updateWordElement();
     }
   }
 
@@ -595,7 +598,7 @@ function handleChar(char, charIndex) {
     Caret.updatePosition();
   }
 
-  return;
+  $("#wordsInput").val(" " + TestLogic.input.current);
 }
 
 $(document).keydown((event) => {
@@ -670,7 +673,7 @@ $(document).keydown((event) => {
       TestLogic.setBailout(true);
       TestLogic.finish();
     } else {
-      triggerInputWith("\n");
+      handleChar("\n", TestLogic.input.current.length);
     }
   }
 
@@ -691,7 +694,7 @@ $(document).keydown((event) => {
     const char = LayoutEmulator.getCharFromEvent(event);
     if (char !== null) {
       event.preventDefault();
-      triggerInputWith(char);
+      handleChar(char, TestLogic.input.current.length);
     }
   }
 });
@@ -711,11 +714,6 @@ $("#wordsInput").keyup((event) => {
   TestStats.setKeypressDuration(now);
   Monkey.stop();
 });
-
-function triggerInputWith(char) {
-  handleChar(char, TestLogic.input.current.length);
-  $("#wordsInput").val(" " + TestLogic.input.current);
-}
 
 $("#wordsInput").on("beforeinput", (event) => {
   if (!event.originalEvent?.isTrusted) return;

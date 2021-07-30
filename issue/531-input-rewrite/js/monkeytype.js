@@ -6315,7 +6315,7 @@ function handleTab(event) {
           }
         } else {
           event.preventDefault();
-          triggerInputWith("\t");
+          handleChar("\t", TestLogic.input.current.length);
         }
       } else if (!TestUI.resultVisible) {
         if (TestLogic.hasTab && event.shiftKey || !TestLogic.hasTab && UpdateConfig["default"].mode !== "zen" || UpdateConfig["default"].mode === "zen" && event.shiftKey) {
@@ -6323,7 +6323,7 @@ function handleTab(event) {
           $("#restartTestButton").focus();
         } else {
           event.preventDefault();
-          triggerInputWith("\t");
+          handleChar("\t", TestLogic.input.current.length);
         }
       }
     } else if (UpdateConfig["default"].quickTab) {
@@ -6629,6 +6629,7 @@ function handleChar(_char2, charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
+    $("#wordsInput").val(" " + TestLogic.input.current);
     TestUI.updateWordElement();
     Caret.updatePosition();
     return;
@@ -6686,6 +6687,7 @@ function handleChar(_char2, charIndex) {
 
   if (UpdateConfig["default"].mode === "zen" && charIndex < 30 || UpdateConfig["default"].mode !== "zen" && charIndex < TestLogic.words.getCurrent().length + 20) {
     TestLogic.input.current = resultingWord;
+    $("#wordsInput").val(" " + TestLogic.input.current);
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
@@ -6697,7 +6699,7 @@ function handleChar(_char2, charIndex) {
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey(_char2, thisCharCorrect);
   } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent()[TestLogic.input.current.length].toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
   }
 
   if (UpdateConfig["default"].mode != "zen") {
@@ -6723,7 +6725,8 @@ function handleChar(_char2, charIndex) {
       var currentTop = Math.floor(document.querySelectorAll("#words .word")[TestUI.currentWordElementIndex - 1].offsetTop);
       if (!UpdateConfig["default"].showAllLines) TestUI.lineJump(currentTop);
     } else {
-      return;
+      TestLogic.input.current = TestLogic.input.current.slice(0, -1);
+      TestUI.updateWordElement();
     }
   } //simulate space press in nospace funbox
 
@@ -6736,7 +6739,7 @@ function handleChar(_char2, charIndex) {
     Caret.updatePosition();
   }
 
-  return;
+  $("#wordsInput").val(" " + TestLogic.input.current);
 }
 
 $(document).keydown(function (event) {
@@ -6793,7 +6796,7 @@ $(document).keydown(function (event) {
       TestLogic.setBailout(true);
       TestLogic.finish();
     } else {
-      triggerInputWith("\n");
+      handleChar("\n", TestLogic.input.current.length);
     }
   } //show dead keys
 
@@ -6808,7 +6811,7 @@ $(document).keydown(function (event) {
 
     if (_char3 !== null) {
       event.preventDefault();
-      triggerInputWith(_char3);
+      handleChar(_char3, TestLogic.input.current.length);
     }
   }
 });
@@ -6831,12 +6834,6 @@ $("#wordsInput").keyup(function (event) {
   TestStats.setKeypressDuration(now);
   Monkey.stop();
 });
-
-function triggerInputWith(_char4) {
-  handleChar(_char4, TestLogic.input.current.length);
-  $("#wordsInput").val(" " + TestLogic.input.current);
-}
-
 $("#wordsInput").on("beforeinput", function (event) {
   var _event$originalEvent3;
 
