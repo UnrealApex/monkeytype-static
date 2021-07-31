@@ -136,11 +136,7 @@ function backspaceToPrevious() {
   if (Config.keymapMode === "next" && Config.mode !== "zen") {
     Keymap.highlightKey(
       TestLogic.words
-        .getCurrent()
-        .substring(
-          TestLogic.input.current.length,
-          TestLogic.input.current.length + 1
-        )
+        .getCurrent().charAt(TestLogic.input.current.length)
         .toString()
         .toUpperCase()
     );
@@ -179,7 +175,7 @@ function handleSpace() {
     Keymap.highlightKey(
       TestLogic.words
         .getCurrent()
-        .substring(TestLogic.input.current.length, TestLogic.input.current.length + 1)
+        .charAt(TestLogic.input.current.length)
         .toString()
         .toUpperCase()
     );
@@ -318,7 +314,7 @@ function handleSpace() {
     Keymap.highlightKey(
       TestLogic.words
         .getCurrent()
-        .substring(TestLogic.input.current.length, TestLogic.input.current.length + 1)
+        .charAt(TestLogic.input.current.length)
         .toString()
         .toUpperCase()
     );
@@ -700,7 +696,7 @@ $(document).keydown((event) => {
 });
 
 $("#wordsInput").keyup((event) => {
-  if (!event.originalEvent?.isTrusted) {
+  if (!event.originalEvent?.isTrusted || TestUI.testRestarting) {
     event.preventDefault();
     return;
   }
@@ -723,7 +719,7 @@ $("#wordsInput").on("beforeinput", (event) => {
 });
 
 $("#wordsInput").on("input", (event) => {
-  if (!event.originalEvent?.isTrusted) {
+  if (!event.originalEvent?.isTrusted || TestUI.testRestarting) {
     event.target.value = " ";
     return;
   }

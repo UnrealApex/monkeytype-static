@@ -6359,7 +6359,7 @@ function backspaceToPrevious() {
   Funbox.toggleScript(TestLogic.words.getCurrent());
 
   if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
   }
 
   Caret.updatePosition();
@@ -6390,7 +6390,7 @@ function handleSpace() {
 
     UpdateConfig.setLayout(layouts[index]);
     UpdateConfig.setKeymapLayout(layouts[index]);
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
     Settings.groups.layout.updateButton();
   }
 
@@ -6518,7 +6518,7 @@ function handleSpace() {
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey("Space", true);
   } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
+    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
   }
 
   if (UpdateConfig["default"].mode === "words" || UpdateConfig["default"].mode === "custom" || UpdateConfig["default"].mode === "quote" || UpdateConfig["default"].mode === "zen") {
@@ -6818,7 +6818,7 @@ $(document).keydown(function (event) {
 $("#wordsInput").keyup(function (event) {
   var _event$originalEvent2;
 
-  if (!((_event$originalEvent2 = event.originalEvent) === null || _event$originalEvent2 === void 0 ? void 0 : _event$originalEvent2.isTrusted)) {
+  if (!((_event$originalEvent2 = event.originalEvent) === null || _event$originalEvent2 === void 0 ? void 0 : _event$originalEvent2.isTrusted) || TestUI.testRestarting) {
     event.preventDefault();
     return;
   }
@@ -6846,7 +6846,7 @@ $("#wordsInput").on("beforeinput", function (event) {
 $("#wordsInput").on("input", function (event) {
   var _event$originalEvent4;
 
-  if (!((_event$originalEvent4 = event.originalEvent) === null || _event$originalEvent4 === void 0 ? void 0 : _event$originalEvent4.isTrusted)) {
+  if (!((_event$originalEvent4 = event.originalEvent) === null || _event$originalEvent4 === void 0 ? void 0 : _event$originalEvent4.isTrusted) || TestUI.testRestarting) {
     event.target.value = " ";
     return;
   }
@@ -11438,15 +11438,15 @@ function setNotSignedInUid(uid) {
   notSignedInLastResult.uid = uid;
 }
 
-var WordList = /*#__PURE__*/function () {
-  function WordList() {
-    (0, _classCallCheck2["default"])(this, WordList);
+var Words = /*#__PURE__*/function () {
+  function Words() {
+    (0, _classCallCheck2["default"])(this, Words);
     this.list = [];
     this.length = 0;
     this.currentIndex = 0;
   }
 
-  (0, _createClass2["default"])(WordList, [{
+  (0, _createClass2["default"])(Words, [{
     key: "get",
     value: function get(i) {
       if (i === undefined) {
@@ -11494,20 +11494,42 @@ var WordList = /*#__PURE__*/function () {
       this.currentIndex++;
     }
   }]);
-  return WordList;
+  return Words;
 }();
 
-var InputWordList = /*#__PURE__*/function () {
-  function InputWordList() {
-    (0, _classCallCheck2["default"])(this, InputWordList);
-    this.history = [];
+var Input = /*#__PURE__*/function () {
+  function Input() {
+    (0, _classCallCheck2["default"])(this, Input);
     this.current = "";
+    this.history = [];
   }
 
-  (0, _createClass2["default"])(InputWordList, [{
+  (0, _createClass2["default"])(Input, [{
     key: "reset",
     value: function reset() {
+      this.current = "";
       this.history = [];
+    }
+  }, {
+    key: "resetHistory",
+    value: function resetHistory() {
+      this.history = [];
+    }
+  }, {
+    key: "setCurrent",
+    value: function setCurrent(val) {
+      this.current = val;
+      this.length = this.current.length;
+    }
+  }, {
+    key: "appendCurrent",
+    value: function appendCurrent(val) {
+      this.current += val;
+      this.length = this.current.length;
+    }
+  }, {
+    key: "resetCurrent",
+    value: function resetCurrent() {
       this.current = "";
     }
   }, {
@@ -11519,17 +11541,13 @@ var InputWordList = /*#__PURE__*/function () {
     key: "pushHistory",
     value: function pushHistory() {
       this.history.push(this.current);
-      this.current = "";
+      this.historyLength = this.history.length;
+      this.resetCurrent();
     }
   }, {
     key: "popHistory",
     value: function popHistory() {
       return this.history.pop();
-    }
-  }, {
-    key: "getLastChar",
-    value: function getLastChar() {
-      return this.current[this.current.length];
     }
   }, {
     key: "getHistory",
@@ -11541,16 +11559,69 @@ var InputWordList = /*#__PURE__*/function () {
       }
     }
   }]);
-  return InputWordList;
+  return Input;
+}();
+
+var Corrected = /*#__PURE__*/function () {
+  function Corrected() {
+    (0, _classCallCheck2["default"])(this, Corrected);
+    this.current = "";
+    this.history = [];
+  }
+
+  (0, _createClass2["default"])(Corrected, [{
+    key: "setCurrent",
+    value: function setCurrent(val) {
+      this.current = val;
+    }
+  }, {
+    key: "appendCurrent",
+    value: function appendCurrent(val) {
+      this.current += val;
+    }
+  }, {
+    key: "resetCurrent",
+    value: function resetCurrent() {
+      this.current = "";
+    }
+  }, {
+    key: "resetHistory",
+    value: function resetHistory() {
+      this.history = [];
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.resetCurrent();
+      this.resetHistory();
+    }
+  }, {
+    key: "getHistory",
+    value: function getHistory(i) {
+      return this.history[i];
+    }
+  }, {
+    key: "popHistory",
+    value: function popHistory() {
+      return this.history.pop();
+    }
+  }, {
+    key: "pushHistory",
+    value: function pushHistory() {
+      this.history.push(this.current);
+      this.current = "";
+    }
+  }]);
+  return Corrected;
 }();
 
 var active = false;
 exports.active = active;
-var words = new WordList();
+var words = new Words();
 exports.words = words;
-var input = new InputWordList();
+var input = new Input();
 exports.input = input;
-var corrected = new InputWordList();
+var corrected = new Corrected();
 exports.corrected = corrected;
 var currentWordIndex = 0;
 exports.currentWordIndex = currentWordIndex;
@@ -11756,11 +11827,12 @@ function _init() {
             //   incorrect: 0,
             // };
 
-            input.reset();
-            _context2.next = 7;
+            input.resetHistory();
+            input.resetCurrent();
+            _context2.next = 8;
             return Misc.getLanguage(UpdateConfig["default"].language);
 
-          case 7:
+          case 8:
             language = _context2.sent;
 
             if (language && language.name !== UpdateConfig["default"].language) {
@@ -11768,20 +11840,20 @@ function _init() {
             }
 
             if (language) {
-              _context2.next = 14;
+              _context2.next = 15;
               break;
             }
 
             UpdateConfig.setLanguage("english");
-            _context2.next = 13;
+            _context2.next = 14;
             return Misc.getLanguage(UpdateConfig["default"].language);
 
-          case 13:
+          case 14:
             language = _context2.sent;
 
-          case 14:
+          case 15:
             if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
-              _context2.next = 33;
+              _context2.next = 34;
               break;
             }
 
@@ -11840,22 +11912,22 @@ function _init() {
             }
 
             if (!(UpdateConfig["default"].funbox == "poetry")) {
-              _context2.next = 30;
+              _context2.next = 31;
               break;
             }
 
-            _context2.next = 26;
+            _context2.next = 27;
             return Poetry.getPoem();
 
-          case 26:
+          case 27:
             poem = _context2.sent;
             poem.words.forEach(function (word) {
               words.push(word);
             });
-            _context2.next = 31;
+            _context2.next = 32;
             break;
 
-          case 30:
+          case 31:
             for (i = 0; i < wordsBound; i++) {
               randomWord = wordset[Math.floor(Math.random() * wordset.length)];
               previousWord = words.get(i - 1);
@@ -11929,24 +12001,24 @@ function _init() {
               words.push(randomWord);
             }
 
-          case 31:
-            _context2.next = 71;
+          case 32:
+            _context2.next = 72;
             break;
 
-          case 33:
+          case 34:
             if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 71;
+              _context2.next = 72;
               break;
             }
 
-            _context2.next = 36;
+            _context2.next = 37;
             return Misc.getQuotes(UpdateConfig["default"].language.replace(/_\d*k$/g, ""));
 
-          case 36:
+          case 37:
             quotes = _context2.sent;
 
             if (!(quotes.length === 0)) {
-              _context2.next = 43;
+              _context2.next = 44;
               break;
             }
 
@@ -11956,16 +12028,16 @@ function _init() {
             restart();
             return _context2.abrupt("return");
 
-          case 43:
+          case 44:
             if (!(UpdateConfig["default"].quoteLength != -2)) {
-              _context2.next = 59;
+              _context2.next = 60;
               break;
             }
 
             quoteLengths = UpdateConfig["default"].quoteLength;
 
             if (!(quoteLengths.length > 1)) {
-              _context2.next = 50;
+              _context2.next = 51;
               break;
             }
 
@@ -11975,14 +12047,14 @@ function _init() {
               groupIndex = quoteLengths[Math.floor(Math.random() * quoteLengths.length)];
             }
 
-            _context2.next = 55;
+            _context2.next = 56;
             break;
 
-          case 50:
+          case 51:
             groupIndex = quoteLengths[0];
 
             if (!(quotes.groups[groupIndex].length === 0)) {
-              _context2.next = 55;
+              _context2.next = 56;
               break;
             }
 
@@ -11990,17 +12062,17 @@ function _init() {
             TestUI.setTestRestarting(false);
             return _context2.abrupt("return");
 
-          case 55:
+          case 56:
             rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
 
             if (randomQuote != null && rq.id === randomQuote.id) {
               rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
             }
 
-            _context2.next = 61;
+            _context2.next = 62;
             break;
 
-          case 59:
+          case 60:
             quotes.groups.forEach(function (group) {
               var filtered = group.filter(function (quote) {
                 return quote.id == QuoteSearchPopup.selectedId;
@@ -12016,7 +12088,7 @@ function _init() {
               Notifications.add("Quote Id Does Not Exist", 0);
             }
 
-          case 61:
+          case 62:
             rq.text = rq.text.replace(/ +/gm, " ");
             rq.text = rq.text.replace(/\\\\t/gm, "\t");
             rq.text = rq.text.replace(/\\\\n/gm, "\n");
@@ -12035,7 +12107,7 @@ function _init() {
               words.push(w[_i3]);
             }
 
-          case 71:
+          case 72:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -12060,17 +12132,17 @@ function _init() {
 
 
             if (!$(".pageTest").hasClass("active")) {
-              _context2.next = 76;
+              _context2.next = 77;
               break;
             }
 
-            _context2.next = 76;
+            _context2.next = 77;
             return Funbox.activate();
 
-          case 76:
+          case 77:
             TestUI.showWords(); // }
 
-          case 77:
+          case 78:
           case "end":
             return _context2.stop();
         }
