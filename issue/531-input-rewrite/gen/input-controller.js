@@ -399,7 +399,6 @@ function handleChar(char, charIndex) {
 
   TestStats.recordKeypressSpacing();
   TestStats.setKeypressDuration(performance.now());
-  TestStats.setKeypressNotAfk();
 
   if (char === "\n" && Config.funbox === "58008") {
     char = " ";
@@ -723,6 +722,8 @@ $("#wordsInput").on("input", (event) => {
     event.target.value = " ";
     return;
   }
+
+  TestStats.setKeypressNotAfk();
 
   const realInputValue = event.target.value.normalize();
   const inputValue = realInputValue.slice(1);
