@@ -11,6 +11,8 @@ Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
 
+console.log("but this time formatting is good");
+
 RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(() => {
   if (window.location.hash === "") {
