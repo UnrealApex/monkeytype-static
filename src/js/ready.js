@@ -5,7 +5,7 @@ import * as Settings from "./settings";
 import * as RouteController from "./route-controller";
 import * as UI from "./ui";
 import * as MonkeyPower from "./monkey-power";
-
+console.log(' cool');
 ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
