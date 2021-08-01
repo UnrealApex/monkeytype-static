@@ -1382,7 +1382,7 @@ export function finish(difficultyFailed = false) {
     Math.max(TestStats.keypressPerSecond.length - 5, 0)
   );
 
-  kps = kps.map((a) => a.count);
+  kps = kps.map((a) => a.count + a.mod);
 
   kps = kps.reduce((a, b) => a + b, 0);
 

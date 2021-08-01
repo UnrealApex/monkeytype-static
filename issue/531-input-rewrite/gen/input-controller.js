@@ -371,15 +371,30 @@ function isCharCorrect(char, charIndex) {
     return true;
   }
 
-  if (char === "”" && originalChar == '"') {
+  if (
+    (char === `’` || char === "'") &&
+    (originalChar == `’` || originalChar === "'")
+  ) {
     return true;
   }
 
-  if (char === '"' && originalChar == "”") {
+  if (
+    (char === `"` ||
+      char === "”" ||
+      char == "“" ||
+      char === "„") &&
+    (originalChar == `"` ||
+      originalChar === "”" ||
+      originalChar === "“" ||
+      originalChar === "„")
+  ) {
     return true;
   }
 
-  if ((char === "–" || char === "—") && originalChar == "-") {
+  if (
+    (char === "–" || char === "—" || char == "-") &&
+    (originalChar == "-" || originalChar === "–" || originalChar === "—")
+  ) {
     return true;
   }
 
@@ -432,8 +447,13 @@ function handleChar(char, charIndex) {
   Focus.set(true);
   Caret.stopAnimation();
 
-  const resultingWord = TestLogic.input.current.substring(0, charIndex) + char + TestLogic.input.current.substring(charIndex + 1);
   let thisCharCorrect = isCharCorrect(char, charIndex);
+
+  if (thisCharCorrect) {
+    char = TestLogic.words.getCurrent().charAt(charIndex);
+  }
+
+  const resultingWord = TestLogic.input.current.substring(0, charIndex) + char + TestLogic.input.current.substring(charIndex + 1);
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;

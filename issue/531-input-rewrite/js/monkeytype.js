@@ -6563,15 +6563,15 @@ function isCharCorrect(_char, charIndex) {
     return true;
   }
 
-  if (_char === "”" && originalChar == '"') {
+  if ((_char === "\u2019" || _char === "'") && (originalChar == "\u2019" || originalChar === "'")) {
     return true;
   }
 
-  if (_char === '"' && originalChar == "”") {
+  if ((_char === "\"" || _char === "”" || _char == "“" || _char === "„") && (originalChar == "\"" || originalChar === "”" || originalChar === "“" || originalChar === "„")) {
     return true;
   }
 
-  if ((_char === "–" || _char === "—") && originalChar == "-") {
+  if ((_char === "–" || _char === "—" || _char == "-") && (originalChar == "-" || originalChar === "–" || originalChar === "—")) {
     return true;
   }
 
@@ -6623,8 +6623,13 @@ function handleChar(_char2, charIndex) {
 
   Focus.set(true);
   Caret.stopAnimation();
-  var resultingWord = TestLogic.input.current.substring(0, charIndex) + _char2 + TestLogic.input.current.substring(charIndex + 1);
   var thisCharCorrect = isCharCorrect(_char2, charIndex);
+
+  if (thisCharCorrect) {
+    _char2 = TestLogic.words.getCurrent().charAt(charIndex);
+  }
+
+  var resultingWord = TestLogic.input.current.substring(0, charIndex) + _char2 + TestLogic.input.current.substring(charIndex + 1);
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
@@ -7471,9 +7476,17 @@ var layouts = {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "wW", "cC", "dD", "lL", "'\"", "/?", "yY", "oO", "uU", "qQ", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "vV", "bB", "gG", "mM", ",<", ".>", "fF", "jJ", "xX", "zZ", " "]
   },
-  Thai_Kedmanee: {
+  thai_kedmanee: {
     keymapShowTopRow: true,
     keys: ["-%", "ๅ+", "/๑", "_๒", "ภ๓", "ถ๔", "ุู", "ึ฿", "ค๕", "ต๖", "จ๗", "ข๘", "ช๙", "ๆ๐", "ไ\"", "ำฎ", "พฑ", "ะธ", "ัํ", "ี๊", "รณ", "นฯ", "ยญ", "บฐ", "ล,", "ฃฅ", "ฟฤ", "หฆ", "กฏ", "ดโ", "เฌ", "้็", "่๋", "าษ", "สศ", "วซ", "ง.", "ฃฅ", "ผ(", "ป)", "แฉ", "อฮ", "ิฺ", "ื์", "ท?", "มฒ", "ใฬ", "ฝฦ", " "]
+  },
+  thai_pattachote: {
+    keymapShowTopRow: true,
+    keys: ["฿~", "ๅ+", "๒\"", "๓/", "๔,", "๕?", "ูุ", "๗_", "๘.", "๙(", "๐)", "๑-", "๖%", "็๊", "ตฤ", "ยๆ", "อญ", "รษ", "่ึ", "ดฝ", "มซ", "วถ", "แฒ", "ใฯ", "ฌฦ", "ฃฅ", "้๋", "ทธ", "งำ", "กณ", "ั์", "ีื", "่าผ", "นช", "เโ", "ไฆ", "ขฑ", "ฃฅ", "บฎ", "ปฏ", "ลฐ", "หภ", "ิั", "คศ", "สฮ", "ะฟ", "จฉ", "พฬ", " "]
+  },
+  thai_manoonchai: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "ใฒ", "ตฏ", "หซ", "ลญ", "สฟ", "ปฉ", "ัึ", "กธ", "ิฐ", "บฎ", "็ฆ", "ฬฑ", "ฯฌ", "งษ", "เถ", "รแ", "นช", "มพ", "อผ", "าำ", "่ข", "้โ", "วภ", "ื\"", "ฯฌ", "ุฤ", "ไฝ", "ทๆ", "ยณ", "จ๊", "ค๋", "ี์", "ดศ", "ะฮ", "ู?", " "]
   }
 };
 var _default = layouts;
@@ -12798,14 +12811,10 @@ function finish() {
   }
 
   ChartController.result.data.datasets[2].data = errorsArray;
-  var kps = TestStats.keypressPerSecond.slice(Math.max(TestStats.keypressPerSecond.length - 5, 0));
-  kps = kps.map(function (a) {
-    return a.count;
+  var kps = TestStats.keypressPerSecond.slice(-5);
+  var afkDetected = kps.every(function (second) {
+    return second.afk;
   });
-  kps = kps.reduce(function (a, b) {
-    return a + b;
-  }, 0);
-  var afkDetected = kps === 0 ? true : false;
   if (bailout) afkDetected = false;
   var lang = UpdateConfig["default"].language;
   var quoteLength = -1;
@@ -13987,10 +13996,10 @@ function updateWordElement() {
   if (UpdateConfig["default"].mode === "zen") {
     for (var i = 0; i < TestLogic.input.current.length; i++) {
       if (TestLogic.input.current[i] === "\t") {
-        ret += "<letter class='tabChar correct'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
+        ret += "<letter class='tabChar correct' style=\"opacity: 0\"><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
       } else if (TestLogic.input.current[i] === "\n") {
         newlineafter = true;
-        ret += "<letter class='nlChar correct'><i class=\"fas fa-angle-down\"></i></letter>";
+        ret += "<letter class='nlChar correct' style=\"opacity: 0\"><i class=\"fas fa-angle-down\"></i></letter>";
       } else {
         ret += "<letter class=\"correct\">".concat(TestLogic.input.current[i], "</letter>");
       }

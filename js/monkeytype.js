@@ -6764,18 +6764,18 @@ function handleAlpha(event) {
     thisCharCorrect = true;
   }
 
-  if (event.key === "”" && nextCharInWord == '"') {
-    event.key = '"';
+  if ((event.key === "\u2019" || event.key === "'") && (nextCharInWord == "\u2019" || nextCharInWord === "'")) {
+    event.key = nextCharInWord;
     thisCharCorrect = true;
   }
 
-  if (event.key === '"' && nextCharInWord == "”") {
-    event.key = "”";
+  if ((event.key === "\"" || event.key === "”" || event.key == "“" || event.key === "„") && (nextCharInWord == "\"" || nextCharInWord === "”" || nextCharInWord === "“" || nextCharInWord === "„")) {
+    event.key = nextCharInWord;
     thisCharCorrect = true;
   }
 
-  if ((event.key === "–" || event.key === "—") && nextCharInWord == "-") {
-    event.key = "-";
+  if ((event.key === "–" || event.key === "—" || event.key == "-") && (nextCharInWord == "-" || nextCharInWord === "–" || nextCharInWord === "—")) {
+    event.key = nextCharInWord;
     thisCharCorrect = true;
   }
 
@@ -7580,9 +7580,17 @@ var layouts = {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "wW", "cC", "dD", "lL", "'\"", "/?", "yY", "oO", "uU", "qQ", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "vV", "bB", "gG", "mM", ",<", ".>", "fF", "jJ", "xX", "zZ", " "]
   },
-  Thai_Kedmanee: {
+  thai_kedmanee: {
     keymapShowTopRow: true,
     keys: ["-%", "ๅ+", "/๑", "_๒", "ภ๓", "ถ๔", "ุู", "ึ฿", "ค๕", "ต๖", "จ๗", "ข๘", "ช๙", "ๆ๐", "ไ\"", "ำฎ", "พฑ", "ะธ", "ัํ", "ี๊", "รณ", "นฯ", "ยญ", "บฐ", "ล,", "ฃฅ", "ฟฤ", "หฆ", "กฏ", "ดโ", "เฌ", "้็", "่๋", "าษ", "สศ", "วซ", "ง.", "ฃฅ", "ผ(", "ป)", "แฉ", "อฮ", "ิฺ", "ื์", "ท?", "มฒ", "ใฬ", "ฝฦ", " "]
+  },
+  thai_pattachote: {
+    keymapShowTopRow: true,
+    keys: ["฿~", "ๅ+", "๒\"", "๓/", "๔,", "๕?", "ูุ", "๗_", "๘.", "๙(", "๐)", "๑-", "๖%", "็๊", "ตฤ", "ยๆ", "อญ", "รษ", "่ึ", "ดฝ", "มซ", "วถ", "แฒ", "ใฯ", "ฌฦ", "ฃฅ", "้๋", "ทธ", "งำ", "กณ", "ั์", "ีื", "่าผ", "นช", "เโ", "ไฆ", "ขฑ", "ฃฅ", "บฎ", "ปฏ", "ลฐ", "หภ", "ิั", "คศ", "สฮ", "ะฟ", "จฉ", "พฬ", " "]
+  },
+  thai_manoonchai: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "ใฒ", "ตฏ", "หซ", "ลญ", "สฟ", "ปฉ", "ัึ", "กธ", "ิฐ", "บฎ", "็ฆ", "ฬฑ", "ฯฌ", "งษ", "เถ", "รแ", "นช", "มพ", "อผ", "าำ", "่ข", "้โ", "วภ", "ื\"", "ฯฌ", "ุฤ", "ไฝ", "ทๆ", "ยณ", "จ๊", "ค๋", "ี์", "ดศ", "ะฮ", "ู?", " "]
   }
 };
 var _default = layouts;
@@ -12918,7 +12926,7 @@ function finish() {
   ChartController.result.data.datasets[2].data = errorsArray;
   var kps = TestStats.keypressPerSecond.slice(Math.max(TestStats.keypressPerSecond.length - 5, 0));
   kps = kps.map(function (a) {
-    return a.count;
+    return a.count + a.mod;
   });
   kps = kps.reduce(function (a, b) {
     return a + b;
@@ -14105,10 +14113,10 @@ function updateWordElement(showError) {
   if (UpdateConfig["default"].mode === "zen") {
     for (var i = 0; i < TestLogic.input.current.length; i++) {
       if (TestLogic.input.current[i] === "\t") {
-        ret += "<letter class='tabChar correct'><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
+        ret += "<letter class='tabChar correct' style=\"opacity: 0\"><i class=\"fas fa-long-arrow-alt-right\"></i></letter>";
       } else if (TestLogic.input.current[i] === "\n") {
         newlineafter = true;
-        ret += "<letter class='nlChar correct'><i class=\"fas fa-angle-down\"></i></letter>";
+        ret += "<letter class='nlChar correct' style=\"opacity: 0\"><i class=\"fas fa-angle-down\"></i></letter>";
       } else {
         ret += "<letter class=\"correct\">" + TestLogic.input.current[i] + "</letter>";
       }
