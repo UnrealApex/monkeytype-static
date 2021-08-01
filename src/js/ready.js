@@ -10,6 +10,7 @@ ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
+                  console.log(              " hey hey hey" + 'hey hey');
 
 RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(() => {
