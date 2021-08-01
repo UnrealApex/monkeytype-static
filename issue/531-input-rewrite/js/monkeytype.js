@@ -6625,7 +6625,7 @@ function handleChar(_char2, charIndex) {
   Caret.stopAnimation();
   var thisCharCorrect = isCharCorrect(_char2, charIndex);
 
-  if (thisCharCorrect) {
+  if (thisCharCorrect && UpdateConfig["default"].mode !== "zen") {
     _char2 = TestLogic.words.getCurrent().charAt(charIndex);
   }
 

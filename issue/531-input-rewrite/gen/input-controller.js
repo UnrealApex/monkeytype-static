@@ -449,7 +449,7 @@ function handleChar(char, charIndex) {
 
   let thisCharCorrect = isCharCorrect(char, charIndex);
 
-  if (thisCharCorrect) {
+  if (thisCharCorrect && Config.mode !== "zen") {
     char = TestLogic.words.getCurrent().charAt(charIndex);
   }
 
