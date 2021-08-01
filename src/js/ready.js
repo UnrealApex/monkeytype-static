@@ -6,6 +6,8 @@ import * as RouteController from "./route-controller";
 import * as UI from "./ui";
 import * as MonkeyPower from "./monkey-power";
 
+
+wrong
 ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
