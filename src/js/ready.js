@@ -10,7 +10,7 @@ ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub();
-
+this is all wrong
 RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(() => {
   if (window.location.hash === "") {
