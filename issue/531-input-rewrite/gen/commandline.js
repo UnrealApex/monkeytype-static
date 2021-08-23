@@ -322,8 +322,15 @@ $("#commandLine input").keyup((e) => {
 
 $(document).ready((e) => {
   $(document).keydown((event) => {
-    //escape
-    if (event.keyCode == 27 || (event.keyCode == 9 && Config.swapEscAndTab)) {
+    // opens command line if escape, ctrl/cmd + shift + p, or tab is pressed if the setting swapEscAndTab is enabled
+    if (
+      event.keyCode == 27 ||
+      (event.key &&
+        event.key.toLowerCase() == "p" &&
+        (event.metaKey || event.ctrlKey) &&
+        event.shiftKey) ||
+      (event.keyCode == 9 && Config.swapEscAndTab)
+    ) {
       event.preventDefault();
       if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
         event.preventDefault();

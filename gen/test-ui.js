@@ -16,6 +16,7 @@ import * as Replay from "./replay";
 import * as TestStats from "./test-stats";
 import * as Misc from "./misc";
 import * as TestUI from "./test-ui";
+import * as ChallengeController from "./challenge-controller";
 
 export let currentWordElementIndex = 0;
 export let resultVisible = false;
@@ -186,7 +187,7 @@ export function colorful(tc) {
   }
 }
 
-export function screenshot() {
+export async function screenshot() {
   let revealReplay = false;
   function revertScreenshot() {
     $("#notificationCenter").removeClass("hidden");
@@ -213,7 +214,7 @@ export function screenshot() {
   $("#commandLineMobileButton").addClass("hidden");
   try {
     html2canvas(document.body, {
-      backgroundColor: ThemeColors.bg,
+      backgroundColor: await ThemeColors.get("bg"),
       height: sourceHeight + 50,
       width: sourceWidth + 50,
       x: sourceX - 25,
@@ -466,6 +467,12 @@ export function updateModesNotice() {
     );
   }
 
+  if (ChallengeController.active) {
+    $(".pageTest #testModesNotice").append(
+      `<div class="text-button" commands="commandsChallenges"><i class="fas fa-award"></i>${ChallengeController.active.display}</div>`
+    );
+  }
+
   if (Config.mode === "zen") {
     $(".pageTest #testModesNotice").append(
       `<div class="text-button"><i class="fas fa-poll"></i>shift + enter to finish zen </div>`
@@ -474,7 +481,12 @@ export function updateModesNotice() {
 
   // /^[0-9a-zA-Z_.-]+$/.test(name);
 
-  if (/_\d+k$/g.test(Config.language) && Config.mode !== "quote") {
+  if (
+    (/_\d+k$/g.test(Config.language) ||
+      /code_/g.test(Config.language) ||
+      Config.language == "english_commonly_misspelled") &&
+    Config.mode !== "quote"
+  ) {
     $(".pageTest #testModesNotice").append(
       `<div class="text-button" commands="commandsLanguages"><i class="fas fa-globe-americas"></i>${Config.language.replace(
         /_/g,
@@ -959,6 +971,7 @@ $("#wordsInput").on("focusout", () => {
 
 $(document).on("keypress", "#restartTestButton", (event) => {
   if (event.keyCode == 13) {
+    ManualRestart.reset();
     if (
       TestLogic.active &&
       Config.repeatQuotes === "typing" &&

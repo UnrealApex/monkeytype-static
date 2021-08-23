@@ -69,7 +69,11 @@ function handleTab(event) {
         ) {
           //ignore
         } else {
-          if (event.shiftKey) ManualRestart.set();
+          if (event.shiftKey) {
+            ManualRestart.set();
+          } else {
+            ManualRestart.reset();
+          }
           event.preventDefault();
           if (
             TestLogic.active &&
@@ -484,6 +488,7 @@ function handleAlpha(event) {
       "End",
       "GroupPrevious",
       "GroupNext",
+      "WakeUp",
       undefined,
     ].includes(event.key)
   ) {

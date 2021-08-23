@@ -16,6 +16,7 @@ import * as UI from "./ui";
 import * as CommandlineLists from "./commandline-lists";
 import * as BackgroundFilter from "./custom-background-filter";
 import LayoutList from "./layouts";
+import * as ChallengeContoller from "./challenge-controller";
 
 export let localStorageConfig = null;
 
@@ -150,6 +151,7 @@ export function setNumbers(numb, nosave) {
   } else {
     $("#top .config .numbersMode .text-button").addClass("active");
   }
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -177,6 +179,7 @@ export function setPunctuation(punc, nosave) {
   } else {
     $("#top .config .punctuationMode .text-button").addClass("active");
   }
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -264,6 +267,7 @@ export function setMode(mode, nosave) {
     }
     // setPaceCaret("off", true);
   }
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -315,6 +319,7 @@ export function setFavThemes(themes, nosave) {
 
 export function setFunbox(funbox, nosave) {
   config.funbox = funbox ? funbox : "none";
+  ChallengeContoller.clearActive();
   if (!nosave) {
     saveToLocalStorage();
   }
@@ -425,6 +430,7 @@ export function setPaceCaret(val, nosave) {
   //   val = "off";
   // }
   config.paceCaret = val;
+  ChallengeContoller.clearActive();
   TestUI.updateModesNotice();
   PaceCaret.init(nosave);
   if (!nosave) saveToLocalStorage();
@@ -551,6 +557,7 @@ export function setShowAllLines(sal, nosave) {
     sal = false;
   }
   config.showAllLines = sal;
+  ChallengeContoller.clearActive();
   if (!nosave) {
     saveToLocalStorage();
     TestLogic.restart();
@@ -747,6 +754,7 @@ export function setShowLiveWpm(live, nosave) {
   } else {
     LiveWpm.hide();
   }
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -822,6 +830,7 @@ export function setHighlightMode(mode, nosave) {
   }
   config.highlightMode = mode;
   // if(TestLogic.active){
+  ChallengeContoller.clearActive();
   try {
     if (!nosave) TestUI.updateWordElement(config.blindMode);
   } catch {}
@@ -935,6 +944,7 @@ export function setTimeConfig(time, nosave) {
   $("#top .config .time .text-button[timeConfig='" + time + "']").addClass(
     "active"
   );
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -985,6 +995,7 @@ export function setWordCount(wordCount, nosave) {
   $(
     "#top .config .wordCount .text-button[wordCount='" + wordCount + "']"
   ).addClass("active");
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -1239,6 +1250,7 @@ export function setKeymapMode(mode, nosave) {
   $(".active-key").removeClass("active-key");
   $(".keymap-key").attr("style", "");
   config.keymapMode = mode;
+  ChallengeContoller.clearActive();
   if (!nosave) TestLogic.restart(false, nosave);
   if (!nosave) saveToLocalStorage();
 }
@@ -1287,6 +1299,7 @@ export function setKeymapLayout(layout, nosave) {
     layout = "qwerty";
   }
   config.keymapLayout = layout;
+  ChallengeContoller.clearActive();
   Keymap.refreshKeys(layout, setKeymapLayout);
   if (!nosave) saveToLocalStorage();
 }
@@ -1296,6 +1309,7 @@ export function setLayout(layout, nosave) {
     layout = "qwerty";
   }
   config.layout = layout;
+  ChallengeContoller.clearActive();
   TestUI.updateModesNotice();
   if (config.keymapLayout === "overrideSync") {
     Keymap.refreshKeys(config.keymapLayout, setKeymapLayout);

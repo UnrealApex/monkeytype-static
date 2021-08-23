@@ -85,8 +85,10 @@
     </div>
     <div class="merchBanner hidden">
       <img src="images/merchdropwebsite2.png" alt="" />
-      We've got brand new merch designs over at
-      <a href="https://monkeytype.store" target="_blank">monkeytype.store</a>
+      <div class="text">
+        We've got brand new merch designs over at
+        <a href="https://monkeytype.store" target="_blank">monkeytype.store</a>
+      </div>
       <i class="fas closeButton fa-times"></i>
     </div>
 
@@ -305,7 +307,18 @@
     </div>
     <div id="commandLineWrapper" class="hidden">
       <div id="commandLine">
-        <input type="text" class="input" placeholder="Type to search" />
+        <div
+          style="
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+          "
+        >
+          <div class="searchicon">
+            <i class="fas fa-search"></i>
+          </div>
+          <input type="text" class="input" placeholder="Type to search" />
+        </div>
         <div class="separator hidden"></div>
         <div class="listTitle">Title</div>
         <div class="suggestions"></div>
@@ -371,7 +384,9 @@
           </div>
 
           <div class="config hidden">
-            <div style="display: grid; grid-auto-flow: column">
+            <div
+              style="display: grid; grid-auto-flow: column; padding-top: 0.1rem"
+            >
               <div class="group punctuationMode">
                 <!--           <div class="title">time</div> -->
                 <div class="buttons">
@@ -465,8 +480,6 @@
               </div>
               <div id="memoryTimer">Time left to memorise all words: 0s</div>
               <div id="testModesNotice"></div>
-              <div id="caret" class="default size15"></div>
-              <div id="paceCaret" class="default size15 hidden"></div>
               <input id="wordsInput" class="" tabindex="0" autocomplete="off" />
               <div id="timerNumber" class="timerMain">
                 <div>60</div>
@@ -482,6 +495,8 @@
                 Click or press any key to focus
               </div>
               <div id="wordsWrapper">
+                <div id="paceCaret" class="default size15 hidden"></div>
+                <div id="caret" class="default size15"></div>
                 <div id="words" class="size15"></div>
               </div>
               <div class="keymap hidden">

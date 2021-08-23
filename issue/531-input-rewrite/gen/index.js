@@ -19,6 +19,7 @@ import "./import-settings-popup";
 import "./input-controller";
 import "./ready";
 import "./about-page";
+import * as TestStats from "./test-stats";
 
 //this file should be concatenated with the legacy js files
 
@@ -29,3 +30,5 @@ global.simplePopups = SimplePopups.simplePopups;
 global.config = Config;
 // global.addnotif = Notifications.add;
 global.glarsesMode = toggleGlarses;
+
+global.stats = TestStats.getStats;

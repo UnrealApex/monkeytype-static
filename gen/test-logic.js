@@ -29,6 +29,8 @@ import * as MonkeyPower from "./monkey-power";
 import * as Poetry from "./poetry.js";
 import * as TodayTracker from "./today-tracker";
 import * as WeakSpot from "./weak-spot";
+import * as Wordset from "./wordset";
+import * as ChallengeContoller from "./challenge-controller";
 
 let glarsesMode = false;
 
@@ -495,10 +497,11 @@ export async function init() {
     if (Config.funbox === "plus_two") {
       wordsBound = 3;
     }
-    let wordset = language.words;
+    let wordList = language.words;
     if (Config.mode == "custom") {
-      wordset = CustomText.text;
+      wordList = CustomText.text;
     }
+    const wordset = Wordset.withWords(wordList);
 
     if (Config.funbox == "poetry") {
       let poem = await Poetry.getPoem();
@@ -507,7 +510,7 @@ export async function init() {
       });
     } else {
       for (let i = 0; i < wordsBound; i++) {
-        let randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+        let randomWord = wordset.randomWord();
         const previousWord = words.get(i - 1);
         const previousWord2 = words.get(i - 2);
         if (
@@ -520,7 +523,7 @@ export async function init() {
           Config.mode == "custom" &&
           (wordset.length < 3 || PractiseWords.before.mode !== null)
         ) {
-          randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+          randomWord = wordset.randomWord();
         } else {
           let regenarationCount = 0; //infinite loop emergency stop button
           while (
@@ -531,12 +534,12 @@ export async function init() {
               randomWord.indexOf(" ") > -1)
           ) {
             regenarationCount++;
-            randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            randomWord = wordset.randomWord();
           }
         }
 
         if (randomWord === undefined) {
-          randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+          randomWord = wordset.randomWord();
         }
 
         if (Config.funbox === "rAnDoMcAsE") {
@@ -656,6 +659,7 @@ export async function init() {
     rq.text = rq.text.replace(/\\t/gm, "\t");
     rq.text = rq.text.replace(/\\n/gm, "\n");
     rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
+    rq.text = rq.text.replace(/…/g, "...");
     rq.text = rq.text.trim();
 
     setRandomQuote(rq);
@@ -786,7 +790,6 @@ export function restart(
   TestStats.restart();
   corrected.reset();
   ShiftTracker.reset();
-  Focus.set(false);
   Caret.hide();
   setActive(false);
   Replay.stopReplayRecording();
@@ -916,6 +919,7 @@ export function restart(
         opacity: 1,
       });
       // resetPaceCaret();
+      Focus.set(false);
       $("#typingTest")
         .css("opacity", 0)
         .removeClass("hidden")
@@ -932,7 +936,7 @@ export function restart(
             TestTimer.clear();
             if ($("#commandLineWrapper").hasClass("hidden"))
               TestUI.focusWords();
-            ChartController.result.update();
+            // ChartController.result.update();
             TestUI.updateModesNotice();
             UI.setPageTransition(false);
             // console.log(TestStats.incompleteSeconds);
@@ -1004,8 +1008,8 @@ export async function addWord() {
           leftToRight: await Misc.getCurrentLanguage().leftToRight,
           words: CustomText.text,
         };
-  const wordset = language.words;
-  let randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+  const wordset = Wordset.withWords(language.words);
+  let randomWord = wordset.randomWord();
   const previousWord = words.getLast();
   const previousWordStripped = previousWord
     .replace(/[.?!":\-,]/g, "")
@@ -1020,7 +1024,7 @@ export async function addWord() {
     (CustomText.isWordRandom || CustomText.isTimeRandom) &&
     wordset.length < 3
   ) {
-    randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+    randomWord = wordset.randomWord();
   } else if (
     Config.mode == "custom" &&
     !CustomText.isWordRandom &&
@@ -1034,12 +1038,12 @@ export async function addWord() {
       randomWord.indexOf(" ") > -1 ||
       (!Config.punctuation && randomWord == "I")
     ) {
-      randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+      randomWord = wordset.randomWord();
     }
   }
 
   if (randomWord === undefined) {
-    randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+    randomWord = wordset.randomWord();
   }
 
   if (Config.funbox === "rAnDoMcAsE") {
@@ -1060,6 +1064,8 @@ export async function addWord() {
     randomWord = Misc.getSpecials();
   } else if (Config.funbox === "ascii") {
     randomWord = Misc.getASCII();
+  } else if (Config.funbox === "weakspot") {
+    randomWord = WeakSpot.getWord(wordset);
   }
 
   if (Config.punctuation) {
@@ -1075,7 +1081,7 @@ export async function addWord() {
   TestUI.addWord(randomWord);
 }
 
-export function finish(difficultyFailed = false) {
+export async function finish(difficultyFailed = false) {
   if (!active) return;
   if (Config.mode == "zen" && input.current.length != 0) {
     input.pushHistory();
@@ -1083,7 +1089,7 @@ export function finish(difficultyFailed = false) {
     Replay.replayGetWordsList(input.history);
   }
 
-  TestStats.recordKeypressSpacing();
+  TestStats.recordKeypressSpacing(); //this is needed in case there is afk time at the end - to make sure test duration makes sense
 
   TestUI.setResultCalculating(true);
   TestUI.setResultVisible(true);
@@ -1099,23 +1105,21 @@ export function finish(difficultyFailed = false) {
   TimerProgress.hide();
   Funbox.activate("none", null);
 
+  let stats = TestStats.calculateStats();
+
   if (TestStats.burstHistory.length !== input.getHistory().length) {
     //auto ended test, need one more calculation for the last word
     let burst = TestStats.calculateBurst();
     TestStats.pushBurstToHistory(burst);
   }
 
-  if (
-    Misc.roundTo2(TestStats.calculateTestSeconds()) % 1 != 0 &&
-    Config.mode !== "time"
-  ) {
+  if (stats.time % 1 != 0 && Config.mode !== "time") {
     TestStats.setLastSecondNotRound();
   }
 
   if (Config.mode == "zen" || bailout) {
     TestStats.removeAfkData();
   }
-  let stats = TestStats.calculateStats();
   if (stats === undefined) {
     stats = {
       wpm: 0,
@@ -1315,10 +1319,17 @@ export function finish(difficultyFailed = false) {
   let avg = Misc.mean(rawWpmPerSecondRaw);
 
   let consistency = Misc.roundTo2(Misc.kogasa(stddev / avg));
+
+  let keyconsistencyarray = TestStats.keypressTimings.spacing.array.slice();
+
+  keyconsistencyarray = keyconsistencyarray.splice(
+    0,
+    keyconsistencyarray.length - 1
+  );
+
   let keyConsistency = Misc.roundTo2(
     Misc.kogasa(
-      Misc.stdDev(TestStats.keypressTimings.spacing.array) /
-        Misc.mean(TestStats.keypressTimings.spacing.array)
+      Misc.stdDev(keyconsistencyarray) / Misc.mean(keyconsistencyarray)
     )
   );
 
@@ -1455,9 +1466,15 @@ export function finish(difficultyFailed = false) {
     let completedEvent = {
       wpm: stats.wpm,
       rawWpm: stats.wpmRaw,
-      correctChars: stats.correctChars + stats.correctSpaces,
-      incorrectChars: stats.incorrectChars,
-      allChars: stats.allChars,
+      // correctChars: stats.correctChars + stats.correctSpaces,
+      // incorrectChars: stats.incorrectChars,
+      // allChars: stats.allChars,
+      charStats: [
+        stats.correctChars + stats.correctSpaces,
+        stats.incorrectChars,
+        stats.extraChars,
+        stats.missedChars,
+      ],
       acc: stats.acc,
       mode: Config.mode,
       mode2: mode2,
@@ -1475,7 +1492,7 @@ export function finish(difficultyFailed = false) {
       testDuration: testtime,
       afkDuration: afkseconds,
       blindMode: Config.blindMode,
-      theme: Config.theme,
+      // theme: Config.theme,
       keySpacing: TestStats.keypressTimings.spacing.array,
       keyDuration: TestStats.keypressTimings.duration.array,
       consistency: consistency,
@@ -1594,7 +1611,7 @@ export function finish(difficultyFailed = false) {
   } else {
     $("#result .stats .source").addClass("hidden");
   }
-
+  let fc = await ThemeColors.get("sub");
   if (Config.funbox !== "none") {
     let content = Config.funbox;
     if (Config.funbox === "layoutfluid") {
@@ -1614,7 +1631,7 @@ export function finish(difficultyFailed = false) {
         fontFamily: Config.fontFamily.replace(/_/g, " "),
         fontSize: 11,
         fontStyle: "normal",
-        fontColor: ThemeColors.sub,
+        fontColor: fc,
         xPadding: 6,
         yPadding: 6,
         cornerRadius: 3,
@@ -1642,7 +1659,7 @@ export function finish(difficultyFailed = false) {
         font-size: 2rem;
         padding: 2rem 0;
       ">Test completed</div>
-    
+
     `);
     $("#middle #result .stats").remove();
     $("#middle #result .chart").remove();

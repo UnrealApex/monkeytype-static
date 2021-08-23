@@ -12,7 +12,7 @@ $(".supportButtons .button.ads").click(function (e) {
   Commandline.show();
 });
 
-},{"./commandline-lists.js":5,"./commandline.js":6,"@babel/runtime/helpers/interopRequireWildcard":68}],2:[function(require,module,exports){
+},{"./commandline-lists.js":6,"./commandline.js":7,"@babel/runtime/helpers/interopRequireWildcard":74}],2:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -41,7 +41,7 @@ $(document).keydown(function (event) {
   } catch (_unused) {}
 });
 
-},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":67}],3:[function(require,module,exports){
+},{"./config":8,"@babel/runtime/helpers/interopRequireDefault":73}],3:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -232,7 +232,347 @@ function show() {
   }
 }
 
-},{"./config":7,"./misc":28,"./test-logic":48,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],4:[function(require,module,exports){
+},{"./config":8,"./misc":29,"./test-logic":49,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],4:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.clearActive = clearActive;
+exports.verify = verify;
+exports.setup = setup;
+exports.active = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var Misc = _interopRequireWildcard(require("./misc"));
+
+var Notifications = _interopRequireWildcard(require("./notifications"));
+
+var ManualRestart = _interopRequireWildcard(require("./manual-restart-tracker"));
+
+var CustomText = _interopRequireWildcard(require("./custom-text"));
+
+var TestLogic = _interopRequireWildcard(require("./test-logic"));
+
+var Funbox = _interopRequireWildcard(require("./funbox"));
+
+var UpdateConfig = _interopRequireWildcard(require("./config"));
+
+var active = null;
+exports.active = active;
+
+function clearActive() {
+  if (active) {
+    Notifications.add("Challenge cleared", 0);
+    exports.active = active = null;
+  }
+}
+
+function verify(result) {
+  if (active) {
+    var afk = result.afkDuration / result.testDuration * 100;
+
+    if (afk > 10) {
+      Notifications.add("Challenge failed: AFK time is greater than 10%", 0);
+      return null;
+    }
+
+    if (!active.requirements) {
+      Notifications.add("".concat(active.display, " challenge passed!"), 1);
+      return active.name;
+    } else {
+      var requirementsMet = true;
+      var failReasons = [];
+
+      for (var requirementType in active.requirements) {
+        if (requirementsMet == false) return;
+        var requirementValue = active.requirements[requirementType];
+
+        if (requirementType == "wpm") {
+          var wpmMode = Object.keys(requirementValue)[0];
+
+          if (wpmMode == "exact") {
+            if (Math.round(result.wpm) != requirementValue.exact) {
+              requirementsMet = false;
+              failReasons.push("WPM not ".concat(requirementValue.exact));
+            }
+          } else if (wpmMode == "min") {
+            if (result.wpm < requirementValue.min) {
+              requirementsMet = false;
+              failReasons.push("WPM below ".concat(requirementValue.min));
+            }
+          }
+        } else if (requirementType == "acc") {
+          var accMode = Object.keys(requirementValue)[0];
+
+          if (accMode == "exact") {
+            if (Math.round(result.acc) != requirementValue.exact) {
+              requirementsMet = false;
+              failReasons.push("Accuracy not ".concat(requirementValue.exact));
+            }
+          } else if (accMode == "min") {
+            if (result.acc < requirementValue.min) {
+              requirementsMet = false;
+              failReasons.push("Accuracy below ".concat(requirementValue.min));
+            }
+          }
+        } else if (requirementType == "afk") {
+          var afkMode = Object.keys(requirementValue)[0];
+
+          if (afkMode == "max") {
+            if (Math.round(afk) > requirementValue.max) {
+              requirementsMet = false;
+              failReasons.push("AFK percentage above ".concat(requirementValue.max));
+            }
+          }
+        } else if (requirementType == "time") {
+          var timeMode = Object.keys(requirementValue)[0];
+
+          if (timeMode == "min") {
+            if (Math.round(result.testDuration) < requirementValue.min) {
+              requirementsMet = false;
+              failReasons.push("Test time below ".concat(requirementValue.min));
+            }
+          }
+        } else if (requirementType == "funbox") {
+          var funboxMode = requirementValue[0];
+
+          if (funboxMode != result.funbox) {
+            requirementsMet = false;
+            failReasons.push("".concat(funboxMode, " funbox not active"));
+          }
+        } else if (requirementType == "raw") {
+          var rawMode = Object.keys(requirementValue)[0];
+
+          if (rawMode == "exact") {
+            if (Math.round(result.rawWpm) != requirementValue.exact) {
+              requirementsMet = false;
+              failReasons.push("Raw WPM not ".concat(requirementValue.exact));
+            }
+          }
+        } else if (requirementType == "con") {
+          var conMode = Object.keys(requirementValue)[0];
+
+          if (conMode == "exact") {
+            if (Math.round(result.consistency) != requirementValue.exact) {
+              requirementsMet = false;
+              failReasons.push("Consistency not ".concat(requirementValue.exact));
+            }
+          }
+        } else if (requirementType == "config") {
+          for (var configKey in requirementValue) {
+            var configValue = requirementValue[configKey];
+
+            if (UpdateConfig["default"][configKey] != configValue) {
+              requirementsMet = false;
+              failReasons.push("".concat(configKey, " not set to ").concat(configValue));
+            }
+          }
+        }
+      }
+
+      if (requirementsMet) {
+        Notifications.add("".concat(active.display, " challenge passed!"), 1);
+        return active.name;
+      } else {
+        Notifications.add("".concat(active.display, " challenge failed: ").concat(failReasons.join(", ")), 0);
+        return null;
+      }
+    }
+  } else {
+    return null;
+  }
+}
+
+function setup(_x) {
+  return _setup.apply(this, arguments);
+}
+
+function _setup() {
+  _setup = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(challengeName) {
+    var list, challenge, notitext, scriptdata, text;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return Misc.getChallengeList();
+
+          case 2:
+            list = _context.sent;
+            challenge = list.filter(function (c) {
+              return c.name === challengeName;
+            })[0];
+            _context.prev = 4;
+
+            if (!(challenge === undefined)) {
+              _context.next = 11;
+              break;
+            }
+
+            Notifications.add("Challenge not found", 0);
+            ManualRestart.set();
+            TestLogic.restart(false, true);
+            setTimeout(function () {
+              $("#top .config").removeClass("hidden");
+              $(".page.pageTest").removeClass("hidden");
+            }, 250);
+            return _context.abrupt("return");
+
+          case 11:
+            if (!(challenge.type === "customTime")) {
+              _context.next = 18;
+              break;
+            }
+
+            UpdateConfig.setTimeConfig(challenge.parameters[0], true);
+            UpdateConfig.setMode("time", true);
+            UpdateConfig.setDifficulty("normal", true);
+
+            if (challenge.name === "englishMaster") {
+              UpdateConfig.setLanguage("english_10k", true);
+              UpdateConfig.setNumbers(true, true);
+              UpdateConfig.setPunctuation(true, true);
+            }
+
+            _context.next = 51;
+            break;
+
+          case 18:
+            if (!(challenge.type === "customWords")) {
+              _context.next = 24;
+              break;
+            }
+
+            UpdateConfig.setWordCount(challenge.parameters[0], true);
+            UpdateConfig.setMode("words", true);
+            UpdateConfig.setDifficulty("normal", true);
+            _context.next = 51;
+            break;
+
+          case 24:
+            if (!(challenge.type === "customText")) {
+              _context.next = 32;
+              break;
+            }
+
+            CustomText.setText(challenge.parameters[0].split(" "));
+            CustomText.setIsWordRandom(challenge.parameters[1]);
+            CustomText.setWord(parseInt(challenge.parameters[2]));
+            UpdateConfig.setMode("custom", true);
+            UpdateConfig.setDifficulty("normal", true);
+            _context.next = 51;
+            break;
+
+          case 32:
+            if (!(challenge.type === "script")) {
+              _context.next = 50;
+              break;
+            }
+
+            _context.next = 35;
+            return fetch("/challenges/" + challenge.parameters[0]);
+
+          case 35:
+            scriptdata = _context.sent;
+            _context.next = 38;
+            return scriptdata.text();
+
+          case 38:
+            scriptdata = _context.sent;
+            text = scriptdata.trim();
+            text = text.replace(/[\n\r\t ]/gm, " ");
+            text = text.replace(/ +/gm, " ");
+            CustomText.setText(text.split(" "));
+            CustomText.setIsWordRandom(false);
+            UpdateConfig.setMode("custom", true);
+            UpdateConfig.setDifficulty("normal", true);
+
+            if (challenge.parameters[1] != null) {
+              UpdateConfig.setTheme(challenge.parameters[1]);
+            }
+
+            if (challenge.parameters[2] != null) {
+              Funbox.activate(challenge.parameters[2]);
+            }
+
+            _context.next = 51;
+            break;
+
+          case 50:
+            if (challenge.type === "accuracy") {
+              UpdateConfig.setTimeConfig(0, true);
+              UpdateConfig.setMode("time", true);
+              UpdateConfig.setDifficulty("master", true);
+            } else if (challenge.type === "funbox") {
+              Funbox.activate(challenge.parameters[0]);
+              UpdateConfig.setDifficulty("normal", true);
+
+              if (challenge.parameters[1] === "words") {
+                UpdateConfig.setWordCount(challenge.parameters[2], true);
+              } else if (challenge.parameters[1] === "time") {
+                UpdateConfig.setTimeConfig(challenge.parameters[2], true);
+              }
+
+              UpdateConfig.setMode(challenge.parameters[1], true);
+
+              if (challenge.parameters[3] !== undefined) {
+                UpdateConfig.setDifficulty(challenge.parameters[3], true);
+              }
+            } else if (challenge.type === "special") {
+              if (challenge.name === "semimak") {
+                // so can you make a link that sets up 120s, 10k, punct, stop on word, and semimak as the layout?
+                UpdateConfig.setMode("time", true);
+                UpdateConfig.setTimeConfig(120, true);
+                UpdateConfig.setLanguage("english_10k", true);
+                UpdateConfig.setPunctuation(true, true);
+                UpdateConfig.setStopOnError("word", true);
+                UpdateConfig.setLayout("semimak", true);
+                UpdateConfig.setKeymapLayout("overrideSync", true);
+                UpdateConfig.setKeymapMode("static", true);
+              }
+            }
+
+          case 51:
+            ManualRestart.set();
+            TestLogic.restart(false, true);
+            notitext = challenge.message;
+            $("#top .config").removeClass("hidden");
+            $(".page.pageTest").removeClass("hidden");
+
+            if (notitext === undefined) {
+              Notifications.add("Challenge '".concat(challenge.display, "' loaded."), 0);
+            } else {
+              Notifications.add("Challenge loaded. " + notitext, 0);
+            }
+
+            exports.active = active = challenge;
+            _context.next = 63;
+            break;
+
+          case 60:
+            _context.prev = 60;
+            _context.t0 = _context["catch"](4);
+            Notifications.add("Something went wrong: " + _context.t0, -1);
+
+          case 63:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[4, 60]]);
+  }));
+  return _setup.apply(this, arguments);
+}
+
+},{"./config":8,"./custom-text":12,"./funbox":16,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],5:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -246,6 +586,10 @@ exports.updateColors = updateColors;
 exports.setDefaultFontFamily = setDefaultFontFamily;
 exports.updateAllChartColors = updateAllChartColors;
 exports.result = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -395,64 +739,127 @@ var result = new _chart["default"]($("#wpmChart"), {
 });
 exports.result = result;
 
-function updateColors(chart) {
-  if (ThemeColors.main == "") {
-    ThemeColors.update();
-  }
+function updateColors(_x) {
+  return _updateColors.apply(this, arguments);
+}
 
-  chart.data.datasets[0].borderColor = ThemeColors.main;
-  chart.data.datasets[1].borderColor = ThemeColors.sub;
+function _updateColors() {
+  _updateColors = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(chart) {
+    var bgcolor, subcolor, maincolor;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return ThemeColors.get("bg");
 
-  if (chart.data.datasets[0].type === undefined) {
-    if (chart.config.type === "line") {
-      chart.data.datasets[0].pointBackgroundColor = ThemeColors.main;
-    } else if (chart.config.type === "bar") {
-      chart.data.datasets[0].backgroundColor = ThemeColors.main;
-    }
-  } else if (chart.data.datasets[0].type === "bar") {
-    chart.data.datasets[0].backgroundColor = ThemeColors.main;
-  } else if (chart.data.datasets[0].type === "line") {
-    chart.data.datasets[0].pointBackgroundColor = ThemeColors.main;
-  }
+          case 2:
+            bgcolor = _context.sent;
+            _context.next = 5;
+            return ThemeColors.get("sub");
 
-  if (chart.data.datasets[1].type === undefined) {
-    if (chart.config.type === "line") {
-      chart.data.datasets[1].pointBackgroundColor = ThemeColors.sub;
-    } else if (chart.config.type === "bar") {
-      chart.data.datasets[1].backgroundColor = ThemeColors.sub;
-    }
-  } else if (chart.data.datasets[1].type === "bar") {
-    chart.data.datasets[1].backgroundColor = ThemeColors.sub;
-  } else if (chart.data.datasets[1].type === "line") {
-    chart.data.datasets[1].pointBackgroundColor = ThemeColors.sub;
-  }
+          case 5:
+            subcolor = _context.sent;
+            _context.next = 8;
+            return ThemeColors.get("main");
 
-  try {
-    chart.options.scales.xAxes[0].ticks.minor.fontColor = ThemeColors.sub;
-    chart.options.scales.xAxes[0].scaleLabel.fontColor = ThemeColors.sub;
-  } catch (_unused2) {}
+          case 8:
+            maincolor = _context.sent;
+            chart.data.datasets[0].borderColor = maincolor;
+            chart.data.datasets[1].borderColor = subcolor;
 
-  try {
-    chart.options.scales.yAxes[0].ticks.minor.fontColor = ThemeColors.sub;
-    chart.options.scales.yAxes[0].scaleLabel.fontColor = ThemeColors.sub;
-  } catch (_unused3) {}
+            if (chart.data.datasets[0].type === undefined) {
+              if (chart.config.type === "line") {
+                chart.data.datasets[0].pointBackgroundColor = maincolor;
+              } else if (chart.config.type === "bar") {
+                chart.data.datasets[0].backgroundColor = maincolor;
+              }
+            } else if (chart.data.datasets[0].type === "bar") {
+              chart.data.datasets[0].backgroundColor = maincolor;
+            } else if (chart.data.datasets[0].type === "line") {
+              chart.data.datasets[0].pointBackgroundColor = maincolor;
+            }
 
-  try {
-    chart.options.scales.yAxes[1].ticks.minor.fontColor = ThemeColors.sub;
-    chart.options.scales.yAxes[1].scaleLabel.fontColor = ThemeColors.sub;
-  } catch (_unused4) {}
+            if (chart.data.datasets[1].type === undefined) {
+              if (chart.config.type === "line") {
+                chart.data.datasets[1].pointBackgroundColor = subcolor;
+              } else if (chart.config.type === "bar") {
+                chart.data.datasets[1].backgroundColor = subcolor;
+              }
+            } else if (chart.data.datasets[1].type === "bar") {
+              chart.data.datasets[1].backgroundColor = subcolor;
+            } else if (chart.data.datasets[1].type === "line") {
+              chart.data.datasets[1].pointBackgroundColor = subcolor;
+            }
 
-  try {
-    chart.options.scales.yAxes[2].ticks.minor.fontColor = ThemeColors.sub;
-    chart.options.scales.yAxes[2].scaleLabel.fontColor = ThemeColors.sub;
-  } catch (_unused5) {}
+            try {
+              chart.options.scales.xAxes[0].ticks.minor.fontColor = subcolor;
+              chart.options.scales.xAxes[0].scaleLabel.fontColor = subcolor;
+            } catch (_unused2) {}
 
-  try {
-    chart.data.datasets[0].trendlineLinear.style = ThemeColors.sub;
-    chart.data.datasets[1].trendlineLinear.style = ThemeColors.sub;
-  } catch (_unused6) {}
+            try {
+              chart.options.scales.yAxes[0].ticks.minor.fontColor = subcolor;
+              chart.options.scales.yAxes[0].scaleLabel.fontColor = subcolor;
+            } catch (_unused3) {}
 
-  chart.update();
+            try {
+              chart.options.scales.yAxes[1].ticks.minor.fontColor = subcolor;
+              chart.options.scales.yAxes[1].scaleLabel.fontColor = subcolor;
+            } catch (_unused4) {}
+
+            try {
+              chart.options.scales.yAxes[2].ticks.minor.fontColor = subcolor;
+              chart.options.scales.yAxes[2].scaleLabel.fontColor = subcolor;
+            } catch (_unused5) {}
+
+            try {
+              chart.data.datasets[0].trendlineLinear.style = subcolor;
+              chart.data.datasets[1].trendlineLinear.style = subcolor;
+            } catch (_unused6) {}
+
+            try {
+              chart.options.annotation.annotations.forEach(function (annotation) {
+                annotation.borderColor = subcolor;
+                annotation.label.backgroundColor = subcolor;
+                annotation.label.fontColor = bgcolor;
+              });
+            } catch (_unused7) {} // ChartController.result.options.annotation.annotations.push({
+            //   enabled: false,
+            //   type: "line",
+            //   mode: "horizontal",
+            //   scaleID: "wpm",
+            //   value: lpb,
+            //   borderColor: themecolors['sub'],
+            //   borderWidth: 1,
+            //   borderDash: [2, 2],
+            //   label: {
+            //     backgroundColor: themecolors['sub'],
+            //     fontFamily: Config.fontFamily.replace(/_/g, " "),
+            //     fontSize: 11,
+            //     fontStyle: "normal",
+            //     fontColor: themecolors['bg'],
+            //     xPadding: 6,
+            //     yPadding: 6,
+            //     cornerRadius: 3,
+            //     position: "center",
+            //     enabled: true,
+            //     content: `PB: ${lpb}`,
+            //   },
+            // });
+
+
+            chart.update({
+              duration: 250
+            });
+
+          case 20:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _updateColors.apply(this, arguments);
 }
 
 _chart["default"].prototype.updateColors = function () {
@@ -468,7 +875,7 @@ function updateAllChartColors() {
   result.updateColors();
 }
 
-},{"./misc":28,"./test-stats":49,"./theme-colors":52,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"chart.js":75}],5:[function(require,module,exports){
+},{"./misc":29,"./test-stats":50,"./theme-colors":53,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85,"chart.js":86}],6:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -482,7 +889,7 @@ exports.updateThemeCommands = updateThemeCommands;
 exports.setCurrent = setCurrent;
 exports.pushCurrent = pushCurrent;
 exports.getList = getList;
-exports.defaultCommands = exports.themeCommands = exports.commandsKeymapLayouts = exports.current = void 0;
+exports.defaultCommands = exports.commandsChallenges = exports.themeCommands = exports.commandsKeymapLayouts = exports.current = void 0;
 
 var Misc = _interopRequireWildcard(require("./misc"));
 
@@ -515,6 +922,8 @@ var Commandline = _interopRequireWildcard(require("./commandline"));
 var CustomText = _interopRequireWildcard(require("./custom-text"));
 
 var Settings = _interopRequireWildcard(require("./settings"));
+
+var ChallengeController = _interopRequireWildcard(require("./challenge-controller"));
 
 var current = [];
 exports.current = current;
@@ -2196,6 +2605,23 @@ Misc.getThemesList().then(function (themes) {
       }
     });
   });
+});
+var commandsChallenges = {
+  title: "Load challenge...",
+  list: []
+};
+exports.commandsChallenges = commandsChallenges;
+Misc.getChallengeList().then(function (challenges) {
+  challenges.forEach(function (challenge) {
+    commandsChallenges.list.push({
+      id: "loadChallenge" + Misc.capitalizeFirstLetter(challenge.name),
+      noIcon: true,
+      display: challenge.display,
+      exec: function exec() {
+        ChallengeController.setup(challenge.name);
+      }
+    });
+  });
 }); // export function showFavouriteThemesAtTheTop() {
 
 function updateThemeCommands() {
@@ -2708,6 +3134,11 @@ var defaultCommands = {
       return canBailOut();
     }
   }, {
+    id: "loadChallenge",
+    display: "Load challenge...",
+    icon: "fa-award",
+    subgroup: commandsChallenges
+  }, {
     id: "joinDiscord",
     display: "Join the Discord server",
     icon: "fa-users",
@@ -2825,7 +3256,7 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./commandline":6,"./config":7,"./custom-text":11,"./custom-text-popup":10,"./funbox":15,"./layouts":22,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./practise-words":36,"./settings":42,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],6:[function(require,module,exports){
+},{"./challenge-controller":4,"./commandline":7,"./config":8,"./custom-text":12,"./custom-text-popup":11,"./funbox":16,"./layouts":23,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./practise-words":37,"./settings":43,"./sound":46,"./test-logic":49,"./test-stats":50,"./test-ui":52,"./theme-controller":54,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -3168,8 +3599,8 @@ $("#commandLine input").keyup(function (e) {
 });
 $(document).ready(function (e) {
   $(document).keydown(function (event) {
-    //escape
-    if (event.keyCode == 27 || event.keyCode == 9 && UpdateConfig["default"].swapEscAndTab) {
+    // opens command line if escape, ctrl/cmd + shift + p, or tab is pressed if the setting swapEscAndTab is enabled
+    if (event.keyCode == 27 || event.key && event.key.toLowerCase() == "p" && (event.metaKey || event.ctrlKey) && event.shiftKey || event.keyCode == 9 && UpdateConfig["default"].swapEscAndTab) {
       event.preventDefault();
 
       if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
@@ -3394,7 +3825,7 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":5,"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./focus":14,"./practise-words":36,"./simple-popups":44,"./test-ui":51,"./theme-controller":53,"@babel/runtime/helpers/defineProperty":66,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],7:[function(require,module,exports){
+},{"./commandline-lists":6,"./config":8,"./custom-test-duration-popup":10,"./custom-text-popup":11,"./custom-word-amount-popup":14,"./focus":15,"./practise-words":37,"./simple-popups":45,"./test-ui":52,"./theme-controller":54,"@babel/runtime/helpers/defineProperty":70,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],8:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -3559,6 +3990,8 @@ var BackgroundFilter = _interopRequireWildcard(require("./custom-background-filt
 
 var _layouts = _interopRequireDefault(require("./layouts"));
 
+var ChallengeContoller = _interopRequireWildcard(require("./challenge-controller"));
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3709,6 +4142,7 @@ function setNumbers(numb, nosave) {
     $("#top .config .numbersMode .text-button").addClass("active");
   }
 
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -3742,6 +4176,7 @@ function setPunctuation(punc, nosave) {
     $("#top .config .punctuationMode .text-button").addClass("active");
   }
 
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -3833,6 +4268,7 @@ function setMode(mode, nosave) {
 
   }
 
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -3886,6 +4322,7 @@ function setFavThemes(themes, nosave) {
 
 function setFunbox(funbox, nosave) {
   config.funbox = funbox ? funbox : "none";
+  ChallengeContoller.clearActive();
 
   if (!nosave) {
     saveToLocalStorage();
@@ -4012,6 +4449,7 @@ function setPaceCaret(val, nosave) {
 
 
   config.paceCaret = val;
+  ChallengeContoller.clearActive();
   TestUI.updateModesNotice();
   PaceCaret.init(nosave);
   if (!nosave) saveToLocalStorage();
@@ -4154,6 +4592,7 @@ function setShowAllLines(sal, nosave) {
   }
 
   config.showAllLines = sal;
+  ChallengeContoller.clearActive();
 
   if (!nosave) {
     saveToLocalStorage();
@@ -4373,6 +4812,7 @@ function setShowLiveWpm(live, nosave) {
     LiveWpm.hide();
   }
 
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -4455,6 +4895,8 @@ function setHighlightMode(mode, nosave) {
   }
 
   config.highlightMode = mode; // if(TestLogic.active){
+
+  ChallengeContoller.clearActive();
 
   try {
     if (!nosave) TestUI.updateWordElement(config.blindMode);
@@ -4576,6 +5018,7 @@ function setTimeConfig(time, nosave) {
   }
 
   $("#top .config .time .text-button[timeConfig='" + time + "']").addClass("active");
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 } //quote length
 
@@ -4630,6 +5073,7 @@ function setWordCount(wordCount, nosave) {
   }
 
   $("#top .config .wordCount .text-button[wordCount='" + wordCount + "']").addClass("active");
+  ChallengeContoller.clearActive();
   if (!nosave) saveToLocalStorage();
 } //caret
 
@@ -4893,6 +5337,7 @@ function setKeymapMode(mode, nosave) {
   $(".active-key").removeClass("active-key");
   $(".keymap-key").attr("style", "");
   config.keymapMode = mode;
+  ChallengeContoller.clearActive();
   if (!nosave) TestLogic.restart(false, nosave);
   if (!nosave) saveToLocalStorage();
 }
@@ -4939,6 +5384,7 @@ function setKeymapLayout(layout, nosave) {
   }
 
   config.keymapLayout = layout;
+  ChallengeContoller.clearActive();
   Keymap.refreshKeys(layout, setKeymapLayout);
   if (!nosave) saveToLocalStorage();
 }
@@ -4949,6 +5395,7 @@ function setLayout(layout, nosave) {
   }
 
   config.layout = layout;
+  ChallengeContoller.clearActive();
   TestUI.updateModesNotice();
 
   if (config.keymapLayout === "overrideSync") {
@@ -5244,7 +5691,7 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./commandline-lists":5,"./custom-background-filter":8,"./funbox":15,"./keymap":19,"./language-picker":20,"./layouts":22,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./sound":45,"./test-logic":48,"./test-ui":51,"./theme-controller":53,"./timer-progress":55,"./ui":57,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/defineProperty":66,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],8:[function(require,module,exports){
+},{"./challenge-controller":4,"./commandline-lists":6,"./custom-background-filter":9,"./funbox":16,"./keymap":20,"./language-picker":21,"./layouts":23,"./live-acc":24,"./live-burst":25,"./live-wpm":26,"./notifications":32,"./out-of-focus":33,"./pace-caret":34,"./sound":46,"./test-logic":49,"./test-ui":52,"./theme-controller":54,"./timer-progress":56,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/defineProperty":70,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],9:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5354,7 +5801,7 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   Notifications.add("Custom background filters saved", 1);
 });
 
-},{"./config":7,"./notifications":31,"@babel/runtime/helpers/interopRequireWildcard":68}],9:[function(require,module,exports){
+},{"./config":8,"./notifications":32,"@babel/runtime/helpers/interopRequireWildcard":74}],10:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5496,7 +5943,7 @@ $("#customTestDurationPopup .button").click(function () {
   apply();
 });
 
-},{"./config":7,"./manual-restart-tracker":27,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71}],10:[function(require,module,exports){
+},{"./config":8,"./manual-restart-tracker":28,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82}],11:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5519,6 +5966,8 @@ var Notifications = _interopRequireWildcard(require("./notifications"));
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var WordFilterPopup = _interopRequireWildcard(require("./word-filter-popup"));
+
+var ChallengeController = _interopRequireWildcard(require("./challenge-controller"));
 
 var wrapper = "#customTextPopupWrapper";
 var popup = "#customTextPopup";
@@ -5626,6 +6075,7 @@ $("#customTextPopup .apply").click(function () {
     Notifications.add("Infinite words! Make sure to use Bail Out from the command line to save your result.", 0, 7);
   }
 
+  ChallengeController.clearActive();
   ManualRestart.set();
   TestLogic.restart();
   hide();
@@ -5634,7 +6084,7 @@ $("#customTextPopup .wordfilter").click(function () {
   WordFilterPopup.show();
 });
 
-},{"./custom-text":11,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./test-logic":48,"./word-filter-popup":60,"@babel/runtime/helpers/interopRequireWildcard":68}],11:[function(require,module,exports){
+},{"./challenge-controller":4,"./custom-text":12,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./test-logic":49,"./word-filter-popup":61,"@babel/runtime/helpers/interopRequireWildcard":74}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5677,7 +6127,7 @@ function setWord(val) {
   exports.word = word = val;
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5739,7 +6189,7 @@ $("#shareCustomThemeButton").click(function (e) {
   }
 });
 
-},{"./config":7,"./notifications":31,"./theme-picker":54,"@babel/runtime/helpers/interopRequireWildcard":68}],13:[function(require,module,exports){
+},{"./config":8,"./notifications":32,"./theme-picker":55,"@babel/runtime/helpers/interopRequireWildcard":74}],14:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5811,7 +6261,7 @@ $("#customWordAmountPopup .button").click(function () {
   apply();
 });
 
-},{"./config":7,"./manual-restart-tracker":27,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/interopRequireWildcard":68}],14:[function(require,module,exports){
+},{"./config":8,"./manual-restart-tracker":28,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/interopRequireWildcard":74}],15:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5849,7 +6299,7 @@ $(document).mousemove(function (event) {
   }
 });
 
-},{"./caret":3,"@babel/runtime/helpers/interopRequireWildcard":68}],15:[function(require,module,exports){
+},{"./caret":3,"@babel/runtime/helpers/interopRequireWildcard":74}],16:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6063,8 +6513,8 @@ function _activate() {
                 Settings.groups.keymapMode.updateButton();
                 TestLogic.restart();
               } else if (funbox === "layoutfluid") {
-                rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
-                UpdateConfig.setKeymapMode("next");
+                rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode); // UpdateConfig.setKeymapMode("next");
+
                 Settings.groups.keymapMode.updateButton(); // UpdateConfig.setSavedLayout(Config.layout);
 
                 rememberSetting("layout", UpdateConfig["default"].layout, UpdateConfig.setLayout);
@@ -6119,7 +6569,7 @@ function setFunbox(funbox, mode) {
   return true;
 }
 
-},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./settings":42,"./test-logic":48,"./test-ui":51,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],16:[function(require,module,exports){
+},{"./config":8,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./settings":43,"./test-logic":49,"./test-ui":52,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],17:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6175,7 +6625,7 @@ $("#settingsImportWrapper").click(function (e) {
   }
 });
 
-},{"./config":7,"./notifications":31,"./settings":42,"@babel/runtime/helpers/interopRequireWildcard":68}],17:[function(require,module,exports){
+},{"./config":8,"./notifications":32,"./settings":43,"@babel/runtime/helpers/interopRequireWildcard":74}],18:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
@@ -6213,6 +6663,8 @@ require("./ready");
 
 require("./about-page");
 
+var TestStats = _interopRequireWildcard(require("./test-stats"));
+
 //this file should be concatenated at the top of the legacy js files
 _chart["default"].plugins.register(_chartjsPluginTrendline["default"]);
 
@@ -6225,9 +6677,10 @@ global.simplePopups = SimplePopups.simplePopups; //these exports are just for de
 global.config = _config["default"]; // global.addnotif = Notifications.add;
 
 global.glarsesMode = _testLogic.toggleGlarses;
+global.stats = TestStats.getStats;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./about-page":1,"./caps-warning":2,"./config":7,"./custom-theme-popup":12,"./import-settings-popup":16,"./input-controller":18,"./misc":28,"./ready":38,"./simple-popups":44,"./support-popup":46,"./test-logic":48,"./version-popup":58,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"chart.js":75,"chartjs-plugin-annotation":80,"chartjs-plugin-trendline":83}],18:[function(require,module,exports){
+},{"./about-page":1,"./caps-warning":2,"./config":8,"./custom-theme-popup":13,"./import-settings-popup":17,"./input-controller":19,"./misc":29,"./ready":39,"./simple-popups":45,"./support-popup":47,"./test-logic":49,"./test-stats":50,"./version-popup":59,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"chart.js":86,"chartjs-plugin-annotation":91,"chartjs-plugin-trendline":94}],19:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6305,7 +6758,12 @@ function handleTab(event) {
     if ($(".pageTest").hasClass("active")) {
       if (UpdateConfig["default"].quickTab) {
         if (TestUI.resultVisible || !(UpdateConfig["default"].mode == "zen" && !event.shiftKey || TestLogic.hasTab && !event.shiftKey)) {
-          if (event.shiftKey) ManualRestart.set();
+          if (event.shiftKey) {
+            ManualRestart.set();
+          } else {
+            ManualRestart.reset();
+          }
+
           event.preventDefault();
 
           if (TestLogic.active && UpdateConfig["default"].repeatQuotes === "typing" && UpdateConfig["default"].mode === "quote") {
@@ -6893,12 +7351,12 @@ $("#wordsInput").on("copy paste", function (event) {
   event.preventDefault();
 });
 
-},{"./caret":3,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./layout-emulator":21,"./live-acc":23,"./live-burst":24,"./manual-restart-tracker":27,"./misc":28,"./monkey":30,"./monkey-power":29,"./notifications":31,"./pace-caret":33,"./replay.js":39,"./settings":42,"./shift-tracker":43,"./sound":45,"./test-logic":48,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./timer-progress":55,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/interopRequireWildcard":68}],19:[function(require,module,exports){
+},{"./caret":3,"./config":8,"./custom-text":12,"./focus":15,"./funbox":16,"./keymap":20,"./layout-emulator":22,"./live-acc":24,"./live-burst":25,"./manual-restart-tracker":28,"./misc":29,"./monkey":31,"./monkey-power":30,"./notifications":32,"./pace-caret":34,"./replay.js":40,"./settings":43,"./shift-tracker":44,"./sound":46,"./test-logic":49,"./test-stats":50,"./test-timer":51,"./test-ui":52,"./timer-progress":56,"./ui":58,"./weak-spot":60,"@babel/runtime/helpers/interopRequireWildcard":74}],20:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6908,6 +7366,10 @@ exports.flashKey = flashKey;
 exports.hide = hide;
 exports.show = show;
 exports.refreshKeys = refreshKeys;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
@@ -6988,85 +7450,111 @@ function highlightKey(currentKey) {
   }
 }
 
-function flashKey(key, correct) {
-  if (key == undefined) return;
+function flashKey(_x, _x2) {
+  return _flashKey.apply(this, arguments);
+}
 
-  switch (key) {
-    case "\\":
-    case "|":
-      key = "#KeyBackslash";
-      break;
+function _flashKey() {
+  _flashKey = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(key, correct) {
+    var themecolors;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!(key == undefined)) {
+              _context.next = 2;
+              break;
+            }
 
-    case "}":
-    case "]":
-      key = "#KeyRightBracket";
-      break;
+            return _context.abrupt("return");
 
-    case "{":
-    case "[":
-      key = "#KeyLeftBracket";
-      break;
+          case 2:
+            _context.t0 = key;
+            _context.next = _context.t0 === "\\" ? 5 : _context.t0 === "|" ? 5 : _context.t0 === "}" ? 7 : _context.t0 === "]" ? 7 : _context.t0 === "{" ? 9 : _context.t0 === "[" ? 9 : _context.t0 === '"' ? 11 : _context.t0 === "'" ? 11 : _context.t0 === ":" ? 13 : _context.t0 === ";" ? 13 : _context.t0 === "<" ? 15 : _context.t0 === "," ? 15 : _context.t0 === ">" ? 17 : _context.t0 === "." ? 17 : _context.t0 === "?" ? 19 : _context.t0 === "/" ? 19 : _context.t0 === ("" || "Space") ? 21 : 23;
+            break;
 
-    case '"':
-    case "'":
-      key = "#KeyQuote";
-      break;
+          case 5:
+            key = "#KeyBackslash";
+            return _context.abrupt("break", 24);
 
-    case ":":
-    case ";":
-      key = "#KeySemicolon";
-      break;
+          case 7:
+            key = "#KeyRightBracket";
+            return _context.abrupt("break", 24);
 
-    case "<":
-    case ",":
-      key = "#KeyComma";
-      break;
+          case 9:
+            key = "#KeyLeftBracket";
+            return _context.abrupt("break", 24);
 
-    case ">":
-    case ".":
-      key = "#KeyPeriod";
-      break;
+          case 11:
+            key = "#KeyQuote";
+            return _context.abrupt("break", 24);
 
-    case "?":
-    case "/":
-      key = "#KeySlash";
-      break;
+          case 13:
+            key = "#KeySemicolon";
+            return _context.abrupt("break", 24);
 
-    case "" || "Space":
-      key = "#KeySpace";
-      break;
+          case 15:
+            key = "#KeyComma";
+            return _context.abrupt("break", 24);
 
-    default:
-      key = "#Key".concat(key.toUpperCase());
-  }
+          case 17:
+            key = "#KeyPeriod";
+            return _context.abrupt("break", 24);
 
-  if (key == "#KeySpace") {
-    key = ".key-split-space";
-  }
+          case 19:
+            key = "#KeySlash";
+            return _context.abrupt("break", 24);
 
-  try {
-    if (correct || UpdateConfig["default"].blindMode) {
-      $(key).stop(true, true).css({
-        color: ThemeColors.bg,
-        backgroundColor: ThemeColors.main,
-        borderColor: ThemeColors.main
-      }).animate({
-        color: ThemeColors.sub,
-        backgroundColor: "transparent",
-        borderColor: ThemeColors.sub
-      }, 500, "easeOutExpo");
-    } else {
-      $(key).stop(true, true).css({
-        color: ThemeColors.bg,
-        backgroundColor: ThemeColors.error,
-        borderColor: ThemeColors.error
-      }).animate({
-        color: ThemeColors.sub,
-        backgroundColor: "transparent",
-        borderColor: ThemeColors.sub
-      }, 500, "easeOutExpo");
-    }
-  } catch (e) {}
+          case 21:
+            key = "#KeySpace";
+            return _context.abrupt("break", 24);
+
+          case 23:
+            key = "#Key".concat(key.toUpperCase());
+
+          case 24:
+            if (key == "#KeySpace") {
+              key = ".key-split-space";
+            }
+
+            _context.next = 27;
+            return ThemeColors.get();
+
+          case 27:
+            themecolors = _context.sent;
+
+            try {
+              if (correct || UpdateConfig["default"].blindMode) {
+                $(key).stop(true, true).css({
+                  color: themecolors.bg,
+                  backgroundColor: themecolors.main,
+                  borderColor: themecolors.main
+                }).animate({
+                  color: themecolors.sub,
+                  backgroundColor: "transparent",
+                  borderColor: themecolors.sub
+                }, 500, "easeOutExpo");
+              } else {
+                $(key).stop(true, true).css({
+                  color: themecolors.bg,
+                  backgroundColor: themecolors.error,
+                  borderColor: themecolors.error
+                }).animate({
+                  color: themecolors.sub,
+                  backgroundColor: "transparent",
+                  borderColor: themecolors.sub
+                }, 500, "easeOutExpo");
+              }
+            } catch (e) {}
+
+          case 29:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _flashKey.apply(this, arguments);
 }
 
 function hide() {
@@ -7177,7 +7665,7 @@ $(document).on("click", ".keymap .r5 #KeySpace", function (e) {
   Commandline.show();
 });
 
-},{"./commandline":6,"./commandline-lists":5,"./config":7,"./layouts":22,"./theme-colors":52,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],20:[function(require,module,exports){
+},{"./commandline":7,"./commandline-lists":6,"./config":8,"./layouts":23,"./theme-colors":53,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],21:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7264,7 +7752,7 @@ function _setActiveGroup() {
   return _setActiveGroup.apply(this, arguments);
 }
 
-},{"./config":7,"./misc":28,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],21:[function(require,module,exports){
+},{"./config":8,"./misc":29,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],22:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7306,7 +7794,7 @@ function getCharFromEvent(event) {
   return _char;
 }
 
-},{"./config":7,"./layouts":22,"./misc":28,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],22:[function(require,module,exports){
+},{"./config":8,"./layouts":23,"./misc":29,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7390,6 +7878,10 @@ var layouts = {
     keymapShowTopRow: true,
     keys: ["$~", "&%", "[7", "{5", "}3", "(1", "=9", "*0", ")2", "+4", "]6", "!8", "#`", ";:", ",<", ".>", "pP", "yY", "fF", "gG", "cC", "rR", "lL", "/?", "@^", "\\|", "aA", "oO", "eE", "uU", "iI", "dD", "hH", "tT", "nN", "sS", "-_", "\\|", "'\"", "qQ", "jJ", "kK", "xX", "bB", "mM", "wW", "vV", "zZ", " "]
   },
+  german_dvorak: {
+    keymapShowTopRow: true,
+    keys: ["^°", "1!", "2", "3§", "4$", "5%", "6&", "7/", "8(", "9)", "0=", "+*", "<>", "üÜ", ",;", ".:", "pP", "yY", "fF", "gG", "cC", "tT", "pP", "zZ", "ß?", "´`", "aA", "oO", "eE", "iI", "uU", "hH", "dD", "rR", "nN", "sS", "lL", "-_", "äÄ", "öÖ", "qQ", "jJ", "kK", "xX", "bB", "mM", "wW", "vV", "#'", " "]
+  },
   dvorak_L: {
     keymapShowTopRow: true,
     keys: ["`~", "[{", "]}", "/?", "pP", "fF", "mM", "lL", "jJ", "4$", "3#", "2@", "1!", ";:", "qQ", "bB", "yY", "uU", "rR", "sS", "oO", ".>", "6^", "5%", "=+", "\\|", "-_", "kK", "cC", "dD", "tT", "hH", "eE", "aA", "zZ", "8*", "7&", "\\|", "'\"", "xX", "gG", "vV", "wW", "nN", "iI", ",<", "0)", "9(", " "]
@@ -7462,11 +7954,11 @@ var layouts = {
   },
   boo: {
     keymapShowTopRow: false,
-    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "zZ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "pP", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "jJ", "bB", "hH", "mM", "kK", "qQ", " "]
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "jJ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "pP", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "zZ", "bB", "hH", "mM", "kK", "qQ", " "]
   },
   APT: {
     keymapShowTopRow: false,
-    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "wW", "cC", "dD", "lL", "'\"", "/?", "yY", "oO", "uU", "qQ", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "vV", "bB", "gG", "mM", ",<", ".>", "fF", "jJ", "xX", "zZ", " "]
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "cC", "dD", "lL", "xX", "zZ", "yY", "oO", "uU", "/?", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "wW", "bB", "gG", "mM", "vV", "jJ", "fF", "'\"", ",<", ".>", " "]
   },
   thai_kedmanee: {
     keymapShowTopRow: true,
@@ -7474,7 +7966,7 @@ var layouts = {
   },
   thai_pattachote: {
     keymapShowTopRow: true,
-    keys: ["฿~", "ๅ+", "๒\"", "๓/", "๔,", "๕?", "ูุ", "๗_", "๘.", "๙(", "๐)", "๑-", "๖%", "็๊", "ตฤ", "ยๆ", "อญ", "รษ", "่ึ", "ดฝ", "มซ", "วถ", "แฒ", "ใฯ", "ฌฦ", "ฃฅ", "้๋", "ทธ", "งำ", "กณ", "ั์", "ีื", "่าผ", "นช", "เโ", "ไฆ", "ขฑ", "ฃฅ", "บฎ", "ปฏ", "ลฐ", "หภ", "ิั", "คศ", "สฮ", "ะฟ", "จฉ", "พฬ", " "]
+    keys: ["฿~", "ๅ+", "๒\"", "๓/", "๔,", "๕?", "ูุ", "๗_", "๘.", "๙(", "๐)", "๑-", "๖%", "็๊", "ตฤ", "ยๆ", "อญ", "รษ", "่ึ", "ดฝ", "มซ", "วถ", "แฒ", "ใฯ", "ฌฦ", "ฃฅ", "้๋", "ทธ", "งำ", "กณ", "ั์", "ีื", "าผ", "นช", "เโ", "ไฆ", "ขฑ", "ฃฅ", "บฎ", "ปฏ", "ลฐ", "หภ", "ิั", "คศ", "สฮ", "ะฟ", "จฉ", "พฬ", " "]
   },
   thai_manoonchai: {
     keymapShowTopRow: true,
@@ -7484,7 +7976,7 @@ var layouts = {
 var _default = layouts;
 exports["default"] = _default;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7547,7 +8039,7 @@ function hide() {
   });
 }
 
-},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],24:[function(require,module,exports){
+},{"./config":8,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],25:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7606,7 +8098,7 @@ function hide() {
   });
 }
 
-},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],25:[function(require,module,exports){
+},{"./config":8,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],26:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7676,7 +8168,7 @@ function hide() {
   });
 }
 
-},{"./config":7,"./test-logic":48,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],26:[function(require,module,exports){
+},{"./config":8,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7693,7 +8185,7 @@ function hide() {
   $("#backgroundLoader").stop(true, true).fadeOut(125);
 }
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7716,7 +8208,7 @@ function get() {
   return state;
 }
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7881,7 +8373,7 @@ function _getSortedThemesList() {
         switch (_context2.prev = _context2.next) {
           case 0:
             if (!(sortedThemesList == null)) {
-              _context2.next = 9;
+              _context2.next = 10;
               break;
             }
 
@@ -7894,7 +8386,8 @@ function _getSortedThemesList() {
             return getThemesList();
 
           case 4:
-            sorted = themesList.sort(function (a, b) {
+            sorted = (0, _toConsumableArray2["default"])(themesList);
+            sorted = sorted.sort(function (a, b) {
               var b1 = hexToHSL(a.bgColor);
               var b2 = hexToHSL(b.bgColor);
               return b2.lgt - b1.lgt;
@@ -7902,10 +8395,10 @@ function _getSortedThemesList() {
             sortedThemesList = sorted;
             return _context2.abrupt("return", sortedThemesList);
 
-          case 9:
+          case 10:
             return _context2.abrupt("return", sortedThemesList);
 
-          case 10:
+          case 11:
           case "end":
             return _context2.stop();
         }
@@ -8752,12 +9245,12 @@ String.prototype.lastIndexOfRegex = function (regex) {
 var trailingComposeChars = /[\u02B0-\u02FF`´^¨~]+$|⎄.*$/;
 exports.trailingComposeChars = trailingComposeChars;
 
-},{"./config":7,"./loader":26,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/helpers/typeof":72,"@babel/runtime/regenerator":74}],29:[function(require,module,exports){
+},{"./config":8,"./loader":27,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/helpers/typeof":83,"@babel/runtime/regenerator":85}],30:[function(require,module,exports){
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8765,6 +9258,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.init = init;
 exports.reset = reset;
 exports.addPower = addPower;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
@@ -8937,31 +9434,110 @@ function randomColor() {
 
 
 function addPower() {
-  var good = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-  var extra = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  if (!TestLogic.active || _config["default"].monkeyPowerLevel === "off") return; // Shake
-
-  if (["3", "4"].includes(_config["default"].monkeyPowerLevel)) {
-    $("html").css("overflow", "hidden");
-    var shake = [Math.round(shakeAmount - Math.random() * shakeAmount), Math.round(shakeAmount - Math.random() * shakeAmount)];
-    $(document.body).css("transform", "translate(".concat(shake[0], "px, ").concat(shake[1], "px)"));
-    if (ctx.resetTimeOut) clearTimeout(ctx.resetTimeOut);
-    ctx.resetTimeOut = setTimeout(reset, 2000);
-  } // Sparks
-
-
-  var offset = ctx.caret.offset();
-  var coords = [offset.left, offset.top + ctx.caret.height()];
-
-  for (var i = Math.round((particleCreateCount[0] + Math.random() * particleCreateCount[1]) * (extra ? 2 : 1)); i > 0; i--) {
-    var color = ["2", "4"].includes(_config["default"].monkeyPowerLevel) ? randomColor() : good ? ThemeColors.caret : ThemeColors.error;
-    ctx.particles.push(createParticle.apply(void 0, coords.concat([color])));
-  }
-
-  startRender();
+  return _addPower.apply(this, arguments);
 }
 
-},{"./config":7,"./test-logic":48,"./theme-colors":52,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],30:[function(require,module,exports){
+function _addPower() {
+  _addPower = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    var good,
+        extra,
+        shake,
+        offset,
+        coords,
+        i,
+        color,
+        _args = arguments;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            good = _args.length > 0 && _args[0] !== undefined ? _args[0] : true;
+            extra = _args.length > 1 && _args[1] !== undefined ? _args[1] : false;
+
+            if (!(!TestLogic.active || _config["default"].monkeyPowerLevel === "off")) {
+              _context.next = 4;
+              break;
+            }
+
+            return _context.abrupt("return");
+
+          case 4:
+            // Shake
+            if (["3", "4"].includes(_config["default"].monkeyPowerLevel)) {
+              $("html").css("overflow", "hidden");
+              shake = [Math.round(shakeAmount - Math.random() * shakeAmount), Math.round(shakeAmount - Math.random() * shakeAmount)];
+              $(document.body).css("transform", "translate(".concat(shake[0], "px, ").concat(shake[1], "px)"));
+              if (ctx.resetTimeOut) clearTimeout(ctx.resetTimeOut);
+              ctx.resetTimeOut = setTimeout(reset, 2000);
+            } // Sparks
+
+
+            offset = ctx.caret.offset();
+            coords = [offset.left, offset.top + ctx.caret.height()];
+            i = Math.round((particleCreateCount[0] + Math.random() * particleCreateCount[1]) * (extra ? 2 : 1));
+
+          case 8:
+            if (!(i > 0)) {
+              _context.next = 28;
+              break;
+            }
+
+            if (!["2", "4"].includes(_config["default"].monkeyPowerLevel)) {
+              _context.next = 13;
+              break;
+            }
+
+            _context.t0 = randomColor();
+            _context.next = 23;
+            break;
+
+          case 13:
+            if (!good) {
+              _context.next = 19;
+              break;
+            }
+
+            _context.next = 16;
+            return ThemeColors.get("caret");
+
+          case 16:
+            _context.t1 = _context.sent;
+            _context.next = 22;
+            break;
+
+          case 19:
+            _context.next = 21;
+            return ThemeColors.get("error");
+
+          case 21:
+            _context.t1 = _context.sent;
+
+          case 22:
+            _context.t0 = _context.t1;
+
+          case 23:
+            color = _context.t0;
+            ctx.particles.push(createParticle.apply(void 0, coords.concat([color])));
+
+          case 25:
+            i--;
+            _context.next = 8;
+            break;
+
+          case 28:
+            startRender();
+
+          case 29:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _addPower.apply(this, arguments);
+}
+
+},{"./config":8,"./test-logic":49,"./theme-colors":53,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9039,7 +9615,7 @@ function stop() {
   update();
 }
 
-},{"./misc":28}],31:[function(require,module,exports){
+},{"./misc":29}],32:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9162,7 +9738,7 @@ function add(message, level, duration, customTitle, customIcon) {
   notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon).show());
 }
 
-},{"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67}],32:[function(require,module,exports){
+},{"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73}],33:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9190,7 +9766,7 @@ function show() {
   }, 1000));
 }
 
-},{"./misc":28,"@babel/runtime/helpers/interopRequireWildcard":68}],33:[function(require,module,exports){
+},{"./misc":29,"@babel/runtime/helpers/interopRequireWildcard":74}],34:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9438,7 +10014,7 @@ function start() {
   update(performance.now() + settings.spc * 1000);
 }
 
-},{"./config":7,"./test-logic":48,"./test-ui":51,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],34:[function(require,module,exports){
+},{"./config":8,"./test-logic":49,"./test-ui":52,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],35:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9457,7 +10033,7 @@ function show() {
   }, 250, "easeOutCubic");
 }
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9562,7 +10138,7 @@ function _getPoem() {
   return _getPoem.apply(this, arguments);
 }
 
-},{"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/regenerator":74}],36:[function(require,module,exports){
+},{"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/regenerator":85}],37:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9715,7 +10291,7 @@ $("#practiseWordsPopup .button.both").on("focusout", function (e) {
   $("#practiseWordsPopup .missed").focus();
 });
 
-},{"./config":7,"./custom-text":11,"./notifications":31,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireWildcard":68}],37:[function(require,module,exports){
+},{"./config":8,"./custom-text":12,"./notifications":32,"./test-logic":49,"./test-stats":50,"@babel/runtime/helpers/interopRequireWildcard":74}],38:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9925,7 +10501,7 @@ $("#quoteSearchPopup input").keypress(function (e) {
   }
 });
 
-},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./test-logic":48,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],38:[function(require,module,exports){
+},{"./config":8,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],39:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9979,7 +10555,7 @@ $(document).ready(function () {
   MonkeyPower.init();
 });
 
-},{"./config":7,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./route-controller":40,"./settings":42,"./ui":57,"@babel/runtime/helpers/interopRequireWildcard":68}],39:[function(require,module,exports){
+},{"./config":8,"./manual-restart-tracker":28,"./misc":29,"./monkey-power":30,"./route-controller":41,"./settings":43,"./ui":58,"@babel/runtime/helpers/interopRequireWildcard":74}],40:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10304,7 +10880,7 @@ $(document.body).on("click", "#watchReplayButton", function () {
   toggleReplayDisplay();
 });
 
-},{"./config":7,"./sound":45,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],40:[function(require,module,exports){
+},{"./config":8,"./sound":46,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85}],41:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -10365,7 +10941,7 @@ $(window).on("popstate", function (e) {
   }
 });
 
-},{"./config":7,"./funbox":15,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],41:[function(require,module,exports){
+},{"./config":8,"./funbox":16,"./ui":58,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],42:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -10455,7 +11031,7 @@ var SettingsGroup = /*#__PURE__*/function () {
 
 exports["default"] = SettingsGroup;
 
-},{"./config":7,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/toConsumableArray":71}],42:[function(require,module,exports){
+},{"./config":8,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/toConsumableArray":82}],43:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10817,7 +11393,7 @@ $(".quickNav .links a").on("click", function (e) {
   isOpen && toggleSettingsGroup(settingsGroup);
 });
 
-},{"./config":7,"./funbox":15,"./language-picker":20,"./layouts":22,"./loader":26,"./misc":28,"./notifications":31,"./settings-group":41,"./simple-popups":44,"./sound":45,"./theme-picker":54,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],43:[function(require,module,exports){
+},{"./config":8,"./funbox":16,"./language-picker":21,"./layouts":23,"./loader":27,"./misc":29,"./notifications":32,"./settings-group":42,"./simple-popups":45,"./sound":46,"./theme-picker":55,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],44:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10865,7 +11441,7 @@ function isUsingOppositeShift(_char) {
   }
 }
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11036,13 +11612,12 @@ list.applyCustomFont = new SimplePopup("applyCustomFont", "text", "Custom font",
   Settings.groups.fontFamily.setValue(fontName.replace(/\s/g, "_"));
 }, function () {});
 list.resetSettings = new SimplePopup("resetSettings", "text", "Reset Settings", [], "Are you sure you want to reset all your settings?", "Reset", function () {
-  UpdateConfig.reset();
-  setTimeout(function () {
-    location.reload();
-  }, 1000);
+  UpdateConfig.reset(); // setTimeout(() => {
+  //   location.reload();
+  // }, 1000);
 }, function () {});
 
-},{"./config":7,"./loader":26,"./notifications":31,"./settings":42,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],45:[function(require,module,exports){
+},{"./config":8,"./loader":27,"./notifications":32,"./settings":43,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],46:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -11195,7 +11770,7 @@ function playError() {
   errorSound.play();
 }
 
-},{"./config":7,"@babel/runtime/helpers/interopRequireDefault":67,"howler":84}],46:[function(require,module,exports){
+},{"./config":8,"@babel/runtime/helpers/interopRequireDefault":73,"howler":95}],47:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11224,7 +11799,7 @@ $(document.body).on("click", "#supportMeWrapper a.button", function () {
   });
 });
 
-},{"./commandline":6,"./commandline-lists":5,"@babel/runtime/helpers/interopRequireWildcard":68}],47:[function(require,module,exports){
+},{"./commandline":7,"./commandline-lists":6,"@babel/runtime/helpers/interopRequireWildcard":74}],48:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11328,7 +11903,7 @@ $(document).on("click", "#top .config .mode .text-button", function (e) {
   TestLogic.restart();
 });
 
-},{"./config":7,"./custom-test-duration-popup":9,"./custom-text-popup":10,"./custom-word-amount-popup":13,"./manual-restart-tracker":27,"./quote-search-popup":37,"./test-logic":48,"@babel/runtime/helpers/interopRequireWildcard":68}],48:[function(require,module,exports){
+},{"./config":8,"./custom-test-duration-popup":10,"./custom-text-popup":11,"./custom-word-amount-popup":14,"./manual-restart-tracker":28,"./quote-search-popup":38,"./test-logic":49,"@babel/runtime/helpers/interopRequireWildcard":74}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11427,6 +12002,10 @@ var Poetry = _interopRequireWildcard(require("./poetry.js"));
 var TodayTracker = _interopRequireWildcard(require("./today-tracker"));
 
 var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
+
+var Wordset = _interopRequireWildcard(require("./wordset"));
+
+var ChallengeContoller = _interopRequireWildcard(require("./challenge-controller"));
 
 var glarsesMode = false;
 
@@ -11818,7 +12397,7 @@ function init() {
 
 function _init() {
   _init = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-    var language, wordsBound, wordset, poem, i, randomWord, previousWord, previousWord2, regenarationCount, randomcaseword, _i2, quotes, rq, quoteLengths, groupIndex, w, _i3;
+    var language, wordsBound, wordList, wordset, poem, i, randomWord, previousWord, previousWord2, regenarationCount, randomcaseword, _i, quotes, rq, quoteLengths, groupIndex, w, _i2;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -11858,7 +12437,7 @@ function _init() {
 
           case 15:
             if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
-              _context2.next = 34;
+              _context2.next = 35;
               break;
             }
 
@@ -11910,59 +12489,61 @@ function _init() {
               wordsBound = 3;
             }
 
-            wordset = language.words;
+            wordList = language.words;
 
             if (UpdateConfig["default"].mode == "custom") {
-              wordset = CustomText.text;
+              wordList = CustomText.text;
             }
 
+            wordset = Wordset.withWords(wordList);
+
             if (!(UpdateConfig["default"].funbox == "poetry")) {
-              _context2.next = 31;
+              _context2.next = 32;
               break;
             }
 
-            _context2.next = 27;
+            _context2.next = 28;
             return Poetry.getPoem();
 
-          case 27:
+          case 28:
             poem = _context2.sent;
             poem.words.forEach(function (word) {
               words.push(word);
             });
-            _context2.next = 32;
+            _context2.next = 33;
             break;
 
-          case 31:
+          case 32:
             for (i = 0; i < wordsBound; i++) {
-              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+              randomWord = wordset.randomWord();
               previousWord = words.get(i - 1);
               previousWord2 = words.get(i - 2);
 
               if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
                 randomWord = CustomText.text[i];
               } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseWords.before.mode !== null)) {
-                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+                randomWord = wordset.randomWord();
               } else {
                 regenarationCount = 0; //infinite loop emergency stop button
 
                 while (regenarationCount < 100 && (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I" || randomWord.indexOf(" ") > -1)) {
                   regenarationCount++;
-                  randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+                  randomWord = wordset.randomWord();
                 }
               }
 
               if (randomWord === undefined) {
-                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+                randomWord = wordset.randomWord();
               }
 
               if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
                 randomcaseword = "";
 
-                for (_i2 = 0; _i2 < randomWord.length; _i2++) {
-                  if (_i2 % 2 != 0) {
-                    randomcaseword += randomWord[_i2].toUpperCase();
+                for (_i = 0; _i < randomWord.length; _i++) {
+                  if (_i % 2 != 0) {
+                    randomcaseword += randomWord[_i].toUpperCase();
                   } else {
-                    randomcaseword += randomWord[_i2];
+                    randomcaseword += randomWord[_i];
                   }
                 }
 
@@ -12006,24 +12587,24 @@ function _init() {
               words.push(randomWord);
             }
 
-          case 32:
-            _context2.next = 72;
+          case 33:
+            _context2.next = 74;
             break;
 
-          case 34:
+          case 35:
             if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 72;
+              _context2.next = 74;
               break;
             }
 
-            _context2.next = 37;
+            _context2.next = 38;
             return Misc.getQuotes(UpdateConfig["default"].language.replace(/_\d*k$/g, ""));
 
-          case 37:
+          case 38:
             quotes = _context2.sent;
 
             if (!(quotes.length === 0)) {
-              _context2.next = 44;
+              _context2.next = 45;
               break;
             }
 
@@ -12033,16 +12614,16 @@ function _init() {
             restart();
             return _context2.abrupt("return");
 
-          case 44:
+          case 45:
             if (!(UpdateConfig["default"].quoteLength != -2)) {
-              _context2.next = 60;
+              _context2.next = 61;
               break;
             }
 
             quoteLengths = UpdateConfig["default"].quoteLength;
 
             if (!(quoteLengths.length > 1)) {
-              _context2.next = 51;
+              _context2.next = 52;
               break;
             }
 
@@ -12052,14 +12633,14 @@ function _init() {
               groupIndex = quoteLengths[Math.floor(Math.random() * quoteLengths.length)];
             }
 
-            _context2.next = 56;
+            _context2.next = 57;
             break;
 
-          case 51:
+          case 52:
             groupIndex = quoteLengths[0];
 
             if (!(quotes.groups[groupIndex].length === 0)) {
-              _context2.next = 56;
+              _context2.next = 57;
               break;
             }
 
@@ -12067,17 +12648,17 @@ function _init() {
             TestUI.setTestRestarting(false);
             return _context2.abrupt("return");
 
-          case 56:
+          case 57:
             rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
 
             if (randomQuote != null && rq.id === randomQuote.id) {
               rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
             }
 
-            _context2.next = 62;
+            _context2.next = 63;
             break;
 
-          case 60:
+          case 61:
             quotes.groups.forEach(function (group) {
               var filtered = group.filter(function (quote) {
                 return quote.id == QuoteSearchPopup.selectedId;
@@ -12093,26 +12674,27 @@ function _init() {
               Notifications.add("Quote Id Does Not Exist", 0);
             }
 
-          case 62:
+          case 63:
             rq.text = rq.text.replace(/ +/gm, " ");
             rq.text = rq.text.replace(/\\\\t/gm, "\t");
             rq.text = rq.text.replace(/\\\\n/gm, "\n");
             rq.text = rq.text.replace(/\\t/gm, "\t");
             rq.text = rq.text.replace(/\\n/gm, "\n");
             rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
+            rq.text = rq.text.replace(/…/g, "...");
             rq.text = rq.text.trim();
             setRandomQuote(rq);
             w = randomQuote.text.trim().split(" ");
 
-            for (_i3 = 0; _i3 < w.length; _i3++) {
-              if (/\t/g.test(w[_i3])) {
+            for (_i2 = 0; _i2 < w.length; _i2++) {
+              if (/\t/g.test(w[_i2])) {
                 setHasTab(true);
               }
 
-              words.push(w[_i3]);
+              words.push(w[_i2]);
             }
 
-          case 72:
+          case 74:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -12137,17 +12719,17 @@ function _init() {
 
 
             if (!$(".pageTest").hasClass("active")) {
-              _context2.next = 77;
+              _context2.next = 79;
               break;
             }
 
-            _context2.next = 77;
+            _context2.next = 79;
             return Funbox.activate();
 
-          case 77:
+          case 79:
             TestUI.showWords(); // }
 
-          case 78:
+          case 80:
           case "end":
             return _context2.stop();
         }
@@ -12235,7 +12817,6 @@ function restart() {
   TestStats.restart();
   corrected.reset();
   ShiftTracker.reset();
-  Focus.set(false);
   Caret.hide();
   setActive(false);
   Replay.stopReplayRecording();
@@ -12373,6 +12954,7 @@ function restart() {
               opacity: 1
             }); // resetPaceCaret();
 
+            Focus.set(false);
             $("#typingTest").css("opacity", 0).removeClass("hidden").stop(true, true).animate({
               opacity: 1
             }, 125, function () {
@@ -12380,14 +12962,14 @@ function restart() {
 
               PbCrown.hide();
               TestTimer.clear();
-              if ($("#commandLineWrapper").hasClass("hidden")) TestUI.focusWords();
-              ChartController.result.update();
+              if ($("#commandLineWrapper").hasClass("hidden")) TestUI.focusWords(); // ChartController.result.update();
+
               TestUI.updateModesNotice();
               UI.setPageTransition(false); // console.log(TestStats.incompleteSeconds);
               // console.log(TestStats.restartCount);
             });
 
-          case 41:
+          case 42:
           case "end":
             return _context.stop();
         }
@@ -12485,24 +13067,24 @@ function _addWord() {
 
           case 16:
             language = _context3.t0;
-            wordset = language.words;
-            randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+            wordset = Wordset.withWords(language.words);
+            randomWord = wordset.randomWord();
             previousWord = words.getLast();
             previousWordStripped = previousWord.replace(/[.?!":\-,]/g, "").toLowerCase();
             previousWord2Stripped = words.get(words.length - 2).replace(/[.?!":\-,]/g, "").toLowerCase();
 
             if (UpdateConfig["default"].mode === "custom" && (CustomText.isWordRandom || CustomText.isTimeRandom) && wordset.length < 3) {
-              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+              randomWord = wordset.randomWord();
             } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
               randomWord = CustomText.text[words.length];
             } else {
               while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
-                randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+                randomWord = wordset.randomWord();
               }
             }
 
             if (randomWord === undefined) {
-              randomWord = wordset[Math.floor(Math.random() * wordset.length)];
+              randomWord = wordset.randomWord();
             }
 
             if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
@@ -12525,6 +13107,8 @@ function _addWord() {
               randomWord = Misc.getSpecials();
             } else if (UpdateConfig["default"].funbox === "ascii") {
               randomWord = Misc.getASCII();
+            } else if (UpdateConfig["default"].funbox === "weakspot") {
+              randomWord = WeakSpot.getWord(wordset);
             }
 
             if (UpdateConfig["default"].punctuation) {
@@ -12551,510 +13135,580 @@ function _addWord() {
 }
 
 function finish() {
-  var difficultyFailed = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-  if (!active) return;
+  return _finish.apply(this, arguments);
+}
 
-  if (UpdateConfig["default"].mode == "zen" && input.current.length != 0) {
-    input.pushHistory();
-    corrected.pushHistory();
-    Replay.replayGetWordsList(input.history);
-  }
+function _finish() {
+  _finish = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+    var difficultyFailed,
+        stats,
+        burst,
+        inf,
+        testtime,
+        wpmAndRaw,
+        afkseconds,
+        afkSecondsPercent,
+        time,
+        _time,
+        mode2,
+        labels,
+        i,
+        rawWpmPerSecondRaw,
+        rawWpmPerSecond,
+        stddev,
+        avg,
+        consistency,
+        keyconsistencyarray,
+        keyConsistency,
+        maxChartVal,
+        errorsArray,
+        _i3,
+        kps,
+        afkDetected,
+        lang,
+        quoteLength,
+        chartData,
+        cdata,
+        completedEvent,
+        testType,
+        qlen,
+        otherText,
+        fc,
+        content,
+        _args4 = arguments;
 
-  TestStats.recordKeypressSpacing();
-  TestUI.setResultCalculating(true);
-  TestUI.setResultVisible(true);
-  TestStats.setEnd(performance.now());
-  setActive(false);
-  Replay.stopReplayRecording();
-  Focus.set(false);
-  Caret.hide();
-  LiveWpm.hide();
-  PbCrown.hide();
-  LiveAcc.hide();
-  LiveBurst.hide();
-  TimerProgress.hide();
-  Funbox.activate("none", null);
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            difficultyFailed = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : false;
 
-  if (TestStats.burstHistory.length !== input.getHistory().length) {
-    //auto ended test, need one more calculation for the last word
-    var burst = TestStats.calculateBurst();
-    TestStats.pushBurstToHistory(burst);
-  }
+            if (active) {
+              _context4.next = 3;
+              break;
+            }
 
-  if (Misc.roundTo2(TestStats.calculateTestSeconds()) % 1 != 0 && UpdateConfig["default"].mode !== "time") {
-    TestStats.setLastSecondNotRound();
-  }
+            return _context4.abrupt("return");
 
-  if (UpdateConfig["default"].mode == "zen" || bailout) {
-    TestStats.removeAfkData();
-  }
+          case 3:
+            if (UpdateConfig["default"].mode == "zen" && input.current.length != 0) {
+              input.pushHistory();
+              corrected.pushHistory();
+              Replay.replayGetWordsList(input.history);
+            }
 
-  var stats = TestStats.calculateStats();
+            TestStats.recordKeypressSpacing(); //this is needed in case there is afk time at the end - to make sure test duration makes sense
 
-  if (stats === undefined) {
-    stats = {
-      wpm: 0,
-      wpmRaw: 0,
-      acc: 0,
-      correctChars: 0,
-      incorrectChars: 0,
-      missedChars: 0,
-      extraChars: 0,
-      time: 0,
-      spaces: 0,
-      correctSpaces: 0
-    };
-  }
+            TestUI.setResultCalculating(true);
+            TestUI.setResultVisible(true);
+            TestStats.setEnd(performance.now());
+            setActive(false);
+            Replay.stopReplayRecording();
+            Focus.set(false);
+            Caret.hide();
+            LiveWpm.hide();
+            PbCrown.hide();
+            LiveAcc.hide();
+            LiveBurst.hide();
+            TimerProgress.hide();
+            Funbox.activate("none", null);
+            stats = TestStats.calculateStats();
 
-  var inf = false;
+            if (TestStats.burstHistory.length !== input.getHistory().length) {
+              //auto ended test, need one more calculation for the last word
+              burst = TestStats.calculateBurst();
+              TestStats.pushBurstToHistory(burst);
+            }
 
-  if (stats.wpm >= 1000) {
-    inf = true;
-  }
+            if (stats.time % 1 != 0 && UpdateConfig["default"].mode !== "time") {
+              TestStats.setLastSecondNotRound();
+            }
 
-  TestTimer.clear();
-  exports.lastTestWpm = lastTestWpm = stats.wpm;
-  var testtime = stats.time;
+            if (UpdateConfig["default"].mode == "zen" || bailout) {
+              TestStats.removeAfkData();
+            }
 
-  if (TestStats.lastSecondNotRound && !difficultyFailed) {
-    var wpmAndRaw = calculateWpmAndRaw();
-    TestStats.pushToWpmHistory(wpmAndRaw.wpm);
-    TestStats.pushToRawHistory(wpmAndRaw.raw);
-    TestStats.pushKeypressesToHistory(); // errorsPerSecond.push(currentError);
-    // currentError = {
-    //   count: 0,
-    //   words: [],
-    // };
-  }
+            if (stats === undefined) {
+              stats = {
+                wpm: 0,
+                wpmRaw: 0,
+                acc: 0,
+                correctChars: 0,
+                incorrectChars: 0,
+                missedChars: 0,
+                extraChars: 0,
+                time: 0,
+                spaces: 0,
+                correctSpaces: 0
+              };
+            }
 
-  var afkseconds = TestStats.calculateAfkSeconds(testtime);
-  var afkSecondsPercent = Misc.roundTo2(afkseconds / testtime * 100);
-  ChartController.result.options.annotation.annotations = [];
-  $("#result #resultWordsHistory").addClass("hidden");
+            inf = false;
 
-  if (UpdateConfig["default"].alwaysShowDecimalPlaces) {
-    if (UpdateConfig["default"].alwaysShowCPM == false) {
-      $("#result .stats .wpm .top .text").text("wpm");
+            if (stats.wpm >= 1000) {
+              inf = true;
+            }
 
-      if (inf) {
-        $("#result .stats .wpm .bottom").text("Infinite");
-      } else {
-        $("#result .stats .wpm .bottom").text(Misc.roundTo2(stats.wpm));
+            TestTimer.clear();
+            exports.lastTestWpm = lastTestWpm = stats.wpm;
+            testtime = stats.time;
+
+            if (TestStats.lastSecondNotRound && !difficultyFailed) {
+              wpmAndRaw = calculateWpmAndRaw();
+              TestStats.pushToWpmHistory(wpmAndRaw.wpm);
+              TestStats.pushToRawHistory(wpmAndRaw.raw);
+              TestStats.pushKeypressesToHistory(); // errorsPerSecond.push(currentError);
+              // currentError = {
+              //   count: 0,
+              //   words: [],
+              // };
+            }
+
+            afkseconds = TestStats.calculateAfkSeconds(testtime);
+            afkSecondsPercent = Misc.roundTo2(afkseconds / testtime * 100);
+            ChartController.result.options.annotation.annotations = [];
+            $("#result #resultWordsHistory").addClass("hidden");
+
+            if (UpdateConfig["default"].alwaysShowDecimalPlaces) {
+              if (UpdateConfig["default"].alwaysShowCPM == false) {
+                $("#result .stats .wpm .top .text").text("wpm");
+
+                if (inf) {
+                  $("#result .stats .wpm .bottom").text("Infinite");
+                } else {
+                  $("#result .stats .wpm .bottom").text(Misc.roundTo2(stats.wpm));
+                }
+
+                $("#result .stats .raw .bottom").text(Misc.roundTo2(stats.wpmRaw));
+                $("#result .stats .wpm .bottom").attr("aria-label", Misc.roundTo2(stats.wpm * 5) + " cpm");
+              } else {
+                $("#result .stats .wpm .top .text").text("cpm");
+
+                if (inf) {
+                  $("#result .stats .wpm .bottom").text("Infinite");
+                } else {
+                  $("#result .stats .wpm .bottom").text(Misc.roundTo2(stats.wpm * 5));
+                }
+
+                $("#result .stats .raw .bottom").text(Misc.roundTo2(stats.wpmRaw * 5));
+                $("#result .stats .wpm .bottom").attr("aria-label", Misc.roundTo2(stats.wpm) + " wpm");
+              }
+
+              $("#result .stats .acc .bottom").text(Misc.roundTo2(stats.acc) + "%");
+              time = Misc.roundTo2(testtime) + "s";
+
+              if (testtime > 61) {
+                time = Misc.secondsToString(Misc.roundTo2(testtime));
+              }
+
+              $("#result .stats .time .bottom .text").text(time);
+              $("#result .stats .raw .bottom").removeAttr("aria-label");
+              $("#result .stats .acc .bottom").removeAttr("aria-label");
+              $("#result .stats .time .bottom").attr("aria-label", "".concat(afkseconds, "s afk ").concat(afkSecondsPercent, "%"));
+            } else {
+              //not showing decimal places
+              if (UpdateConfig["default"].alwaysShowCPM == false) {
+                $("#result .stats .wpm .top .text").text("wpm");
+                $("#result .stats .wpm .bottom").attr("aria-label", stats.wpm + " (".concat(Misc.roundTo2(stats.wpm * 5), " cpm)"));
+
+                if (inf) {
+                  $("#result .stats .wpm .bottom").text("Infinite");
+                } else {
+                  $("#result .stats .wpm .bottom").text(Math.round(stats.wpm));
+                }
+
+                $("#result .stats .raw .bottom").text(Math.round(stats.wpmRaw));
+                $("#result .stats .raw .bottom").attr("aria-label", stats.wpmRaw);
+              } else {
+                $("#result .stats .wpm .top .text").text("cpm");
+                $("#result .stats .wpm .bottom").attr("aria-label", Misc.roundTo2(stats.wpm * 5) + " (".concat(Misc.roundTo2(stats.wpm), " wpm)"));
+
+                if (inf) {
+                  $("#result .stats .wpm .bottom").text("Infinite");
+                } else {
+                  $("#result .stats .wpm .bottom").text(Math.round(stats.wpm * 5));
+                }
+
+                $("#result .stats .raw .bottom").text(Math.round(stats.wpmRaw * 5));
+                $("#result .stats .raw .bottom").attr("aria-label", stats.wpmRaw * 5);
+              }
+
+              $("#result .stats .acc .bottom").text(Math.floor(stats.acc) + "%");
+              $("#result .stats .acc .bottom").attr("aria-label", stats.acc + "%");
+              _time = Math.round(testtime) + "s";
+
+              if (testtime > 61) {
+                _time = Misc.secondsToString(Math.round(testtime));
+              }
+
+              $("#result .stats .time .bottom .text").text(_time);
+              $("#result .stats .time .bottom").attr("aria-label", "".concat(Misc.roundTo2(testtime), "s (").concat(afkseconds, "s afk ").concat(afkSecondsPercent, "%)"));
+            }
+
+            $("#result .stats .time .bottom .afk").text("");
+
+            if (afkSecondsPercent > 0) {
+              $("#result .stats .time .bottom .afk").text(afkSecondsPercent + "% afk");
+            }
+
+            if (!difficultyFailed) {
+              TodayTracker.addSeconds(testtime + (TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds)) - afkseconds);
+            }
+
+            $("#result .stats .time .bottom .timeToday").text(TodayTracker.getString());
+            $("#result .stats .key .bottom").text(testtime + "s");
+            $("#words").removeClass("blurred");
+            OutOfFocus.hide();
+            $("#result .stats .key .bottom").text(stats.correctChars + stats.correctSpaces + "/" + stats.incorrectChars + "/" + stats.extraChars + "/" + stats.missedChars);
+            setTimeout(function () {
+              $("#resultExtraButtons").removeClass("hidden").css("opacity", 0).animate({
+                opacity: 1
+              }, 125);
+            }, 125);
+            $("#testModesNotice").css("opacity", 0);
+            mode2 = "";
+
+            if (UpdateConfig["default"].mode === "time") {
+              mode2 = UpdateConfig["default"].time;
+            } else if (UpdateConfig["default"].mode === "words") {
+              mode2 = UpdateConfig["default"].words;
+            } else if (UpdateConfig["default"].mode === "custom") {
+              mode2 = "custom";
+            } else if (UpdateConfig["default"].mode === "quote") {
+              mode2 = randomQuote.id;
+            } else if (UpdateConfig["default"].mode === "zen") {
+              mode2 = "zen";
+            }
+
+            labels = [];
+
+            for (i = 1; i <= TestStats.wpmHistory.length; i++) {
+              if (TestStats.lastSecondNotRound && i === TestStats.wpmHistory.length) {
+                labels.push(Misc.roundTo2(testtime).toString());
+              } else {
+                labels.push(i.toString());
+              }
+            }
+
+            ChartController.result.updateColors();
+            ChartController.result.data.labels = labels;
+            rawWpmPerSecondRaw = TestStats.keypressPerSecond.map(function (f) {
+              return Math.round(f.count / 5 * 60);
+            });
+            rawWpmPerSecond = Misc.smooth(rawWpmPerSecondRaw, 1);
+            stddev = Misc.stdDev(rawWpmPerSecondRaw);
+            avg = Misc.mean(rawWpmPerSecondRaw);
+            consistency = Misc.roundTo2(Misc.kogasa(stddev / avg));
+            keyconsistencyarray = TestStats.keypressTimings.spacing.array.slice();
+            keyconsistencyarray = keyconsistencyarray.splice(0, keyconsistencyarray.length - 1);
+            keyConsistency = Misc.roundTo2(Misc.kogasa(Misc.stdDev(keyconsistencyarray) / Misc.mean(keyconsistencyarray)));
+
+            if (isNaN(consistency)) {
+              consistency = 0;
+            }
+
+            if (UpdateConfig["default"].alwaysShowDecimalPlaces) {
+              $("#result .stats .consistency .bottom").text(Misc.roundTo2(consistency) + "%");
+              $("#result .stats .consistency .bottom").attr("aria-label", "".concat(keyConsistency, "% key"));
+            } else {
+              $("#result .stats .consistency .bottom").text(Math.round(consistency) + "%");
+              $("#result .stats .consistency .bottom").attr("aria-label", "".concat(consistency, "% (").concat(keyConsistency, "% key)"));
+            }
+
+            ChartController.result.data.datasets[0].data = TestStats.wpmHistory;
+            ChartController.result.data.datasets[1].data = rawWpmPerSecond;
+            maxChartVal = Math.max.apply(Math, [Math.max.apply(Math, (0, _toConsumableArray2["default"])(rawWpmPerSecond)), Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory))]);
+
+            if (!UpdateConfig["default"].startGraphsAtZero) {
+              ChartController.result.options.scales.yAxes[0].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory));
+              ChartController.result.options.scales.yAxes[1].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory));
+            } else {
+              ChartController.result.options.scales.yAxes[0].ticks.min = 0;
+              ChartController.result.options.scales.yAxes[1].ticks.min = 0;
+            } // let errorsNoZero = [];
+            // for (let i = 0; i < errorsPerSecond.length; i++) {
+            //   errorsNoZero.push({
+            //     x: i + 1,
+            //     y: errorsPerSecond[i].count,
+            //   });
+            // }
+
+
+            errorsArray = [];
+
+            for (_i3 = 0; _i3 < TestStats.keypressPerSecond.length; _i3++) {
+              errorsArray.push(TestStats.keypressPerSecond[_i3].errors);
+            }
+
+            ChartController.result.data.datasets[2].data = errorsArray;
+            kps = TestStats.keypressPerSecond.slice(-5);
+            afkDetected = kps.every(function (second) {
+              return second.afk;
+            });
+            if (bailout) afkDetected = false;
+            lang = UpdateConfig["default"].language;
+            quoteLength = -1;
+
+            if (UpdateConfig["default"].mode === "quote") {
+              quoteLength = randomQuote.group;
+              lang = UpdateConfig["default"].language.replace(/_\d*k$/g, "");
+            }
+
+            if (difficultyFailed) {
+              Notifications.add("Test failed - ".concat(failReason), 0, 1);
+            } else if (afkDetected) {
+              Notifications.add("Test invalid - AFK detected", 0);
+            } else if (isRepeated) {
+              Notifications.add("Test invalid - repeated", 0);
+            } else if (UpdateConfig["default"].mode === "time" && mode2 < 15 && mode2 > 0 || UpdateConfig["default"].mode === "time" && mode2 == 0 && testtime < 15 || UpdateConfig["default"].mode === "words" && mode2 < 10 && mode2 > 0 || UpdateConfig["default"].mode === "words" && mode2 == 0 && testtime < 15 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom && CustomText.text.length < 10 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && !CustomText.isTimeRandom && CustomText.word < 10 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && CustomText.isTimeRandom && CustomText.time < 15 || UpdateConfig["default"].mode === "zen" && testtime < 15) {
+              Notifications.add("Test too short", 0);
+            } else {
+              chartData = {
+                wpm: TestStats.wpmHistory,
+                raw: rawWpmPerSecond,
+                err: errorsArray
+              };
+
+              if (testtime > 122) {
+                chartData = "toolong";
+                TestStats.setKeypressTimingsTooLong();
+              }
+
+              cdata = null;
+
+              if (UpdateConfig["default"].mode === "custom") {
+                cdata = {};
+                cdata.textLen = CustomText.text.length;
+                cdata.isWordRandom = CustomText.isWordRandom;
+                cdata.isTimeRandom = CustomText.isTimeRandom;
+                cdata.word = CustomText.word !== "" && !isNaN(CustomText.word) ? CustomText.word : null;
+                cdata.time = CustomText.time !== "" && !isNaN(CustomText.time) ? CustomText.time : null;
+              }
+
+              completedEvent = {
+                wpm: stats.wpm,
+                rawWpm: stats.wpmRaw,
+                // correctChars: stats.correctChars + stats.correctSpaces,
+                // incorrectChars: stats.incorrectChars,
+                // allChars: stats.allChars,
+                charStats: [stats.correctChars + stats.correctSpaces, stats.incorrectChars, stats.extraChars, stats.missedChars],
+                acc: stats.acc,
+                mode: UpdateConfig["default"].mode,
+                mode2: mode2,
+                quoteLength: quoteLength,
+                punctuation: UpdateConfig["default"].punctuation,
+                numbers: UpdateConfig["default"].numbers,
+                timestamp: Date.now(),
+                language: lang,
+                restartCount: TestStats.restartCount,
+                incompleteTestSeconds: TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds),
+                difficulty: UpdateConfig["default"].difficulty,
+                testDuration: testtime,
+                afkDuration: afkseconds,
+                blindMode: UpdateConfig["default"].blindMode,
+                // theme: Config.theme,
+                keySpacing: TestStats.keypressTimings.spacing.array,
+                keyDuration: TestStats.keypressTimings.duration.array,
+                consistency: consistency,
+                keyConsistency: keyConsistency,
+                funbox: UpdateConfig["default"].funbox,
+                bailedOut: bailout,
+                chartData: chartData,
+                customText: cdata
+              };
+
+              if (UpdateConfig["default"].mode !== "custom") {
+                delete completedEvent.CustomText;
+              }
+
+              if (UpdateConfig["default"].difficulty == "normal" || (UpdateConfig["default"].difficulty == "master" || UpdateConfig["default"].difficulty == "expert") && !difficultyFailed) {
+                // restartCount = 0;
+                // incompleteTestSeconds = 0;
+                TestStats.resetIncomplete();
+              }
+            }
+
+            testType = "";
+
+            if (UpdateConfig["default"].mode === "quote") {
+              qlen = "";
+
+              if (UpdateConfig["default"].quoteLength === 0) {
+                qlen = "short ";
+              } else if (UpdateConfig["default"].quoteLength === 1) {
+                qlen = "medium ";
+              } else if (UpdateConfig["default"].quoteLength === 2) {
+                qlen = "long ";
+              } else if (UpdateConfig["default"].quoteLength === 3) {
+                qlen = "thicc ";
+              }
+
+              testType += qlen + UpdateConfig["default"].mode;
+            } else {
+              testType += UpdateConfig["default"].mode;
+            }
+
+            if (UpdateConfig["default"].mode == "time") {
+              testType += " " + UpdateConfig["default"].time;
+            } else if (UpdateConfig["default"].mode == "words") {
+              testType += " " + UpdateConfig["default"].words;
+            }
+
+            if (UpdateConfig["default"].mode != "custom" && UpdateConfig["default"].funbox !== "gibberish" && UpdateConfig["default"].funbox !== "ascii" && UpdateConfig["default"].funbox !== "58008") {
+              testType += "<br>" + lang.replace(/_/g, " ");
+            }
+
+            if (UpdateConfig["default"].punctuation) {
+              testType += "<br>punctuation";
+            }
+
+            if (UpdateConfig["default"].numbers) {
+              testType += "<br>numbers";
+            }
+
+            if (UpdateConfig["default"].blindMode) {
+              testType += "<br>blind";
+            }
+
+            if (UpdateConfig["default"].funbox !== "none") {
+              testType += "<br>" + UpdateConfig["default"].funbox.replace(/_/g, " ");
+            }
+
+            if (UpdateConfig["default"].difficulty == "expert") {
+              testType += "<br>expert";
+            } else if (UpdateConfig["default"].difficulty == "master") {
+              testType += "<br>master";
+            }
+
+            $("#result .stats .testType .bottom").html(testType);
+            otherText = ""; // if (Config.layout !== "default") {
+            //   otherText += "<br>" + Config.layout;
+            // }
+
+            if (difficultyFailed) {
+              otherText += "<br>failed (".concat(failReason, ")");
+            }
+
+            if (afkDetected) {
+              otherText += "<br>afk detected";
+            }
+
+            if (TestStats.invalid) {
+              otherText += "<br>invalid";
+            }
+
+            if (isRepeated) {
+              otherText += "<br>repeated";
+            }
+
+            if (bailout) {
+              otherText += "<br>bailed out";
+            }
+
+            if (otherText == "") {
+              $("#result .stats .info").addClass("hidden");
+            } else {
+              $("#result .stats .info").removeClass("hidden");
+              otherText = otherText.substring(4);
+              $("#result .stats .info .bottom").html(otherText);
+            }
+
+            if ($("#result .stats .tags").hasClass("hidden") && $("#result .stats .info").hasClass("hidden")) {
+              $("#result .stats .infoAndTags").addClass("hidden");
+            } else {
+              $("#result .stats .infoAndTags").removeClass("hidden");
+            }
+
+            if (UpdateConfig["default"].mode === "quote") {
+              $("#result .stats .source").removeClass("hidden");
+              $("#result .stats .source .bottom").html(randomQuote.source);
+            } else {
+              $("#result .stats .source").addClass("hidden");
+            }
+
+            _context4.next = 95;
+            return ThemeColors.get("sub");
+
+          case 95:
+            fc = _context4.sent;
+
+            if (UpdateConfig["default"].funbox !== "none") {
+              content = UpdateConfig["default"].funbox;
+
+              if (UpdateConfig["default"].funbox === "layoutfluid") {
+                content += " " + UpdateConfig["default"].customLayoutfluid.replace(/#/g, " ");
+              }
+
+              ChartController.result.options.annotation.annotations.push({
+                enabled: false,
+                type: "line",
+                mode: "horizontal",
+                scaleID: "wpm",
+                value: 0,
+                borderColor: "transparent",
+                borderWidth: 1,
+                borderDash: [2, 2],
+                label: {
+                  backgroundColor: "transparent",
+                  fontFamily: UpdateConfig["default"].fontFamily.replace(/_/g, " "),
+                  fontSize: 11,
+                  fontStyle: "normal",
+                  fontColor: fc,
+                  xPadding: 6,
+                  yPadding: 6,
+                  cornerRadius: 3,
+                  position: "left",
+                  enabled: true,
+                  content: "".concat(content),
+                  yAdjust: -11
+                }
+              });
+            }
+
+            ChartController.result.options.scales.yAxes[0].ticks.max = maxChartVal;
+            ChartController.result.options.scales.yAxes[1].ticks.max = maxChartVal;
+            ChartController.result.update({
+              duration: 0
+            });
+            ChartController.result.resize();
+
+            if (glarsesMode) {
+              $("#middle #result .glarsesmessage").remove();
+              $("#middle #result").prepend("\n\n      <div class='glarsesmessage' style=\"\n        text-align: center;\n        grid-column: 1/3;\n        font-size: 2rem;\n        padding: 2rem 0;\n      \">Test completed</div>\n\n    ");
+              $("#middle #result .stats").remove();
+              $("#middle #result .chart").remove();
+              $("#middle #result #resultWordsHistory").remove();
+              $("#middle #result #resultReplay").remove();
+              $("#middle #result .loginTip").remove();
+              console.log("Test Completed: ".concat(stats.wpm, " wpm ").concat(stats.acc, "% acc ").concat(stats.wpmRaw, " raw ").concat(consistency, "% consistency"));
+            }
+
+            UI.swapElements($("#typingTest"), $("#result"), 250, function () {
+              TestUI.setResultCalculating(false);
+              $("#words").empty();
+              ChartController.result.resize();
+
+              if (UpdateConfig["default"].alwaysShowWordsHistory && UpdateConfig["default"].burstHeatmap) {
+                TestUI.applyBurstHeatmap();
+              }
+
+              $("#testModesNotice").addClass("hidden");
+            }, function () {
+              if (UpdateConfig["default"].alwaysShowWordsHistory) {
+                TestUI.toggleResultWords();
+              }
+
+              Keymap.hide();
+            });
+
+          case 103:
+          case "end":
+            return _context4.stop();
+        }
       }
-
-      $("#result .stats .raw .bottom").text(Misc.roundTo2(stats.wpmRaw));
-      $("#result .stats .wpm .bottom").attr("aria-label", Misc.roundTo2(stats.wpm * 5) + " cpm");
-    } else {
-      $("#result .stats .wpm .top .text").text("cpm");
-
-      if (inf) {
-        $("#result .stats .wpm .bottom").text("Infinite");
-      } else {
-        $("#result .stats .wpm .bottom").text(Misc.roundTo2(stats.wpm * 5));
-      }
-
-      $("#result .stats .raw .bottom").text(Misc.roundTo2(stats.wpmRaw * 5));
-      $("#result .stats .wpm .bottom").attr("aria-label", Misc.roundTo2(stats.wpm) + " wpm");
-    }
-
-    $("#result .stats .acc .bottom").text(Misc.roundTo2(stats.acc) + "%");
-    var time = Misc.roundTo2(testtime) + "s";
-
-    if (testtime > 61) {
-      time = Misc.secondsToString(Misc.roundTo2(testtime));
-    }
-
-    $("#result .stats .time .bottom .text").text(time);
-    $("#result .stats .raw .bottom").removeAttr("aria-label");
-    $("#result .stats .acc .bottom").removeAttr("aria-label");
-    $("#result .stats .time .bottom").attr("aria-label", "".concat(afkseconds, "s afk ").concat(afkSecondsPercent, "%"));
-  } else {
-    //not showing decimal places
-    if (UpdateConfig["default"].alwaysShowCPM == false) {
-      $("#result .stats .wpm .top .text").text("wpm");
-      $("#result .stats .wpm .bottom").attr("aria-label", stats.wpm + " (".concat(Misc.roundTo2(stats.wpm * 5), " cpm)"));
-
-      if (inf) {
-        $("#result .stats .wpm .bottom").text("Infinite");
-      } else {
-        $("#result .stats .wpm .bottom").text(Math.round(stats.wpm));
-      }
-
-      $("#result .stats .raw .bottom").text(Math.round(stats.wpmRaw));
-      $("#result .stats .raw .bottom").attr("aria-label", stats.wpmRaw);
-    } else {
-      $("#result .stats .wpm .top .text").text("cpm");
-      $("#result .stats .wpm .bottom").attr("aria-label", Misc.roundTo2(stats.wpm * 5) + " (".concat(Misc.roundTo2(stats.wpm), " wpm)"));
-
-      if (inf) {
-        $("#result .stats .wpm .bottom").text("Infinite");
-      } else {
-        $("#result .stats .wpm .bottom").text(Math.round(stats.wpm * 5));
-      }
-
-      $("#result .stats .raw .bottom").text(Math.round(stats.wpmRaw * 5));
-      $("#result .stats .raw .bottom").attr("aria-label", stats.wpmRaw * 5);
-    }
-
-    $("#result .stats .acc .bottom").text(Math.floor(stats.acc) + "%");
-    $("#result .stats .acc .bottom").attr("aria-label", stats.acc + "%");
-
-    var _time = Math.round(testtime) + "s";
-
-    if (testtime > 61) {
-      _time = Misc.secondsToString(Math.round(testtime));
-    }
-
-    $("#result .stats .time .bottom .text").text(_time);
-    $("#result .stats .time .bottom").attr("aria-label", "".concat(Misc.roundTo2(testtime), "s (").concat(afkseconds, "s afk ").concat(afkSecondsPercent, "%)"));
-  }
-
-  $("#result .stats .time .bottom .afk").text("");
-
-  if (afkSecondsPercent > 0) {
-    $("#result .stats .time .bottom .afk").text(afkSecondsPercent + "% afk");
-  }
-
-  if (!difficultyFailed) {
-    TodayTracker.addSeconds(testtime + (TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds)) - afkseconds);
-  }
-
-  $("#result .stats .time .bottom .timeToday").text(TodayTracker.getString());
-  $("#result .stats .key .bottom").text(testtime + "s");
-  $("#words").removeClass("blurred");
-  OutOfFocus.hide();
-  $("#result .stats .key .bottom").text(stats.correctChars + stats.correctSpaces + "/" + stats.incorrectChars + "/" + stats.extraChars + "/" + stats.missedChars);
-  setTimeout(function () {
-    $("#resultExtraButtons").removeClass("hidden").css("opacity", 0).animate({
-      opacity: 1
-    }, 125);
-  }, 125);
-  $("#testModesNotice").css("opacity", 0);
-  var mode2 = "";
-
-  if (UpdateConfig["default"].mode === "time") {
-    mode2 = UpdateConfig["default"].time;
-  } else if (UpdateConfig["default"].mode === "words") {
-    mode2 = UpdateConfig["default"].words;
-  } else if (UpdateConfig["default"].mode === "custom") {
-    mode2 = "custom";
-  } else if (UpdateConfig["default"].mode === "quote") {
-    mode2 = randomQuote.id;
-  } else if (UpdateConfig["default"].mode === "zen") {
-    mode2 = "zen";
-  }
-
-  var labels = [];
-
-  for (var i = 1; i <= TestStats.wpmHistory.length; i++) {
-    if (TestStats.lastSecondNotRound && i === TestStats.wpmHistory.length) {
-      labels.push(Misc.roundTo2(testtime).toString());
-    } else {
-      labels.push(i.toString());
-    }
-  }
-
-  ChartController.result.updateColors();
-  ChartController.result.data.labels = labels;
-  var rawWpmPerSecondRaw = TestStats.keypressPerSecond.map(function (f) {
-    return Math.round(f.count / 5 * 60);
-  });
-  var rawWpmPerSecond = Misc.smooth(rawWpmPerSecondRaw, 1);
-  var stddev = Misc.stdDev(rawWpmPerSecondRaw);
-  var avg = Misc.mean(rawWpmPerSecondRaw);
-  var consistency = Misc.roundTo2(Misc.kogasa(stddev / avg));
-  var keyConsistency = Misc.roundTo2(Misc.kogasa(Misc.stdDev(TestStats.keypressTimings.spacing.array) / Misc.mean(TestStats.keypressTimings.spacing.array)));
-
-  if (isNaN(consistency)) {
-    consistency = 0;
-  }
-
-  if (UpdateConfig["default"].alwaysShowDecimalPlaces) {
-    $("#result .stats .consistency .bottom").text(Misc.roundTo2(consistency) + "%");
-    $("#result .stats .consistency .bottom").attr("aria-label", "".concat(keyConsistency, "% key"));
-  } else {
-    $("#result .stats .consistency .bottom").text(Math.round(consistency) + "%");
-    $("#result .stats .consistency .bottom").attr("aria-label", "".concat(consistency, "% (").concat(keyConsistency, "% key)"));
-  }
-
-  ChartController.result.data.datasets[0].data = TestStats.wpmHistory;
-  ChartController.result.data.datasets[1].data = rawWpmPerSecond;
-  var maxChartVal = Math.max.apply(Math, [Math.max.apply(Math, (0, _toConsumableArray2["default"])(rawWpmPerSecond)), Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory))]);
-
-  if (!UpdateConfig["default"].startGraphsAtZero) {
-    ChartController.result.options.scales.yAxes[0].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory));
-    ChartController.result.options.scales.yAxes[1].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory));
-  } else {
-    ChartController.result.options.scales.yAxes[0].ticks.min = 0;
-    ChartController.result.options.scales.yAxes[1].ticks.min = 0;
-  } // let errorsNoZero = [];
-  // for (let i = 0; i < errorsPerSecond.length; i++) {
-  //   errorsNoZero.push({
-  //     x: i + 1,
-  //     y: errorsPerSecond[i].count,
-  //   });
-  // }
-
-
-  var errorsArray = [];
-
-  for (var _i = 0; _i < TestStats.keypressPerSecond.length; _i++) {
-    errorsArray.push(TestStats.keypressPerSecond[_i].errors);
-  }
-
-  ChartController.result.data.datasets[2].data = errorsArray;
-  var kps = TestStats.keypressPerSecond.slice(-5);
-  var afkDetected = kps.every(function (second) {
-    return second.afk;
-  });
-  if (bailout) afkDetected = false;
-  var lang = UpdateConfig["default"].language;
-  var quoteLength = -1;
-
-  if (UpdateConfig["default"].mode === "quote") {
-    quoteLength = randomQuote.group;
-    lang = UpdateConfig["default"].language.replace(/_\d*k$/g, "");
-  }
-
-  if (difficultyFailed) {
-    Notifications.add("Test failed - ".concat(failReason), 0, 1);
-  } else if (afkDetected) {
-    Notifications.add("Test invalid - AFK detected", 0);
-  } else if (isRepeated) {
-    Notifications.add("Test invalid - repeated", 0);
-  } else if (UpdateConfig["default"].mode === "time" && mode2 < 15 && mode2 > 0 || UpdateConfig["default"].mode === "time" && mode2 == 0 && testtime < 15 || UpdateConfig["default"].mode === "words" && mode2 < 10 && mode2 > 0 || UpdateConfig["default"].mode === "words" && mode2 == 0 && testtime < 15 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom && CustomText.text.length < 10 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && !CustomText.isTimeRandom && CustomText.word < 10 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && CustomText.isTimeRandom && CustomText.time < 15 || UpdateConfig["default"].mode === "zen" && testtime < 15) {
-    Notifications.add("Test too short", 0);
-  } else {
-    var chartData = {
-      wpm: TestStats.wpmHistory,
-      raw: rawWpmPerSecond,
-      err: errorsArray
-    };
-
-    if (testtime > 122) {
-      chartData = "toolong";
-      TestStats.setKeypressTimingsTooLong();
-    }
-
-    var cdata = null;
-
-    if (UpdateConfig["default"].mode === "custom") {
-      cdata = {};
-      cdata.textLen = CustomText.text.length;
-      cdata.isWordRandom = CustomText.isWordRandom;
-      cdata.isTimeRandom = CustomText.isTimeRandom;
-      cdata.word = CustomText.word !== "" && !isNaN(CustomText.word) ? CustomText.word : null;
-      cdata.time = CustomText.time !== "" && !isNaN(CustomText.time) ? CustomText.time : null;
-    }
-
-    var completedEvent = {
-      wpm: stats.wpm,
-      rawWpm: stats.wpmRaw,
-      correctChars: stats.correctChars + stats.correctSpaces,
-      incorrectChars: stats.incorrectChars,
-      allChars: stats.allChars,
-      acc: stats.acc,
-      mode: UpdateConfig["default"].mode,
-      mode2: mode2,
-      quoteLength: quoteLength,
-      punctuation: UpdateConfig["default"].punctuation,
-      numbers: UpdateConfig["default"].numbers,
-      timestamp: Date.now(),
-      language: lang,
-      restartCount: TestStats.restartCount,
-      incompleteTestSeconds: TestStats.incompleteSeconds < 0 ? 0 : Misc.roundTo2(TestStats.incompleteSeconds),
-      difficulty: UpdateConfig["default"].difficulty,
-      testDuration: testtime,
-      afkDuration: afkseconds,
-      blindMode: UpdateConfig["default"].blindMode,
-      theme: UpdateConfig["default"].theme,
-      keySpacing: TestStats.keypressTimings.spacing.array,
-      keyDuration: TestStats.keypressTimings.duration.array,
-      consistency: consistency,
-      keyConsistency: keyConsistency,
-      funbox: UpdateConfig["default"].funbox,
-      bailedOut: bailout,
-      chartData: chartData,
-      customText: cdata
-    };
-
-    if (UpdateConfig["default"].mode !== "custom") {
-      delete completedEvent.CustomText;
-    }
-
-    if (UpdateConfig["default"].difficulty == "normal" || (UpdateConfig["default"].difficulty == "master" || UpdateConfig["default"].difficulty == "expert") && !difficultyFailed) {
-      // restartCount = 0;
-      // incompleteTestSeconds = 0;
-      TestStats.resetIncomplete();
-    }
-  }
-
-  var testType = "";
-
-  if (UpdateConfig["default"].mode === "quote") {
-    var qlen = "";
-
-    if (UpdateConfig["default"].quoteLength === 0) {
-      qlen = "short ";
-    } else if (UpdateConfig["default"].quoteLength === 1) {
-      qlen = "medium ";
-    } else if (UpdateConfig["default"].quoteLength === 2) {
-      qlen = "long ";
-    } else if (UpdateConfig["default"].quoteLength === 3) {
-      qlen = "thicc ";
-    }
-
-    testType += qlen + UpdateConfig["default"].mode;
-  } else {
-    testType += UpdateConfig["default"].mode;
-  }
-
-  if (UpdateConfig["default"].mode == "time") {
-    testType += " " + UpdateConfig["default"].time;
-  } else if (UpdateConfig["default"].mode == "words") {
-    testType += " " + UpdateConfig["default"].words;
-  }
-
-  if (UpdateConfig["default"].mode != "custom" && UpdateConfig["default"].funbox !== "gibberish" && UpdateConfig["default"].funbox !== "ascii" && UpdateConfig["default"].funbox !== "58008") {
-    testType += "<br>" + lang.replace(/_/g, " ");
-  }
-
-  if (UpdateConfig["default"].punctuation) {
-    testType += "<br>punctuation";
-  }
-
-  if (UpdateConfig["default"].numbers) {
-    testType += "<br>numbers";
-  }
-
-  if (UpdateConfig["default"].blindMode) {
-    testType += "<br>blind";
-  }
-
-  if (UpdateConfig["default"].funbox !== "none") {
-    testType += "<br>" + UpdateConfig["default"].funbox.replace(/_/g, " ");
-  }
-
-  if (UpdateConfig["default"].difficulty == "expert") {
-    testType += "<br>expert";
-  } else if (UpdateConfig["default"].difficulty == "master") {
-    testType += "<br>master";
-  }
-
-  $("#result .stats .testType .bottom").html(testType);
-  var otherText = ""; // if (Config.layout !== "default") {
-  //   otherText += "<br>" + Config.layout;
-  // }
-
-  if (difficultyFailed) {
-    otherText += "<br>failed (".concat(failReason, ")");
-  }
-
-  if (afkDetected) {
-    otherText += "<br>afk detected";
-  }
-
-  if (TestStats.invalid) {
-    otherText += "<br>invalid";
-  }
-
-  if (isRepeated) {
-    otherText += "<br>repeated";
-  }
-
-  if (bailout) {
-    otherText += "<br>bailed out";
-  }
-
-  if (otherText == "") {
-    $("#result .stats .info").addClass("hidden");
-  } else {
-    $("#result .stats .info").removeClass("hidden");
-    otherText = otherText.substring(4);
-    $("#result .stats .info .bottom").html(otherText);
-  }
-
-  if ($("#result .stats .tags").hasClass("hidden") && $("#result .stats .info").hasClass("hidden")) {
-    $("#result .stats .infoAndTags").addClass("hidden");
-  } else {
-    $("#result .stats .infoAndTags").removeClass("hidden");
-  }
-
-  if (UpdateConfig["default"].mode === "quote") {
-    $("#result .stats .source").removeClass("hidden");
-    $("#result .stats .source .bottom").html(randomQuote.source);
-  } else {
-    $("#result .stats .source").addClass("hidden");
-  }
-
-  if (UpdateConfig["default"].funbox !== "none") {
-    var content = UpdateConfig["default"].funbox;
-
-    if (UpdateConfig["default"].funbox === "layoutfluid") {
-      content += " " + UpdateConfig["default"].customLayoutfluid.replace(/#/g, " ");
-    }
-
-    ChartController.result.options.annotation.annotations.push({
-      enabled: false,
-      type: "line",
-      mode: "horizontal",
-      scaleID: "wpm",
-      value: 0,
-      borderColor: "transparent",
-      borderWidth: 1,
-      borderDash: [2, 2],
-      label: {
-        backgroundColor: "transparent",
-        fontFamily: UpdateConfig["default"].fontFamily.replace(/_/g, " "),
-        fontSize: 11,
-        fontStyle: "normal",
-        fontColor: ThemeColors.sub,
-        xPadding: 6,
-        yPadding: 6,
-        cornerRadius: 3,
-        position: "left",
-        enabled: true,
-        content: "".concat(content),
-        yAdjust: -11
-      }
-    });
-  }
-
-  ChartController.result.options.scales.yAxes[0].ticks.max = maxChartVal;
-  ChartController.result.options.scales.yAxes[1].ticks.max = maxChartVal;
-  ChartController.result.update({
-    duration: 0
-  });
-  ChartController.result.resize();
-
-  if (glarsesMode) {
-    $("#middle #result .glarsesmessage").remove();
-    $("#middle #result").prepend("\n\n      <div class='glarsesmessage' style=\"\n        text-align: center;\n        grid-column: 1/3;\n        font-size: 2rem;\n        padding: 2rem 0;\n      \">Test completed</div>\n    \n    ");
-    $("#middle #result .stats").remove();
-    $("#middle #result .chart").remove();
-    $("#middle #result #resultWordsHistory").remove();
-    $("#middle #result #resultReplay").remove();
-    $("#middle #result .loginTip").remove();
-    console.log("Test Completed: ".concat(stats.wpm, " wpm ").concat(stats.acc, "% acc ").concat(stats.wpmRaw, " raw ").concat(consistency, "% consistency"));
-  }
-
-  UI.swapElements($("#typingTest"), $("#result"), 250, function () {
-    TestUI.setResultCalculating(false);
-    $("#words").empty();
-    ChartController.result.resize();
-
-    if (UpdateConfig["default"].alwaysShowWordsHistory && UpdateConfig["default"].burstHeatmap) {
-      TestUI.applyBurstHeatmap();
-    }
-
-    $("#testModesNotice").addClass("hidden");
-  }, function () {
-    if (UpdateConfig["default"].alwaysShowWordsHistory) {
-      TestUI.toggleResultWords();
-    }
-
-    Keymap.hide();
-  });
+    }, _callee4);
+  }));
+  return _finish.apply(this, arguments);
 }
 
 var failReason = "";
@@ -13073,7 +13727,7 @@ function fail(reason) {
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":3,"./chart-controller":4,"./config":7,"./custom-text":11,"./focus":14,"./funbox":15,"./keymap":19,"./live-acc":23,"./live-burst":24,"./live-wpm":25,"./manual-restart-tracker":27,"./misc":28,"./monkey-power":29,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./pb-crown":34,"./poetry.js":35,"./practise-words":36,"./quote-search-popup":37,"./replay.js":39,"./shift-tracker":43,"./test-stats":49,"./test-timer":50,"./test-ui":51,"./theme-colors":52,"./theme-controller":53,"./timer-progress":55,"./today-tracker":56,"./ui":57,"./weak-spot":59,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],49:[function(require,module,exports){
+},{"./caret":3,"./challenge-controller":4,"./chart-controller":5,"./config":8,"./custom-text":12,"./focus":15,"./funbox":16,"./keymap":20,"./live-acc":24,"./live-burst":25,"./live-wpm":26,"./manual-restart-tracker":28,"./misc":29,"./monkey-power":30,"./notifications":32,"./out-of-focus":33,"./pace-caret":34,"./pb-crown":35,"./poetry.js":36,"./practise-words":37,"./quote-search-popup":38,"./replay.js":40,"./shift-tracker":44,"./test-stats":50,"./test-timer":51,"./test-ui":52,"./theme-colors":53,"./theme-controller":54,"./timer-progress":56,"./today-tracker":57,"./ui":58,"./weak-spot":60,"./wordset":62,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85}],50:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13083,6 +13737,7 @@ var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWild
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.getStats = getStats;
 exports.restart = restart;
 exports.incrementRestartCount = incrementRestartCount;
 exports.incrementIncompleteSeconds = incrementIncompleteSeconds;
@@ -13177,6 +13832,24 @@ var keypressTimings = {
   }
 };
 exports.keypressTimings = keypressTimings;
+
+function getStats() {
+  return {
+    start: start,
+    end: end,
+    wpmHistory: wpmHistory,
+    rawHistory: rawHistory,
+    burstHistory: burstHistory,
+    keypressPerSecond: keypressPerSecond,
+    currentKeypress: currentKeypress,
+    lastKeypress: lastKeypress,
+    currentBurstStart: currentBurstStart,
+    lastSecondNotRound: lastSecondNotRound,
+    missedWords: missedWords,
+    accuracy: accuracy,
+    keypressTimings: keypressTimings
+  };
+}
 
 function restart() {
   exports.start = start = 0;
@@ -13521,7 +14194,14 @@ function countChars() {
 }
 
 function calculateStats() {
-  var testSeconds = TestStats.calculateTestSeconds();
+  var testSeconds;
+
+  if (_config["default"].mode == "custom") {
+    testSeconds = TestStats.calculateTestSeconds();
+  } else {
+    testSeconds = Misc.roundTo2(TestStats.calculateTestSeconds());
+  }
+
   var chars = countChars();
   var wpm = Misc.roundTo2((chars.correctWordChars + chars.correctSpaces) * (60 / testSeconds) / 5);
   var wpmraw = Misc.roundTo2((chars.allCorrectChars + chars.spaces + chars.incorrectChars + chars.extraChars) * (60 / testSeconds) / 5);
@@ -13541,7 +14221,7 @@ function calculateStats() {
   };
 }
 
-},{"./config":7,"./funbox":15,"./misc":28,"./test-logic":48,"./test-stats":49,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],50:[function(require,module,exports){
+},{"./config":8,"./funbox":16,"./misc":29,"./test-logic":49,"./test-stats":50,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],51:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -13665,7 +14345,7 @@ function start() {
   })(TestStats.start + stepIntervalMS);
 }
 
-},{"./caret":3,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./live-wpm":25,"./misc":28,"./monkey":30,"./notifications":31,"./test-logic":48,"./test-stats":49,"./timer-progress":55,"@babel/runtime/helpers/interopRequireWildcard":68}],51:[function(require,module,exports){
+},{"./caret":3,"./config":8,"./custom-text":12,"./funbox":16,"./keymap":20,"./live-wpm":26,"./misc":29,"./monkey":31,"./notifications":32,"./test-logic":49,"./test-stats":50,"./timer-progress":56,"@babel/runtime/helpers/interopRequireWildcard":74}],52:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -13739,6 +14419,8 @@ var TestStats = _interopRequireWildcard(require("./test-stats"));
 var Misc = _interopRequireWildcard(require("./misc"));
 
 var TestUI = _interopRequireWildcard(require("./test-ui"));
+
+var ChallengeController = _interopRequireWildcard(require("./challenge-controller"));
 
 var currentWordElementIndex = 0;
 exports.currentWordElementIndex = currentWordElementIndex;
@@ -13902,77 +14584,112 @@ function colorful(tc) {
 }
 
 function screenshot() {
-  var revealReplay = false;
+  return _screenshot.apply(this, arguments);
+}
 
-  function revertScreenshot() {
-    $("#notificationCenter").removeClass("hidden");
-    $("#commandLineMobileButton").removeClass("hidden");
-    $(".pageTest .ssWatermark").addClass("hidden");
-    $(".pageTest .ssWatermark").text("monkeytype.com");
-    $(".pageTest .buttons").removeClass("hidden");
-    if (revealReplay) $("#resultReplay").removeClass("hidden");
-  }
+function _screenshot() {
+  _screenshot = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+    var revealReplay, revertScreenshot, src, sourceX, sourceY, sourceWidth, sourceHeight;
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            revertScreenshot = function _revertScreenshot() {
+              $("#notificationCenter").removeClass("hidden");
+              $("#commandLineMobileButton").removeClass("hidden");
+              $(".pageTest .ssWatermark").addClass("hidden");
+              $(".pageTest .ssWatermark").text("monkeytype.com");
+              $(".pageTest .buttons").removeClass("hidden");
+              if (revealReplay) $("#resultReplay").removeClass("hidden");
+            };
 
-  if (!$("#resultReplay").hasClass("hidden")) {
-    revealReplay = true;
-    Replay.pauseReplay();
-  }
+            revealReplay = false;
 
-  $("#resultReplay").addClass("hidden");
-  $(".pageTest .ssWatermark").removeClass("hidden");
-  $(".pageTest .buttons").addClass("hidden");
-  var src = $("#middle");
-  var sourceX = src.position().left;
-  /*X position from div#target*/
+            if (!$("#resultReplay").hasClass("hidden")) {
+              revealReplay = true;
+              Replay.pauseReplay();
+            }
 
-  var sourceY = src.position().top;
-  /*Y position from div#target*/
+            $("#resultReplay").addClass("hidden");
+            $(".pageTest .ssWatermark").removeClass("hidden");
+            $(".pageTest .buttons").addClass("hidden");
+            src = $("#middle");
+            sourceX = src.position().left;
+            /*X position from div#target*/
 
-  var sourceWidth = src.width();
-  /*clientWidth/offsetWidth from div#target*/
+            sourceY = src.position().top;
+            /*Y position from div#target*/
 
-  var sourceHeight = src.height();
-  /*clientHeight/offsetHeight from div#target*/
+            sourceWidth = src.width();
+            /*clientWidth/offsetWidth from div#target*/
 
-  $("#notificationCenter").addClass("hidden");
-  $("#commandLineMobileButton").addClass("hidden");
+            sourceHeight = src.height();
+            /*clientHeight/offsetHeight from div#target*/
 
-  try {
-    html2canvas(document.body, {
-      backgroundColor: ThemeColors.bg,
-      height: sourceHeight + 50,
-      width: sourceWidth + 50,
-      x: sourceX - 25,
-      y: sourceY - 25
-    }).then(function (canvas) {
-      canvas.toBlob(function (blob) {
-        try {
-          if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
-            open(URL.createObjectURL(blob));
-            revertScreenshot();
-          } else {
-            navigator.clipboard.write([new ClipboardItem(Object.defineProperty({}, blob.type, {
-              value: blob,
-              enumerable: true
-            }))]).then(function () {
-              Notifications.add("Copied to clipboard", 1, 2);
-              revertScreenshot();
+            $("#notificationCenter").addClass("hidden");
+            $("#commandLineMobileButton").addClass("hidden");
+            _context3.prev = 13;
+            _context3.t0 = html2canvas;
+            _context3.t1 = document.body;
+            _context3.next = 18;
+            return ThemeColors.get("bg");
+
+          case 18:
+            _context3.t2 = _context3.sent;
+            _context3.t3 = sourceHeight + 50;
+            _context3.t4 = sourceWidth + 50;
+            _context3.t5 = sourceX - 25;
+            _context3.t6 = sourceY - 25;
+            _context3.t7 = {
+              backgroundColor: _context3.t2,
+              height: _context3.t3,
+              width: _context3.t4,
+              x: _context3.t5,
+              y: _context3.t6
+            };
+            (0, _context3.t0)(_context3.t1, _context3.t7).then(function (canvas) {
+              canvas.toBlob(function (blob) {
+                try {
+                  if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
+                    open(URL.createObjectURL(blob));
+                    revertScreenshot();
+                  } else {
+                    navigator.clipboard.write([new ClipboardItem(Object.defineProperty({}, blob.type, {
+                      value: blob,
+                      enumerable: true
+                    }))]).then(function () {
+                      Notifications.add("Copied to clipboard", 1, 2);
+                      revertScreenshot();
+                    });
+                  }
+                } catch (e) {
+                  Notifications.add("Error saving image to clipboard: " + e.message, -1);
+                  revertScreenshot();
+                }
+              });
             });
-          }
-        } catch (e) {
-          Notifications.add("Error saving image to clipboard: " + e.message, -1);
-          revertScreenshot();
-        }
-      });
-    });
-  } catch (e) {
-    Notifications.add("Error creating image: " + e.message, -1);
-    revertScreenshot();
-  }
+            _context3.next = 31;
+            break;
 
-  setTimeout(function () {
-    revertScreenshot();
-  }, 3000);
+          case 27:
+            _context3.prev = 27;
+            _context3.t8 = _context3["catch"](13);
+            Notifications.add("Error creating image: " + _context3.t8.message, -1);
+            revertScreenshot();
+
+          case 31:
+            setTimeout(function () {
+              revertScreenshot();
+            }, 3000);
+
+          case 32:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[13, 27]]);
+  }));
+  return _screenshot.apply(this, arguments);
 }
 
 function updateWordElement() {
@@ -14150,12 +14867,16 @@ function updateModesNotice() {
     $(".pageTest #testModesNotice").append("<div class=\"text-button\"><i class=\"fas fa-long-arrow-alt-right\"></i>shift + tab to restart</div>");
   }
 
+  if (ChallengeController.active) {
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsChallenges\"><i class=\"fas fa-award\"></i>".concat(ChallengeController.active.display, "</div>"));
+  }
+
   if (UpdateConfig["default"].mode === "zen") {
     $(".pageTest #testModesNotice").append("<div class=\"text-button\"><i class=\"fas fa-poll\"></i>shift + enter to finish zen </div>");
   } // /^[0-9a-zA-Z_.-]+$/.test(name);
 
 
-  if (/_\d+k$/g.test(UpdateConfig["default"].language) && UpdateConfig["default"].mode !== "quote") {
+  if ((/_\d+k$/g.test(UpdateConfig["default"].language) || /code_/g.test(UpdateConfig["default"].language) || UpdateConfig["default"].language == "english_commonly_misspelled") && UpdateConfig["default"].mode !== "quote") {
     $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsLanguages\"><i class=\"fas fa-globe-americas\"></i>".concat(UpdateConfig["default"].language.replace(/_/g, " "), "</div>"));
   }
 
@@ -14241,12 +14962,12 @@ function loadWordsHistory() {
 }
 
 function _loadWordsHistory() {
-  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
     var wordsHTML, i, input, word, wordEl, wordstats, length, c, loop, _c, correctedChar, extraCorrected, _c2;
 
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
             $("#resultWordsHistory .words").empty();
             wordsHTML = "";
@@ -14254,17 +14975,17 @@ function _loadWordsHistory() {
 
           case 3:
             if (!(i < TestLogic.input.history.length + 2)) {
-              _context3.next = 25;
+              _context4.next = 25;
               break;
             }
 
             input = TestLogic.input.getHistory(i);
             word = TestLogic.words.get(i);
             wordEl = "";
-            _context3.prev = 7;
+            _context4.prev = 7;
 
             if (!(input === "")) {
-              _context3.next = 10;
+              _context4.next = 10;
               break;
             }
 
@@ -14358,12 +15079,12 @@ function _loadWordsHistory() {
             }
 
             wordEl += "</div>";
-            _context3.next = 21;
+            _context4.next = 21;
             break;
 
           case 18:
-            _context3.prev = 18;
-            _context3.t0 = _context3["catch"](7);
+            _context4.prev = 18;
+            _context4.t0 = _context4["catch"](7);
 
             try {
               wordEl = "<div class='word'>";
@@ -14380,20 +15101,20 @@ function _loadWordsHistory() {
 
           case 22:
             i++;
-            _context3.next = 3;
+            _context4.next = 3;
             break;
 
           case 25:
             $("#resultWordsHistory .words").html(wordsHTML);
             $("#showWordHistoryButton").addClass("loaded");
-            return _context3.abrupt("return", true);
+            return _context4.abrupt("return", true);
 
           case 28:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, null, [[7, 18]]);
+    }, _callee4, null, [[7, 18]]);
   }));
   return _loadWordsHistory.apply(this, arguments);
 }
@@ -14621,6 +15342,8 @@ $("#wordsInput").on("focusout", function () {
 });
 $(document).on("keypress", "#restartTestButton", function (event) {
   if (event.keyCode == 13) {
+    ManualRestart.reset();
+
     if (TestLogic.active && UpdateConfig["default"].repeatQuotes === "typing" && UpdateConfig["default"].mode === "quote") {
       TestLogic.restart(true);
     } else {
@@ -14687,52 +15410,105 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./keymap":19,"./manual-restart-tracker":27,"./misc":28,"./notifications":31,"./out-of-focus":32,"./pace-caret":33,"./practise-words":36,"./replay":39,"./test-logic":48,"./test-stats":49,"./test-ui":51,"./theme-colors":52,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/helpers/toConsumableArray":71,"@babel/runtime/regenerator":74}],52:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.update = update;
-exports.colorfulErrorExtra = exports.colorfulError = exports.errorExtra = exports.error = exports.text = exports.sub = exports.caret = exports.main = exports.bg = void 0;
-var bg = "#323437";
-exports.bg = bg;
-var main = "#e2b714";
-exports.main = main;
-var caret = "#e2b714";
-exports.caret = caret;
-var sub = "#646669";
-exports.sub = sub;
-var text = "#d1d0c5";
-exports.text = text;
-var error = "#ca4754";
-exports.error = error;
-var errorExtra = "#7e2a33";
-exports.errorExtra = errorExtra;
-var colorfulError = "#ca4754";
-exports.colorfulError = colorfulError;
-var colorfulErrorExtra = "#7e2a33";
-exports.colorfulErrorExtra = colorfulErrorExtra;
-
-function update() {
-  var st = getComputedStyle(document.body);
-  exports.bg = bg = st.getPropertyValue("--bg-color").replace(" ", "");
-  exports.main = main = st.getPropertyValue("--main-color").replace(" ", "");
-  exports.caret = caret = st.getPropertyValue("--caret-color").replace(" ", "");
-  exports.sub = sub = st.getPropertyValue("--sub-color").replace(" ", "");
-  exports.text = text = st.getPropertyValue("--text-color").replace(" ", "");
-  exports.error = error = st.getPropertyValue("--error-color").replace(" ", "");
-  exports.errorExtra = errorExtra = st.getPropertyValue("--error-extra-color").replace(" ", "");
-  exports.colorfulError = colorfulError = st.getPropertyValue("--colorful-error-color").replace(" ", "");
-  exports.colorfulErrorExtra = colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
-}
-
-},{}],53:[function(require,module,exports){
+},{"./caret":3,"./challenge-controller":4,"./commandline":7,"./commandline-lists":6,"./config":8,"./custom-text":12,"./funbox":16,"./keymap":20,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./out-of-focus":33,"./pace-caret":34,"./practise-words":37,"./replay":40,"./test-logic":49,"./test-stats":50,"./test-ui":52,"./theme-colors":53,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85}],53:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.get = get;
+exports.reset = reset;
+exports.update = update;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+// export let bg = "#323437";
+// export let main = "#e2b714";
+// export let caret = "#e2b714";
+// export let sub = "#646669";
+// export let text = "#d1d0c5";
+// export let error = "#ca4754";
+// export let errorExtra = "#7e2a33";
+// export let colorfulError = "#ca4754";
+// export let colorfulErrorExtra = "#7e2a33";
+var colors = {
+  bg: "#323437",
+  main: "#e2b714",
+  caret: "#e2b714",
+  sub: "#646669",
+  text: "#d1d0c5",
+  error: "#ca4754",
+  errorExtra: "#7e2a33",
+  colorfulError: "#ca4754",
+  colorfulErrorExtra: "#7e2a33"
+};
+
+function get(_x) {
+  return _get.apply(this, arguments);
+}
+
+function _get() {
+  _get = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(color) {
+    var ret;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (color === undefined) {
+              ret = colors;
+            } else {
+              ret = colors[color];
+            }
+
+            return _context.abrupt("return", ret);
+
+          case 2:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function reset() {
+  colors = {
+    bg: "",
+    main: "",
+    caret: "",
+    sub: "",
+    text: "",
+    error: "",
+    errorExtra: "",
+    colorfulError: "",
+    colorfulErrorExtra: ""
+  };
+}
+
+function update() {
+  var st = getComputedStyle(document.body);
+  colors.bg = st.getPropertyValue("--bg-color").replace(" ", "");
+  colors.main = st.getPropertyValue("--main-color").replace(" ", "");
+  colors.caret = st.getPropertyValue("--caret-color").replace(" ", "");
+  colors.sub = st.getPropertyValue("--sub-color").replace(" ", "");
+  colors.text = st.getPropertyValue("--text-color").replace(" ", "");
+  colors.error = st.getPropertyValue("--error-color").replace(" ", "");
+  colors.errorExtra = st.getPropertyValue("--error-extra-color").replace(" ", "");
+  colors.colorfulError = st.getPropertyValue("--colorful-error-color").replace(" ", "");
+  colors.colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
+}
+
+},{"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/regenerator":85}],54:[function(require,module,exports){
+"use strict";
+
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -14746,6 +15522,10 @@ exports.clearRandom = clearRandom;
 exports.applyCustomBackground = applyCustomBackground;
 exports.applyCustomBackgroundSize = applyCustomBackgroundSize;
 exports.colorVars = exports.randomTheme = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
@@ -14767,38 +15547,64 @@ exports.randomTheme = randomTheme;
 var colorVars = ["--bg-color", "--main-color", "--caret-color", "--sub-color", "--text-color", "--error-color", "--error-extra-color", "--colorful-error-color", "--colorful-error-extra-color"];
 exports.colorVars = colorVars;
 
-function updateFavicon(size, curveSize) {
-  var maincolor, bgcolor;
-  bgcolor = ThemeColors.bg;
-  maincolor = ThemeColors.main;
+function updateFavicon(_x, _x2) {
+  return _updateFavicon.apply(this, arguments);
+}
 
-  if (bgcolor == maincolor) {
-    bgcolor = "#111";
-    maincolor = "#eee";
-  }
+function _updateFavicon() {
+  _updateFavicon = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(size, curveSize) {
+    var maincolor, bgcolor, canvas, ctx;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return ThemeColors.get("bg");
 
-  var canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  var ctx = canvas.getContext("2d");
-  ctx.beginPath();
-  ctx.moveTo(0, curveSize); //top left
+          case 2:
+            bgcolor = _context.sent;
+            _context.next = 5;
+            return ThemeColors.get("main");
 
-  ctx.quadraticCurveTo(0, 0, curveSize, 0);
-  ctx.lineTo(size - curveSize, 0); //top right
+          case 5:
+            maincolor = _context.sent;
 
-  ctx.quadraticCurveTo(size, 0, size, curveSize);
-  ctx.lineTo(size, size - curveSize);
-  ctx.quadraticCurveTo(size, size, size - curveSize, size);
-  ctx.lineTo(curveSize, size);
-  ctx.quadraticCurveTo(0, size, 0, size - curveSize);
-  ctx.fillStyle = bgcolor;
-  ctx.fill();
-  ctx.font = "900 " + size / 2 * 1.2 + "px Roboto Mono";
-  ctx.textAlign = "center";
-  ctx.fillStyle = maincolor;
-  ctx.fillText("mt", size / 2 + size / 32, size / 3 * 2.1);
-  $("#favicon").attr("href", canvas.toDataURL("image/png"));
+            if (bgcolor == maincolor) {
+              bgcolor = "#111";
+              maincolor = "#eee";
+            }
+
+            canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size;
+            ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.moveTo(0, curveSize); //top left
+
+            ctx.quadraticCurveTo(0, 0, curveSize, 0);
+            ctx.lineTo(size - curveSize, 0); //top right
+
+            ctx.quadraticCurveTo(size, 0, size, curveSize);
+            ctx.lineTo(size, size - curveSize);
+            ctx.quadraticCurveTo(size, size, size - curveSize, size);
+            ctx.lineTo(curveSize, size);
+            ctx.quadraticCurveTo(0, size, 0, size - curveSize);
+            ctx.fillStyle = bgcolor;
+            ctx.fill();
+            ctx.font = "900 " + size / 2 * 1.2 + "px Roboto Mono";
+            ctx.textAlign = "center";
+            ctx.fillStyle = maincolor;
+            ctx.fillText("mt", size / 2 + size / 32, size / 3 * 2.1);
+            $("#favicon").attr("href", canvas.toDataURL("image/png"));
+
+          case 27:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _updateFavicon.apply(this, arguments);
 }
 
 function clearCustomTheme() {
@@ -14806,6 +15612,23 @@ function clearCustomTheme() {
     document.documentElement.style.setProperty(e, "");
   });
 }
+
+var loadStyle = function loadStyle(name) {
+  return new Promise(function (resolve, reject) {
+    var link = document.createElement("link");
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.id = "currentTheme";
+
+    link.onload = function () {
+      resolve();
+    };
+
+    link.href = "themes/".concat(name, ".css");
+    var headScript = document.querySelector("#currentTheme");
+    headScript.replaceWith(link);
+  });
+};
 
 function apply(themeName) {
   clearCustomTheme();
@@ -14819,22 +15642,26 @@ function apply(themeName) {
     UI.swapElements($('.pageSettings [tabContent="preset"]'), $('.pageSettings [tabContent="custom"]'), 250);
   }
 
-  $(".keymap-key").attr("style", "");
-  $("#currentTheme").attr("href", "themes/".concat(name, ".css"));
-  $(".current-theme .text").text(themeName.replace("_", " "));
+  ThemeColors.reset();
+  $(".keymap-key").attr("style", ""); // $("#currentTheme").attr("href", `themes/${name}.css`);
 
-  if (themeName === "custom") {
-    colorVars.forEach(function (e, index) {
-      document.documentElement.style.setProperty(e, _config["default"].customThemeColors[index]);
+  loadStyle(name).then(function () {
+    ThemeColors.update();
+    $(".current-theme .text").text(themeName.replace("_", " "));
+
+    if (themeName === "custom") {
+      colorVars.forEach(function (e, index) {
+        document.documentElement.style.setProperty(e, _config["default"].customThemeColors[index]);
+      });
+    }
+
+    ThemeColors.get().then(function (colors) {
+      $(".keymap-key").attr("style", "");
+      ChartController.updateAllChartColors();
+      updateFavicon(32, 14);
+      $("#metaThemeColor").attr("content", colors.bg);
     });
-  }
-
-  setTimeout(function () {
-    $(".keymap-key").attr("style", "");
-    ChartController.updateAllChartColors();
-    updateFavicon(32, 14);
-    $("#metaThemeColor").attr("content", ThemeColors.bg);
-  }, 500);
+  });
 }
 
 function preview(themeName) {
@@ -14925,10 +15752,12 @@ function applyCustomBackgroundSize() {
   }
 }
 
-},{"./chart-controller":4,"./config":7,"./misc":28,"./notifications":31,"./theme-colors":52,"./ui":57,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"tinycolor2":87}],54:[function(require,module,exports){
+},{"./chart-controller":5,"./config":8,"./misc":29,"./notifications":32,"./theme-colors":53,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85,"tinycolor2":98}],55:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -14937,6 +15766,10 @@ exports.updateActiveButton = updateActiveButton;
 exports.refreshButtons = refreshButtons;
 exports.setCustomInputs = setCustomInputs;
 exports.updateActiveTab = updateActiveTab;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
@@ -15115,39 +15948,56 @@ $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   ThemeController.colorVars.forEach(function (e) {
     document.documentElement.style.setProperty(e, "");
   });
-  setTimeout(function () {
-    ChartController.updateAllChartColors();
-    ThemeController.colorVars.forEach(function (colorName) {
-      var color;
+  setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    var themecolors;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            ChartController.updateAllChartColors();
+            _context.next = 3;
+            return ThemeColors.get();
 
-      if (colorName === "--bg-color") {
-        color = ThemeColors.bg;
-      } else if (colorName === "--main-color") {
-        color = ThemeColors.main;
-      } else if (colorName === "--sub-color") {
-        color = ThemeColors.sub;
-      } else if (colorName === "--caret-color") {
-        color = ThemeColors.caret;
-      } else if (colorName === "--text-color") {
-        color = ThemeColors.text;
-      } else if (colorName === "--error-color") {
-        color = ThemeColors.error;
-      } else if (colorName === "--error-extra-color") {
-        color = ThemeColors.errorExtra;
-      } else if (colorName === "--colorful-error-color") {
-        color = ThemeColors.colorfulError;
-      } else if (colorName === "--colorful-error-extra-color") {
-        color = ThemeColors.colorfulErrorExtra;
+          case 3:
+            themecolors = _context.sent;
+            ThemeController.colorVars.forEach(function (colorName) {
+              var color;
+
+              if (colorName === "--bg-color") {
+                color = themecolors.bg;
+              } else if (colorName === "--main-color") {
+                color = themecolors.main;
+              } else if (colorName === "--sub-color") {
+                color = themecolors.sub;
+              } else if (colorName === "--caret-color") {
+                color = themecolors.caret;
+              } else if (colorName === "--text-color") {
+                color = themecolors.text;
+              } else if (colorName === "--error-color") {
+                color = themecolors.error;
+              } else if (colorName === "--error-extra-color") {
+                color = themecolors.errorExtra;
+              } else if (colorName === "--colorful-error-color") {
+                color = themecolors.colorfulError;
+              } else if (colorName === "--colorful-error-extra-color") {
+                color = themecolors.colorfulErrorExtra;
+              }
+
+              $(".colorPicker #" + colorName).attr("value", color);
+              $(".colorPicker #" + colorName).val(color);
+              $(".colorPicker [for=" + colorName + "]").text(color);
+            });
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
       }
-
-      $(".colorPicker #" + colorName).attr("value", color);
-      $(".colorPicker #" + colorName).val(color);
-      $(".colorPicker [for=" + colorName + "]").text(color);
-    });
-  }, 250);
+    }, _callee);
+  })), 250);
 });
 
-},{"./chart-controller":4,"./commandline-lists":5,"./config":7,"./misc":28,"./notifications":31,"./theme-colors":52,"./theme-controller":53,"./ui":57,"@babel/runtime/helpers/interopRequireWildcard":68}],55:[function(require,module,exports){
+},{"./chart-controller":5,"./commandline-lists":6,"./config":8,"./misc":29,"./notifications":32,"./theme-colors":53,"./theme-controller":54,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],56:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15323,7 +16173,7 @@ function update() {
   }
 }
 
-},{"./config":7,"./custom-text":11,"./misc":28,"./test-logic":48,"./test-timer":50,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],56:[function(require,module,exports){
+},{"./config":8,"./custom-text":12,"./misc":29,"./test-logic":49,"./test-timer":51,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],57:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15359,7 +16209,7 @@ function getString() {
   return secString + (addedAllToday === true ? " today" : " session");
 }
 
-},{"./misc":28,"@babel/runtime/helpers/interopRequireWildcard":68}],57:[function(require,module,exports){
+},{"./misc":29,"@babel/runtime/helpers/interopRequireWildcard":74}],58:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15513,6 +16363,7 @@ if (window.location.hostname === "localhost") {
   $("#top .logo .top").text("localhost");
   $("head title").text($("head title").text() + " (localhost)");
   $("body").append("<div class=\"devIndicator tl\">local</div><div class=\"devIndicator br\">local</div>");
+  $(".pageSettings .discordIntegration .buttons a").attr("href", "https://discord.com/api/oauth2/authorize?client_id=798272335035498557&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fverify&response_type=token&scope=identify");
 } //stop space scrolling
 
 
@@ -15543,7 +16394,7 @@ $(document).on("click", "#bottom .leftright .right .current-theme", function (e)
     // if (Config.customTheme) {
     //   toggleCustomTheme();
     // }
-    CommandlineLists.setCurrent([CommandlineLists.themeCommands]);
+    CommandlineLists.pushCurrent(CommandlineLists.themeCommands);
     Commandline.show();
   }
 });
@@ -15570,7 +16421,7 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":3,"./commandline":6,"./commandline-lists":5,"./config":7,"./custom-text":11,"./funbox":15,"./manual-restart-tracker":27,"./notifications":31,"./settings":42,"./test-config":47,"./test-logic":48,"./test-stats":49,"./test-ui":51,"@babel/runtime/helpers/interopRequireWildcard":68}],58:[function(require,module,exports){
+},{"./caret":3,"./commandline":7,"./commandline-lists":6,"./config":8,"./custom-text":12,"./funbox":16,"./manual-restart-tracker":28,"./notifications":32,"./settings":43,"./test-config":48,"./test-logic":49,"./test-stats":50,"./test-ui":52,"@babel/runtime/helpers/interopRequireWildcard":74}],59:[function(require,module,exports){
 "use strict";
 
 $(document.body).on("click", ".version", function () {
@@ -15586,7 +16437,7 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
   });
 });
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15668,7 +16519,7 @@ function getWord(wordset) {
   var randomWord;
 
   for (var i = 0; i < wordSamples; i++) {
-    var newWord = wordset[Math.floor(Math.random() * wordset.length)];
+    var newWord = wordset.randomWord();
     var newScore = score(newWord);
 
     if (i == 0 || newScore > highScore) {
@@ -15705,7 +16556,7 @@ function score(word) {
   return numChars == 0 ? 0.0 : total / numChars;
 }
 
-},{"./test-stats":49,"@babel/runtime/helpers/classCallCheck":64,"@babel/runtime/helpers/createClass":65,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68}],60:[function(require,module,exports){
+},{"./test-stats":50,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],61:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15909,7 +16760,206 @@ $("#wordFilterPopupWrapper .button").mousedown(function (e) {
   }, 1);
 });
 
-},{"./misc":28,"@babel/runtime/helpers/asyncToGenerator":63,"@babel/runtime/helpers/interopRequireDefault":67,"@babel/runtime/helpers/interopRequireWildcard":68,"@babel/runtime/regenerator":74}],61:[function(require,module,exports){
+},{"./misc":29,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],62:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.withWords = withWords;
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _config = _interopRequireDefault(require("./config"));
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0, _getPrototypeOf2["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0, _getPrototypeOf2["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0, _possibleConstructorReturn2["default"])(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+var currentWordset = null;
+var currentWordGenerator = null;
+
+var Wordset = /*#__PURE__*/function () {
+  function Wordset(words) {
+    (0, _classCallCheck2["default"])(this, Wordset);
+    this.words = words;
+    this.length = this.words.length;
+  }
+
+  (0, _createClass2["default"])(Wordset, [{
+    key: "randomWord",
+    value: function randomWord() {
+      return this.words[Math.floor(Math.random() * this.length)];
+    }
+  }]);
+  return Wordset;
+}();
+
+var prefixSize = 2;
+
+var CharDistribution = /*#__PURE__*/function () {
+  function CharDistribution() {
+    (0, _classCallCheck2["default"])(this, CharDistribution);
+    this.chars = {};
+    this.count = 0;
+  }
+
+  (0, _createClass2["default"])(CharDistribution, [{
+    key: "addChar",
+    value: function addChar(_char) {
+      this.count++;
+
+      if (_char in this.chars) {
+        this.chars[_char]++;
+      } else {
+        this.chars[_char] = 1;
+      }
+    }
+  }, {
+    key: "randomChar",
+    value: function randomChar() {
+      var randomIndex = Math.floor(Math.random() * this.count);
+      var runningCount = 0;
+
+      for (var _i = 0, _Object$entries = Object.entries(this.chars); _i < _Object$entries.length; _i++) {
+        var _Object$entries$_i = (0, _slicedToArray2["default"])(_Object$entries[_i], 2),
+            _char2 = _Object$entries$_i[0],
+            charCount = _Object$entries$_i[1];
+
+        runningCount += charCount;
+
+        if (runningCount > randomIndex) {
+          return _char2;
+        }
+      }
+    }
+  }]);
+  return CharDistribution;
+}();
+
+var WordGenerator = /*#__PURE__*/function (_Wordset) {
+  (0, _inherits2["default"])(WordGenerator, _Wordset);
+
+  var _super = _createSuper(WordGenerator);
+
+  function WordGenerator(words) {
+    var _this;
+
+    (0, _classCallCheck2["default"])(this, WordGenerator);
+    _this = _super.call(this, words); // Can generate an unbounded number of words in theory.
+
+    _this.length = Infinity;
+    _this.ngrams = {};
+
+    var _iterator = _createForOfIteratorHelper(words),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var word = _step.value;
+        // Mark the end of each word with a space.
+        word += " ";
+        var prefix = "";
+
+        var _iterator2 = _createForOfIteratorHelper(word),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var c = _step2.value;
+
+            // Add `c` to the distribution of chars that can come after `prefix`.
+            if (!(prefix in _this.ngrams)) {
+              _this.ngrams[prefix] = new CharDistribution();
+            }
+
+            _this.ngrams[prefix].addChar(c);
+
+            prefix = (prefix + c).substr(-prefixSize);
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
+    return _this;
+  }
+
+  (0, _createClass2["default"])(WordGenerator, [{
+    key: "randomWord",
+    value: function randomWord() {
+      var word = "";
+
+      for (;;) {
+        var prefix = word.substr(-prefixSize);
+        var charDistribution = this.ngrams[prefix];
+
+        if (!charDistribution) {
+          // This shouldn't happen if this.ngrams is complete. If it does
+          // somehow, start generating a new word.
+          word = "";
+          continue;
+        } // Pick a random char from the distribution that comes after `prefix`.
+
+
+        var nextChar = charDistribution.randomChar();
+
+        if (nextChar == " ") {
+          // A space marks the end of the word, so stop generating and return.
+          break;
+        }
+
+        word += nextChar;
+      }
+
+      return word;
+    }
+  }]);
+  return WordGenerator;
+}(Wordset);
+
+function withWords(words) {
+  if (_config["default"].funbox == "pseudolang") {
+    if (currentWordGenerator == null || words !== currentWordGenerator.words) {
+      currentWordGenerator = new WordGenerator(words);
+    }
+
+    return currentWordGenerator;
+  } else {
+    if (currentWordset == null || words !== currentWordset.words) {
+      currentWordset = new Wordset(words);
+    }
+
+    return currentWordset;
+  }
+}
+
+},{"./config":8,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/getPrototypeOf":71,"@babel/runtime/helpers/inherits":72,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/possibleConstructorReturn":79,"@babel/runtime/helpers/slicedToArray":81}],63:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -15921,7 +16971,13 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-},{}],62:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+},{}],65:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _arrayWithoutHoles(arr) {
@@ -15929,7 +16985,17 @@ function _arrayWithoutHoles(arr) {
 }
 
 module.exports = _arrayWithoutHoles;
-},{"./arrayLikeToArray":61}],63:[function(require,module,exports){
+},{"./arrayLikeToArray":63}],66:[function(require,module,exports){
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+module.exports = _assertThisInitialized;
+},{}],67:[function(require,module,exports){
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -15967,7 +17033,7 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
-},{}],64:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -15975,7 +17041,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 module.exports = _classCallCheck;
-},{}],65:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -15993,7 +17059,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 }
 
 module.exports = _createClass;
-},{}],66:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -16010,7 +17076,35 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
-},{}],67:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+module.exports = _getPrototypeOf;
+},{}],72:[function(require,module,exports){
+var setPrototypeOf = require("./setPrototypeOf");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+
+module.exports = _inherits;
+},{"./setPrototypeOf":80}],73:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -16018,7 +17112,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-},{}],68:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 var _typeof = require("@babel/runtime/helpers/typeof");
 
 function _getRequireWildcardCache() {
@@ -16074,19 +17168,93 @@ function _interopRequireWildcard(obj) {
 }
 
 module.exports = _interopRequireWildcard;
-},{"@babel/runtime/helpers/typeof":72}],69:[function(require,module,exports){
+},{"@babel/runtime/helpers/typeof":83}],75:[function(require,module,exports){
 function _iterableToArray(iter) {
   if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
 }
 
 module.exports = _iterableToArray;
-},{}],70:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+},{}],77:[function(require,module,exports){
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+},{}],78:[function(require,module,exports){
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableSpread;
-},{}],71:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
+var _typeof = require("@babel/runtime/helpers/typeof");
+
+var assertThisInitialized = require("./assertThisInitialized");
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return assertThisInitialized(self);
+}
+
+module.exports = _possibleConstructorReturn;
+},{"./assertThisInitialized":66,"@babel/runtime/helpers/typeof":83}],80:[function(require,module,exports){
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+},{}],81:[function(require,module,exports){
+var arrayWithHoles = require("./arrayWithHoles");
+
+var iterableToArrayLimit = require("./iterableToArrayLimit");
+
+var unsupportedIterableToArray = require("./unsupportedIterableToArray");
+
+var nonIterableRest = require("./nonIterableRest");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+},{"./arrayWithHoles":64,"./iterableToArrayLimit":76,"./nonIterableRest":77,"./unsupportedIterableToArray":84}],82:[function(require,module,exports){
 var arrayWithoutHoles = require("./arrayWithoutHoles");
 
 var iterableToArray = require("./iterableToArray");
@@ -16100,7 +17268,7 @@ function _toConsumableArray(arr) {
 }
 
 module.exports = _toConsumableArray;
-},{"./arrayWithoutHoles":62,"./iterableToArray":69,"./nonIterableSpread":70,"./unsupportedIterableToArray":73}],72:[function(require,module,exports){
+},{"./arrayWithoutHoles":65,"./iterableToArray":75,"./nonIterableSpread":78,"./unsupportedIterableToArray":84}],83:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -16118,7 +17286,7 @@ function _typeof(obj) {
 }
 
 module.exports = _typeof;
-},{}],73:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -16131,10 +17299,10 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":61}],74:[function(require,module,exports){
+},{"./arrayLikeToArray":63}],85:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":86}],75:[function(require,module,exports){
+},{"regenerator-runtime":97}],86:[function(require,module,exports){
 /*!
  * Chart.js v2.9.4
  * https://www.chartjs.org
@@ -32308,7 +33476,7 @@ return src;
 
 })));
 
-},{"moment":85}],76:[function(require,module,exports){
+},{"moment":96}],87:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 
@@ -32436,7 +33604,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./events.js":78,"./helpers.js":79}],77:[function(require,module,exports){
+},{"./events.js":89,"./helpers.js":90}],88:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	
@@ -32461,7 +33629,7 @@ module.exports = function(Chart) {
 	return AnnotationElement;
 };
 
-},{}],78:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	var helpers = require('./helpers.js')(Chart);
@@ -32571,7 +33739,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./helpers.js":79}],79:[function(require,module,exports){
+},{"./helpers.js":90}],90:[function(require,module,exports){
 function noop() {}
 
 function elements(chartInstance) {
@@ -32758,7 +33926,7 @@ module.exports = function(Chart) {
 };
 
 
-},{}],80:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 // Get the chart variable
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
@@ -32807,7 +33975,7 @@ var annotationPlugin = require('./annotation.js')(Chart);
 module.exports = annotationPlugin;
 Chart.pluginService.register(annotationPlugin);
 
-},{"./annotation.js":76,"./element.js":77,"./types/box.js":81,"./types/line.js":82,"chart.js":75}],81:[function(require,module,exports){
+},{"./annotation.js":87,"./element.js":88,"./types/box.js":92,"./types/line.js":93,"chart.js":86}],92:[function(require,module,exports){
 // Box Annotation implementation
 module.exports = function(Chart) {
 	var helpers = require('../helpers.js')(Chart);
@@ -32955,7 +34123,7 @@ module.exports = function(Chart) {
 	return BoxAnnotation;
 };
 
-},{"../helpers.js":79}],82:[function(require,module,exports){
+},{"../helpers.js":90}],93:[function(require,module,exports){
 // Line Annotation implementation
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
@@ -33224,7 +34392,7 @@ module.exports = function(Chart) {
 	return LineAnnotation;
 };
 
-},{"../helpers.js":79}],83:[function(require,module,exports){
+},{"../helpers.js":90}],94:[function(require,module,exports){
 /*!
  * chartjs-plugin-trendline.js
  * Version: 0.2.2
@@ -33372,7 +34540,7 @@ try {
     module.exports = exports = pluginTrendlineLinear;
 } catch (e) {}
 
-},{}],84:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 (function (global){(function (){
 /*!
  *  howler.js v2.2.3
@@ -36618,7 +37786,7 @@ try {
 })();
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],85:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -42290,7 +43458,7 @@ try {
 
 })));
 
-},{}],86:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -43040,7 +44208,7 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],87:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 // TinyColor v1.4.2
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
@@ -44237,4 +45405,4 @@ else {
 
 })(Math);
 
-},{}]},{},[17]);
+},{}]},{},[18]);
