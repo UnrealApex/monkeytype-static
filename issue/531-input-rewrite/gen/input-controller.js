@@ -406,15 +406,6 @@ function handleChar(char, charIndex) {
     return;
   }
 
-  let now = performance.now();
-  if (TestStats.keypressTimings.duration.current !== -1) {
-    let diff = Math.abs(TestStats.keypressTimings.duration.current - now);
-    TestStats.pushKeypressDuration(diff);
-  }
-
-  TestStats.recordKeypressSpacing();
-  TestStats.setKeypressDuration(performance.now());
-
   if (char === "\n" && Config.funbox === "58008") {
     char = " ";
   }
@@ -656,6 +647,8 @@ $(document).keydown((event) => {
     return;
   }
 
+  TestStats.recordKeypressSpacing();
+  TestStats.setKeypressDuration(performance.now());
   TestStats.setKeypressNotAfk();
 
   //blocking firefox from going back in history with backspace
@@ -799,4 +792,4 @@ $("#wordsInput").focus((event) => {
 
 $("#wordsInput").on("copy paste", (event) => {
   event.preventDefault();
-})
+});
