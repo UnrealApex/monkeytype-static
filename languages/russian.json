@@ -1,7 +1,6 @@
 {
   "name": "russian",
   "leftToRight": true,
-  "noLazyMode": true,
   "words": [
     "и",
     "в",

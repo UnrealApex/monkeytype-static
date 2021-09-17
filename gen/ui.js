@@ -104,7 +104,7 @@ export function swapElements(
   }
 }
 
-export function changePage(page, norestart = false) {
+export function changePage(page) {
   console.log("change");
   if (pageTransition) {
     return;
@@ -136,7 +136,7 @@ export function changePage(page, norestart = false) {
     // incompleteTestSeconds = 0;
     TestStats.resetIncomplete();
     ManualRestart.set();
-    if (!norestart) TestLogic.restart();
+    TestLogic.restart();
     Funbox.activate(Config.funbox);
   } else if (page == "about") {
     setPageTransition(true);
@@ -200,7 +200,7 @@ $(".merchBanner .fas").click((event) => {
 });
 
 $(".scrollToTopButton").click((event) => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo(0, 0);
 });
 
 $(document).on("click", "#bottom .leftright .right .current-theme", (e) => {

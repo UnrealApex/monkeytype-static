@@ -25,10 +25,6 @@ function showInput(command, placeholder, defaultValue = "") {
   }
 }
 
-export function isSingleListCommandLineActive() {
-  return $("#commandLine").hasClass("allCommands");
-}
-
 function showFound() {
   $("#commandLine .suggestions").empty();
   let commandsHTML = "";
@@ -146,27 +142,6 @@ function updateSuggested() {
   showFound();
 }
 
-export let show = () => {
-  Focus.set(false);
-  $("#commandLine").removeClass("hidden");
-  $("#commandInput").addClass("hidden");
-  if ($("#commandLineWrapper").hasClass("hidden")) {
-    $("#commandLineWrapper")
-      .stop(true, true)
-      .css("opacity", 0)
-      .removeClass("hidden")
-      .animate(
-        {
-          opacity: 1,
-        },
-        100
-      );
-  }
-  $("#commandLine input").val("");
-  updateSuggested();
-  $("#commandLine input").focus();
-};
-
 function hide() {
   UpdateConfig.previewFontFamily(Config.fontFamily);
   // applyCustomThemeColors();
@@ -220,6 +195,27 @@ function trigger(command) {
     hide();
   }
 }
+
+export let show = () => {
+  Focus.set(false);
+  $("#commandLine").removeClass("hidden");
+  $("#commandInput").addClass("hidden");
+  if ($("#commandLineWrapper").hasClass("hidden")) {
+    $("#commandLineWrapper")
+      .stop(true, true)
+      .css("opacity", 0)
+      .removeClass("hidden")
+      .animate(
+        {
+          opacity: 1,
+        },
+        100
+      );
+  }
+  $("#commandLine input").val("");
+  updateSuggested();
+  $("#commandLine input").focus();
+};
 
 function addChildCommands(
   unifiedCommands,
@@ -279,19 +275,23 @@ function generateSingleListOfCommands() {
   };
 }
 
-function useSingleListCommandLine(sshow = true) {
-  let allCommands = generateSingleListOfCommands();
-  // if (Config.singleListCommandLine == "manual") {
-  // CommandlineLists.pushCurrent(allCommands);
-  // } else if (Config.singleListCommandLine == "on") {
-  CommandlineLists.setCurrent([allCommands]);
-  // }
-  if (Config.singleListCommandLine != "off")
-    $("#commandLine").addClass("allCommands");
-  if (sshow) show();
+export function isSingleListCommandLineActive() {
+  return $("#commandLine").hasClass("allCommands");
 }
 
-function restoreOldCommandLine(sshow = true) {
+function useSingleListCommandLine(show = true) {
+  let allCommands = generateSingleListOfCommands();
+  if (Config.singleListCommandLine == "manual") {
+    CommandlineLists.pushCurrent(allCommands);
+  } else if (Config.singleListCommandLine == "on") {
+    CommandlineLists.setCurrent([allCommands]);
+  }
+  if (Config.singleListCommandLine != "off")
+    $("#commandLine").addClass("allCommands");
+  if (show) show();
+}
+
+function restoreOldCommandLine(show = true) {
   if (isSingleListCommandLineActive()) {
     $("#commandLine").removeClass("allCommands");
     CommandlineLists.setCurrent(
@@ -300,7 +300,7 @@ function restoreOldCommandLine(sshow = true) {
     if (CommandlineLists.current.length < 1)
       CommandlineLists.setCurrent([CommandlineLists.defaultCommands]);
   }
-  if (sshow) show();
+  if (show) show();
 }
 
 $("#commandLine input").keyup((e) => {
@@ -309,11 +309,12 @@ $("#commandLine input").keyup((e) => {
     "activeMouse"
   );
   if (
-    e.key === "ArrowUp" ||
-    e.key === "ArrowDown" ||
-    e.key === "Enter" ||
-    e.key === "Tab" ||
-    e.code == "AltLeft"
+    e.keyCode == 38 ||
+    e.keyCode == 40 ||
+    e.keyCode == 13 ||
+    e.code == "Tab" ||
+    e.code == "AltLeft" ||
+    (e.altKey && (e.keyCode == 74 || e.keyCode == 75))
   )
     return;
   updateSuggested();
@@ -323,12 +324,12 @@ $(document).ready((e) => {
   $(document).keydown((event) => {
     // opens command line if escape, ctrl/cmd + shift + p, or tab is pressed if the setting swapEscAndTab is enabled
     if (
-      event.key === "Escape" ||
+      event.keyCode == 27 ||
       (event.key &&
-        event.key.toLowerCase() === "p" &&
+        event.key.toLowerCase() == "p" &&
         (event.metaKey || event.ctrlKey) &&
         event.shiftKey) ||
-      (event.key === "Tab" && Config.swapEscAndTab)
+      (event.keyCode == 9 && Config.swapEscAndTab)
     ) {
       event.preventDefault();
       if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
@@ -355,7 +356,7 @@ $(document).ready((e) => {
           hide();
         }
         UpdateConfig.setFontFamily(Config.fontFamily, true);
-      } else if (event.key === "Tab" || !Config.swapEscAndTab) {
+      } else if (event.keyCode == 9 || !Config.swapEscAndTab) {
         if (Config.singleListCommandLine == "on") {
           useSingleListCommandLine(false);
         } else {
@@ -368,7 +369,7 @@ $(document).ready((e) => {
 });
 
 $("#commandInput input").keydown((e) => {
-  if (e.key === "Enter") {
+  if (e.keyCode == 13) {
     //enter
     e.preventDefault();
     let command = $("#commandInput input").attr("command");
@@ -499,7 +500,7 @@ $(document).keydown((e) => {
     $("#commandLine input").focus();
     if (e.key == ">" && Config.singleListCommandLine == "manual") {
       if (!isSingleListCommandLineActive()) {
-        useSingleListCommandLine(false);
+        useSingleListCommandLine();
         return;
       } else if ($("#commandLine input").val() == ">") {
         //so that it will ignore succeeding ">" when input is already ">"
@@ -507,28 +508,26 @@ $(document).keydown((e) => {
         return;
       }
     }
-
-    if (e.key === "Backspace" || e.key === "Delete") {
-      setTimeout(() => {
-        let inputVal = $("#commandLine input").val();
-        if (
-          Config.singleListCommandLine == "manual" &&
-          isSingleListCommandLineActive() &&
-          inputVal[0] !== ">"
-        ) {
-          restoreOldCommandLine(false);
-        }
-      }, 1);
-    }
-
-    if (e.key === "Enter") {
+    if (
+      e.keyCode == 8 &&
+      $("#commandLine input").val().length == 1 &&
+      Config.singleListCommandLine == "manual" &&
+      isSingleListCommandLineActive()
+    )
+      restoreOldCommandLine();
+    if (e.keyCode == 13) {
       //enter
       e.preventDefault();
       let command = $(".suggestions .entry.activeKeyboard").attr("command");
       trigger(command);
       return;
     }
-    if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Tab") {
+    if (
+      e.keyCode == 38 ||
+      e.keyCode == 40 ||
+      e.code == "Tab" ||
+      (e.altKey && (e.keyCode == 74 || e.keyCode == 75))
+    ) {
       e.preventDefault();
       $("#commandLineWrapper #commandLine .suggestions .entry").unbind(
         "mouseenter mouseleave"
@@ -539,7 +538,11 @@ $(document).keydown((e) => {
       $.each(entries, (index, obj) => {
         if ($(obj).hasClass("activeKeyboard")) activenum = index;
       });
-      if (e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) {
+      if (
+        e.keyCode == 38 ||
+        (e.code == "Tab" && e.shiftKey) ||
+        (e.altKey && e.keyCode == 75)
+      ) {
         entries.removeClass("activeKeyboard");
         if (activenum == 0) {
           $(entries[entries.length - 1]).addClass("activeKeyboard");
@@ -549,7 +552,11 @@ $(document).keydown((e) => {
           hoverId = $(entries[activenum]).attr("command");
         }
       }
-      if (e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) {
+      if (
+        e.keyCode == 40 ||
+        (e.code == "Tab" && !e.shiftKey) ||
+        (e.altKey && e.keyCode == 74)
+      ) {
         entries.removeClass("activeKeyboard");
         if (activenum + 1 == entries.length) {
           $(entries[0]).addClass("activeKeyboard");

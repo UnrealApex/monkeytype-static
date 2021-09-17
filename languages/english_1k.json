@@ -1,7 +1,6 @@
 {
   "name": "english_1k",
   "leftToRight": true,
-  "noLazyMode": true,
   "words": [
     "the",
     "of",

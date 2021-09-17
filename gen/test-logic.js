@@ -31,14 +31,8 @@ import * as TodayTracker from "./today-tracker";
 import * as WeakSpot from "./weak-spot";
 import * as Wordset from "./wordset";
 import * as ChallengeContoller from "./challenge-controller";
-import * as BritishEnglish from "./british-english";
-import * as LazyMode from "./lazy-mode";
-
-const objecthash = require("object-hash");
 
 let glarsesMode = false;
-
-let failReason = "";
 
 export function toggleGlarses() {
   glarsesMode = true;
@@ -50,14 +44,8 @@ export function toggleGlarses() {
 
 export let notSignedInLastResult = null;
 
-export function clearNotSignedInResult() {
-  notSignedInLastResult = null;
-}
-
 export function setNotSignedInUid(uid) {
   notSignedInLastResult.uid = uid;
-  delete notSignedInLastResult.hash;
-  notSignedInLastResult.hash = objecthash(notSignedInLastResult);
 }
 
 class Words {
@@ -96,18 +84,6 @@ class Words {
   }
   increaseCurrentIndex() {
     this.currentIndex++;
-  }
-  clean() {
-    for (let s of this.list) {
-      if (/ +/.test(s)) {
-        let id = this.list.indexOf(s);
-        let tempList = s.split(" ");
-        this.list.splice(id, 1);
-        for (let i = 0; i < tempList.length; i++) {
-          this.list.splice(id + i, 0, tempList[i]);
-        }
-      }
-    }
   }
 }
 
@@ -456,11 +432,6 @@ export async function init() {
     language = await Misc.getLanguage(Config.language);
   }
 
-  if (Config.lazyMode === true && language.noLazyMode) {
-    Notifications.add("This language does not support lazy mode.", 0);
-    UpdateConfig.setLazyMode(false);
-  }
-
   if (
     Config.mode == "time" ||
     Config.mode == "words" ||
@@ -559,7 +530,8 @@ export async function init() {
             regenarationCount < 100 &&
             (randomWord == previousWord ||
               randomWord == previousWord2 ||
-              (!Config.punctuation && randomWord == "I"))
+              (!Config.punctuation && randomWord == "I") ||
+              randomWord.indexOf(" ") > -1)
           ) {
             regenarationCount++;
             randomWord = wordset.randomWord();
@@ -569,18 +541,6 @@ export async function init() {
         if (randomWord === undefined) {
           randomWord = wordset.randomWord();
         }
-
-        if (Config.britishEnglish && /english/.test(Config.language)) {
-          let britishWord = await BritishEnglish.replace(randomWord);
-          if (britishWord) randomWord = britishWord;
-        }
-
-        if (Config.lazyMode === true && !language.noLazyMode) {
-          randomWord = LazyMode.replaceAccents(randomWord);
-        }
-
-        randomWord = randomWord.replace(/ +/gm, " ");
-        randomWord = randomWord.replace(/^ | $/gm, "");
 
         if (Config.funbox === "rAnDoMcAsE") {
           let randomcaseword = "";
@@ -630,33 +590,7 @@ export async function init() {
           setHasTab(true);
         }
 
-        if (/ +/.test(randomWord)) {
-          let randomList = randomWord.split(" ");
-          let id = 0;
-          while (id < randomList.length) {
-            words.push(randomList[id]);
-            id++;
-
-            if (
-              words.length == wordsBound &&
-              Config.mode == "custom" &&
-              CustomText.isWordRandom
-            ) {
-              break;
-            }
-          }
-          if (
-            Config.mode == "custom" &&
-            !CustomText.isWordRandom &&
-            !CustomText.isTimeRandom
-          ) {
-            //
-          } else {
-            i = words.length - 1;
-          }
-        } else {
-          words.push(randomWord);
-        }
+        words.push(randomWord);
       }
     }
   } else if (Config.mode == "quote") {
@@ -727,7 +661,6 @@ export async function init() {
     rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
     rq.text = rq.text.replace(/…/g, "...");
     rq.text = rq.text.trim();
-    rq.language = Config.language.replace(/_\d*k$/g, "");
 
     setRandomQuote(rq);
 
@@ -736,18 +669,6 @@ export async function init() {
       if (/\t/g.test(w[i])) {
         setHasTab(true);
       }
-      if (
-        Config.britishEnglish &&
-        Config.language.replace(/_\d*k$/g, "") === "english"
-      ) {
-        let britishWord = await BritishEnglish.replace(w[i]);
-        if (britishWord) w[i] = britishWord;
-      }
-
-      if (Config.lazyMode === true && !language.noLazyMode) {
-        w[i] = LazyMode.replaceAccents(w[i]);
-      }
-
       words.push(w[i]);
     }
   }
@@ -977,14 +898,12 @@ export function restart(
         UpdateConfig.setLayout(
           Config.customLayoutfluid
             ? Config.customLayoutfluid.split("#")[0]
-            : "qwerty",
-          true
+            : "qwerty"
         );
         UpdateConfig.setKeymapLayout(
           Config.customLayoutfluid
             ? Config.customLayoutfluid.split("#")[0]
-            : "qwerty",
-          true
+            : "qwerty"
         );
         Keymap.highlightKey(
           words
@@ -1127,14 +1046,6 @@ export async function addWord() {
     randomWord = wordset.randomWord();
   }
 
-  if (
-    Config.britishEnglish &&
-    Config.language.replace(/_\d*k$/g, "") === "english"
-  ) {
-    let britishWord = await BritishEnglish.replace(randomWord);
-    if (britishWord) randomWord = britishWord;
-  }
-
   if (Config.funbox === "rAnDoMcAsE") {
     let randomcaseword = "";
     for (let i = 0; i < randomWord.length; i++) {
@@ -1231,7 +1142,7 @@ export async function finish(difficultyFailed = false) {
 
   lastTestWpm = stats.wpm;
 
-  let testtime = parseFloat(stats.time);
+  let testtime = stats.time;
 
   if (TestStats.lastSecondNotRound && !difficultyFailed) {
     let wpmAndRaw = calculateWpmAndRaw();
@@ -1444,28 +1355,18 @@ export async function finish(difficultyFailed = false) {
     );
   }
 
-  ChartController.result.options.scales.yAxes[0].scaleLabel.labelString = Config.alwaysShowCPM
-    ? "Character per Minute"
-    : "Words per Minute";
-  let chartData1 = Config.alwaysShowCPM
-    ? TestStats.wpmHistory.map((a) => a * 5)
-    : TestStats.wpmHistory;
-  let chartData2 = Config.alwaysShowCPM
-    ? rawWpmPerSecond.map((a) => a * 5)
-    : rawWpmPerSecond;
-
-  ChartController.result.data.datasets[0].data = chartData1;
-  ChartController.result.data.datasets[1].data = chartData2;
+  ChartController.result.data.datasets[0].data = TestStats.wpmHistory;
+  ChartController.result.data.datasets[1].data = rawWpmPerSecond;
 
   let maxChartVal = Math.max(
-    ...[Math.max(...chartData2), Math.max(...chartData1)]
+    ...[Math.max(...rawWpmPerSecond), Math.max(...TestStats.wpmHistory)]
   );
   if (!Config.startGraphsAtZero) {
     ChartController.result.options.scales.yAxes[0].ticks.min = Math.min(
-      ...chartData1
+      ...TestStats.wpmHistory
     );
     ChartController.result.options.scales.yAxes[1].ticks.min = Math.min(
-      ...chartData1
+      ...TestStats.wpmHistory
     );
   } else {
     ChartController.result.options.scales.yAxes[0].ticks.min = 0;
@@ -1580,7 +1481,6 @@ export async function finish(difficultyFailed = false) {
       quoteLength: quoteLength,
       punctuation: Config.punctuation,
       numbers: Config.numbers,
-      lazyMode: Config.lazyMode,
       timestamp: Date.now(),
       language: lang,
       restartCount: TestStats.restartCount,
@@ -1656,9 +1556,6 @@ export async function finish(difficultyFailed = false) {
   }
   if (Config.blindMode) {
     testType += "<br>blind";
-  }
-  if (Config.lazyMode) {
-    testType += "<br>lazy";
   }
   if (Config.funbox !== "none") {
     testType += "<br>" + Config.funbox.replace(/_/g, " ");
@@ -1798,10 +1695,11 @@ export async function finish(difficultyFailed = false) {
   );
 }
 
+let failReason = "";
 export function fail(reason) {
   failReason = reason;
-  // input.pushHistory();
-  // corrected.pushHistory();
+  input.pushHistory();
+  corrected.pushHistory();
   TestStats.pushKeypressesToHistory();
   finish(true);
   let testSeconds = TestStats.calculateTestSeconds(performance.now());

@@ -1,9 +1,7 @@
 {
   "name": "toki_pona",
   "leftToRight": true,
-  "noLazyMode": true,
-  "words": [
-    "a",
+  "words": ["a",
     "akesi",
     "ala",
     "alasa",

@@ -1,5 +1,4 @@
 import * as Misc from "./misc";
-import * as CustomText from "./custom-text";
 
 let initialised = false;
 
@@ -69,7 +68,7 @@ async function filter(language) {
 async function apply(set) {
   let language = $("#wordFilterPopup .languageInput").val();
   let filteredWords = await filter(language);
-  let customText = filteredWords.join(CustomText.delimiter);
+  let customText = filteredWords.join(" ");
 
   $("#customTextPopup textarea").val(
     (index, val) => (set ? "" : val + " ") + customText
