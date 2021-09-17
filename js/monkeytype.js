@@ -12,7 +12,89 @@ $(".supportButtons .button.ads").click(function (e) {
   Commandline.show();
 });
 
-},{"./commandline-lists.js":6,"./commandline.js":7,"@babel/runtime/helpers/interopRequireWildcard":74}],2:[function(require,module,exports){
+},{"./commandline-lists.js":7,"./commandline.js":8,"@babel/runtime/helpers/interopRequireWildcard":77}],2:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getList = getList;
+exports.replace = replace;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var list = null;
+
+function getList() {
+  return _getList.apply(this, arguments);
+}
+
+function _getList() {
+  _getList = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            if (!(list == null)) {
+              _context.next = 4;
+              break;
+            }
+
+            return _context.abrupt("return", $.getJSON("languages/britishenglish.json", function (data) {
+              list = data;
+              return list;
+            }));
+
+          case 4:
+            return _context.abrupt("return", list);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _getList.apply(this, arguments);
+}
+
+function replace(_x) {
+  return _replace.apply(this, arguments);
+}
+
+function _replace() {
+  _replace = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(word) {
+    var _list$list$findIndex;
+
+    var list;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return getList();
+
+          case 2:
+            list = _context2.sent;
+            return _context2.abrupt("return", (_list$list$findIndex = list[list.findIndex(function (a) {
+              return a[0] === word;
+            })]) === null || _list$list$findIndex === void 0 ? void 0 : _list$list$findIndex[1]);
+
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _replace.apply(this, arguments);
+}
+
+},{"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/regenerator":88}],3:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -41,7 +123,7 @@ $(document).keydown(function (event) {
   } catch (_unused) {}
 });
 
-},{"./config":8,"@babel/runtime/helpers/interopRequireDefault":73}],3:[function(require,module,exports){
+},{"./config":9,"@babel/runtime/helpers/interopRequireDefault":76}],4:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -114,14 +196,9 @@ function _updatePosition() {
             return _context.abrupt("return");
 
           case 2:
-            if (!$("#caret").hasClass("off")) {
-              _context.next = 4;
-              break;
-            }
-
-            return _context.abrupt("return");
-
-          case 4:
+            // if ($("#caret").hasClass("off")) {
+            //   return;
+            // }
             caret = $("#caret");
             inputLen = TestLogic.input.current.length;
             currentLetterIndex = inputLen - 1;
@@ -130,7 +207,7 @@ function _updatePosition() {
               currentLetterIndex = 0;
             }
 
-            _context.prev = 8;
+            _context.prev = 6;
             //insert temporary character so the caret will work in zen mode
             activeWordEmpty = $("#words .active").children().length == 0;
 
@@ -146,17 +223,17 @@ function _updatePosition() {
             }
 
             if (!(_config["default"].mode != "zen" && $(currentLetter).length == 0)) {
-              _context.next = 16;
+              _context.next = 14;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 16:
-            _context.next = 18;
+          case 14:
+            _context.next = 16;
             return Misc.getCurrentLanguage();
 
-          case 18:
+          case 16:
             currentLanguage = _context.sent;
             isLanguageLeftToRight = currentLanguage.leftToRight;
             currentLetterPosLeft = isLanguageLeftToRight ? currentLetter.offsetLeft : currentLetter.offsetLeft + $(currentLetter).width();
@@ -205,20 +282,20 @@ function _updatePosition() {
               $("#words .active").children().remove();
             }
 
-            _context.next = 37;
+            _context.next = 35;
             break;
 
-          case 34:
-            _context.prev = 34;
-            _context.t0 = _context["catch"](8);
+          case 32:
+            _context.prev = 32;
+            _context.t0 = _context["catch"](6);
             console.log("could not move caret: " + _context.t0.message);
 
-          case 37:
+          case 35:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[8, 34]]);
+    }, _callee, null, [[6, 32]]);
   }));
   return _updatePosition.apply(this, arguments);
 }
@@ -231,7 +308,7 @@ function show() {
   }
 }
 
-},{"./config":8,"./misc":29,"./test-logic":49,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],4:[function(require,module,exports){
+},{"./config":9,"./misc":31,"./test-logic":52,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],5:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -264,11 +341,16 @@ var Funbox = _interopRequireWildcard(require("./funbox"));
 
 var UpdateConfig = _interopRequireWildcard(require("./config"));
 
+var UI = _interopRequireWildcard(require("./ui"));
+
+var TestUI = _interopRequireWildcard(require("./test-ui"));
+
 var active = null;
 exports.active = active;
+var challengeLoading = false;
 
 function clearActive() {
-  if (active) {
+  if (active && !challengeLoading && !TestUI.testRestarting) {
     Notifications.add("Challenge cleared", 0);
     exports.active = active = null;
   }
@@ -401,18 +483,24 @@ function _setup() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _context.next = 2;
+            challengeLoading = true;
+
+            if (!$(".page.pageTest").hasClass("active")) {
+              UI.changePage("", true);
+            }
+
+            _context.next = 4;
             return Misc.getChallengeList();
 
-          case 2:
+          case 4:
             list = _context.sent;
             challenge = list.filter(function (c) {
               return c.name === challengeName;
             })[0];
-            _context.prev = 4;
+            _context.prev = 6;
 
             if (!(challenge === undefined)) {
-              _context.next = 11;
+              _context.next = 13;
               break;
             }
 
@@ -425,9 +513,9 @@ function _setup() {
             }, 250);
             return _context.abrupt("return");
 
-          case 11:
+          case 13:
             if (!(challenge.type === "customTime")) {
-              _context.next = 18;
+              _context.next = 20;
               break;
             }
 
@@ -441,24 +529,24 @@ function _setup() {
               UpdateConfig.setPunctuation(true, true);
             }
 
-            _context.next = 51;
+            _context.next = 53;
             break;
 
-          case 18:
+          case 20:
             if (!(challenge.type === "customWords")) {
-              _context.next = 24;
+              _context.next = 26;
               break;
             }
 
             UpdateConfig.setWordCount(challenge.parameters[0], true);
             UpdateConfig.setMode("words", true);
             UpdateConfig.setDifficulty("normal", true);
-            _context.next = 51;
+            _context.next = 53;
             break;
 
-          case 24:
+          case 26:
             if (!(challenge.type === "customText")) {
-              _context.next = 32;
+              _context.next = 34;
               break;
             }
 
@@ -467,24 +555,24 @@ function _setup() {
             CustomText.setWord(parseInt(challenge.parameters[2]));
             UpdateConfig.setMode("custom", true);
             UpdateConfig.setDifficulty("normal", true);
-            _context.next = 51;
+            _context.next = 53;
             break;
 
-          case 32:
+          case 34:
             if (!(challenge.type === "script")) {
-              _context.next = 50;
+              _context.next = 52;
               break;
             }
 
-            _context.next = 35;
+            _context.next = 37;
             return fetch("/challenges/" + challenge.parameters[0]);
 
-          case 35:
+          case 37:
             scriptdata = _context.sent;
-            _context.next = 38;
+            _context.next = 40;
             return scriptdata.text();
 
-          case 38:
+          case 40:
             scriptdata = _context.sent;
             text = scriptdata.trim();
             text = text.replace(/[\n\r\t ]/gm, " ");
@@ -502,16 +590,16 @@ function _setup() {
               Funbox.activate(challenge.parameters[2]);
             }
 
-            _context.next = 51;
+            _context.next = 53;
             break;
 
-          case 50:
+          case 52:
             if (challenge.type === "accuracy") {
               UpdateConfig.setTimeConfig(0, true);
               UpdateConfig.setMode("time", true);
               UpdateConfig.setDifficulty("master", true);
             } else if (challenge.type === "funbox") {
-              Funbox.activate(challenge.parameters[0]);
+              UpdateConfig.setFunbox(challenge.parameters[0], true);
               UpdateConfig.setDifficulty("normal", true);
 
               if (challenge.parameters[1] === "words") {
@@ -539,7 +627,7 @@ function _setup() {
               }
             }
 
-          case 51:
+          case 53:
             ManualRestart.set();
             TestLogic.restart(false, true);
             notitext = challenge.message;
@@ -553,25 +641,26 @@ function _setup() {
             }
 
             exports.active = active = challenge;
-            _context.next = 63;
+            challengeLoading = false;
+            _context.next = 66;
             break;
 
-          case 60:
-            _context.prev = 60;
-            _context.t0 = _context["catch"](4);
+          case 63:
+            _context.prev = 63;
+            _context.t0 = _context["catch"](6);
             Notifications.add("Something went wrong: " + _context.t0, -1);
 
-          case 63:
+          case 66:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[4, 60]]);
+    }, _callee, null, [[6, 63]]);
   }));
   return _setup.apply(this, arguments);
 }
 
-},{"./config":8,"./custom-text":12,"./funbox":16,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],5:[function(require,module,exports){
+},{"./config":9,"./custom-text":13,"./funbox":17,"./manual-restart-tracker":30,"./misc":31,"./notifications":35,"./test-logic":52,"./test-ui":55,"./ui":61,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],6:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -599,6 +688,8 @@ var TestStats = _interopRequireWildcard(require("./test-stats"));
 var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
+
+var UpdateConfig = _interopRequireWildcard(require("./config"));
 
 var result = new _chart["default"]($("#wpmChart"), {
   type: "line",
@@ -874,7 +965,7 @@ function updateAllChartColors() {
   result.updateColors();
 }
 
-},{"./misc":29,"./test-stats":50,"./theme-colors":53,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85,"chart.js":86}],6:[function(require,module,exports){
+},{"./config":9,"./misc":31,"./test-stats":53,"./theme-colors":56,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/helpers/toConsumableArray":85,"@babel/runtime/regenerator":88,"chart.js":89}],7:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -897,8 +988,6 @@ var _layouts = _interopRequireDefault(require("./layouts"));
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
 var Sound = _interopRequireWildcard(require("./sound"));
-
-var TestStats = _interopRequireWildcard(require("./test-stats"));
 
 var ThemeController = _interopRequireWildcard(require("./theme-controller"));
 
@@ -1021,6 +1110,7 @@ var commandsFunbox = {
     id: "changeFunboxNone",
     display: "none",
     configValue: "none",
+    alias: "off",
     exec: function exec() {
       if (Funbox.setFunbox("none", null)) {
         TestLogic.restart();
@@ -1471,6 +1561,27 @@ var commandsStartGraphsAtZero = {
     configValue: true,
     exec: function exec() {
       UpdateConfig.setStartGraphsAtZero(true);
+    }
+  }]
+};
+var commandsLazyMode = {
+  title: "Lazy mode...",
+  configKey: "lazyMode",
+  list: [{
+    id: "setLazyModeOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setLazyMode(false);
+      TestLogic.restart();
+    }
+  }, {
+    id: "setLazyModeOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setLazyMode(true);
+      TestLogic.restart();
     }
   }]
 };
@@ -2003,6 +2114,27 @@ var commandsKeymapLegendStyle = {
     configValue: "blank",
     exec: function exec() {
       UpdateConfig.setKeymapLegendStyle("blank");
+    }
+  }]
+};
+var commandsBritishEnglish = {
+  title: "British english...",
+  configKey: "britishEnglish",
+  list: [{
+    id: "setBritishEnglishOff",
+    display: "off",
+    configValue: false,
+    exec: function exec() {
+      UpdateConfig.setBritishEnglish(false);
+      TestLogic.restart();
+    }
+  }, {
+    id: "setBritishEnglishOn",
+    display: "on",
+    configValue: true,
+    exec: function exec() {
+      UpdateConfig.setBritishEnglish(true);
+      TestLogic.restart();
     }
   }]
 };
@@ -2929,6 +3061,11 @@ var defaultCommands = {
     icon: "fa-exchange-alt",
     subgroup: commandsSwapEscAndTab
   }, {
+    id: "changeLazyMode",
+    display: "Lazy mode...",
+    icon: "fa-couch",
+    subgroup: commandsLazyMode
+  }, {
     id: "changeShowAllLines",
     display: "Show all lines...",
     icon: "fa-align-left",
@@ -3024,6 +3161,11 @@ var defaultCommands = {
     display: "Language...",
     icon: "fa-language",
     subgroup: commandsLanguages
+  }, {
+    id: "changeBritishEnglish",
+    display: "British english...",
+    icon: "fa-language",
+    subgroup: commandsBritishEnglish
   }, {
     id: "changeFunbox",
     display: "Funbox...",
@@ -3254,7 +3396,7 @@ var defaultCommands = {
     icon: "fa-cog",
     input: true,
     defaultValue: "",
-    exec: function exec(input) {}
+    exec: function exec() {}
   }, {
     id: "monkeyPower",
     display: "Power mode...",
@@ -3279,7 +3421,7 @@ function getList(list) {
   return eval(list);
 }
 
-},{"./challenge-controller":4,"./commandline":7,"./config":8,"./custom-text":12,"./custom-text-popup":11,"./funbox":16,"./layouts":23,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./practise-words":37,"./settings":43,"./sound":46,"./test-logic":49,"./test-stats":50,"./test-ui":52,"./theme-controller":54,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],7:[function(require,module,exports){
+},{"./challenge-controller":5,"./commandline":8,"./config":9,"./custom-text":13,"./custom-text-popup":12,"./funbox":17,"./layouts":24,"./manual-restart-tracker":30,"./misc":31,"./notifications":35,"./practise-words":40,"./settings":46,"./sound":49,"./test-logic":52,"./test-ui":55,"./theme-controller":57,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],8:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -3334,6 +3476,10 @@ function showInput(command, placeholder) {
   if (defaultValue != "") {
     $("#commandInput input").select();
   }
+}
+
+function isSingleListCommandLineActive() {
+  return $("#commandLine").hasClass("allCommands");
 }
 
 function showFound() {
@@ -3454,6 +3600,24 @@ function updateSuggested() {
   showFound();
 }
 
+var show = function show() {
+  Focus.set(false);
+  $("#commandLine").removeClass("hidden");
+  $("#commandInput").addClass("hidden");
+
+  if ($("#commandLineWrapper").hasClass("hidden")) {
+    $("#commandLineWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
+      opacity: 1
+    }, 100);
+  }
+
+  $("#commandLine input").val("");
+  updateSuggested();
+  $("#commandLine input").focus();
+};
+
+exports.show = show;
+
 function hide() {
   UpdateConfig.previewFontFamily(UpdateConfig["default"].fontFamily); // applyCustomThemeColors();
 
@@ -3507,24 +3671,6 @@ function trigger(command) {
     hide();
   }
 }
-
-var show = function show() {
-  Focus.set(false);
-  $("#commandLine").removeClass("hidden");
-  $("#commandInput").addClass("hidden");
-
-  if ($("#commandLineWrapper").hasClass("hidden")) {
-    $("#commandLineWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
-      opacity: 1
-    }, 100);
-  }
-
-  $("#commandLine input").val("");
-  updateSuggested();
-  $("#commandLine input").focus();
-};
-
-exports.show = show;
 
 function addChildCommands(unifiedCommands, commandItem) {
   var parentCommandDisplay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
@@ -3582,26 +3728,20 @@ function generateSingleListOfCommands() {
   };
 }
 
-function isSingleListCommandLineActive() {
-  return $("#commandLine").hasClass("allCommands");
-}
-
 function useSingleListCommandLine() {
-  var show = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-  var allCommands = generateSingleListOfCommands();
+  var sshow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var allCommands = generateSingleListOfCommands(); // if (Config.singleListCommandLine == "manual") {
+  // CommandlineLists.pushCurrent(allCommands);
+  // } else if (Config.singleListCommandLine == "on") {
 
-  if (UpdateConfig["default"].singleListCommandLine == "manual") {
-    CommandlineLists.pushCurrent(allCommands);
-  } else if (UpdateConfig["default"].singleListCommandLine == "on") {
-    CommandlineLists.setCurrent([allCommands]);
-  }
+  CommandlineLists.setCurrent([allCommands]); // }
 
   if (UpdateConfig["default"].singleListCommandLine != "off") $("#commandLine").addClass("allCommands");
-  if (show) show();
+  if (sshow) show();
 }
 
 function restoreOldCommandLine() {
-  var show = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var sshow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
   if (isSingleListCommandLineActive()) {
     $("#commandLine").removeClass("allCommands");
@@ -3611,19 +3751,19 @@ function restoreOldCommandLine() {
     if (CommandlineLists.current.length < 1) CommandlineLists.setCurrent([CommandlineLists.defaultCommands]);
   }
 
-  if (show) show();
+  if (sshow) show();
 }
 
 $("#commandLine input").keyup(function (e) {
   commandLineMouseMode = false;
   $("#commandLineWrapper #commandLine .suggestions .entry").removeClass("activeMouse");
-  if (e.keyCode == 38 || e.keyCode == 40 || e.keyCode == 13 || e.code == "Tab" || e.code == "AltLeft" || e.altKey && (e.keyCode == 74 || e.keyCode == 75)) return;
+  if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Enter" || e.key === "Tab" || e.code == "AltLeft") return;
   updateSuggested();
 });
 $(document).ready(function (e) {
   $(document).keydown(function (event) {
     // opens command line if escape, ctrl/cmd + shift + p, or tab is pressed if the setting swapEscAndTab is enabled
-    if (event.keyCode == 27 || event.key && event.key.toLowerCase() == "p" && (event.metaKey || event.ctrlKey) && event.shiftKey || event.keyCode == 9 && UpdateConfig["default"].swapEscAndTab) {
+    if (event.key === "Escape" || event.key && event.key.toLowerCase() === "p" && (event.metaKey || event.ctrlKey) && event.shiftKey || event.key === "Tab" && UpdateConfig["default"].swapEscAndTab) {
       event.preventDefault();
 
       if (!$("#practiseWordsPopupWrapper").hasClass("hidden")) {
@@ -3651,7 +3791,7 @@ $(document).ready(function (e) {
         }
 
         UpdateConfig.setFontFamily(UpdateConfig["default"].fontFamily, true);
-      } else if (event.keyCode == 9 || !UpdateConfig["default"].swapEscAndTab) {
+      } else if (event.key === "Tab" || !UpdateConfig["default"].swapEscAndTab) {
         if (UpdateConfig["default"].singleListCommandLine == "on") {
           useSingleListCommandLine(false);
         } else {
@@ -3664,7 +3804,7 @@ $(document).ready(function (e) {
   });
 });
 $("#commandInput input").keydown(function (e) {
-  if (e.keyCode == 13) {
+  if (e.key === "Enter") {
     //enter
     e.preventDefault();
     var command = $("#commandInput input").attr("command");
@@ -3767,7 +3907,7 @@ $(document).keydown(function (e) {
 
     if (e.key == ">" && UpdateConfig["default"].singleListCommandLine == "manual") {
       if (!isSingleListCommandLineActive()) {
-        useSingleListCommandLine();
+        useSingleListCommandLine(false);
         return;
       } else if ($("#commandLine input").val() == ">") {
         //so that it will ignore succeeding ">" when input is already ">"
@@ -3776,9 +3916,17 @@ $(document).keydown(function (e) {
       }
     }
 
-    if (e.keyCode == 8 && $("#commandLine input").val().length == 1 && UpdateConfig["default"].singleListCommandLine == "manual" && isSingleListCommandLineActive()) restoreOldCommandLine();
+    if (e.key === "Backspace" || e.key === "Delete") {
+      setTimeout(function () {
+        var inputVal = $("#commandLine input").val();
 
-    if (e.keyCode == 13) {
+        if (UpdateConfig["default"].singleListCommandLine == "manual" && isSingleListCommandLineActive() && inputVal[0] !== ">") {
+          restoreOldCommandLine(false);
+        }
+      }, 1);
+    }
+
+    if (e.key === "Enter") {
       //enter
       e.preventDefault();
       var command = $(".suggestions .entry.activeKeyboard").attr("command");
@@ -3786,7 +3934,7 @@ $(document).keydown(function (e) {
       return;
     }
 
-    if (e.keyCode == 38 || e.keyCode == 40 || e.code == "Tab" || e.altKey && (e.keyCode == 74 || e.keyCode == 75)) {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Tab") {
       e.preventDefault();
       $("#commandLineWrapper #commandLine .suggestions .entry").unbind("mouseenter mouseleave");
       var entries = $(".suggestions .entry");
@@ -3796,7 +3944,7 @@ $(document).keydown(function (e) {
         if ($(obj).hasClass("activeKeyboard")) activenum = index;
       });
 
-      if (e.keyCode == 38 || e.code == "Tab" && e.shiftKey || e.altKey && e.keyCode == 75) {
+      if (e.key === "ArrowUp" || e.key === "Tab" && e.shiftKey) {
         entries.removeClass("activeKeyboard");
 
         if (activenum == 0) {
@@ -3808,7 +3956,7 @@ $(document).keydown(function (e) {
         }
       }
 
-      if (e.keyCode == 40 || e.code == "Tab" && !e.shiftKey || e.altKey && e.keyCode == 74) {
+      if (e.key === "ArrowDown" || e.key === "Tab" && !e.shiftKey) {
         entries.removeClass("activeKeyboard");
 
         if (activenum + 1 == entries.length) {
@@ -3848,7 +3996,7 @@ $(document).on("click", "#commandLineMobileButton", function () {
   show();
 });
 
-},{"./commandline-lists":6,"./config":8,"./custom-test-duration-popup":10,"./custom-text-popup":11,"./custom-word-amount-popup":14,"./focus":15,"./practise-words":37,"./simple-popups":45,"./test-ui":52,"./theme-controller":54,"@babel/runtime/helpers/defineProperty":70,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],8:[function(require,module,exports){
+},{"./commandline-lists":7,"./config":9,"./custom-test-duration-popup":11,"./custom-text-popup":12,"./custom-word-amount-popup":15,"./focus":16,"./practise-words":40,"./simple-popups":48,"./test-ui":55,"./theme-controller":57,"@babel/runtime/helpers/defineProperty":73,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],9:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -3947,6 +4095,8 @@ exports.setIndicateTypos = setIndicateTypos;
 exports.setCustomTheme = setCustomTheme;
 exports.setTheme = setTheme;
 exports.setRandomTheme = setRandomTheme;
+exports.setBritishEnglish = setBritishEnglish;
+exports.setLazyMode = setLazyMode;
 exports.toggleCustomTheme = toggleCustomTheme;
 exports.setCustomThemeColors = setCustomThemeColors;
 exports.setLanguage = setLanguage;
@@ -4104,7 +4254,9 @@ var defaultConfig = {
   monkeyPowerLevel: "off",
   minBurst: "off",
   minBurstCustomSpeed: 100,
-  burstHeatmap: false
+  burstHeatmap: false,
+  britishEnglish: false,
+  lazyMode: false
 };
 
 function isConfigKeyValid(name) {
@@ -4269,8 +4421,8 @@ function setMode(mode, nosave) {
     setPunctuation(false, true);
     setNumbers(false, true);
   } else if (config.mode == "quote") {
-    setPunctuation(false, nosave);
-    setNumbers(false, nosave);
+    setPunctuation(false, true);
+    setNumbers(false, true);
     $("#top .config .wordCount").addClass("hidden");
     $("#top .config .time").addClass("hidden");
     $("#top .config .customText").addClass("hidden");
@@ -4911,7 +5063,7 @@ function toggleShowLiveBurst() {
 }
 
 function setHighlightMode(mode, nosave) {
-  if (mode === "word" && (config.funbox === "nospace" || config.funbox === "read_ahead" || config.funbox === "read_ahead_easy" || config.funbox === "read_ahead_hard")) {
+  if (mode === "word" && (config.funbox === "nospace" || config.funbox === "read_ahead" || config.funbox === "read_ahead_easy" || config.funbox === "read_ahead_hard" || config.funbox === "tts")) {
     Notifications.add("Can't use word highlight with this funbox", 0);
     return;
   }
@@ -5297,6 +5449,24 @@ function setRandomTheme(val, nosave) {
   if (!nosave) saveToLocalStorage();
 }
 
+function setBritishEnglish(val, nosave) {
+  if (!val) {
+    val = false;
+  }
+
+  config.britishEnglish = val;
+  if (!nosave) saveToLocalStorage();
+}
+
+function setLazyMode(val, nosave) {
+  if (!val) {
+    val = false;
+  }
+
+  config.lazyMode = val;
+  if (!nosave) saveToLocalStorage();
+}
+
 function toggleCustomTheme(nosave) {
   if (config.customTheme) {
     setCustomTheme(false);
@@ -5676,6 +5846,8 @@ function apply(configObj) {
     setRepeatQuotes(configObj.repeatQuotes, true);
     setMonkeyPowerLevel(configObj.monkeyPowerLevel, true);
     setBurstHeatmap(configObj.burstHeatmap, true);
+    setBritishEnglish(configObj.britishEnglish, true);
+    setLazyMode(configObj.lazyMode, true);
     LanguagePicker.setActiveGroup();
   }
 
@@ -5731,7 +5903,7 @@ exports.loadPromise = loadPromise;
 var _default = config;
 exports["default"] = _default;
 
-},{"./challenge-controller":4,"./commandline-lists":6,"./custom-background-filter":9,"./funbox":16,"./keymap":20,"./language-picker":21,"./layouts":23,"./live-acc":24,"./live-burst":25,"./live-wpm":26,"./notifications":32,"./out-of-focus":33,"./pace-caret":34,"./sound":46,"./test-logic":49,"./test-ui":52,"./theme-controller":54,"./timer-progress":56,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/defineProperty":70,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],9:[function(require,module,exports){
+},{"./challenge-controller":5,"./commandline-lists":7,"./custom-background-filter":10,"./funbox":17,"./keymap":21,"./language-picker":22,"./layouts":24,"./live-acc":26,"./live-burst":27,"./live-wpm":28,"./notifications":35,"./out-of-focus":36,"./pace-caret":37,"./sound":49,"./test-logic":52,"./test-ui":55,"./theme-controller":57,"./timer-progress":59,"./ui":61,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/defineProperty":73,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],10:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5841,7 +6013,7 @@ $(".section.customBackgroundFilter  .save.button").click(function (e) {
   Notifications.add("Custom background filters saved", 1);
 });
 
-},{"./config":8,"./notifications":32,"@babel/runtime/helpers/interopRequireWildcard":74}],10:[function(require,module,exports){
+},{"./config":9,"./notifications":35,"@babel/runtime/helpers/interopRequireWildcard":77}],11:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -5983,7 +6155,7 @@ $("#customTestDurationPopup .button").click(function () {
   apply();
 });
 
-},{"./config":8,"./manual-restart-tracker":28,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82}],11:[function(require,module,exports){
+},{"./config":9,"./manual-restart-tracker":30,"./notifications":35,"./test-logic":52,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/helpers/toConsumableArray":85}],12:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6023,7 +6195,7 @@ function show() {
     $(wrapper).stop(true, true).css("opacity", 0).removeClass("hidden").animate({
       opacity: 1
     }, 100, function () {
-      var newtext = CustomText.text.join(" ");
+      var newtext = CustomText.text.join(CustomText.delimiter);
       newtext = newtext.replace(/\n /g, "\n");
       $("".concat(popup, " textarea")).val(newtext);
       $("".concat(popup, " .wordcount input")).val(CustomText.word);
@@ -6036,6 +6208,31 @@ function show() {
     $("".concat(popup, " textarea")).focus();
   }, 150);
 }
+
+$("".concat(popup, " .delimiterCheck input")).change(function () {
+  var delimiter;
+
+  if ($("".concat(popup, " .delimiterCheck input")).prop("checked")) {
+    delimiter = "|";
+  } else {
+    delimiter = " ";
+  }
+
+  if ($("".concat(popup, " textarea")).val() != CustomText.text.join(CustomText.delimiter)) {
+    var currentText = $("".concat(popup, " textarea")).val();
+    var currentTextSplit = currentText.split(CustomText.delimiter);
+    var newtext = currentTextSplit.join(delimiter);
+    newtext = newtext.replace(/\n /g, "\n");
+    $("".concat(popup, " textarea")).val(newtext);
+  } else {
+    var _newtext = CustomText.text.join(delimiter);
+
+    _newtext = _newtext.replace(/\n /g, "\n");
+    $("".concat(popup, " textarea")).val(_newtext);
+  }
+
+  CustomText.setDelimiter(delimiter);
+});
 
 function hide() {
   if (!$(wrapper).hasClass("hidden")) {
@@ -6094,7 +6291,7 @@ $("#customTextPopup .apply").click(function () {
 
 
   text = text.replace(/[\u2060]/g, "");
-  text = text.split(" ");
+  text = text.split(CustomText.delimiter);
   CustomText.setText(text);
   CustomText.setWord(parseInt($("#customTextPopup .wordcount input").val()));
   CustomText.setTime(parseInt($("#customTextPopup .time input").val()));
@@ -6124,7 +6321,7 @@ $("#customTextPopup .wordfilter").click(function () {
   WordFilterPopup.show();
 });
 
-},{"./challenge-controller":4,"./custom-text":12,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./test-logic":49,"./word-filter-popup":61,"@babel/runtime/helpers/interopRequireWildcard":74}],12:[function(require,module,exports){
+},{"./challenge-controller":5,"./custom-text":13,"./manual-restart-tracker":30,"./misc":31,"./notifications":35,"./test-logic":52,"./word-filter-popup":64,"@babel/runtime/helpers/interopRequireWildcard":77}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6135,7 +6332,8 @@ exports.setIsWordRandom = setIsWordRandom;
 exports.setIsTimeRandom = setIsTimeRandom;
 exports.setTime = setTime;
 exports.setWord = setWord;
-exports.time = exports.word = exports.isTimeRandom = exports.isWordRandom = exports.text = void 0;
+exports.setDelimiter = setDelimiter;
+exports.delimiter = exports.time = exports.word = exports.isTimeRandom = exports.isWordRandom = exports.text = void 0;
 var text = "The quick brown fox jumps over the lazy dog".split(" ");
 exports.text = text;
 var isWordRandom = false;
@@ -6146,6 +6344,8 @@ var word = "";
 exports.word = word;
 var time = "";
 exports.time = time;
+var delimiter = " ";
+exports.delimiter = delimiter;
 
 function setText(txt) {
   exports.text = text = txt;
@@ -6167,7 +6367,11 @@ function setWord(val) {
   exports.word = word = val;
 }
 
-},{}],13:[function(require,module,exports){
+function setDelimiter(val) {
+  exports.delimiter = delimiter = val;
+}
+
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6229,7 +6433,7 @@ $("#shareCustomThemeButton").click(function (e) {
   }
 });
 
-},{"./config":8,"./notifications":32,"./theme-picker":55,"@babel/runtime/helpers/interopRequireWildcard":74}],14:[function(require,module,exports){
+},{"./config":9,"./notifications":35,"./theme-picker":58,"@babel/runtime/helpers/interopRequireWildcard":77}],15:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6301,7 +6505,7 @@ $("#customWordAmountPopup .button").click(function () {
   apply();
 });
 
-},{"./config":8,"./manual-restart-tracker":28,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/interopRequireWildcard":74}],15:[function(require,module,exports){
+},{"./config":9,"./manual-restart-tracker":30,"./notifications":35,"./test-logic":52,"@babel/runtime/helpers/interopRequireWildcard":77}],16:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6339,7 +6543,7 @@ $(document).mousemove(function (event) {
   }
 });
 
-},{"./caret":3,"@babel/runtime/helpers/interopRequireWildcard":74}],16:[function(require,module,exports){
+},{"./caret":4,"@babel/runtime/helpers/interopRequireWildcard":77}],17:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6353,8 +6557,8 @@ exports.resetMemoryTimer = resetMemoryTimer;
 exports.startMemoryTimer = startMemoryTimer;
 exports.reset = reset;
 exports.toggleScript = toggleScript;
-exports.activate = activate;
 exports.setFunbox = setFunbox;
+exports.activate = activate;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -6444,10 +6648,18 @@ function toggleScript() {
     var msg = new SpeechSynthesisUtterance();
     console.log("Speaking");
     msg.text = arguments.length <= 0 ? undefined : arguments[0];
+    if (!msg.text) return;
     msg.lang = "en-US";
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(msg);
   }
+}
+
+function setFunbox(funbox, mode) {
+  if (funbox === "none") loadMemory();
+  modeSaved = mode;
+  UpdateConfig.setFunbox(funbox, false);
+  return true;
 }
 
 function activate(_x) {
@@ -6493,7 +6705,7 @@ function _activate() {
 
             Notifications.add("Zen mode does not support the ".concat(funbox, " funbox"), 0);
             setFunbox("none", null);
-            TestLogic.restart();
+            TestLogic.restart(undefined, true);
             return _context.abrupt("return");
 
           case 14:
@@ -6535,45 +6747,46 @@ function _activate() {
 
               if (funbox === "simon_says") {
                 rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
-                UpdateConfig.setKeymapMode("next");
+                UpdateConfig.setKeymapMode("next", true);
                 Settings.groups.keymapMode.updateButton();
-                TestLogic.restart();
+                TestLogic.restart(undefined, true);
               }
 
               if (funbox === "read_ahead" || funbox === "read_ahead_easy" || funbox === "read_ahead_hard") {
                 rememberSetting("highlightMode", UpdateConfig["default"].highlightMode, UpdateConfig.setHighlightMode);
                 UpdateConfig.setHighlightMode("letter", true);
-                TestLogic.restart();
+                TestLogic.restart(undefined, true);
               }
             } else if (mode === "script") {
               if (funbox === "tts") {
                 $("#funBoxTheme").attr("href", "funbox/simon_says.css");
                 rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
-                UpdateConfig.setKeymapMode("off");
+                UpdateConfig.setKeymapMode("off", true);
+                UpdateConfig.setHighlightMode("letter", true);
                 Settings.groups.keymapMode.updateButton();
-                TestLogic.restart();
+                TestLogic.restart(undefined, true);
               } else if (funbox === "layoutfluid") {
                 rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode); // UpdateConfig.setKeymapMode("next");
 
                 Settings.groups.keymapMode.updateButton(); // UpdateConfig.setSavedLayout(Config.layout);
 
                 rememberSetting("layout", UpdateConfig["default"].layout, UpdateConfig.setLayout);
-                UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
+                UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty", true);
                 Settings.groups.layout.updateButton();
                 rememberSetting("keymapLayout", UpdateConfig["default"].keymapLayout, UpdateConfig.setKeymapLayout);
-                UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
+                UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty", true);
                 Settings.groups.keymapLayout.updateButton();
-                TestLogic.restart();
+                TestLogic.restart(undefined, true);
               } else if (funbox === "memory") {
                 rememberSetting("mode", UpdateConfig["default"].mode, UpdateConfig.setMode);
-                UpdateConfig.setMode("words");
+                UpdateConfig.setMode("words", true);
                 rememberSetting("showAllLines", UpdateConfig["default"].showAllLines, UpdateConfig.setShowAllLines);
                 UpdateConfig.setShowAllLines(true, true);
                 TestLogic.restart(false, true);
 
                 if (UpdateConfig["default"].keymapMode === "next") {
                   rememberSetting("keymapMode", UpdateConfig["default"].keymapMode, UpdateConfig.setKeymapMode);
-                  UpdateConfig.setKeymapMode("react");
+                  UpdateConfig.setKeymapMode("react", true);
                 }
               } else if (funbox === "nospace") {
                 $("#words").addClass("nospace");
@@ -6602,14 +6815,7 @@ function _activate() {
   return _activate.apply(this, arguments);
 }
 
-function setFunbox(funbox, mode) {
-  if (funbox === "none") loadMemory();
-  modeSaved = mode;
-  UpdateConfig.setFunbox(funbox);
-  return true;
-}
-
-},{"./config":8,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./settings":43,"./test-logic":49,"./test-ui":52,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],17:[function(require,module,exports){
+},{"./config":9,"./manual-restart-tracker":30,"./misc":31,"./notifications":35,"./settings":46,"./test-logic":52,"./test-ui":55,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],18:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -6665,7 +6871,7 @@ $("#settingsImportWrapper").click(function (e) {
   }
 });
 
-},{"./config":8,"./notifications":32,"./settings":43,"@babel/runtime/helpers/interopRequireWildcard":74}],18:[function(require,module,exports){
+},{"./config":9,"./notifications":35,"./settings":46,"@babel/runtime/helpers/interopRequireWildcard":77}],19:[function(require,module,exports){
 (function (global){(function (){
 "use strict";
 
@@ -6705,6 +6911,8 @@ require("./about-page");
 
 var TestStats = _interopRequireWildcard(require("./test-stats"));
 
+var Replay = _interopRequireWildcard(require("./replay"));
+
 //this file should be concatenated at the top of the legacy js files
 _chart["default"].plugins.register(_chartjsPluginTrendline["default"]);
 
@@ -6718,9 +6926,10 @@ global.config = _config["default"]; // global.addnotif = Notifications.add;
 
 global.glarsesMode = _testLogic.toggleGlarses;
 global.stats = TestStats.getStats;
+global.replay = Replay.getReplayExport;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./about-page":1,"./caps-warning":2,"./config":8,"./custom-theme-popup":13,"./import-settings-popup":17,"./input-controller":19,"./misc":29,"./ready":39,"./simple-popups":45,"./support-popup":47,"./test-logic":49,"./test-stats":50,"./version-popup":59,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"chart.js":86,"chartjs-plugin-annotation":91,"chartjs-plugin-trendline":94}],19:[function(require,module,exports){
+},{"./about-page":1,"./caps-warning":3,"./config":9,"./custom-theme-popup":14,"./import-settings-popup":18,"./input-controller":20,"./misc":31,"./ready":42,"./replay":43,"./simple-popups":48,"./support-popup":50,"./test-logic":52,"./test-stats":53,"./version-popup":62,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"chart.js":89,"chartjs-plugin-annotation":94,"chartjs-plugin-trendline":97}],20:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7212,17 +7421,7 @@ function handleAlpha(event) {
     thisCharCorrect = true;
   }
 
-  if (event.key === "’" && nextCharInWord == "'") {
-    event.key = "'";
-    thisCharCorrect = true;
-  }
-
-  if (event.key === "'" && nextCharInWord == "’") {
-    event.key = "’";
-    thisCharCorrect = true;
-  }
-
-  if ((event.key === "\u2019" || event.key === "'") && (nextCharInWord == "\u2019" || nextCharInWord === "'")) {
+  if ((event.key === "\u2019" || event.key === "\u2018" || event.key === "'") && (nextCharInWord == "\u2019" || nextCharInWord === "\u2018" || nextCharInWord === "'")) {
     event.key = nextCharInWord;
     thisCharCorrect = true;
   }
@@ -7307,6 +7506,8 @@ function handleAlpha(event) {
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
+    TestLogic.input.pushHistory();
+    TestLogic.corrected.pushHistory();
     TestLogic.fail("difficulty");
     return;
   } //keymap
@@ -7437,7 +7638,7 @@ $(document).keydown(function (event) {
   LiveAcc.update(acc);
 });
 
-},{"./caret":3,"./config":8,"./custom-text":12,"./focus":15,"./funbox":16,"./keymap":20,"./layout-emulator":22,"./live-acc":24,"./live-burst":25,"./manual-restart-tracker":28,"./misc":29,"./monkey":31,"./monkey-power":30,"./notifications":32,"./pace-caret":34,"./replay.js":40,"./settings":43,"./shift-tracker":44,"./sound":46,"./test-logic":49,"./test-stats":50,"./test-timer":51,"./test-ui":52,"./timer-progress":56,"./ui":58,"./weak-spot":60,"@babel/runtime/helpers/interopRequireWildcard":74}],20:[function(require,module,exports){
+},{"./caret":4,"./config":9,"./custom-text":13,"./focus":16,"./funbox":17,"./keymap":21,"./layout-emulator":23,"./live-acc":26,"./live-burst":27,"./manual-restart-tracker":30,"./misc":31,"./monkey":33,"./monkey-power":32,"./notifications":35,"./pace-caret":37,"./replay.js":43,"./settings":46,"./shift-tracker":47,"./sound":49,"./test-logic":52,"./test-stats":53,"./test-timer":54,"./test-ui":55,"./timer-progress":59,"./ui":61,"./weak-spot":63,"@babel/runtime/helpers/interopRequireWildcard":77}],21:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7751,7 +7952,7 @@ $(document).on("click", ".keymap .r5 #KeySpace", function (e) {
   Commandline.show();
 });
 
-},{"./commandline":7,"./commandline-lists":6,"./config":8,"./layouts":23,"./theme-colors":53,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],21:[function(require,module,exports){
+},{"./commandline":8,"./commandline-lists":7,"./config":9,"./layouts":24,"./theme-colors":56,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],22:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7838,7 +8039,7 @@ function _setActiveGroup() {
   return _setActiveGroup.apply(this, arguments);
 }
 
-},{"./config":8,"./misc":29,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],22:[function(require,module,exports){
+},{"./config":9,"./misc":31,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],23:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -7906,7 +8107,7 @@ function updateEvent(event) {
   return newEvent;
 }
 
-},{"./config":8,"./layouts":23,"./misc":29,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],23:[function(require,module,exports){
+},{"./config":9,"./layouts":24,"./misc":31,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8083,12 +8284,38 @@ var layouts = {
   thai_manoonchai: {
     keymapShowTopRow: true,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "ใฒ", "ตฏ", "หซ", "ลญ", "สฟ", "ปฉ", "ัึ", "กธ", "ิฐ", "บฎ", "็ฆ", "ฬฑ", "ฯฌ", "งษ", "เถ", "รแ", "นช", "มพ", "อผ", "าำ", "่ข", "้โ", "วภ", "ื\"", "ฯฌ", "ุฤ", "ไฝ", "ทๆ", "ยณ", "จ๊", "ค๋", "ี์", "ดศ", "ะฮ", "ู?", " "]
+  },
+  persian_standard: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "چ", "\"", "ش", "س", "ی", "ب", "ل", "اآ", "ت", "ن", "م", "ک", "گ", "\\|", "ظ", "ط", "زژ", "ر", "ذ", "د", "پ", "و", ".", "/?", " "]
   }
 };
 var _default = layouts;
 exports["default"] = _default;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.replaceAccents = replaceAccents;
+var accents = [["áàâäåãąą́āą̄", "a"], ["éèêëẽęę́ēę̄ė", "e"], ["íìîïĩįį́īį̄", "i"], ["óòôöøõóōǫǫ́ǭ", "o"], ["úùûüŭũúūů", "u"], ["ñń", "n"], ["çĉć", "c"], ["æ", "ae"], ["œ", "oe"], ["ẅ", "w"], ["ĝğg̃", "g"], ["ĥ", "h"], ["ĵ", "j"], ["ń", "n"], ["ŝś", "s"], ["żź", "z"], ["ÿỹ", "y"], ["ł", "l"], ["أإآ", "ا"], ["َ", ""], ["ُ", ""], ["ِ", ""], ["ْ", ""], ["ً", ""], ["ٌ", ""], ["ٍ", ""], ["ّ", ""]];
+
+function replaceAccents(word) {
+  var newWord = word;
+  if (!accents) return newWord;
+  var regex;
+
+  for (var i = 0; i < accents.length; i++) {
+    regex = new RegExp("[".concat(accents[i][0], "]"), "gi");
+    newWord = newWord.replace(regex, accents[i][1]);
+  }
+
+  return newWord;
+}
+
+},{}],26:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -8151,7 +8378,7 @@ function hide() {
   });
 }
 
-},{"./config":8,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],25:[function(require,module,exports){
+},{"./config":9,"./test-logic":52,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],27:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -8210,7 +8437,7 @@ function hide() {
   });
 }
 
-},{"./config":8,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],26:[function(require,module,exports){
+},{"./config":9,"./test-logic":52,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],28:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -8280,7 +8507,7 @@ function hide() {
   });
 }
 
-},{"./config":8,"./test-logic":49,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],27:[function(require,module,exports){
+},{"./config":9,"./test-logic":52,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8297,7 +8524,7 @@ function hide() {
   $("#backgroundLoader").stop(true, true).fadeOut(125);
 }
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8320,7 +8547,7 @@ function get() {
   return state;
 }
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -8340,8 +8567,8 @@ exports.getLanguageGroups = getLanguageGroups;
 exports.findCurrentGroup = findCurrentGroup;
 exports.getChallengeList = getChallengeList;
 exports.showNotification = showNotification;
-exports.getCurrentLanguage = getCurrentLanguage;
 exports.getLanguage = getLanguage;
+exports.getCurrentLanguage = getCurrentLanguage;
 exports.migrateFromCookies = migrateFromCookies;
 exports.smooth = smooth;
 exports.stdDev = stdDev;
@@ -8376,8 +8603,6 @@ exports.setCharAt = setCharAt;
 exports.regexIndexOf = regexIndexOf;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -8845,80 +9070,80 @@ function showNotification(text, time) {
 
 var currentLanguage;
 
-function getCurrentLanguage() {
-  return _getCurrentLanguage.apply(this, arguments);
-}
-
-function _getCurrentLanguage() {
-  _getCurrentLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10() {
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
-      while (1) {
-        switch (_context10.prev = _context10.next) {
-          case 0:
-            _context10.next = 2;
-            return getLanguage(_config["default"].language);
-
-          case 2:
-            return _context10.abrupt("return", _context10.sent);
-
-          case 3:
-          case "end":
-            return _context10.stop();
-        }
-      }
-    }, _callee10);
-  }));
-  return _getCurrentLanguage.apply(this, arguments);
-}
-
 function getLanguage(_x3) {
   return _getLanguage.apply(this, arguments);
 }
 
 function _getLanguage() {
-  _getLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11(lang) {
-    return _regenerator["default"].wrap(function _callee11$(_context11) {
+  _getLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee10(lang) {
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
       while (1) {
-        switch (_context11.prev = _context11.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
-            _context11.prev = 0;
+            _context10.prev = 0;
 
             if (!(currentLanguage == null || currentLanguage.name !== lang)) {
-              _context11.next = 5;
+              _context10.next = 5;
               break;
             }
 
             console.log("getting language json");
-            _context11.next = 5;
+            _context10.next = 5;
             return $.getJSON("languages/".concat(lang, ".json"), function (data) {
               currentLanguage = data;
             });
 
           case 5:
-            return _context11.abrupt("return", currentLanguage);
+            return _context10.abrupt("return", currentLanguage);
 
           case 8:
-            _context11.prev = 8;
-            _context11.t0 = _context11["catch"](0);
+            _context10.prev = 8;
+            _context10.t0 = _context10["catch"](0);
             console.error("error getting language");
-            console.error(_context11.t0);
-            showNotification("Error getting language: ".concat(_context11.t0.message), 4000);
-            _context11.next = 15;
+            console.error(_context10.t0);
+            showNotification("Error getting language: ".concat(_context10.t0.message), 4000);
+            _context10.next = 15;
             return $.getJSON("languages/english.json", function (data) {
               currentLanguage = data;
             });
 
           case 15:
-            return _context11.abrupt("return", currentLanguage);
+            return _context10.abrupt("return", currentLanguage);
 
           case 16:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10, null, [[0, 8]]);
+  }));
+  return _getLanguage.apply(this, arguments);
+}
+
+function getCurrentLanguage() {
+  return _getCurrentLanguage.apply(this, arguments);
+}
+
+function _getCurrentLanguage() {
+  _getCurrentLanguage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee11() {
+    return _regenerator["default"].wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            _context11.next = 2;
+            return getLanguage(_config["default"].language);
+
+          case 2:
+            return _context11.abrupt("return", _context11.sent);
+
+          case 3:
           case "end":
             return _context11.stop();
         }
       }
-    }, _callee11, null, [[0, 8]]);
+    }, _callee11);
   }));
-  return _getLanguage.apply(this, arguments);
+  return _getCurrentLanguage.apply(this, arguments);
 }
 
 function migrateFromCookies() {
@@ -9015,16 +9240,34 @@ function median(arr) {
 }
 
 function getReleasesFromGitHub() {
-  $.getJSON("releases.json", function (data) {
-    $("#bottom .version .text").text(data[0].name);
-    $("#bottom .version").css("opacity", 1);
-    $("#versionHistory .releases").empty();
-    data.forEach(function (release) {
-      if (!release.draft && !release.prerelease) {
-        $("#versionHistory .releases").append("\n          <div class=\"release\">\n            <div class=\"title\">".concat(release.name, "</div>\n            <div class=\"date\">").concat(moment(release.published_at).format("DD MMM YYYY"), "</div>\n            <div class=\"body\">").concat(release.body.replace(/\r\n/g, "<br>"), "</div>\n          </div>\n        "));
+  return _getReleasesFromGitHub.apply(this, arguments);
+}
+
+function _getReleasesFromGitHub() {
+  _getReleasesFromGitHub = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee12() {
+    return _regenerator["default"].wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            $.getJSON("releases.json", function (data) {
+              $("#bottom .version .text").text(data[0].name);
+              $("#bottom .version").css("opacity", 1);
+              $("#versionHistory .releases").empty();
+              data.forEach(function (release) {
+                if (!release.draft && !release.prerelease) {
+                  $("#versionHistory .releases").append("\n          <div class=\"release\">\n            <div class=\"title\">".concat(release.name, "</div>\n            <div class=\"date\">").concat(moment(release.published_at).format("DD MMM YYYY"), "</div>\n            <div class=\"body\">").concat(release.body.replace(/\r\n/g, "<br>"), "</div>\n          </div>\n        "));
+                }
+              });
+            });
+
+          case 1:
+          case "end":
+            return _context12.stop();
+        }
       }
-    });
-  });
+    }, _callee12);
+  }));
+  return _getReleasesFromGitHub.apply(this, arguments);
 }
 
 function getLastChar(word) {
@@ -9114,7 +9357,8 @@ function getGibberish() {
 }
 
 function secondsToString(sec) {
-  var full = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var fullMinutes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var fullHours = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   var hours = Math.floor(sec / 3600);
   var minutes = Math.floor(sec % 3600 / 60);
   var seconds = roundTo2(sec % 3600 % 60);
@@ -9123,10 +9367,10 @@ function secondsToString(sec) {
   var secondsString;
   hours < 10 ? hoursString = "0" + hours : hoursString = hours;
   minutes < 10 ? minutesString = "0" + minutes : minutesString = minutes;
-  seconds < 10 && (minutes > 0 || hours > 0 || full) ? secondsString = "0" + seconds : secondsString = seconds;
+  seconds < 10 && (minutes > 0 || hours > 0 || fullMinutes) ? secondsString = "0" + seconds : secondsString = seconds;
   var ret = "";
-  if (hours > 0 || full) ret += hoursString + ":";
-  if (minutes > 0 || hours > 0 || full) ret += minutesString + ":";
+  if (hours > 0 || fullHours) ret += hoursString + ":";
+  if (minutes > 0 || hours > 0 || fullMinutes) ret += minutesString + ":";
   ret += secondsString;
   return ret;
 }
@@ -9271,9 +9515,12 @@ function cleanTypographySymbols(textToClean) {
     // &hellip; &#8230;
     "«": "<<",
     "»": ">>",
-    "–": "-"
+    "–": "-",
+    " ": " ",
+    " ": " ",
+    " ": " "
   };
-  return textToClean.replace(/[“”’‘—,…«»–]/g, function (_char) {
+  return textToClean.replace(/[“”’‘—,…«»–   ]/g, function (_char) {
     return specials[_char] || "";
   });
 }
@@ -9326,20 +9573,6 @@ function clearTimeouts(timeouts) {
 function setCharAt(str, index, chr) {
   if (index > str.length - 1) return str;
   return str.substring(0, index) + chr + str.substring(index + 1);
-} //https://www.reddit.com/r/learnjavascript/comments/8ohug3/how_to_recursively_count_keys_in_an_object/e03fytn/
-
-
-function countAllKeys(obj) {
-  if ((0, _typeof2["default"])(obj) !== "object" || obj === null) {
-    return 0;
-  }
-
-  var keys = Object.keys(obj);
-  var sum = keys.length;
-  keys.forEach(function (key) {
-    return sum += countAllKeys(obj[key]);
-  });
-  return sum;
 } //https://stackoverflow.com/questions/273789/is-there-a-version-of-javascripts-string-indexof-that-allows-for-regular-expr
 
 
@@ -9353,7 +9586,7 @@ String.prototype.lastIndexOfRegex = function (regex) {
   return match ? this.lastIndexOf(match[match.length - 1]) : -1;
 };
 
-},{"./config":8,"./loader":27,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/helpers/typeof":83,"@babel/runtime/regenerator":85}],30:[function(require,module,exports){
+},{"./config":9,"./loader":29,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/helpers/toConsumableArray":85,"@babel/runtime/regenerator":88}],32:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9645,7 +9878,7 @@ function _addPower() {
   return _addPower.apply(this, arguments);
 }
 
-},{"./config":8,"./test-logic":49,"./theme-colors":53,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],31:[function(require,module,exports){
+},{"./config":9,"./test-logic":52,"./theme-colors":56,"./ui":61,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9723,7 +9956,86 @@ function stop() {
   update();
 }
 
-},{"./misc":29}],32:[function(require,module,exports){
+},{"./misc":31}],34:[function(require,module,exports){
+"use strict";
+
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.show = show;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var Notifications = _interopRequireWildcard(require("./notifications"));
+
+var VersionPopup = _interopRequireWildcard(require("./version-popup"));
+
+function setMemory(v) {
+  window.localStorage.setItem("lastSeenVersion", v);
+}
+
+function getMemory() {
+  var _window$localStorage$;
+
+  return (_window$localStorage$ = window.localStorage.getItem("lastSeenVersion")) !== null && _window$localStorage$ !== void 0 ? _window$localStorage$ : "";
+}
+
+function show(_x) {
+  return _show.apply(this, arguments);
+}
+
+function _show() {
+  _show = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(version) {
+    var memory;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return getMemory();
+
+          case 2:
+            memory = _context.sent;
+
+            if (!(memory === "")) {
+              _context.next = 6;
+              break;
+            }
+
+            setMemory(version);
+            return _context.abrupt("return");
+
+          case 6:
+            if (!(memory === version)) {
+              _context.next = 8;
+              break;
+            }
+
+            return _context.abrupt("return");
+
+          case 8:
+            Notifications.add("Version ".concat(version, " has been released. Click to view the changelog."), 1, 7, "Announcement", "code-branch", function () {
+              VersionPopup.show();
+            });
+            setMemory(version);
+
+          case 10:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _show.apply(this, arguments);
+}
+
+},{"./notifications":35,"./version-popup":62,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],35:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -9742,6 +10054,7 @@ var id = 0;
 
 var Notification = /*#__PURE__*/function () {
   function Notification(message, level, duration, customTitle, customIcon) {
+    var clickCallback = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : function () {};
     (0, _classCallCheck2["default"])(this, Notification);
     this.message = message;
     this.level = level;
@@ -9759,6 +10072,7 @@ var Notification = /*#__PURE__*/function () {
     this.customTitle = customTitle;
     this.customIcon = customIcon;
     this.id = id++;
+    this.clickCallback = clickCallback;
   } //level
   //0 - notice
   //1 - good
@@ -9810,6 +10124,8 @@ var Notification = /*#__PURE__*/function () {
         });
         $("#notificationCenter .notif[id='".concat(_this.id, "']")).click(function () {
           _this.hide();
+
+          _this.clickCallback();
         });
       });
 
@@ -9842,11 +10158,11 @@ var Notification = /*#__PURE__*/function () {
   return Notification;
 }();
 
-function add(message, level, duration, customTitle, customIcon) {
-  notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon).show());
+function add(message, level, duration, customTitle, customIcon, clickCallback) {
+  notificationHistory.push(new Notification(message, level, duration, customTitle, customIcon, clickCallback).show());
 }
 
-},{"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73}],33:[function(require,module,exports){
+},{"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/interopRequireDefault":76}],36:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -9874,7 +10190,7 @@ function show() {
   }, 1000));
 }
 
-},{"./misc":29,"@babel/runtime/helpers/interopRequireWildcard":74}],34:[function(require,module,exports){
+},{"./misc":31,"@babel/runtime/helpers/interopRequireWildcard":77}],37:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10122,7 +10438,7 @@ function start() {
   update(performance.now() + settings.spc * 1000);
 }
 
-},{"./config":8,"./test-logic":49,"./test-ui":52,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],35:[function(require,module,exports){
+},{"./config":9,"./test-logic":52,"./test-ui":55,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],38:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10141,7 +10457,7 @@ function show() {
   }, 250, "easeOutCubic");
 }
 
-},{}],36:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -10246,7 +10562,7 @@ function _getPoem() {
   return _getPoem.apply(this, arguments);
 }
 
-},{"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/regenerator":85}],37:[function(require,module,exports){
+},{"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/regenerator":88}],40:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10277,6 +10593,7 @@ var before = {
 exports.before = before;
 
 function init(missed, slow) {
+  if (UpdateConfig["default"].mode === "zen") return;
   var limit;
 
   if (missed && !slow || !missed && slow) {
@@ -10316,6 +10633,11 @@ function init(missed, slow) {
   // console.log(sortableSlowWords);
 
 
+  if (sortableMissedWords.length == 0 && sortableSlowWords.length == 0) {
+    Notifications.add("Could not start a new custom test", 0);
+    return;
+  }
+
   var newCustomText = [];
   sortableMissedWords.forEach(function (missed, index) {
     for (var i = 0; i < missed[1]; i++) {
@@ -10351,6 +10673,11 @@ function showPopup() {
   var focus = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
   if ($("#practiseWordsPopupWrapper").hasClass("hidden")) {
+    if (UpdateConfig["default"].mode === "zen") {
+      Notifications.add("Practice words is unsupported in zen mode", 0);
+      return;
+    }
+
     $("#practiseWordsPopupWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
       opacity: 1
     }, 100, function () {
@@ -10399,7 +10726,7 @@ $("#practiseWordsPopup .button.both").on("focusout", function (e) {
   $("#practiseWordsPopup .missed").focus();
 });
 
-},{"./config":8,"./custom-text":12,"./notifications":32,"./test-logic":49,"./test-stats":50,"@babel/runtime/helpers/interopRequireWildcard":74}],38:[function(require,module,exports){
+},{"./config":9,"./custom-text":13,"./notifications":35,"./test-logic":52,"./test-stats":53,"@babel/runtime/helpers/interopRequireWildcard":77}],41:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10593,23 +10920,21 @@ $("#quoteSearchPopupWrapper").click(function (e) {
 $(document).on("click", "#quoteSearchResults .searchResult", function (e) {
   exports.selectedId = selectedId = parseInt($(e.currentTarget).attr("id"));
   apply(selectedId);
-});
-$("#quoteSearchPopup input").keypress(function (e) {
-  if (e.keyCode == 13) {
-    if (!isNaN(document.getElementById("searchBox").value)) {
-      apply();
-    } else {
-      var results = document.getElementsByClassName("searchResult");
+}); // $("#quoteSearchPopup input").keypress((e) => {
+//   if (e.keyCode == 13) {
+//     if (!isNaN(document.getElementById("searchBox").value)) {
+//       apply();
+//     } else {
+//       let results = document.getElementsByClassName("searchResult");
+//       if (results.length > 0) {
+//         selectedId = parseInt(results[0].getAttribute("id"));
+//         apply(selectedId);
+//       }
+//     }
+//   }
+// });
 
-      if (results.length > 0) {
-        exports.selectedId = selectedId = parseInt(results[0].getAttribute("id"));
-        apply(selectedId);
-      }
-    }
-  }
-});
-
-},{"./config":8,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./test-logic":49,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],39:[function(require,module,exports){
+},{"./config":9,"./manual-restart-tracker":30,"./misc":31,"./notifications":35,"./test-logic":52,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],42:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10628,10 +10953,14 @@ var UI = _interopRequireWildcard(require("./ui"));
 
 var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 
+var NewVersionNotification = _interopRequireWildcard(require("./new-version-notification"));
+
 ManualRestart.set();
 Misc.migrateFromCookies();
 UpdateConfig.loadFromLocalStorage();
-Misc.getReleasesFromGitHub();
+Misc.getReleasesFromGitHub().then(function (v) {
+  NewVersionNotification.show(v[0].name);
+});
 RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(function () {
   if (window.location.hash === "") {
@@ -10663,7 +10992,7 @@ $(document).ready(function () {
   MonkeyPower.init();
 });
 
-},{"./config":8,"./manual-restart-tracker":28,"./misc":29,"./monkey-power":30,"./route-controller":41,"./settings":43,"./ui":58,"@babel/runtime/helpers/interopRequireWildcard":74}],40:[function(require,module,exports){
+},{"./config":9,"./manual-restart-tracker":30,"./misc":31,"./monkey-power":32,"./new-version-notification":34,"./route-controller":44,"./settings":46,"./ui":61,"@babel/runtime/helpers/interopRequireWildcard":77}],43:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -10678,6 +11007,7 @@ exports.startReplayRecording = startReplayRecording;
 exports.stopReplayRecording = stopReplayRecording;
 exports.addReplayEvent = addReplayEvent;
 exports.replayGetWordsList = replayGetWordsList;
+exports.getReplayExport = getReplayExport;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -10689,17 +11019,6 @@ var _config = _interopRequireDefault(require("./config"));
 
 var Sound = _interopRequireWildcard(require("./sound"));
 
-/*
-TODO:
-  Export replay as video
-  Export replay as typing test file?
-    .ttr file extension (stands for typing test record)
-      Should just be json, but fields should be specified by some format
-        metadata field with rules, website source, mode, name of typist
-        data field should be a list of objects, like monkeytype replay uses
-        signature or verfication field should be able to check file validity with server
-    And add ability to upload file to watch replay
-*/
 var wordsList = [];
 var replayData = [];
 var replayStartTime = 0;
@@ -10957,6 +11276,13 @@ function playReplay() {
   }, replayData[replayData.length - 1].time - lastTime));
 }
 
+function getReplayExport() {
+  return JSON.stringify({
+    replayData: replayData,
+    wordsList: wordsList
+  });
+}
+
 $(".pageTest #playpauseReplayButton").click( /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(event) {
     return _regenerator["default"].wrap(function _callee$(_context) {
@@ -11001,7 +11327,7 @@ $(document.body).on("click", "#watchReplayButton", function () {
   toggleReplayDisplay();
 });
 
-},{"./config":8,"./sound":46,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85}],41:[function(require,module,exports){
+},{"./config":9,"./sound":49,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/helpers/toConsumableArray":85,"@babel/runtime/regenerator":88}],44:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -11062,7 +11388,7 @@ $(window).on("popstate", function (e) {
   }
 });
 
-},{"./config":8,"./funbox":16,"./ui":58,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],42:[function(require,module,exports){
+},{"./config":9,"./funbox":17,"./ui":61,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],45:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -11152,7 +11478,7 @@ var SettingsGroup = /*#__PURE__*/function () {
 
 exports["default"] = SettingsGroup;
 
-},{"./config":8,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/toConsumableArray":82}],43:[function(require,module,exports){
+},{"./config":9,"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/toConsumableArray":85}],46:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11182,8 +11508,6 @@ var _layouts = _interopRequireDefault(require("./layouts"));
 var LanguagePicker = _interopRequireWildcard(require("./language-picker"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
-
-var Loader = _interopRequireWildcard(require("./loader"));
 
 var Funbox = _interopRequireWildcard(require("./funbox"));
 
@@ -11255,6 +11579,7 @@ function _initGroups() {
             groups.quickEnd = new _settingsGroup["default"]("quickEnd", UpdateConfig.setQuickEnd);
             groups.repeatQuotes = new _settingsGroup["default"]("repeatQuotes", UpdateConfig.setRepeatQuotes);
             groups.alwaysShowWordsHistory = new _settingsGroup["default"]("alwaysShowWordsHistory", UpdateConfig.setAlwaysShowWordsHistory);
+            groups.britishEnglish = new _settingsGroup["default"]("britishEnglish", UpdateConfig.setBritishEnglish);
             groups.singleListCommandLine = new _settingsGroup["default"]("singleListCommandLine", UpdateConfig.setSingleListCommandLine);
             groups.flipTestColors = new _settingsGroup["default"]("flipTestColors", UpdateConfig.setFlipTestColors);
             groups.swapEscAndTab = new _settingsGroup["default"]("swapEscAndTab", UpdateConfig.setSwapEscAndTab);
@@ -11277,6 +11602,7 @@ function _initGroups() {
             groups.minBurst = new _settingsGroup["default"]("minBurst", UpdateConfig.setMinBurst);
             groups.smoothLineScroll = new _settingsGroup["default"]("smoothLineScroll", UpdateConfig.setSmoothLineScroll);
             groups.capsLockBackspace = new _settingsGroup["default"]("capsLockBackspace", UpdateConfig.setCapsLockBackspace);
+            groups.lazyMode = new _settingsGroup["default"]("lazyMode", UpdateConfig.setLazyMode);
             groups.layout = new _settingsGroup["default"]("layout", UpdateConfig.setLayout);
             groups.language = new _settingsGroup["default"]("language", UpdateConfig.setLanguage);
             groups.fontSize = new _settingsGroup["default"]("fontSize", UpdateConfig.setFontSize);
@@ -11304,7 +11630,7 @@ function _initGroups() {
             //   UpdateConfig.setCustomLayoutfluid
             // );
 
-          case 56:
+          case 58:
           case "end":
             return _context.stop();
         }
@@ -11515,7 +11841,7 @@ $(".quickNav .links a").on("click", function (e) {
   isOpen && toggleSettingsGroup(settingsGroup);
 });
 
-},{"./config":8,"./funbox":16,"./language-picker":21,"./layouts":23,"./loader":27,"./misc":29,"./notifications":32,"./settings-group":42,"./simple-popups":45,"./sound":46,"./theme-picker":55,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],44:[function(require,module,exports){
+},{"./config":9,"./funbox":17,"./language-picker":22,"./layouts":24,"./misc":31,"./notifications":35,"./settings-group":45,"./simple-popups":48,"./sound":49,"./theme-picker":58,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],47:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11563,7 +11889,7 @@ function isUsingOppositeShift(event) {
   }
 }
 
-},{}],45:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11739,7 +12065,7 @@ list.resetSettings = new SimplePopup("resetSettings", "text", "Reset Settings", 
   // }, 1000);
 }, function () {});
 
-},{"./config":8,"./loader":27,"./notifications":32,"./settings":43,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],46:[function(require,module,exports){
+},{"./config":9,"./loader":29,"./notifications":35,"./settings":46,"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],49:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -11892,7 +12218,7 @@ function playError() {
   errorSound.play();
 }
 
-},{"./config":8,"@babel/runtime/helpers/interopRequireDefault":73,"howler":95}],47:[function(require,module,exports){
+},{"./config":9,"@babel/runtime/helpers/interopRequireDefault":76,"howler":98}],50:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -11921,7 +12247,7 @@ $(document.body).on("click", "#supportMeWrapper a.button", function () {
   });
 });
 
-},{"./commandline":7,"./commandline-lists":6,"@babel/runtime/helpers/interopRequireWildcard":74}],48:[function(require,module,exports){
+},{"./commandline":8,"./commandline-lists":7,"@babel/runtime/helpers/interopRequireWildcard":77}],51:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -12025,7 +12351,7 @@ $(document).on("click", "#top .config .mode .text-button", function (e) {
   TestLogic.restart();
 });
 
-},{"./config":8,"./custom-test-duration-popup":10,"./custom-text-popup":11,"./custom-word-amount-popup":14,"./manual-restart-tracker":28,"./quote-search-popup":38,"./test-logic":49,"@babel/runtime/helpers/interopRequireWildcard":74}],49:[function(require,module,exports){
+},{"./config":9,"./custom-test-duration-popup":11,"./custom-text-popup":12,"./custom-word-amount-popup":15,"./manual-restart-tracker":30,"./quote-search-popup":41,"./test-logic":52,"@babel/runtime/helpers/interopRequireWildcard":77}],52:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -12036,6 +12362,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.toggleGlarses = toggleGlarses;
+exports.clearNotSignedInResult = clearNotSignedInResult;
 exports.setNotSignedInUid = setNotSignedInUid;
 exports.setActive = setActive;
 exports.setRepeated = setRepeated;
@@ -12129,7 +12456,20 @@ var Wordset = _interopRequireWildcard(require("./wordset"));
 
 var ChallengeContoller = _interopRequireWildcard(require("./challenge-controller"));
 
+var BritishEnglish = _interopRequireWildcard(require("./british-english"));
+
+var LazyMode = _interopRequireWildcard(require("./lazy-mode"));
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var objecthash = require("object-hash");
+
 var glarsesMode = false;
+var failReason = "";
 
 function toggleGlarses() {
   glarsesMode = true;
@@ -12140,8 +12480,14 @@ function toggleGlarses() {
 var notSignedInLastResult = null;
 exports.notSignedInLastResult = notSignedInLastResult;
 
+function clearNotSignedInResult() {
+  exports.notSignedInLastResult = notSignedInLastResult = null;
+}
+
 function setNotSignedInUid(uid) {
   notSignedInLastResult.uid = uid;
+  delete notSignedInLastResult.hash;
+  notSignedInLastResult.hash = objecthash(notSignedInLastResult);
 }
 
 var Words = /*#__PURE__*/function () {
@@ -12198,6 +12544,32 @@ var Words = /*#__PURE__*/function () {
     key: "increaseCurrentIndex",
     value: function increaseCurrentIndex() {
       this.currentIndex++;
+    }
+  }, {
+    key: "clean",
+    value: function clean() {
+      var _iterator = _createForOfIteratorHelper(this.list),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var s = _step.value;
+
+          if (/ +/.test(s)) {
+            var id = this.list.indexOf(s);
+            var tempList = s.split(" ");
+            this.list.splice(id, 1);
+
+            for (var i = 0; i < tempList.length; i++) {
+              this.list.splice(id + i, 0, tempList[i]);
+            }
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
     }
   }]);
   return Words;
@@ -12519,7 +12891,7 @@ function init() {
 
 function _init() {
   _init = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-    var language, wordsBound, wordList, wordset, poem, i, randomWord, previousWord, previousWord2, regenarationCount, randomcaseword, _i, quotes, rq, quoteLengths, groupIndex, w, _i2;
+    var language, wordsBound, wordList, wordset, poem, i, randomWord, previousWord, previousWord2, regenarationCount, britishWord, randomcaseword, _i, randomList, id, quotes, rq, quoteLengths, groupIndex, w, _i2, _britishWord;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -12558,8 +12930,13 @@ function _init() {
             language = _context2.sent;
 
           case 15:
+            if (UpdateConfig["default"].lazyMode === true && language.noLazyMode) {
+              Notifications.add("This language does not support lazy mode.", 0);
+              UpdateConfig.setLazyMode(false);
+            }
+
             if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
-              _context2.next = 35;
+              _context2.next = 71;
               break;
             }
 
@@ -12620,113 +12997,182 @@ function _init() {
             wordset = Wordset.withWords(wordList);
 
             if (!(UpdateConfig["default"].funbox == "poetry")) {
-              _context2.next = 32;
+              _context2.next = 33;
               break;
             }
 
-            _context2.next = 28;
+            _context2.next = 29;
             return Poetry.getPoem();
 
-          case 28:
+          case 29:
             poem = _context2.sent;
             poem.words.forEach(function (word) {
               words.push(word);
             });
-            _context2.next = 33;
+            _context2.next = 69;
             break;
-
-          case 32:
-            for (i = 0; i < wordsBound; i++) {
-              randomWord = wordset.randomWord();
-              previousWord = words.get(i - 1);
-              previousWord2 = words.get(i - 2);
-
-              if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
-                randomWord = CustomText.text[i];
-              } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseWords.before.mode !== null)) {
-                randomWord = wordset.randomWord();
-              } else {
-                regenarationCount = 0; //infinite loop emergency stop button
-
-                while (regenarationCount < 100 && (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I" || randomWord.indexOf(" ") > -1)) {
-                  regenarationCount++;
-                  randomWord = wordset.randomWord();
-                }
-              }
-
-              if (randomWord === undefined) {
-                randomWord = wordset.randomWord();
-              }
-
-              if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
-                randomcaseword = "";
-
-                for (_i = 0; _i < randomWord.length; _i++) {
-                  if (_i % 2 != 0) {
-                    randomcaseword += randomWord[_i].toUpperCase();
-                  } else {
-                    randomcaseword += randomWord[_i];
-                  }
-                }
-
-                randomWord = randomcaseword;
-              } else if (UpdateConfig["default"].funbox === "gibberish") {
-                randomWord = Misc.getGibberish();
-              } else if (UpdateConfig["default"].funbox === "58008") {
-                // UpdateConfig.setPunctuation(false, true);
-                UpdateConfig.setNumbers(false, true);
-                randomWord = Misc.getNumbers(7);
-              } else if (UpdateConfig["default"].funbox === "specials") {
-                UpdateConfig.setPunctuation(false, true);
-                UpdateConfig.setNumbers(false, true);
-                randomWord = Misc.getSpecials();
-              } else if (UpdateConfig["default"].funbox === "ascii") {
-                UpdateConfig.setPunctuation(false, true);
-                UpdateConfig.setNumbers(false, true);
-                randomWord = Misc.getASCII();
-              } else if (UpdateConfig["default"].funbox === "weakspot") {
-                randomWord = WeakSpot.getWord(wordset);
-              }
-
-              if (UpdateConfig["default"].punctuation) {
-                randomWord = punctuateWord(previousWord, randomWord, i, wordsBound);
-              }
-
-              if (UpdateConfig["default"].numbers) {
-                if (Math.random() < 0.1 && i !== 0 && Misc.getLastChar(previousWord) !== ".") {
-                  randomWord = Misc.getNumbers(4);
-
-                  if (i == wordsBound - 1) {
-                    randomWord += ".";
-                  }
-                }
-              }
-
-              if (/\t/g.test(randomWord)) {
-                setHasTab(true);
-              }
-
-              words.push(randomWord);
-            }
 
           case 33:
-            _context2.next = 74;
-            break;
+            i = 0;
 
-          case 35:
-            if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 74;
+          case 34:
+            if (!(i < wordsBound)) {
+              _context2.next = 69;
               break;
             }
 
-            _context2.next = 38;
+            randomWord = wordset.randomWord();
+            previousWord = words.get(i - 1);
+            previousWord2 = words.get(i - 2);
+
+            if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
+              randomWord = CustomText.text[i];
+            } else if (UpdateConfig["default"].mode == "custom" && (wordset.length < 3 || PractiseWords.before.mode !== null)) {
+              randomWord = wordset.randomWord();
+            } else {
+              regenarationCount = 0; //infinite loop emergency stop button
+
+              while (regenarationCount < 100 && (randomWord == previousWord || randomWord == previousWord2 || !UpdateConfig["default"].punctuation && randomWord == "I")) {
+                regenarationCount++;
+                randomWord = wordset.randomWord();
+              }
+            }
+
+            if (randomWord === undefined) {
+              randomWord = wordset.randomWord();
+            }
+
+            if (!(UpdateConfig["default"].britishEnglish && /english/.test(UpdateConfig["default"].language))) {
+              _context2.next = 45;
+              break;
+            }
+
+            _context2.next = 43;
+            return BritishEnglish.replace(randomWord);
+
+          case 43:
+            britishWord = _context2.sent;
+            if (britishWord) randomWord = britishWord;
+
+          case 45:
+            if (UpdateConfig["default"].lazyMode === true && !language.noLazyMode) {
+              randomWord = LazyMode.replaceAccents(randomWord);
+            }
+
+            randomWord = randomWord.replace(/ +/gm, " ");
+            randomWord = randomWord.replace(/^ | $/gm, "");
+
+            if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
+              randomcaseword = "";
+
+              for (_i = 0; _i < randomWord.length; _i++) {
+                if (_i % 2 != 0) {
+                  randomcaseword += randomWord[_i].toUpperCase();
+                } else {
+                  randomcaseword += randomWord[_i];
+                }
+              }
+
+              randomWord = randomcaseword;
+            } else if (UpdateConfig["default"].funbox === "gibberish") {
+              randomWord = Misc.getGibberish();
+            } else if (UpdateConfig["default"].funbox === "58008") {
+              // UpdateConfig.setPunctuation(false, true);
+              UpdateConfig.setNumbers(false, true);
+              randomWord = Misc.getNumbers(7);
+            } else if (UpdateConfig["default"].funbox === "specials") {
+              UpdateConfig.setPunctuation(false, true);
+              UpdateConfig.setNumbers(false, true);
+              randomWord = Misc.getSpecials();
+            } else if (UpdateConfig["default"].funbox === "ascii") {
+              UpdateConfig.setPunctuation(false, true);
+              UpdateConfig.setNumbers(false, true);
+              randomWord = Misc.getASCII();
+            } else if (UpdateConfig["default"].funbox === "weakspot") {
+              randomWord = WeakSpot.getWord(wordset);
+            }
+
+            if (UpdateConfig["default"].punctuation) {
+              randomWord = punctuateWord(previousWord, randomWord, i, wordsBound);
+            }
+
+            if (UpdateConfig["default"].numbers) {
+              if (Math.random() < 0.1 && i !== 0 && Misc.getLastChar(previousWord) !== ".") {
+                randomWord = Misc.getNumbers(4);
+
+                if (i == wordsBound - 1) {
+                  randomWord += ".";
+                }
+              }
+            }
+
+            if (/\t/g.test(randomWord)) {
+              setHasTab(true);
+            }
+
+            if (!/ +/.test(randomWord)) {
+              _context2.next = 65;
+              break;
+            }
+
+            randomList = randomWord.split(" ");
+            id = 0;
+
+          case 55:
+            if (!(id < randomList.length)) {
+              _context2.next = 62;
+              break;
+            }
+
+            words.push(randomList[id]);
+            id++;
+
+            if (!(words.length == wordsBound && UpdateConfig["default"].mode == "custom" && CustomText.isWordRandom)) {
+              _context2.next = 60;
+              break;
+            }
+
+            return _context2.abrupt("break", 62);
+
+          case 60:
+            _context2.next = 55;
+            break;
+
+          case 62:
+            if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {//
+            } else {
+              i = words.length - 1;
+            }
+
+            _context2.next = 66;
+            break;
+
+          case 65:
+            words.push(randomWord);
+
+          case 66:
+            i++;
+            _context2.next = 34;
+            break;
+
+          case 69:
+            _context2.next = 123;
+            break;
+
+          case 71:
+            if (!(UpdateConfig["default"].mode == "quote")) {
+              _context2.next = 123;
+              break;
+            }
+
+            _context2.next = 74;
             return Misc.getQuotes(UpdateConfig["default"].language.replace(/_\d*k$/g, ""));
 
-          case 38:
+          case 74:
             quotes = _context2.sent;
 
             if (!(quotes.length === 0)) {
-              _context2.next = 45;
+              _context2.next = 81;
               break;
             }
 
@@ -12736,16 +13182,16 @@ function _init() {
             restart();
             return _context2.abrupt("return");
 
-          case 45:
+          case 81:
             if (!(UpdateConfig["default"].quoteLength != -2)) {
-              _context2.next = 61;
+              _context2.next = 97;
               break;
             }
 
             quoteLengths = UpdateConfig["default"].quoteLength;
 
             if (!(quoteLengths.length > 1)) {
-              _context2.next = 52;
+              _context2.next = 88;
               break;
             }
 
@@ -12755,14 +13201,14 @@ function _init() {
               groupIndex = quoteLengths[Math.floor(Math.random() * quoteLengths.length)];
             }
 
-            _context2.next = 57;
+            _context2.next = 93;
             break;
 
-          case 52:
+          case 88:
             groupIndex = quoteLengths[0];
 
             if (!(quotes.groups[groupIndex].length === 0)) {
-              _context2.next = 57;
+              _context2.next = 93;
               break;
             }
 
@@ -12770,17 +13216,17 @@ function _init() {
             TestUI.setTestRestarting(false);
             return _context2.abrupt("return");
 
-          case 57:
+          case 93:
             rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
 
             if (randomQuote != null && rq.id === randomQuote.id) {
               rq = quotes.groups[groupIndex][Math.floor(Math.random() * quotes.groups[groupIndex].length)];
             }
 
-            _context2.next = 63;
+            _context2.next = 99;
             break;
 
-          case 61:
+          case 97:
             quotes.groups.forEach(function (group) {
               var filtered = group.filter(function (quote) {
                 return quote.id == QuoteSearchPopup.selectedId;
@@ -12796,7 +13242,7 @@ function _init() {
               Notifications.add("Quote Id Does Not Exist", 0);
             }
 
-          case 63:
+          case 99:
             rq.text = rq.text.replace(/ +/gm, " ");
             rq.text = rq.text.replace(/\\\\t/gm, "\t");
             rq.text = rq.text.replace(/\\\\n/gm, "\n");
@@ -12805,18 +13251,46 @@ function _init() {
             rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
             rq.text = rq.text.replace(/…/g, "...");
             rq.text = rq.text.trim();
+            rq.language = UpdateConfig["default"].language.replace(/_\d*k$/g, "");
             setRandomQuote(rq);
             w = randomQuote.text.trim().split(" ");
+            _i2 = 0;
 
-            for (_i2 = 0; _i2 < w.length; _i2++) {
-              if (/\t/g.test(w[_i2])) {
-                setHasTab(true);
-              }
-
-              words.push(w[_i2]);
+          case 111:
+            if (!(_i2 < w.length)) {
+              _context2.next = 123;
+              break;
             }
 
-          case 74:
+            if (/\t/g.test(w[_i2])) {
+              setHasTab(true);
+            }
+
+            if (!(UpdateConfig["default"].britishEnglish && UpdateConfig["default"].language.replace(/_\d*k$/g, "") === "english")) {
+              _context2.next = 118;
+              break;
+            }
+
+            _context2.next = 116;
+            return BritishEnglish.replace(w[_i2]);
+
+          case 116:
+            _britishWord = _context2.sent;
+            if (_britishWord) w[_i2] = _britishWord;
+
+          case 118:
+            if (UpdateConfig["default"].lazyMode === true && !language.noLazyMode) {
+              w[_i2] = LazyMode.replaceAccents(w[_i2]);
+            }
+
+            words.push(w[_i2]);
+
+          case 120:
+            _i2++;
+            _context2.next = 111;
+            break;
+
+          case 123:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -12841,17 +13315,17 @@ function _init() {
 
 
             if (!$(".pageTest").hasClass("active")) {
-              _context2.next = 79;
+              _context2.next = 128;
               break;
             }
 
-            _context2.next = 79;
+            _context2.next = 128;
             return Funbox.activate();
 
-          case 79:
+          case 128:
             TestUI.showWords(); // }
 
-          case 80:
+          case 129:
           case "end":
             return _context2.stop();
         }
@@ -13065,8 +13539,8 @@ function restart() {
             $(".pageTest #premidSecondsLeft").text(UpdateConfig["default"].time);
 
             if (UpdateConfig["default"].funbox === "layoutfluid") {
-              UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
-              UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty");
+              UpdateConfig.setLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty", true);
+              UpdateConfig.setKeymapLayout(UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#")[0] : "qwerty", true);
               Keymap.highlightKey(words.getCurrent().substring(input.current.length, input.current.length + 1).toString().toUpperCase());
             }
 
@@ -13144,7 +13618,7 @@ function addWord() {
 
 function _addWord() {
   _addWord = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-    var bound, language, wordset, randomWord, previousWord, previousWordStripped, previousWord2Stripped, randomcaseword, i;
+    var bound, language, wordset, randomWord, previousWord, previousWordStripped, previousWord2Stripped, britishWord, randomcaseword, i;
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -13208,6 +13682,19 @@ function _addWord() {
               randomWord = wordset.randomWord();
             }
 
+            if (!(UpdateConfig["default"].britishEnglish && UpdateConfig["default"].language.replace(/_\d*k$/g, "") === "english")) {
+              _context3.next = 29;
+              break;
+            }
+
+            _context3.next = 27;
+            return BritishEnglish.replace(randomWord);
+
+          case 27:
+            britishWord = _context3.sent;
+            if (britishWord) randomWord = britishWord;
+
+          case 29:
             if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
               randomcaseword = "";
 
@@ -13245,7 +13732,7 @@ function _addWord() {
             words.push(randomWord);
             TestUI.addWord(randomWord);
 
-          case 29:
+          case 34:
           case "end":
             return _context3.stop();
         }
@@ -13281,6 +13768,8 @@ function _finish() {
         consistency,
         keyconsistencyarray,
         keyConsistency,
+        chartData1,
+        chartData2,
         maxChartVal,
         errorsArray,
         _i3,
@@ -13372,7 +13861,7 @@ function _finish() {
 
             TestTimer.clear();
             exports.lastTestWpm = lastTestWpm = stats.wpm;
-            testtime = stats.time;
+            testtime = parseFloat(stats.time);
 
             if (TestStats.lastSecondNotRound && !difficultyFailed) {
               wpmAndRaw = calculateWpmAndRaw();
@@ -13536,13 +14025,20 @@ function _finish() {
               $("#result .stats .consistency .bottom").attr("aria-label", "".concat(consistency, "% (").concat(keyConsistency, "% key)"));
             }
 
-            ChartController.result.data.datasets[0].data = TestStats.wpmHistory;
-            ChartController.result.data.datasets[1].data = rawWpmPerSecond;
-            maxChartVal = Math.max.apply(Math, [Math.max.apply(Math, (0, _toConsumableArray2["default"])(rawWpmPerSecond)), Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory))]);
+            ChartController.result.options.scales.yAxes[0].scaleLabel.labelString = UpdateConfig["default"].alwaysShowCPM ? "Character per Minute" : "Words per Minute";
+            chartData1 = UpdateConfig["default"].alwaysShowCPM ? TestStats.wpmHistory.map(function (a) {
+              return a * 5;
+            }) : TestStats.wpmHistory;
+            chartData2 = UpdateConfig["default"].alwaysShowCPM ? rawWpmPerSecond.map(function (a) {
+              return a * 5;
+            }) : rawWpmPerSecond;
+            ChartController.result.data.datasets[0].data = chartData1;
+            ChartController.result.data.datasets[1].data = chartData2;
+            maxChartVal = Math.max.apply(Math, [Math.max.apply(Math, (0, _toConsumableArray2["default"])(chartData2)), Math.max.apply(Math, (0, _toConsumableArray2["default"])(chartData1))]);
 
             if (!UpdateConfig["default"].startGraphsAtZero) {
-              ChartController.result.options.scales.yAxes[0].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory));
-              ChartController.result.options.scales.yAxes[1].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.wpmHistory));
+              ChartController.result.options.scales.yAxes[0].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(chartData1));
+              ChartController.result.options.scales.yAxes[1].ticks.min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(chartData1));
             } else {
               ChartController.result.options.scales.yAxes[0].ticks.min = 0;
               ChartController.result.options.scales.yAxes[1].ticks.min = 0;
@@ -13623,6 +14119,7 @@ function _finish() {
                 quoteLength: quoteLength,
                 punctuation: UpdateConfig["default"].punctuation,
                 numbers: UpdateConfig["default"].numbers,
+                lazyMode: UpdateConfig["default"].lazyMode,
                 timestamp: Date.now(),
                 language: lang,
                 restartCount: TestStats.restartCount,
@@ -13695,6 +14192,10 @@ function _finish() {
               testType += "<br>blind";
             }
 
+            if (UpdateConfig["default"].lazyMode) {
+              testType += "<br>lazy";
+            }
+
             if (UpdateConfig["default"].funbox !== "none") {
               testType += "<br>" + UpdateConfig["default"].funbox.replace(/_/g, " ");
             }
@@ -13751,10 +14252,10 @@ function _finish() {
               $("#result .stats .source").addClass("hidden");
             }
 
-            _context4.next = 97;
+            _context4.next = 101;
             return ThemeColors.get("sub");
 
-          case 97:
+          case 101:
             fc = _context4.sent;
 
             if (UpdateConfig["default"].funbox !== "none") {
@@ -13826,7 +14327,7 @@ function _finish() {
               Keymap.hide();
             });
 
-          case 105:
+          case 109:
           case "end":
             return _context4.stop();
         }
@@ -13836,12 +14337,10 @@ function _finish() {
   return _finish.apply(this, arguments);
 }
 
-var failReason = "";
-
 function fail(reason) {
-  failReason = reason;
-  input.pushHistory();
-  corrected.pushHistory();
+  failReason = reason; // input.pushHistory();
+  // corrected.pushHistory();
+
   TestStats.pushKeypressesToHistory();
   finish(true);
   var testSeconds = TestStats.calculateTestSeconds(performance.now());
@@ -13852,7 +14351,7 @@ function fail(reason) {
   TestStats.incrementRestartCount();
 }
 
-},{"./caret":3,"./challenge-controller":4,"./chart-controller":5,"./config":8,"./custom-text":12,"./focus":15,"./funbox":16,"./keymap":20,"./live-acc":24,"./live-burst":25,"./live-wpm":26,"./manual-restart-tracker":28,"./misc":29,"./monkey-power":30,"./notifications":32,"./out-of-focus":33,"./pace-caret":34,"./pb-crown":35,"./poetry.js":36,"./practise-words":37,"./quote-search-popup":38,"./replay.js":40,"./shift-tracker":44,"./test-stats":50,"./test-timer":51,"./test-ui":52,"./theme-colors":53,"./theme-controller":54,"./timer-progress":56,"./today-tracker":57,"./ui":58,"./weak-spot":60,"./wordset":62,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85}],50:[function(require,module,exports){
+},{"./british-english":2,"./caret":4,"./challenge-controller":5,"./chart-controller":6,"./config":9,"./custom-text":13,"./focus":16,"./funbox":17,"./keymap":21,"./lazy-mode":25,"./live-acc":26,"./live-burst":27,"./live-wpm":28,"./manual-restart-tracker":30,"./misc":31,"./monkey-power":32,"./notifications":35,"./out-of-focus":36,"./pace-caret":37,"./pb-crown":38,"./poetry.js":39,"./practise-words":40,"./quote-search-popup":41,"./replay.js":43,"./shift-tracker":47,"./test-stats":53,"./test-timer":54,"./test-ui":55,"./theme-colors":56,"./theme-controller":57,"./timer-progress":59,"./today-tracker":60,"./ui":61,"./weak-spot":63,"./wordset":65,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/helpers/toConsumableArray":85,"@babel/runtime/regenerator":88,"object-hash":100}],53:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -13901,8 +14400,6 @@ exports.incompleteSeconds = exports.restartCount = exports.keypressTimings = exp
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var _config = _interopRequireDefault(require("./config"));
-
-var Funbox = _interopRequireWildcard(require("./funbox"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
 
@@ -14346,7 +14843,7 @@ function calculateStats() {
   };
 }
 
-},{"./config":8,"./funbox":16,"./misc":29,"./test-logic":49,"./test-stats":50,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],51:[function(require,module,exports){
+},{"./config":9,"./misc":31,"./test-logic":52,"./test-stats":53,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],54:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -14374,13 +14871,9 @@ var Misc = _interopRequireWildcard(require("./misc"));
 
 var Notifications = _interopRequireWildcard(require("./notifications"));
 
-var Funbox = _interopRequireWildcard(require("./funbox"));
-
 var TestLogic = _interopRequireWildcard(require("./test-logic"));
 
 var Caret = _interopRequireWildcard(require("./caret"));
-
-var Keymap = _interopRequireWildcard(require("./keymap"));
 
 var time = 0;
 exports.time = time;
@@ -14411,9 +14904,9 @@ function start() {
       var acc = Misc.roundTo2(TestStats.calculateAccuracy());
 
       if (UpdateConfig["default"].funbox === "layoutfluid" && UpdateConfig["default"].mode === "time") {
-        var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"];
-        console.log(UpdateConfig["default"].customLayoutfluid);
-        console.log(layouts);
+        var layouts = UpdateConfig["default"].customLayoutfluid ? UpdateConfig["default"].customLayoutfluid.split("#") : ["qwerty", "dvorak", "colemak"]; // console.log(Config.customLayoutfluid);
+        // console.log(layouts);
+
         var numLayouts = layouts.length;
         var index = 0;
         index = Math.floor(time / (UpdateConfig["default"].time / numLayouts));
@@ -14432,11 +14925,9 @@ function start() {
 
         if (UpdateConfig["default"].layout !== layouts[index] && layouts[index] !== undefined) {
           Notifications.add("--- !!! ".concat(layouts[index], " !!! ---"), 0);
+          UpdateConfig.setLayout(layouts[index], true);
+          UpdateConfig.setKeymapLayout(layouts[index], true);
         }
-
-        UpdateConfig.setLayout(layouts[index]);
-        UpdateConfig.setKeymapLayout(layouts[index]);
-        Keymap.highlightKey(TestLogic.words.getCurrent().substring(TestLogic.input.current.length, TestLogic.input.current.length + 1).toString().toUpperCase());
       }
 
       TestStats.pushKeypressesToHistory();
@@ -14470,7 +14961,7 @@ function start() {
   })(TestStats.start + stepIntervalMS);
 }
 
-},{"./caret":3,"./config":8,"./custom-text":12,"./funbox":16,"./keymap":20,"./live-wpm":26,"./misc":29,"./monkey":31,"./notifications":32,"./test-logic":49,"./test-stats":50,"./timer-progress":56,"@babel/runtime/helpers/interopRequireWildcard":74}],52:[function(require,module,exports){
+},{"./caret":4,"./config":9,"./custom-text":13,"./live-wpm":28,"./misc":31,"./monkey":33,"./notifications":35,"./test-logic":52,"./test-stats":53,"./timer-progress":59,"@babel/runtime/helpers/interopRequireWildcard":77}],55:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -14546,6 +15037,8 @@ var Misc = _interopRequireWildcard(require("./misc"));
 var TestUI = _interopRequireWildcard(require("./test-ui"));
 
 var ChallengeController = _interopRequireWildcard(require("./challenge-controller"));
+
+var UI = _interopRequireWildcard(require("./ui"));
 
 var currentWordElementIndex = 0;
 exports.currentWordElementIndex = currentWordElementIndex;
@@ -14713,11 +15206,11 @@ function screenshot() {
 }
 
 function _screenshot() {
-  _screenshot = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+  _screenshot = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
     var revealReplay, revertScreenshot, src, sourceX, sourceY, sourceWidth, sourceHeight;
-    return _regenerator["default"].wrap(function _callee3$(_context3) {
+    return _regenerator["default"].wrap(function _callee4$(_context4) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context4.prev = _context4.next) {
           case 0:
             revertScreenshot = function _revertScreenshot() {
               $("#notificationCenter").removeClass("hidden");
@@ -14737,6 +15230,7 @@ function _screenshot() {
 
             $("#resultReplay").addClass("hidden");
             $(".pageTest .ssWatermark").removeClass("hidden");
+            $(".pageTest .ssWatermark").text(moment(Date.now()).format("DD MMM YYYY HH:mm") + " | monkeytype.com ");
             $(".pageTest .buttons").addClass("hidden");
             src = $("#middle");
             sourceX = src.position().left;
@@ -14753,26 +15247,26 @@ function _screenshot() {
 
             $("#notificationCenter").addClass("hidden");
             $("#commandLineMobileButton").addClass("hidden");
-            _context3.prev = 13;
-            _context3.t0 = html2canvas;
-            _context3.t1 = document.body;
-            _context3.next = 18;
+            _context4.prev = 14;
+            _context4.t0 = html2canvas;
+            _context4.t1 = document.body;
+            _context4.next = 19;
             return ThemeColors.get("bg");
 
-          case 18:
-            _context3.t2 = _context3.sent;
-            _context3.t3 = sourceHeight + 50;
-            _context3.t4 = sourceWidth + 50;
-            _context3.t5 = sourceX - 25;
-            _context3.t6 = sourceY - 25;
-            _context3.t7 = {
-              backgroundColor: _context3.t2,
-              height: _context3.t3,
-              width: _context3.t4,
-              x: _context3.t5,
-              y: _context3.t6
+          case 19:
+            _context4.t2 = _context4.sent;
+            _context4.t3 = sourceHeight + 50;
+            _context4.t4 = sourceWidth + 50;
+            _context4.t5 = sourceX - 25;
+            _context4.t6 = sourceY - 25;
+            _context4.t7 = {
+              backgroundColor: _context4.t2,
+              height: _context4.t3,
+              width: _context4.t4,
+              x: _context4.t5,
+              y: _context4.t6
             };
-            (0, _context3.t0)(_context3.t1, _context3.t7).then(function (canvas) {
+            (0, _context4.t0)(_context4.t1, _context4.t7).then(function (canvas) {
               canvas.toBlob(function (blob) {
                 try {
                   if (navigator.userAgent.toLowerCase().indexOf("firefox") > -1) {
@@ -14793,26 +15287,26 @@ function _screenshot() {
                 }
               });
             });
-            _context3.next = 31;
+            _context4.next = 32;
             break;
 
-          case 27:
-            _context3.prev = 27;
-            _context3.t8 = _context3["catch"](13);
-            Notifications.add("Error creating image: " + _context3.t8.message, -1);
+          case 28:
+            _context4.prev = 28;
+            _context4.t8 = _context4["catch"](14);
+            Notifications.add("Error creating image: " + _context4.t8.message, -1);
             revertScreenshot();
 
-          case 31:
+          case 32:
             setTimeout(function () {
               revertScreenshot();
             }, 3000);
 
-          case 32:
+          case 33:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
       }
-    }, _callee3, null, [[13, 27]]);
+    }, _callee4, null, [[14, 28]]);
   }));
   return _screenshot.apply(this, arguments);
 }
@@ -14917,7 +15411,7 @@ function updateWordElement(showError) {
     }
 
     if (UpdateConfig["default"].highlightMode === "letter" && UpdateConfig["default"].hideExtraLetters) {
-      if (input.length > currentWord.length) {
+      if (input.length > currentWord.length && !UpdateConfig["default"].blindMode) {
         $(wordAtIndex).addClass("error");
       } else if (input.length == currentWord.length) {
         $(wordAtIndex).removeClass("error");
@@ -15019,6 +15513,10 @@ function updateModesNotice() {
     $(".pageTest #testModesNotice").append("<div class=\"text-button blind\"><i class=\"fas fa-eye-slash\"></i>blind</div>");
   }
 
+  if (UpdateConfig["default"].lazyMode) {
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsLazyMode\"><i class=\"fas fa-couch\"></i>lazy</div>");
+  }
+
   if (UpdateConfig["default"].paceCaret !== "off" || UpdateConfig["default"].repeatedPace && TestLogic.isPaceRepeat) {
     var speed = "";
 
@@ -15091,12 +15589,12 @@ function loadWordsHistory() {
 }
 
 function _loadWordsHistory() {
-  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+  _loadWordsHistory = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
     var wordsHTML, i, input, word, wordEl, wordstats, length, c, loop, _c, correctedChar, extraCorrected, _c2;
 
-    return _regenerator["default"].wrap(function _callee4$(_context4) {
+    return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
             $("#resultWordsHistory .words").empty();
             wordsHTML = "";
@@ -15104,17 +15602,17 @@ function _loadWordsHistory() {
 
           case 3:
             if (!(i < TestLogic.input.history.length + 2)) {
-              _context4.next = 25;
+              _context5.next = 25;
               break;
             }
 
             input = TestLogic.input.getHistory(i);
             word = TestLogic.words.get(i);
             wordEl = "";
-            _context4.prev = 7;
+            _context5.prev = 7;
 
             if (!(input === "")) {
-              _context4.next = 10;
+              _context5.next = 10;
               break;
             }
 
@@ -15208,12 +15706,12 @@ function _loadWordsHistory() {
             }
 
             wordEl += "</div>";
-            _context4.next = 21;
+            _context5.next = 21;
             break;
 
           case 18:
-            _context4.prev = 18;
-            _context4.t0 = _context4["catch"](7);
+            _context5.prev = 18;
+            _context5.t0 = _context5["catch"](7);
 
             try {
               wordEl = "<div class='word'>";
@@ -15230,20 +15728,20 @@ function _loadWordsHistory() {
 
           case 22:
             i++;
-            _context4.next = 3;
+            _context5.next = 3;
             break;
 
           case 25:
             $("#resultWordsHistory .words").html(wordsHTML);
             $("#showWordHistoryButton").addClass("loaded");
-            return _context4.abrupt("return", true);
+            return _context5.abrupt("return", true);
 
           case 28:
           case "end":
-            return _context4.stop();
+            return _context5.stop();
         }
       }
-    }, _callee4, null, [[7, 18]]);
+    }, _callee5, null, [[7, 18]]);
   }));
   return _loadWordsHistory.apply(this, arguments);
 }
@@ -15284,44 +15782,18 @@ function toggleResultWords() {
 function applyBurstHeatmap() {
   if (UpdateConfig["default"].burstHeatmap) {
     $("#resultWordsHistory .heatmapLegend").removeClass("hidden");
-    var min = Math.min.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
-    var max = Math.max.apply(Math, (0, _toConsumableArray2["default"])(TestStats.burstHistory));
     var burstlist = (0, _toConsumableArray2["default"])(TestStats.burstHistory);
 
     if (TestLogic.input.getHistory(TestLogic.input.getHistory().length - 1).length !== TestLogic.words.getCurrent().length) {
       burstlist = burstlist.splice(0, burstlist.length - 1);
-    } // let step = (max - min) / 5;
-    // let steps = [
-    //   {
-    //     val: min,
-    //     class: 'heatmap-0'
-    //   },
-    //   {
-    //     val: min + (step * 1),
-    //     class: 'heatmap-1'
-    //   },
-    //   {
-    //     val: min + (step * 2),
-    //     class: 'heatmap-2'
-    //   },
-    //   {
-    //     val: min + (step * 3),
-    //     class: 'heatmap-3'
-    //   },
-    //   {
-    //     val: min + (step * 4),
-    //     class: 'heatmap-4'
-    //   },
-    // ];
-
+    }
 
     var median = Misc.median(burstlist);
     var adatm = [];
     burstlist.forEach(function (burst) {
       adatm.push(Math.abs(median - burst));
     });
-    var step = Misc.mean(adatm); // let step = Misc.stdDev(burstlist)/2;
-
+    var step = Misc.mean(adatm);
     var steps = [{
       val: 0,
       "class": "heatmap-0"
@@ -15428,6 +15900,26 @@ $(".pageTest #toggleBurstHeatmap").click( /*#__PURE__*/function () {
 
   return function (_x2) {
     return _ref2.apply(this, arguments);
+  };
+}());
+$(".pageTest .loginTip .link").click( /*#__PURE__*/function () {
+  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(event) {
+    return _regenerator["default"].wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            UI.changePage("login");
+
+          case 1:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function (_x3) {
+    return _ref3.apply(this, arguments);
   };
 }());
 $(document).on("mouseleave", "#resultWordsHistory .words .word", function (e) {
@@ -15539,7 +16031,7 @@ $("#wordsWrapper").on("click", function () {
   focusWords();
 });
 
-},{"./caret":3,"./challenge-controller":4,"./commandline":7,"./commandline-lists":6,"./config":8,"./custom-text":12,"./funbox":16,"./keymap":20,"./manual-restart-tracker":28,"./misc":29,"./notifications":32,"./out-of-focus":33,"./pace-caret":34,"./practise-words":37,"./replay":40,"./test-logic":49,"./test-stats":50,"./test-ui":52,"./theme-colors":53,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/helpers/toConsumableArray":82,"@babel/runtime/regenerator":85}],53:[function(require,module,exports){
+},{"./caret":4,"./challenge-controller":5,"./commandline":8,"./commandline-lists":7,"./config":9,"./custom-text":13,"./funbox":17,"./keymap":21,"./manual-restart-tracker":30,"./misc":31,"./notifications":35,"./out-of-focus":36,"./pace-caret":37,"./practise-words":40,"./replay":43,"./test-logic":52,"./test-stats":53,"./test-ui":55,"./theme-colors":56,"./ui":61,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/helpers/toConsumableArray":85,"@babel/runtime/regenerator":88}],56:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -15632,7 +16124,7 @@ function update() {
   colors.colorfulErrorExtra = st.getPropertyValue("--colorful-error-extra-color").replace(" ", "");
 }
 
-},{"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/regenerator":85}],54:[function(require,module,exports){
+},{"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/regenerator":88}],57:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15662,8 +16154,6 @@ var ChartController = _interopRequireWildcard(require("./chart-controller"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
 
-var Notifications = _interopRequireWildcard(require("./notifications"));
-
 var _config = _interopRequireDefault(require("./config"));
 
 var UI = _interopRequireWildcard(require("./ui"));
@@ -15676,12 +16166,8 @@ exports.randomTheme = randomTheme;
 var colorVars = ["--bg-color", "--main-color", "--caret-color", "--sub-color", "--text-color", "--error-color", "--error-extra-color", "--colorful-error-color", "--colorful-error-extra-color"];
 exports.colorVars = colorVars;
 
-function updateFavicon(_x, _x2) {
-  return _updateFavicon.apply(this, arguments);
-}
-
-function _updateFavicon() {
-  _updateFavicon = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(size, curveSize) {
+function updateFavicon(size, curveSize) {
+  setTimeout( /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
     var maincolor, bgcolor, canvas, ctx;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -15720,10 +16206,11 @@ function _updateFavicon() {
             ctx.quadraticCurveTo(0, size, 0, size - curveSize);
             ctx.fillStyle = bgcolor;
             ctx.fill();
-            ctx.font = "900 " + size / 2 * 1.2 + "px Roboto Mono";
+            ctx.font = "900 " + size / 2 * 1.2 + "px Lexend Deca";
             ctx.textAlign = "center";
             ctx.fillStyle = maincolor;
-            ctx.fillText("mt", size / 2 + size / 32, size / 3 * 2.1);
+            ctx.fillText("mt", size / 2 + 1, size / 3 * 2.1); // $("body").prepend(canvas);
+
             $("#favicon").attr("href", canvas.toDataURL("image/png"));
 
           case 27:
@@ -15732,8 +16219,7 @@ function _updateFavicon() {
         }
       }
     }, _callee);
-  }));
-  return _updateFavicon.apply(this, arguments);
+  })), 125);
 }
 
 function clearCustomTheme() {
@@ -15760,6 +16246,7 @@ var loadStyle = function loadStyle(name) {
 };
 
 function apply(themeName) {
+  var isPreview = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   clearCustomTheme();
   var name = "serika_dark";
 
@@ -15776,7 +16263,6 @@ function apply(themeName) {
 
   loadStyle(name).then(function () {
     ThemeColors.update();
-    $(".current-theme .text").text(themeName.replace("_", " "));
 
     if (themeName === "custom") {
       colorVars.forEach(function (e, index) {
@@ -15784,18 +16270,22 @@ function apply(themeName) {
       });
     }
 
-    ThemeColors.get().then(function (colors) {
-      $(".keymap-key").attr("style", "");
-      ChartController.updateAllChartColors();
-      updateFavicon(32, 14);
-      $("#metaThemeColor").attr("content", colors.bg);
-    });
+    if (!isPreview) {
+      ThemeColors.get().then(function (colors) {
+        $(".current-theme .text").text(themeName.replace(/_/g, " "));
+        $(".keymap-key").attr("style", "");
+        ChartController.updateAllChartColors();
+        updateFavicon(128, 32);
+        $("#metaThemeColor").attr("content", colors.bg);
+      });
+    }
   });
 }
 
 function preview(themeName) {
+  var randomTheme = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   isPreviewingTheme = true;
-  apply(themeName);
+  apply(themeName, true && !randomTheme);
 }
 
 function set(themeName) {
@@ -15839,7 +16329,7 @@ function randomizeTheme() {
 
     var previousTheme = randomTheme;
     exports.randomTheme = randomTheme = randomList[Math.floor(Math.random() * randomList.length)];
-    preview(randomTheme);
+    preview(randomTheme, true);
 
     if (previousTheme != randomTheme) {// Notifications.add(randomTheme.replace(/_/g, " "), 0);
     }
@@ -15881,7 +16371,7 @@ function applyCustomBackgroundSize() {
   }
 }
 
-},{"./chart-controller":5,"./config":8,"./misc":29,"./notifications":32,"./theme-colors":53,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85,"tinycolor2":98}],55:[function(require,module,exports){
+},{"./chart-controller":6,"./config":9,"./misc":31,"./theme-colors":56,"./ui":61,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88,"tinycolor2":102}],58:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -15939,7 +16429,7 @@ function refreshButtons() {
       themes.forEach(function (theme) {
         if (UpdateConfig["default"].favThemes.includes(theme.name)) {
           var activeTheme = activeThemeName === theme.name ? "active" : "";
-          favThemesEl.append("<div class=\"theme button\" theme='".concat(theme.name, "' style=\"color:").concat(theme.textColor, ";background:").concat(theme.bgColor, "\">\n          <div class=\"activeIndicator ").concat(activeTheme, "\"><i class=\"fas fa-circle\"></i></div>\n          <div class=\"text\">").concat(theme.name.replace(/_/g, " "), "</div>\n          <div class=\"favButton active\"><i class=\"fas fa-star\"></i></div></div>"));
+          favThemesEl.append("<div class=\"theme button ".concat(activeTheme, "\" theme='").concat(theme.name, "' style=\"color:").concat(theme.textColor, ";background:").concat(theme.bgColor, "\">\n          <div class=\"activeIndicator\"><i class=\"fas fa-circle\"></i></div>\n          <div class=\"text\">").concat(theme.name.replace(/_/g, " "), "</div>\n          <div class=\"favButton active\"><i class=\"fas fa-star\"></i></div></div>"));
         }
       });
     } else {
@@ -15952,7 +16442,7 @@ function refreshButtons() {
     themes.forEach(function (theme) {
       if (!UpdateConfig["default"].favThemes.includes(theme.name)) {
         var activeTheme = activeThemeName === theme.name ? "active" : "";
-        themesEl.append("<div class=\"theme button\" theme='".concat(theme.name, "' style=\"color:").concat(theme.textColor, ";background:").concat(theme.bgColor, "\">\n          <div class=\"activeIndicator ").concat(activeTheme, "\"><i class=\"fas fa-circle\"></i></div>\n          <div class=\"text\">").concat(theme.name.replace(/_/g, " "), "</div>\n          <div class=\"favButton\"><i class=\"far fa-star\"></i></div></div>"));
+        themesEl.append("<div class=\"theme button ".concat(activeTheme, "\" theme='").concat(theme.name, "' style=\"color:").concat(theme.textColor, ";background:").concat(theme.bgColor, "\">\n          <div class=\"activeIndicator\"><i class=\"fas fa-circle\"></i></div>\n          <div class=\"text\">").concat(theme.name.replace(/_/g, " "), "</div>\n          <div class=\"favButton\"><i class=\"far fa-star\"></i></div></div>"));
       }
     });
     updateActiveButton();
@@ -16055,7 +16545,7 @@ $(document).on("click", ".pageSettings .section.themes .theme.button", function 
   }
 });
 $(".pageSettings .section.themes .tabContainer .customTheme input[type=color]").on("input", function (e) {
-  UpdateConfig.setCustomTheme(true, true);
+  // UpdateConfig.setCustomTheme(true, true);
   var $colorVar = $(e.currentTarget).attr("id");
   var $pickedColor = $(e.currentTarget).val();
   document.documentElement.style.setProperty($colorVar, $pickedColor);
@@ -16126,7 +16616,7 @@ $(".pageSettings #loadCustomColorsFromPreset").click(function (e) {
   })), 250);
 });
 
-},{"./chart-controller":5,"./commandline-lists":6,"./config":8,"./misc":29,"./notifications":32,"./theme-colors":53,"./theme-controller":54,"./ui":58,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],56:[function(require,module,exports){
+},{"./chart-controller":6,"./commandline-lists":7,"./config":9,"./misc":31,"./notifications":35,"./theme-colors":56,"./theme-controller":57,"./ui":61,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],59:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -16302,7 +16792,7 @@ function update() {
   }
 }
 
-},{"./config":8,"./custom-text":12,"./misc":29,"./test-logic":49,"./test-timer":51,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],57:[function(require,module,exports){
+},{"./config":9,"./custom-text":13,"./misc":31,"./test-logic":52,"./test-timer":54,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],60:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -16334,11 +16824,11 @@ function addSeconds(s) {
 }
 
 function getString() {
-  var secString = Misc.secondsToString(Math.round(seconds), true);
+  var secString = Misc.secondsToString(Math.round(seconds), true, true);
   return secString + (addedAllToday === true ? " today" : " session");
 }
 
-},{"./misc":29,"@babel/runtime/helpers/interopRequireWildcard":74}],58:[function(require,module,exports){
+},{"./misc":31,"@babel/runtime/helpers/interopRequireWildcard":77}],61:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -16434,6 +16924,7 @@ function swapElements(el1, el2, totalDuration) {
 }
 
 function changePage(page) {
+  var norestart = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   console.log("change");
 
   if (pageTransition) {
@@ -16458,7 +16949,7 @@ function changePage(page) {
 
     TestStats.resetIncomplete();
     ManualRestart.set();
-    TestLogic.restart();
+    if (!norestart) TestLogic.restart();
     Funbox.activate(UpdateConfig["default"].funbox);
   } else if (page == "about") {
     setPageTransition(true);
@@ -16514,7 +17005,10 @@ $(".merchBanner .fas").click(function (event) {
   // );
 });
 $(".scrollToTopButton").click(function (event) {
-  window.scrollTo(0, 0);
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
 });
 $(document).on("click", "#bottom .leftright .right .current-theme", function (e) {
   if (e.shiftKey) {
@@ -16550,13 +17044,22 @@ $(document).on("click", "#top #menu .icon-button", function (e) {
   changePage(href.slice(1));
 });
 
-},{"./caret":3,"./commandline":7,"./commandline-lists":6,"./config":8,"./custom-text":12,"./funbox":16,"./manual-restart-tracker":28,"./notifications":32,"./settings":43,"./test-config":48,"./test-logic":49,"./test-stats":50,"./test-ui":52,"@babel/runtime/helpers/interopRequireWildcard":74}],59:[function(require,module,exports){
+},{"./caret":4,"./commandline":8,"./commandline-lists":7,"./config":9,"./custom-text":13,"./funbox":17,"./manual-restart-tracker":30,"./notifications":35,"./settings":46,"./test-config":51,"./test-logic":52,"./test-stats":53,"./test-ui":55,"@babel/runtime/helpers/interopRequireWildcard":77}],62:[function(require,module,exports){
 "use strict";
 
-$(document.body).on("click", ".version", function () {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.show = show;
+
+function show() {
   $("#versionHistoryWrapper").css("opacity", 0).removeClass("hidden").animate({
     opacity: 1
   }, 125);
+}
+
+$(document.body).on("click", ".version", function () {
+  show();
 });
 $(document.body).on("click", "#versionHistoryWrapper", function () {
   $("#versionHistoryWrapper").css("opacity", 1).animate({
@@ -16566,7 +17069,7 @@ $(document.body).on("click", "#versionHistoryWrapper", function () {
   });
 });
 
-},{}],60:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -16643,23 +17146,6 @@ function updateScore(_char, isCorrect) {
   scores[_char].update(score);
 }
 
-function getWord(wordset) {
-  var highScore;
-  var randomWord;
-
-  for (var i = 0; i < wordSamples; i++) {
-    var newWord = wordset.randomWord();
-    var newScore = score(newWord);
-
-    if (i == 0 || newScore > highScore) {
-      randomWord = newWord;
-      highScore = newScore;
-    }
-  }
-
-  return randomWord;
-}
-
 function score(word) {
   var total = 0.0;
   var numChars = 0;
@@ -16685,7 +17171,24 @@ function score(word) {
   return numChars == 0 ? 0.0 : total / numChars;
 }
 
-},{"./test-stats":50,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74}],61:[function(require,module,exports){
+function getWord(wordset) {
+  var highScore;
+  var randomWord;
+
+  for (var i = 0; i < wordSamples; i++) {
+    var newWord = wordset.randomWord();
+    var newScore = score(newWord);
+
+    if (i == 0 || newScore > highScore) {
+      randomWord = newWord;
+      highScore = newScore;
+    }
+  }
+
+  return randomWord;
+}
+
+},{"./test-stats":53,"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77}],64:[function(require,module,exports){
 "use strict";
 
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
@@ -16702,6 +17205,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
+
+var CustomText = _interopRequireWildcard(require("./custom-text"));
 
 var initialised = false;
 
@@ -16854,7 +17359,7 @@ function _apply() {
 
           case 3:
             filteredWords = _context4.sent;
-            customText = filteredWords.join(" ");
+            customText = filteredWords.join(CustomText.delimiter);
             $("#customTextPopup textarea").val(function (index, val) {
               return (set ? "" : val + " ") + customText;
             });
@@ -16889,7 +17394,7 @@ $("#wordFilterPopupWrapper .button").mousedown(function (e) {
   }, 1);
 });
 
-},{"./misc":29,"@babel/runtime/helpers/asyncToGenerator":67,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/interopRequireWildcard":74,"@babel/runtime/regenerator":85}],62:[function(require,module,exports){
+},{"./custom-text":13,"./misc":31,"@babel/runtime/helpers/asyncToGenerator":70,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/interopRequireWildcard":77,"@babel/runtime/regenerator":88}],65:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -17088,7 +17593,7 @@ function withWords(words) {
   }
 }
 
-},{"./config":8,"@babel/runtime/helpers/classCallCheck":68,"@babel/runtime/helpers/createClass":69,"@babel/runtime/helpers/getPrototypeOf":71,"@babel/runtime/helpers/inherits":72,"@babel/runtime/helpers/interopRequireDefault":73,"@babel/runtime/helpers/possibleConstructorReturn":79,"@babel/runtime/helpers/slicedToArray":81}],63:[function(require,module,exports){
+},{"./config":9,"@babel/runtime/helpers/classCallCheck":71,"@babel/runtime/helpers/createClass":72,"@babel/runtime/helpers/getPrototypeOf":74,"@babel/runtime/helpers/inherits":75,"@babel/runtime/helpers/interopRequireDefault":76,"@babel/runtime/helpers/possibleConstructorReturn":82,"@babel/runtime/helpers/slicedToArray":84}],66:[function(require,module,exports){
 function _arrayLikeToArray(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
 
@@ -17100,13 +17605,13 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-},{}],64:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 function _arrayWithHoles(arr) {
   if (Array.isArray(arr)) return arr;
 }
 
 module.exports = _arrayWithHoles;
-},{}],65:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _arrayWithoutHoles(arr) {
@@ -17114,7 +17619,7 @@ function _arrayWithoutHoles(arr) {
 }
 
 module.exports = _arrayWithoutHoles;
-},{"./arrayLikeToArray":63}],66:[function(require,module,exports){
+},{"./arrayLikeToArray":66}],69:[function(require,module,exports){
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -17124,7 +17629,7 @@ function _assertThisInitialized(self) {
 }
 
 module.exports = _assertThisInitialized;
-},{}],67:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -17162,7 +17667,7 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
-},{}],68:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -17170,7 +17675,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 module.exports = _classCallCheck;
-},{}],69:[function(require,module,exports){
+},{}],72:[function(require,module,exports){
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
@@ -17188,7 +17693,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 }
 
 module.exports = _createClass;
-},{}],70:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -17205,7 +17710,7 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
-},{}],71:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 function _getPrototypeOf(o) {
   module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
     return o.__proto__ || Object.getPrototypeOf(o);
@@ -17214,7 +17719,7 @@ function _getPrototypeOf(o) {
 }
 
 module.exports = _getPrototypeOf;
-},{}],72:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 var setPrototypeOf = require("./setPrototypeOf");
 
 function _inherits(subClass, superClass) {
@@ -17233,7 +17738,7 @@ function _inherits(subClass, superClass) {
 }
 
 module.exports = _inherits;
-},{"./setPrototypeOf":80}],73:[function(require,module,exports){
+},{"./setPrototypeOf":83}],76:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     "default": obj
@@ -17241,7 +17746,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-},{}],74:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 var _typeof = require("@babel/runtime/helpers/typeof");
 
 function _getRequireWildcardCache() {
@@ -17297,13 +17802,13 @@ function _interopRequireWildcard(obj) {
 }
 
 module.exports = _interopRequireWildcard;
-},{"@babel/runtime/helpers/typeof":83}],75:[function(require,module,exports){
+},{"@babel/runtime/helpers/typeof":86}],78:[function(require,module,exports){
 function _iterableToArray(iter) {
   if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
 }
 
 module.exports = _iterableToArray;
-},{}],76:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 function _iterableToArrayLimit(arr, i) {
   if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
   var _arr = [];
@@ -17332,19 +17837,19 @@ function _iterableToArrayLimit(arr, i) {
 }
 
 module.exports = _iterableToArrayLimit;
-},{}],77:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableRest;
-},{}],78:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 module.exports = _nonIterableSpread;
-},{}],79:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 var _typeof = require("@babel/runtime/helpers/typeof");
 
 var assertThisInitialized = require("./assertThisInitialized");
@@ -17358,7 +17863,7 @@ function _possibleConstructorReturn(self, call) {
 }
 
 module.exports = _possibleConstructorReturn;
-},{"./assertThisInitialized":66,"@babel/runtime/helpers/typeof":83}],80:[function(require,module,exports){
+},{"./assertThisInitialized":69,"@babel/runtime/helpers/typeof":86}],83:[function(require,module,exports){
 function _setPrototypeOf(o, p) {
   module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
     o.__proto__ = p;
@@ -17369,7 +17874,7 @@ function _setPrototypeOf(o, p) {
 }
 
 module.exports = _setPrototypeOf;
-},{}],81:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 var arrayWithHoles = require("./arrayWithHoles");
 
 var iterableToArrayLimit = require("./iterableToArrayLimit");
@@ -17383,7 +17888,7 @@ function _slicedToArray(arr, i) {
 }
 
 module.exports = _slicedToArray;
-},{"./arrayWithHoles":64,"./iterableToArrayLimit":76,"./nonIterableRest":77,"./unsupportedIterableToArray":84}],82:[function(require,module,exports){
+},{"./arrayWithHoles":67,"./iterableToArrayLimit":79,"./nonIterableRest":80,"./unsupportedIterableToArray":87}],85:[function(require,module,exports){
 var arrayWithoutHoles = require("./arrayWithoutHoles");
 
 var iterableToArray = require("./iterableToArray");
@@ -17397,7 +17902,7 @@ function _toConsumableArray(arr) {
 }
 
 module.exports = _toConsumableArray;
-},{"./arrayWithoutHoles":65,"./iterableToArray":75,"./nonIterableSpread":78,"./unsupportedIterableToArray":84}],83:[function(require,module,exports){
+},{"./arrayWithoutHoles":68,"./iterableToArray":78,"./nonIterableSpread":81,"./unsupportedIterableToArray":87}],86:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -17415,7 +17920,7 @@ function _typeof(obj) {
 }
 
 module.exports = _typeof;
-},{}],84:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 var arrayLikeToArray = require("./arrayLikeToArray");
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -17428,10 +17933,10 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-},{"./arrayLikeToArray":63}],85:[function(require,module,exports){
+},{"./arrayLikeToArray":66}],88:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":97}],86:[function(require,module,exports){
+},{"regenerator-runtime":101}],89:[function(require,module,exports){
 /*!
  * Chart.js v2.9.4
  * https://www.chartjs.org
@@ -33605,7 +34110,7 @@ return src;
 
 })));
 
-},{"moment":96}],87:[function(require,module,exports){
+},{"moment":99}],90:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 
@@ -33733,7 +34238,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./events.js":89,"./helpers.js":90}],88:[function(require,module,exports){
+},{"./events.js":92,"./helpers.js":93}],91:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	
@@ -33758,7 +34263,7 @@ module.exports = function(Chart) {
 	return AnnotationElement;
 };
 
-},{}],89:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
 	var helpers = require('./helpers.js')(Chart);
@@ -33868,7 +34373,7 @@ module.exports = function(Chart) {
 	};
 };
 
-},{"./helpers.js":90}],90:[function(require,module,exports){
+},{"./helpers.js":93}],93:[function(require,module,exports){
 function noop() {}
 
 function elements(chartInstance) {
@@ -34055,7 +34560,7 @@ module.exports = function(Chart) {
 };
 
 
-},{}],91:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 // Get the chart variable
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
@@ -34104,7 +34609,7 @@ var annotationPlugin = require('./annotation.js')(Chart);
 module.exports = annotationPlugin;
 Chart.pluginService.register(annotationPlugin);
 
-},{"./annotation.js":87,"./element.js":88,"./types/box.js":92,"./types/line.js":93,"chart.js":86}],92:[function(require,module,exports){
+},{"./annotation.js":90,"./element.js":91,"./types/box.js":95,"./types/line.js":96,"chart.js":89}],95:[function(require,module,exports){
 // Box Annotation implementation
 module.exports = function(Chart) {
 	var helpers = require('../helpers.js')(Chart);
@@ -34252,7 +34757,7 @@ module.exports = function(Chart) {
 	return BoxAnnotation;
 };
 
-},{"../helpers.js":90}],93:[function(require,module,exports){
+},{"../helpers.js":93}],96:[function(require,module,exports){
 // Line Annotation implementation
 module.exports = function(Chart) {
 	var chartHelpers = Chart.helpers;
@@ -34521,7 +35026,7 @@ module.exports = function(Chart) {
 	return LineAnnotation;
 };
 
-},{"../helpers.js":90}],94:[function(require,module,exports){
+},{"../helpers.js":93}],97:[function(require,module,exports){
 /*!
  * chartjs-plugin-trendline.js
  * Version: 0.2.2
@@ -34669,7 +35174,7 @@ try {
     module.exports = exports = pluginTrendlineLinear;
 } catch (e) {}
 
-},{}],95:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 (function (global){(function (){
 /*!
  *  howler.js v2.2.3
@@ -37915,7 +38420,7 @@ try {
 })();
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],96:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 //! moment.js
 //! version : 2.29.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -43587,7 +44092,11 @@ try {
 
 })));
 
-},{}],97:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
+(function (global){(function (){
+!function(e){var t;"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):("undefined"!=typeof window?t=window:"undefined"!=typeof global?t=global:"undefined"!=typeof self&&(t=self),t.objectHash=e())}(function(){return function o(i,u,a){function s(n,e){if(!u[n]){if(!i[n]){var t="function"==typeof require&&require;if(!e&&t)return t(n,!0);if(f)return f(n,!0);throw new Error("Cannot find module '"+n+"'")}var r=u[n]={exports:{}};i[n][0].call(r.exports,function(e){var t=i[n][1][e];return s(t||e)},r,r.exports,o,i,u,a)}return u[n].exports}for(var f="function"==typeof require&&require,e=0;e<a.length;e++)s(a[e]);return s}({1:[function(w,b,m){(function(e,t,f,n,r,o,i,u,a){"use strict";var s=w("crypto");function c(e,t){return function(e,t){var n;n="passthrough"!==t.algorithm?s.createHash(t.algorithm):new y;void 0===n.write&&(n.write=n.update,n.end=n.update);g(t,n).dispatch(e),n.update||n.end("");if(n.digest)return n.digest("buffer"===t.encoding?void 0:t.encoding);var r=n.read();return"buffer"!==t.encoding?r.toString(t.encoding):r}(e,t=h(e,t))}(m=b.exports=c).sha1=function(e){return c(e)},m.keys=function(e){return c(e,{excludeValues:!0,algorithm:"sha1",encoding:"hex"})},m.MD5=function(e){return c(e,{algorithm:"md5",encoding:"hex"})},m.keysMD5=function(e){return c(e,{algorithm:"md5",encoding:"hex",excludeValues:!0})};var l=s.getHashes?s.getHashes().slice():["sha1","md5"];l.push("passthrough");var d=["buffer","hex","binary","base64"];function h(e,t){t=t||{};var n={};if(n.algorithm=t.algorithm||"sha1",n.encoding=t.encoding||"hex",n.excludeValues=!!t.excludeValues,n.algorithm=n.algorithm.toLowerCase(),n.encoding=n.encoding.toLowerCase(),n.ignoreUnknown=!0===t.ignoreUnknown,n.respectType=!1!==t.respectType,n.respectFunctionNames=!1!==t.respectFunctionNames,n.respectFunctionProperties=!1!==t.respectFunctionProperties,n.unorderedArrays=!0===t.unorderedArrays,n.unorderedSets=!1!==t.unorderedSets,n.unorderedObjects=!1!==t.unorderedObjects,n.replacer=t.replacer||void 0,n.excludeKeys=t.excludeKeys||void 0,void 0===e)throw new Error("Object argument required.");for(var r=0;r<l.length;++r)l[r].toLowerCase()===n.algorithm.toLowerCase()&&(n.algorithm=l[r]);if(-1===l.indexOf(n.algorithm))throw new Error('Algorithm "'+n.algorithm+'"  not supported. supported values: '+l.join(", "));if(-1===d.indexOf(n.encoding)&&"passthrough"!==n.algorithm)throw new Error('Encoding "'+n.encoding+'"  not supported. supported values: '+d.join(", "));return n}function p(e){if("function"==typeof e){return null!=/^function\s+\w*\s*\(\s*\)\s*{\s+\[native code\]\s+}$/i.exec(Function.prototype.toString.call(e))}}function g(u,t,a){a=a||[];function s(e){return t.update?t.update(e,"utf8"):t.write(e,"utf8")}return{dispatch:function(e){return u.replacer&&(e=u.replacer(e)),this["_"+(null===e?"null":typeof e)](e)},_object:function(t){var e=Object.prototype.toString.call(t),n=/\[object (.*)\]/i.exec(e);n=(n=n?n[1]:"unknown:["+e+"]").toLowerCase();var r;if(0<=(r=a.indexOf(t)))return this.dispatch("[CIRCULAR:"+r+"]");if(a.push(t),void 0!==f&&f.isBuffer&&f.isBuffer(t))return s("buffer:"),s(t);if("object"===n||"function"===n||"asyncfunction"===n){var o=Object.keys(t);u.unorderedObjects&&(o=o.sort()),!1===u.respectType||p(t)||o.splice(0,0,"prototype","__proto__","constructor"),u.excludeKeys&&(o=o.filter(function(e){return!u.excludeKeys(e)})),s("object:"+o.length+":");var i=this;return o.forEach(function(e){i.dispatch(e),s(":"),u.excludeValues||i.dispatch(t[e]),s(",")})}if(!this["_"+n]){if(u.ignoreUnknown)return s("["+n+"]");throw new Error('Unknown object type "'+n+'"')}this["_"+n](t)},_array:function(e,t){t=void 0!==t?t:!1!==u.unorderedArrays;var n=this;if(s("array:"+e.length+":"),!t||e.length<=1)return e.forEach(function(e){return n.dispatch(e)});var r=[],o=e.map(function(e){var t=new y,n=a.slice();return g(u,t,n).dispatch(e),r=r.concat(n.slice(a.length)),t.read().toString()});return a=a.concat(r),o.sort(),this._array(o,!1)},_date:function(e){return s("date:"+e.toJSON())},_symbol:function(e){return s("symbol:"+e.toString())},_error:function(e){return s("error:"+e.toString())},_boolean:function(e){return s("bool:"+e.toString())},_string:function(e){s("string:"+e.length+":"),s(e.toString())},_function:function(e){s("fn:"),p(e)?this.dispatch("[native]"):this.dispatch(e.toString()),!1!==u.respectFunctionNames&&this.dispatch("function-name:"+String(e.name)),u.respectFunctionProperties&&this._object(e)},_number:function(e){return s("number:"+e.toString())},_xml:function(e){return s("xml:"+e.toString())},_null:function(){return s("Null")},_undefined:function(){return s("Undefined")},_regexp:function(e){return s("regex:"+e.toString())},_uint8array:function(e){return s("uint8array:"),this.dispatch(Array.prototype.slice.call(e))},_uint8clampedarray:function(e){return s("uint8clampedarray:"),this.dispatch(Array.prototype.slice.call(e))},_int8array:function(e){return s("uint8array:"),this.dispatch(Array.prototype.slice.call(e))},_uint16array:function(e){return s("uint16array:"),this.dispatch(Array.prototype.slice.call(e))},_int16array:function(e){return s("uint16array:"),this.dispatch(Array.prototype.slice.call(e))},_uint32array:function(e){return s("uint32array:"),this.dispatch(Array.prototype.slice.call(e))},_int32array:function(e){return s("uint32array:"),this.dispatch(Array.prototype.slice.call(e))},_float32array:function(e){return s("float32array:"),this.dispatch(Array.prototype.slice.call(e))},_float64array:function(e){return s("float64array:"),this.dispatch(Array.prototype.slice.call(e))},_arraybuffer:function(e){return s("arraybuffer:"),this.dispatch(new Uint8Array(e))},_url:function(e){return s("url:"+e.toString())},_map:function(e){s("map:");var t=Array.from(e);return this._array(t,!1!==u.unorderedSets)},_set:function(e){s("set:");var t=Array.from(e);return this._array(t,!1!==u.unorderedSets)},_file:function(e){return s("file:"),this.dispatch([e.name,e.size,e.type,e.lastModfied])},_blob:function(){if(u.ignoreUnknown)return s("[blob]");throw Error('Hashing Blob objects is currently not supported\n(see https://github.com/puleos/object-hash/issues/26)\nUse "options.replacer" or "options.ignoreUnknown"\n')},_domwindow:function(){return s("domwindow")},_bigint:function(e){return s("bigint:"+e.toString())},_process:function(){return s("process")},_timer:function(){return s("timer")},_pipe:function(){return s("pipe")},_tcp:function(){return s("tcp")},_udp:function(){return s("udp")},_tty:function(){return s("tty")},_statwatcher:function(){return s("statwatcher")},_securecontext:function(){return s("securecontext")},_connection:function(){return s("connection")},_zlib:function(){return s("zlib")},_context:function(){return s("context")},_nodescript:function(){return s("nodescript")},_httpparser:function(){return s("httpparser")},_dataview:function(){return s("dataview")},_signal:function(){return s("signal")},_fsevent:function(){return s("fsevent")},_tlswrap:function(){return s("tlswrap")}}}function y(){return{buf:"",write:function(e){this.buf+=e},end:function(e){this.buf+=e},read:function(){return this.buf}}}m.writeToStream=function(e,t,n){return void 0===n&&(n=t,t={}),g(t=h(e,t),n).dispatch(e)}}).call(this,w("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},w("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7eac155c.js","/")},{buffer:3,crypto:5,lYpoI2:10}],2:[function(e,t,f){(function(e,t,n,r,o,i,u,a,s){!function(e){"use strict";var f="undefined"!=typeof Uint8Array?Uint8Array:Array,n="+".charCodeAt(0),r="/".charCodeAt(0),o="0".charCodeAt(0),i="a".charCodeAt(0),u="A".charCodeAt(0),a="-".charCodeAt(0),s="_".charCodeAt(0);function c(e){var t=e.charCodeAt(0);return t===n||t===a?62:t===r||t===s?63:t<o?-1:t<o+10?t-o+26+26:t<u+26?t-u:t<i+26?t-i+26:void 0}e.toByteArray=function(e){var t,n;if(0<e.length%4)throw new Error("Invalid string. Length must be a multiple of 4");var r=e.length,o="="===e.charAt(r-2)?2:"="===e.charAt(r-1)?1:0,i=new f(3*e.length/4-o),u=0<o?e.length-4:e.length,a=0;function s(e){i[a++]=e}for(t=0;t<u;t+=4,0)s((16711680&(n=c(e.charAt(t))<<18|c(e.charAt(t+1))<<12|c(e.charAt(t+2))<<6|c(e.charAt(t+3))))>>16),s((65280&n)>>8),s(255&n);return 2==o?s(255&(n=c(e.charAt(t))<<2|c(e.charAt(t+1))>>4)):1==o&&(s((n=c(e.charAt(t))<<10|c(e.charAt(t+1))<<4|c(e.charAt(t+2))>>2)>>8&255),s(255&n)),i},e.fromByteArray=function(e){var t,n,r,o,i=e.length%3,u="";function a(e){return"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(e)}for(t=0,r=e.length-i;t<r;t+=3)n=(e[t]<<16)+(e[t+1]<<8)+e[t+2],u+=a((o=n)>>18&63)+a(o>>12&63)+a(o>>6&63)+a(63&o);switch(i){case 1:u+=a((n=e[e.length-1])>>2),u+=a(n<<4&63),u+="==";break;case 2:u+=a((n=(e[e.length-2]<<8)+e[e.length-1])>>10),u+=a(n>>4&63),u+=a(n<<2&63),u+="="}return u}}(void 0===f?this.base64js={}:f)}).call(this,e("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},e("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/base64-js/lib/b64.js","/node_modules/gulp-browserify/node_modules/base64-js/lib")},{buffer:3,lYpoI2:10}],3:[function(O,e,H){(function(e,t,g,n,r,o,i,u,a){var s=O("base64-js"),f=O("ieee754");function g(e,t,n){if(!(this instanceof g))return new g(e,t,n);var r,o,i,u,a,s=typeof e;if("base64"===t&&"string"==s)for(e=(r=e).trim?r.trim():r.replace(/^\s+|\s+$/g,"");e.length%4!=0;)e+="=";if("number"==s)o=x(e);else if("string"==s)o=g.byteLength(e,t);else{if("object"!=s)throw new Error("First argument needs to be a number, array or string.");o=x(e.length)}if(g._useTypedArrays?i=g._augment(new Uint8Array(o)):((i=this).length=o,i._isBuffer=!0),g._useTypedArrays&&"number"==typeof e.byteLength)i._set(e);else if(S(a=e)||g.isBuffer(a)||a&&"object"==typeof a&&"number"==typeof a.length)for(u=0;u<o;u++)g.isBuffer(e)?i[u]=e.readUInt8(u):i[u]=e[u];else if("string"==s)i.write(e,0,t);else if("number"==s&&!g._useTypedArrays&&!n)for(u=0;u<o;u++)i[u]=0;return i}function y(e,t,n,r){return g._charsWritten=T(function(e){for(var t=[],n=0;n<e.length;n++)t.push(255&e.charCodeAt(n));return t}(t),e,n,r)}function w(e,t,n,r){return g._charsWritten=T(function(e){for(var t,n,r,o=[],i=0;i<e.length;i++)t=e.charCodeAt(i),n=t>>8,r=t%256,o.push(r),o.push(n);return o}(t),e,n,r)}function c(e,t,n){var r="";n=Math.min(e.length,n);for(var o=t;o<n;o++)r+=String.fromCharCode(e[o]);return r}function l(e,t,n,r){r||(D("boolean"==typeof n,"missing or invalid endian"),D(null!=t,"missing offset"),D(t+1<e.length,"Trying to read beyond buffer length"));var o,i=e.length;if(!(i<=t))return n?(o=e[t],t+1<i&&(o|=e[t+1]<<8)):(o=e[t]<<8,t+1<i&&(o|=e[t+1])),o}function d(e,t,n,r){r||(D("boolean"==typeof n,"missing or invalid endian"),D(null!=t,"missing offset"),D(t+3<e.length,"Trying to read beyond buffer length"));var o,i=e.length;if(!(i<=t))return n?(t+2<i&&(o=e[t+2]<<16),t+1<i&&(o|=e[t+1]<<8),o|=e[t],t+3<i&&(o+=e[t+3]<<24>>>0)):(t+1<i&&(o=e[t+1]<<16),t+2<i&&(o|=e[t+2]<<8),t+3<i&&(o|=e[t+3]),o+=e[t]<<24>>>0),o}function h(e,t,n,r){if(r||(D("boolean"==typeof n,"missing or invalid endian"),D(null!=t,"missing offset"),D(t+1<e.length,"Trying to read beyond buffer length")),!(e.length<=t)){var o=l(e,t,n,!0);return 32768&o?-1*(65535-o+1):o}}function p(e,t,n,r){if(r||(D("boolean"==typeof n,"missing or invalid endian"),D(null!=t,"missing offset"),D(t+3<e.length,"Trying to read beyond buffer length")),!(e.length<=t)){var o=d(e,t,n,!0);return 2147483648&o?-1*(4294967295-o+1):o}}function b(e,t,n,r){return r||(D("boolean"==typeof n,"missing or invalid endian"),D(t+3<e.length,"Trying to read beyond buffer length")),f.read(e,t,n,23,4)}function m(e,t,n,r){return r||(D("boolean"==typeof n,"missing or invalid endian"),D(t+7<e.length,"Trying to read beyond buffer length")),f.read(e,t,n,52,8)}function v(e,t,n,r,o){o||(D(null!=t,"missing value"),D("boolean"==typeof r,"missing or invalid endian"),D(null!=n,"missing offset"),D(n+1<e.length,"trying to write beyond buffer length"),N(t,65535));var i=e.length;if(!(i<=n))for(var u=0,a=Math.min(i-n,2);u<a;u++)e[n+u]=(t&255<<8*(r?u:1-u))>>>8*(r?u:1-u)}function _(e,t,n,r,o){o||(D(null!=t,"missing value"),D("boolean"==typeof r,"missing or invalid endian"),D(null!=n,"missing offset"),D(n+3<e.length,"trying to write beyond buffer length"),N(t,4294967295));var i=e.length;if(!(i<=n))for(var u=0,a=Math.min(i-n,4);u<a;u++)e[n+u]=t>>>8*(r?u:3-u)&255}function E(e,t,n,r,o){o||(D(null!=t,"missing value"),D("boolean"==typeof r,"missing or invalid endian"),D(null!=n,"missing offset"),D(n+1<e.length,"Trying to write beyond buffer length"),Y(t,32767,-32768)),e.length<=n||v(e,0<=t?t:65535+t+1,n,r,o)}function I(e,t,n,r,o){o||(D(null!=t,"missing value"),D("boolean"==typeof r,"missing or invalid endian"),D(null!=n,"missing offset"),D(n+3<e.length,"Trying to write beyond buffer length"),Y(t,2147483647,-2147483648)),e.length<=n||_(e,0<=t?t:4294967295+t+1,n,r,o)}function A(e,t,n,r,o){o||(D(null!=t,"missing value"),D("boolean"==typeof r,"missing or invalid endian"),D(null!=n,"missing offset"),D(n+3<e.length,"Trying to write beyond buffer length"),F(t,34028234663852886e22,-34028234663852886e22)),e.length<=n||f.write(e,t,n,r,23,4)}function B(e,t,n,r,o){o||(D(null!=t,"missing value"),D("boolean"==typeof r,"missing or invalid endian"),D(null!=n,"missing offset"),D(n+7<e.length,"Trying to write beyond buffer length"),F(t,17976931348623157e292,-17976931348623157e292)),e.length<=n||f.write(e,t,n,r,52,8)}H.Buffer=g,H.SlowBuffer=g,H.INSPECT_MAX_BYTES=50,g.poolSize=8192,g._useTypedArrays=function(){try{var e=new ArrayBuffer(0),t=new Uint8Array(e);return t.foo=function(){return 42},42===t.foo()&&"function"==typeof t.subarray}catch(e){return!1}}(),g.isEncoding=function(e){switch(String(e).toLowerCase()){case"hex":case"utf8":case"utf-8":case"ascii":case"binary":case"base64":case"raw":case"ucs2":case"ucs-2":case"utf16le":case"utf-16le":return!0;default:return!1}},g.isBuffer=function(e){return!(null==e||!e._isBuffer)},g.byteLength=function(e,t){var n;switch(e+="",t||"utf8"){case"hex":n=e.length/2;break;case"utf8":case"utf-8":n=C(e).length;break;case"ascii":case"binary":case"raw":n=e.length;break;case"base64":n=k(e).length;break;case"ucs2":case"ucs-2":case"utf16le":case"utf-16le":n=2*e.length;break;default:throw new Error("Unknown encoding")}return n},g.concat=function(e,t){if(D(S(e),"Usage: Buffer.concat(list, [totalLength])\nlist should be an Array."),0===e.length)return new g(0);if(1===e.length)return e[0];if("number"!=typeof t)for(o=t=0;o<e.length;o++)t+=e[o].length;for(var n=new g(t),r=0,o=0;o<e.length;o++){var i=e[o];i.copy(n,r),r+=i.length}return n},g.prototype.write=function(e,t,n,r){var o;isFinite(t)?isFinite(n)||(r=n,n=void 0):(o=r,r=t,t=n,n=o),t=Number(t)||0;var i,u,a,s,f,c,l,d,h,p=this.length-t;switch((!n||p<(n=Number(n)))&&(n=p),r=String(r||"utf8").toLowerCase()){case"hex":i=function(e,t,n,r){n=Number(n)||0;var o=e.length-n;(!r||o<(r=Number(r)))&&(r=o);var i=t.length;D(i%2==0,"Invalid hex string"),i/2<r&&(r=i/2);for(var u=0;u<r;u++){var a=parseInt(t.substr(2*u,2),16);D(!isNaN(a),"Invalid hex string"),e[n+u]=a}return g._charsWritten=2*u,u}(this,e,t,n);break;case"utf8":case"utf-8":c=this,l=e,d=t,h=n,i=g._charsWritten=T(C(l),c,d,h);break;case"ascii":case"binary":i=y(this,e,t,n);break;case"base64":u=this,a=e,s=t,f=n,i=g._charsWritten=T(k(a),u,s,f);break;case"ucs2":case"ucs-2":case"utf16le":case"utf-16le":i=w(this,e,t,n);break;default:throw new Error("Unknown encoding")}return i},g.prototype.toString=function(e,t,n){var r,o,i,u,a=this;if(e=String(e||"utf8").toLowerCase(),t=Number(t)||0,(n=void 0!==n?Number(n):n=a.length)===t)return"";switch(e){case"hex":r=function(e,t,n){var r=e.length;(!t||t<0)&&(t=0);(!n||n<0||r<n)&&(n=r);for(var o="",i=t;i<n;i++)o+=j(e[i]);return o}(a,t,n);break;case"utf8":case"utf-8":r=function(e,t,n){var r="",o="";n=Math.min(e.length,n);for(var i=t;i<n;i++)e[i]<=127?(r+=M(o)+String.fromCharCode(e[i]),o=""):o+="%"+e[i].toString(16);return r+M(o)}(a,t,n);break;case"ascii":case"binary":r=c(a,t,n);break;case"base64":o=a,u=n,r=0===(i=t)&&u===o.length?s.fromByteArray(o):s.fromByteArray(o.slice(i,u));break;case"ucs2":case"ucs-2":case"utf16le":case"utf-16le":r=function(e,t,n){for(var r=e.slice(t,n),o="",i=0;i<r.length;i+=2)o+=String.fromCharCode(r[i]+256*r[i+1]);return o}(a,t,n);break;default:throw new Error("Unknown encoding")}return r},g.prototype.toJSON=function(){return{type:"Buffer",data:Array.prototype.slice.call(this._arr||this,0)}},g.prototype.copy=function(e,t,n,r){if(n=n||0,r||0===r||(r=this.length),t=t||0,r!==n&&0!==e.length&&0!==this.length){D(n<=r,"sourceEnd < sourceStart"),D(0<=t&&t<e.length,"targetStart out of bounds"),D(0<=n&&n<this.length,"sourceStart out of bounds"),D(0<=r&&r<=this.length,"sourceEnd out of bounds"),r>this.length&&(r=this.length),e.length-t<r-n&&(r=e.length-t+n);var o=r-n;if(o<100||!g._useTypedArrays)for(var i=0;i<o;i++)e[i+t]=this[i+n];else e._set(this.subarray(n,n+o),t)}},g.prototype.slice=function(e,t){var n=this.length;if(e=U(e,n,0),t=U(t,n,n),g._useTypedArrays)return g._augment(this.subarray(e,t));for(var r=t-e,o=new g(r,void 0,!0),i=0;i<r;i++)o[i]=this[i+e];return o},g.prototype.get=function(e){return console.log(".get() is deprecated. Access using array indexes instead."),this.readUInt8(e)},g.prototype.set=function(e,t){return console.log(".set() is deprecated. Access using array indexes instead."),this.writeUInt8(e,t)},g.prototype.readUInt8=function(e,t){if(t||(D(null!=e,"missing offset"),D(e<this.length,"Trying to read beyond buffer length")),!(e>=this.length))return this[e]},g.prototype.readUInt16LE=function(e,t){return l(this,e,!0,t)},g.prototype.readUInt16BE=function(e,t){return l(this,e,!1,t)},g.prototype.readUInt32LE=function(e,t){return d(this,e,!0,t)},g.prototype.readUInt32BE=function(e,t){return d(this,e,!1,t)},g.prototype.readInt8=function(e,t){if(t||(D(null!=e,"missing offset"),D(e<this.length,"Trying to read beyond buffer length")),!(e>=this.length))return 128&this[e]?-1*(255-this[e]+1):this[e]},g.prototype.readInt16LE=function(e,t){return h(this,e,!0,t)},g.prototype.readInt16BE=function(e,t){return h(this,e,!1,t)},g.prototype.readInt32LE=function(e,t){return p(this,e,!0,t)},g.prototype.readInt32BE=function(e,t){return p(this,e,!1,t)},g.prototype.readFloatLE=function(e,t){return b(this,e,!0,t)},g.prototype.readFloatBE=function(e,t){return b(this,e,!1,t)},g.prototype.readDoubleLE=function(e,t){return m(this,e,!0,t)},g.prototype.readDoubleBE=function(e,t){return m(this,e,!1,t)},g.prototype.writeUInt8=function(e,t,n){n||(D(null!=e,"missing value"),D(null!=t,"missing offset"),D(t<this.length,"trying to write beyond buffer length"),N(e,255)),t>=this.length||(this[t]=e)},g.prototype.writeUInt16LE=function(e,t,n){v(this,e,t,!0,n)},g.prototype.writeUInt16BE=function(e,t,n){v(this,e,t,!1,n)},g.prototype.writeUInt32LE=function(e,t,n){_(this,e,t,!0,n)},g.prototype.writeUInt32BE=function(e,t,n){_(this,e,t,!1,n)},g.prototype.writeInt8=function(e,t,n){n||(D(null!=e,"missing value"),D(null!=t,"missing offset"),D(t<this.length,"Trying to write beyond buffer length"),Y(e,127,-128)),t>=this.length||(0<=e?this.writeUInt8(e,t,n):this.writeUInt8(255+e+1,t,n))},g.prototype.writeInt16LE=function(e,t,n){E(this,e,t,!0,n)},g.prototype.writeInt16BE=function(e,t,n){E(this,e,t,!1,n)},g.prototype.writeInt32LE=function(e,t,n){I(this,e,t,!0,n)},g.prototype.writeInt32BE=function(e,t,n){I(this,e,t,!1,n)},g.prototype.writeFloatLE=function(e,t,n){A(this,e,t,!0,n)},g.prototype.writeFloatBE=function(e,t,n){A(this,e,t,!1,n)},g.prototype.writeDoubleLE=function(e,t,n){B(this,e,t,!0,n)},g.prototype.writeDoubleBE=function(e,t,n){B(this,e,t,!1,n)},g.prototype.fill=function(e,t,n){if(e=e||0,t=t||0,n=n||this.length,"string"==typeof e&&(e=e.charCodeAt(0)),D("number"==typeof e&&!isNaN(e),"value is not a number"),D(t<=n,"end < start"),n!==t&&0!==this.length){D(0<=t&&t<this.length,"start out of bounds"),D(0<=n&&n<=this.length,"end out of bounds");for(var r=t;r<n;r++)this[r]=e}},g.prototype.inspect=function(){for(var e=[],t=this.length,n=0;n<t;n++)if(e[n]=j(this[n]),n===H.INSPECT_MAX_BYTES){e[n+1]="...";break}return"<Buffer "+e.join(" ")+">"},g.prototype.toArrayBuffer=function(){if("undefined"==typeof Uint8Array)throw new Error("Buffer.toArrayBuffer not supported in this browser");if(g._useTypedArrays)return new g(this).buffer;for(var e=new Uint8Array(this.length),t=0,n=e.length;t<n;t+=1)e[t]=this[t];return e.buffer};var L=g.prototype;function U(e,t,n){return"number"!=typeof e?n:t<=(e=~~e)?t:0<=e||0<=(e+=t)?e:0}function x(e){return(e=~~Math.ceil(+e))<0?0:e}function S(e){return(Array.isArray||function(e){return"[object Array]"===Object.prototype.toString.call(e)})(e)}function j(e){return e<16?"0"+e.toString(16):e.toString(16)}function C(e){for(var t=[],n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<=127)t.push(e.charCodeAt(n));else{var o=n;55296<=r&&r<=57343&&n++;for(var i=encodeURIComponent(e.slice(o,n+1)).substr(1).split("%"),u=0;u<i.length;u++)t.push(parseInt(i[u],16))}}return t}function k(e){return s.toByteArray(e)}function T(e,t,n,r){for(var o=0;o<r&&!(o+n>=t.length||o>=e.length);o++)t[o+n]=e[o];return o}function M(e){try{return decodeURIComponent(e)}catch(e){return String.fromCharCode(65533)}}function N(e,t){D("number"==typeof e,"cannot write a non-number as a number"),D(0<=e,"specified a negative value for writing an unsigned value"),D(e<=t,"value is larger than maximum value for type"),D(Math.floor(e)===e,"value has a fractional component")}function Y(e,t,n){D("number"==typeof e,"cannot write a non-number as a number"),D(e<=t,"value larger than maximum allowed value"),D(n<=e,"value smaller than minimum allowed value"),D(Math.floor(e)===e,"value has a fractional component")}function F(e,t,n){D("number"==typeof e,"cannot write a non-number as a number"),D(e<=t,"value larger than maximum allowed value"),D(n<=e,"value smaller than minimum allowed value")}function D(e,t){if(!e)throw new Error(t||"Failed assertion")}g._augment=function(e){return e._isBuffer=!0,e._get=e.get,e._set=e.set,e.get=L.get,e.set=L.set,e.write=L.write,e.toString=L.toString,e.toLocaleString=L.toString,e.toJSON=L.toJSON,e.copy=L.copy,e.slice=L.slice,e.readUInt8=L.readUInt8,e.readUInt16LE=L.readUInt16LE,e.readUInt16BE=L.readUInt16BE,e.readUInt32LE=L.readUInt32LE,e.readUInt32BE=L.readUInt32BE,e.readInt8=L.readInt8,e.readInt16LE=L.readInt16LE,e.readInt16BE=L.readInt16BE,e.readInt32LE=L.readInt32LE,e.readInt32BE=L.readInt32BE,e.readFloatLE=L.readFloatLE,e.readFloatBE=L.readFloatBE,e.readDoubleLE=L.readDoubleLE,e.readDoubleBE=L.readDoubleBE,e.writeUInt8=L.writeUInt8,e.writeUInt16LE=L.writeUInt16LE,e.writeUInt16BE=L.writeUInt16BE,e.writeUInt32LE=L.writeUInt32LE,e.writeUInt32BE=L.writeUInt32BE,e.writeInt8=L.writeInt8,e.writeInt16LE=L.writeInt16LE,e.writeInt16BE=L.writeInt16BE,e.writeInt32LE=L.writeInt32LE,e.writeInt32BE=L.writeInt32BE,e.writeFloatLE=L.writeFloatLE,e.writeFloatBE=L.writeFloatBE,e.writeDoubleLE=L.writeDoubleLE,e.writeDoubleBE=L.writeDoubleBE,e.fill=L.fill,e.inspect=L.inspect,e.toArrayBuffer=L.toArrayBuffer,e}}).call(this,O("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},O("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/buffer/index.js","/node_modules/gulp-browserify/node_modules/buffer")},{"base64-js":2,buffer:3,ieee754:11,lYpoI2:10}],4:[function(l,d,e){(function(e,t,u,n,r,o,i,a,s){var u=l("buffer").Buffer,f=4,c=new u(f);c.fill(0);d.exports={hash:function(e,t,n,r){return u.isBuffer(e)||(e=new u(e)),function(e,t,n){for(var r=new u(t),o=n?r.writeInt32BE:r.writeInt32LE,i=0;i<e.length;i++)o.call(r,e[i],4*i,!0);return r}(t(function(e,t){var n;e.length%f!=0&&(n=e.length+(f-e.length%f),e=u.concat([e,c],n));for(var r=[],o=t?e.readInt32BE:e.readInt32LE,i=0;i<e.length;i+=f)r.push(o.call(e,i));return r}(e,r),8*e.length),n,r)}}}).call(this,l("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},l("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/crypto-browserify/helpers.js","/node_modules/gulp-browserify/node_modules/crypto-browserify")},{buffer:3,lYpoI2:10}],5:[function(w,e,b){(function(e,t,a,n,r,o,i,u,s){var a=w("buffer").Buffer,f=w("./sha"),c=w("./sha256"),l=w("./rng"),d={sha1:f,sha256:c,md5:w("./md5")},h=64,p=new a(h);function g(e,r){var o=d[e=e||"sha1"],i=[];return o||y("algorithm:",e,"is not yet supported"),{update:function(e){return a.isBuffer(e)||(e=new a(e)),i.push(e),e.length,this},digest:function(e){var t=a.concat(i),n=r?function(e,t,n){a.isBuffer(t)||(t=new a(t)),a.isBuffer(n)||(n=new a(n)),t.length>h?t=e(t):t.length<h&&(t=a.concat([t,p],h));for(var r=new a(h),o=new a(h),i=0;i<h;i++)r[i]=54^t[i],o[i]=92^t[i];var u=e(a.concat([r,n]));return e(a.concat([o,u]))}(o,r,t):o(t);return i=null,e?n.toString(e):n}}}function y(){var e=[].slice.call(arguments).join(" ");throw new Error([e,"we accept pull requests","http://github.com/dominictarr/crypto-browserify"].join("\n"))}p.fill(0),b.createHash=function(e){return g(e)},b.createHmac=g,b.randomBytes=function(e,t){if(!t||!t.call)return new a(l(e));try{t.call(this,void 0,new a(l(e)))}catch(e){t(e)}},function(e,t){for(var n in e)t(e[n],n)}(["createCredentials","createCipher","createCipheriv","createDecipher","createDecipheriv","createSign","createVerify","createDiffieHellman","pbkdf2"],function(e){b[e]=function(){y("sorry,",e,"is not implemented yet")}})}).call(this,w("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},w("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/crypto-browserify/index.js","/node_modules/gulp-browserify/node_modules/crypto-browserify")},{"./md5":6,"./rng":7,"./sha":8,"./sha256":9,buffer:3,lYpoI2:10}],6:[function(w,b,e){(function(e,t,n,r,o,i,u,a,s){var f=w("./helpers");function c(e,t){e[t>>5]|=128<<t%32,e[14+(t+64>>>9<<4)]=t;for(var n=1732584193,r=-271733879,o=-1732584194,i=271733878,u=0;u<e.length;u+=16){var a=n,s=r,f=o,c=i,n=d(n,r,o,i,e[u+0],7,-680876936),i=d(i,n,r,o,e[u+1],12,-389564586),o=d(o,i,n,r,e[u+2],17,606105819),r=d(r,o,i,n,e[u+3],22,-1044525330);n=d(n,r,o,i,e[u+4],7,-176418897),i=d(i,n,r,o,e[u+5],12,1200080426),o=d(o,i,n,r,e[u+6],17,-1473231341),r=d(r,o,i,n,e[u+7],22,-45705983),n=d(n,r,o,i,e[u+8],7,1770035416),i=d(i,n,r,o,e[u+9],12,-1958414417),o=d(o,i,n,r,e[u+10],17,-42063),r=d(r,o,i,n,e[u+11],22,-1990404162),n=d(n,r,o,i,e[u+12],7,1804603682),i=d(i,n,r,o,e[u+13],12,-40341101),o=d(o,i,n,r,e[u+14],17,-1502002290),n=h(n,r=d(r,o,i,n,e[u+15],22,1236535329),o,i,e[u+1],5,-165796510),i=h(i,n,r,o,e[u+6],9,-1069501632),o=h(o,i,n,r,e[u+11],14,643717713),r=h(r,o,i,n,e[u+0],20,-373897302),n=h(n,r,o,i,e[u+5],5,-701558691),i=h(i,n,r,o,e[u+10],9,38016083),o=h(o,i,n,r,e[u+15],14,-660478335),r=h(r,o,i,n,e[u+4],20,-405537848),n=h(n,r,o,i,e[u+9],5,568446438),i=h(i,n,r,o,e[u+14],9,-1019803690),o=h(o,i,n,r,e[u+3],14,-187363961),r=h(r,o,i,n,e[u+8],20,1163531501),n=h(n,r,o,i,e[u+13],5,-1444681467),i=h(i,n,r,o,e[u+2],9,-51403784),o=h(o,i,n,r,e[u+7],14,1735328473),n=p(n,r=h(r,o,i,n,e[u+12],20,-1926607734),o,i,e[u+5],4,-378558),i=p(i,n,r,o,e[u+8],11,-2022574463),o=p(o,i,n,r,e[u+11],16,1839030562),r=p(r,o,i,n,e[u+14],23,-35309556),n=p(n,r,o,i,e[u+1],4,-1530992060),i=p(i,n,r,o,e[u+4],11,1272893353),o=p(o,i,n,r,e[u+7],16,-155497632),r=p(r,o,i,n,e[u+10],23,-1094730640),n=p(n,r,o,i,e[u+13],4,681279174),i=p(i,n,r,o,e[u+0],11,-358537222),o=p(o,i,n,r,e[u+3],16,-722521979),r=p(r,o,i,n,e[u+6],23,76029189),n=p(n,r,o,i,e[u+9],4,-640364487),i=p(i,n,r,o,e[u+12],11,-421815835),o=p(o,i,n,r,e[u+15],16,530742520),n=g(n,r=p(r,o,i,n,e[u+2],23,-995338651),o,i,e[u+0],6,-198630844),i=g(i,n,r,o,e[u+7],10,1126891415),o=g(o,i,n,r,e[u+14],15,-1416354905),r=g(r,o,i,n,e[u+5],21,-57434055),n=g(n,r,o,i,e[u+12],6,1700485571),i=g(i,n,r,o,e[u+3],10,-1894986606),o=g(o,i,n,r,e[u+10],15,-1051523),r=g(r,o,i,n,e[u+1],21,-2054922799),n=g(n,r,o,i,e[u+8],6,1873313359),i=g(i,n,r,o,e[u+15],10,-30611744),o=g(o,i,n,r,e[u+6],15,-1560198380),r=g(r,o,i,n,e[u+13],21,1309151649),n=g(n,r,o,i,e[u+4],6,-145523070),i=g(i,n,r,o,e[u+11],10,-1120210379),o=g(o,i,n,r,e[u+2],15,718787259),r=g(r,o,i,n,e[u+9],21,-343485551),n=y(n,a),r=y(r,s),o=y(o,f),i=y(i,c)}return Array(n,r,o,i)}function l(e,t,n,r,o,i){return y((u=y(y(t,e),y(r,i)))<<(a=o)|u>>>32-a,n);var u,a}function d(e,t,n,r,o,i,u){return l(t&n|~t&r,e,t,o,i,u)}function h(e,t,n,r,o,i,u){return l(t&r|n&~r,e,t,o,i,u)}function p(e,t,n,r,o,i,u){return l(t^n^r,e,t,o,i,u)}function g(e,t,n,r,o,i,u){return l(n^(t|~r),e,t,o,i,u)}function y(e,t){var n=(65535&e)+(65535&t);return(e>>16)+(t>>16)+(n>>16)<<16|65535&n}b.exports=function(e){return f.hash(e,c,16)}}).call(this,w("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},w("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/crypto-browserify/md5.js","/node_modules/gulp-browserify/node_modules/crypto-browserify")},{"./helpers":4,buffer:3,lYpoI2:10}],7:[function(e,l,t){(function(e,t,n,r,o,i,u,a,s){var f,c;c=function(e){for(var t,n=new Array(e),r=0;r<e;r++)0==(3&r)&&(t=4294967296*Math.random()),n[r]=t>>>((3&r)<<3)&255;return n},l.exports=f||c}).call(this,e("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},e("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/crypto-browserify/rng.js","/node_modules/gulp-browserify/node_modules/crypto-browserify")},{buffer:3,lYpoI2:10}],8:[function(l,d,e){(function(e,t,n,r,o,i,u,a,s){var f=l("./helpers");function c(e,t){e[t>>5]|=128<<24-t%32,e[15+(t+64>>9<<4)]=t;for(var n,r,o,i,u,a=Array(80),s=1732584193,f=-271733879,c=-1732584194,l=271733878,d=-1009589776,h=0;h<e.length;h+=16){for(var p=s,g=f,y=c,w=l,b=d,m=0;m<80;m++){a[m]=m<16?e[h+m]:E(a[m-3]^a[m-8]^a[m-14]^a[m-16],1);var v=_(_(E(s,5),(o=f,i=c,u=l,(r=m)<20?o&i|~o&u:!(r<40)&&r<60?o&i|o&u|i&u:o^i^u)),_(_(d,a[m]),(n=m)<20?1518500249:n<40?1859775393:n<60?-1894007588:-899497514)),d=l,l=c,c=E(f,30),f=s,s=v}s=_(s,p),f=_(f,g),c=_(c,y),l=_(l,w),d=_(d,b)}return Array(s,f,c,l,d)}function _(e,t){var n=(65535&e)+(65535&t);return(e>>16)+(t>>16)+(n>>16)<<16|65535&n}function E(e,t){return e<<t|e>>>32-t}d.exports=function(e){return f.hash(e,c,20,!0)}}).call(this,l("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},l("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/crypto-browserify/sha.js","/node_modules/gulp-browserify/node_modules/crypto-browserify")},{"./helpers":4,buffer:3,lYpoI2:10}],9:[function(l,d,e){(function(e,t,n,r,o,i,u,a,s){function B(e,t){var n=(65535&e)+(65535&t);return(e>>16)+(t>>16)+(n>>16)<<16|65535&n}function L(e,t){return e>>>t|e<<32-t}function f(e,t){var n,r,o,i,u,a,s,f,c,l,d=new Array(1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298),h=new Array(1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225),p=new Array(64);e[t>>5]|=128<<24-t%32,e[15+(t+64>>9<<4)]=t;for(var g,y,w,b,m,v,_,E,I=0;I<e.length;I+=16){n=h[0],r=h[1],o=h[2],i=h[3],u=h[4],a=h[5],s=h[6],f=h[7];for(var A=0;A<64;A++)p[A]=A<16?e[A+I]:B(B(B((E=p[A-2],L(E,17)^L(E,19)^E>>>10),p[A-7]),(_=p[A-15],L(_,7)^L(_,18)^_>>>3)),p[A-16]),c=B(B(B(B(f,L(v=u,6)^L(v,11)^L(v,25)),(m=u)&a^~m&s),d[A]),p[A]),l=B(L(b=n,2)^L(b,13)^L(b,22),(g=n)&(y=r)^g&(w=o)^y&w),f=s,s=a,a=u,u=B(i,c),i=o,o=r,r=n,n=B(c,l);h[0]=B(n,h[0]),h[1]=B(r,h[1]),h[2]=B(o,h[2]),h[3]=B(i,h[3]),h[4]=B(u,h[4]),h[5]=B(a,h[5]),h[6]=B(s,h[6]),h[7]=B(f,h[7])}return h}var c=l("./helpers");d.exports=function(e){return c.hash(e,f,32,!0)}}).call(this,l("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},l("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/crypto-browserify/sha256.js","/node_modules/gulp-browserify/node_modules/crypto-browserify")},{"./helpers":4,buffer:3,lYpoI2:10}],10:[function(e,c,t){(function(e,t,n,r,o,i,u,a,s){function f(){}(e=c.exports={}).nextTick=function(){var e="undefined"!=typeof window&&window.setImmediate,t="undefined"!=typeof window&&window.postMessage&&window.addEventListener;if(e)return function(e){return window.setImmediate(e)};if(t){var n=[];return window.addEventListener("message",function(e){var t=e.source;t!==window&&null!==t||"process-tick"!==e.data||(e.stopPropagation(),0<n.length&&n.shift()())},!0),function(e){n.push(e),window.postMessage("process-tick","*")}}return function(e){setTimeout(e,0)}}(),e.title="browser",e.browser=!0,e.env={},e.argv=[],e.on=f,e.addListener=f,e.once=f,e.off=f,e.removeListener=f,e.removeAllListeners=f,e.emit=f,e.binding=function(e){throw new Error("process.binding is not supported")},e.cwd=function(){return"/"},e.chdir=function(e){throw new Error("process.chdir is not supported")}}).call(this,e("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},e("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/gulp-browserify/node_modules/process/browser.js","/node_modules/gulp-browserify/node_modules/process")},{buffer:3,lYpoI2:10}],11:[function(e,t,f){(function(e,t,n,r,o,i,u,a,s){f.read=function(e,t,n,r,o){var i,u,a=8*o-r-1,s=(1<<a)-1,f=s>>1,c=-7,l=n?o-1:0,d=n?-1:1,h=e[t+l];for(l+=d,i=h&(1<<-c)-1,h>>=-c,c+=a;0<c;i=256*i+e[t+l],l+=d,c-=8);for(u=i&(1<<-c)-1,i>>=-c,c+=r;0<c;u=256*u+e[t+l],l+=d,c-=8);if(0===i)i=1-f;else{if(i===s)return u?NaN:1/0*(h?-1:1);u+=Math.pow(2,r),i-=f}return(h?-1:1)*u*Math.pow(2,i-r)},f.write=function(e,t,n,r,o,i){var u,a,s,f=8*i-o-1,c=(1<<f)-1,l=c>>1,d=23===o?Math.pow(2,-24)-Math.pow(2,-77):0,h=r?0:i-1,p=r?1:-1,g=t<0||0===t&&1/t<0?1:0;for(t=Math.abs(t),isNaN(t)||t===1/0?(a=isNaN(t)?1:0,u=c):(u=Math.floor(Math.log(t)/Math.LN2),t*(s=Math.pow(2,-u))<1&&(u--,s*=2),2<=(t+=1<=u+l?d/s:d*Math.pow(2,1-l))*s&&(u++,s/=2),c<=u+l?(a=0,u=c):1<=u+l?(a=(t*s-1)*Math.pow(2,o),u+=l):(a=t*Math.pow(2,l-1)*Math.pow(2,o),u=0));8<=o;e[n+h]=255&a,h+=p,a/=256,o-=8);for(u=u<<o|a,f+=o;0<f;e[n+h]=255&u,h+=p,u/=256,f-=8);e[n+h-p]|=128*g}}).call(this,e("lYpoI2"),"undefined"!=typeof self?self:"undefined"!=typeof window?window:{},e("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/node_modules/ieee754/index.js","/node_modules/ieee754")},{buffer:3,lYpoI2:10}]},{},[1])(1)});
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],101:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -44337,7 +44846,7 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],98:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 // TinyColor v1.4.2
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
@@ -45534,4 +46043,4 @@ else {
 
 })(Math);
 
-},{}]},{},[18]);
+},{}]},{},[19]);

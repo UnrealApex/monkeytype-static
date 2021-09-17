@@ -5,7 +5,6 @@ import * as Misc from "./misc";
 import layouts from "./layouts";
 import * as LanguagePicker from "./language-picker";
 import * as Notifications from "./notifications";
-import * as Loader from "./loader";
 import * as Funbox from "./funbox";
 import * as SimplePopups from "./simple-popups";
 import * as ThemePicker from "./theme-picker";
@@ -124,6 +123,10 @@ async function initGroups() {
     "alwaysShowWordsHistory",
     UpdateConfig.setAlwaysShowWordsHistory
   );
+  groups.britishEnglish = new SettingsGroup(
+    "britishEnglish",
+    UpdateConfig.setBritishEnglish
+  );
   groups.singleListCommandLine = new SettingsGroup(
     "singleListCommandLine",
     UpdateConfig.setSingleListCommandLine
@@ -191,6 +194,7 @@ async function initGroups() {
     "capsLockBackspace",
     UpdateConfig.setCapsLockBackspace
   );
+  groups.lazyMode = new SettingsGroup("lazyMode", UpdateConfig.setLazyMode);
   groups.layout = new SettingsGroup("layout", UpdateConfig.setLayout);
   groups.language = new SettingsGroup("language", UpdateConfig.setLanguage);
   groups.fontSize = new SettingsGroup("fontSize", UpdateConfig.setFontSize);

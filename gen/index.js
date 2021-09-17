@@ -20,6 +20,7 @@ import "./input-controller";
 import "./ready";
 import "./about-page";
 import * as TestStats from "./test-stats";
+import * as Replay from "./replay";
 
 //this file should be concatenated with the legacy js files
 
@@ -32,3 +33,5 @@ global.config = Config;
 global.glarsesMode = toggleGlarses;
 
 global.stats = TestStats.getStats;
+
+global.replay = Replay.getReplayExport;
