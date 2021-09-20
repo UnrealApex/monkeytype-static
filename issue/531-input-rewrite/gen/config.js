@@ -1053,11 +1053,11 @@ export function setQuickTabMode(mode, nosave) {
     $("#restartTestButton").css("opacity", 1);
     $("#bottom .keyTips")
       .html(`<key>tab</key> and <key>enter</key> / <key>space</key> - restart test<br>
-      <key>esc</key> - command line`);
+      <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line`);
   } else {
     $("#restartTestButton").addClass("hidden");
     $("#bottom .keyTips").html(`<key>tab</key> - restart test<br>
-      <key>esc</key> - command line`);
+    <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line`);
   }
   if (!nosave) saveToLocalStorage();
 }
@@ -1069,11 +1069,11 @@ export function toggleQuickTabMode() {
     $("#restartTestButton").css("opacity", 1);
     $("#bottom .keyTips")
       .html(`<key>tab</key> and <key>enter</key> / <key>space</key> - restart test<br>
-      <key>esc</key> - command line`);
+      <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line`);
   } else {
     $("#restartTestButton").addClass("hidden");
     $("#bottom .keyTips").html(`<key>tab</key> - restart test<br>
-      <key>esc</key> - command line`);
+    <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line`);
   }
   saveToLocalStorage();
 }

@@ -5307,10 +5307,10 @@ function setQuickTabMode(mode, nosave) {
   if (!config.quickTab) {
     $("#restartTestButton").removeClass("hidden");
     $("#restartTestButton").css("opacity", 1);
-    $("#bottom .keyTips").html("<key>tab</key> and <key>enter</key> / <key>space</key> - restart test<br>\n      <key>esc</key> - command line");
+    $("#bottom .keyTips").html("<key>tab</key> and <key>enter</key> / <key>space</key> - restart test<br>\n      <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line");
   } else {
     $("#restartTestButton").addClass("hidden");
-    $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n      <key>esc</key> - command line");
+    $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n    <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line");
   }
 
   if (!nosave) saveToLocalStorage();
@@ -5322,10 +5322,10 @@ function toggleQuickTabMode() {
   if (!config.quickTab) {
     $("#restartTestButton").removeClass("hidden");
     $("#restartTestButton").css("opacity", 1);
-    $("#bottom .keyTips").html("<key>tab</key> and <key>enter</key> / <key>space</key> - restart test<br>\n      <key>esc</key> - command line");
+    $("#bottom .keyTips").html("<key>tab</key> and <key>enter</key> / <key>space</key> - restart test<br>\n      <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line");
   } else {
     $("#restartTestButton").addClass("hidden");
-    $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n      <key>esc</key> - command line");
+    $("#bottom .keyTips").html("<key>tab</key> - restart test<br>\n    <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> or <key>esc</key> - command line");
   }
 
   saveToLocalStorage();
@@ -8271,7 +8271,7 @@ var layouts = {
   },
   APT: {
     keymapShowTopRow: false,
-    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "cC", "dD", "lL", "xX", "zZ", "yY", "oO", "uU", "/?", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", ";:", "\\|", "wW", "bB", "gG", "mM", "vV", "jJ", "fF", "'\"", ",<", ".>", " "]
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "cC", "dD", "lL", "xX", "zZ", "yY", "oO", "uU", ";:", "[{", "]}", "\\|", "rR", "sS", "tT", "hH", "kK", "pP", "nN", "eE", "iI", "aA", "/?", "\\|", "wW", "gG", "bB", "mM", "vV", "jJ", "fF", "'\"", ",<", ".>", " "]
   },
   thai_kedmanee: {
     keymapShowTopRow: true,
@@ -8288,6 +8288,10 @@ var layouts = {
   persian_standard: {
     keymapShowTopRow: true,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "چ", "\"", "ش", "س", "ی", "ب", "ل", "اآ", "ت", "ن", "م", "ک", "گ", "\\|", "ظ", "ط", "زژ", "ر", "ذ", "د", "پ", "و", ".", "/?", " "]
+  },
+  arabic: {
+    keymapShowTopRow: true,
+    keys: ["ذّ", "ذّ", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "ضَ", "صً", "ثُ", "قٌ", "فﻹ", "غإ", "ع`", "ه÷", "خ×", "ح؛", "ج<", "د>", "\\…", "شِ", "سٍ", "ي]", "ب[", "لﻷ", "اأ", "تـ", "ن،", "م/", "ك:", "ط\"", "\\|", "ئ~", "ءْ", "ؤ}", "ر{", "ﻻﻵ", "ىآ", "ة'", "و,", "ز.", "ظ?", " "]
   }
 };
 var _default = layouts;
@@ -16881,7 +16885,7 @@ function updateKeytips() {
     $("#bottom .keyTips").html("\n    <key>esc</key> - restart test<br>\n      <key>tab</key> - command line");
   } else {
     $(".pageSettings .tip").html("\n    tip: You can also change all these settings quickly using the\n    command line (\n    <key>esc</key>\n    )");
-    $("#bottom .keyTips").html("\n    <key>tab</key> - restart test<br>\n      <key>esc</key> - command line");
+    $("#bottom .keyTips").html("\n    <key>tab</key> - restart test<br>\n      <key>esc</key> or <key>ctrl/cmd</key>+<key>shift</key>+<key>p</key> - command line");
   }
 }
 
