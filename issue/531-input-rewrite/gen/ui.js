@@ -105,10 +105,11 @@ export function swapElements(
 }
 
 export function changePage(page, norestart = false) {
-  console.log("change");
   if (pageTransition) {
+    console.log(`change page ${page} stopped`);
     return;
   }
+  console.log(`change page ${page}`);
   let activePage = $(".page.active");
   $(".page").removeClass("active");
   $("#wordsInput").focusout();
@@ -200,7 +201,7 @@ $(".merchBanner .fas").click((event) => {
 });
 
 $(".scrollToTopButton").click((event) => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 $(document).on("click", "#bottom .leftright .right .current-theme", (e) => {

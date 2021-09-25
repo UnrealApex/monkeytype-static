@@ -690,7 +690,7 @@ var ThemeColors = _interopRequireWildcard(require("./theme-colors"));
 
 var Misc = _interopRequireWildcard(require("./misc"));
 
-var UpdateConfig = _interopRequireWildcard(require("./config"));
+var _config = _interopRequireDefault(require("./config"));
 
 var result = new _chart["default"]($("#wpmChart"), {
   type: "line",
@@ -8190,6 +8190,10 @@ var layouts = {
   arabic: {
     keymapShowTopRow: true,
     keys: ["ذّ", "ذّ", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "ضَ", "صً", "ثُ", "قٌ", "فﻹ", "غإ", "ع`", "ه÷", "خ×", "ح؛", "ج<", "د>", "\\…", "شِ", "سٍ", "ي]", "ب[", "لﻷ", "اأ", "تـ", "ن،", "م/", "ك:", "ط\"", "\\|", "ئ~", "ءْ", "ؤ}", "ر{", "ﻻﻵ", "ىآ", "ة'", "و,", "ز.", "ظ?", " "]
+  },
+  arabic_mac: {
+    keymapShowTopRow: false,
+    keys: ["§±", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "ضَ", "صً", "ثِ", "قٍ", "فُ", "غٌ", "عْ", "هّ", "خ]", "ح[", "ج}", "ة{", "\\|", "ش«", "س»", "يى", "ب", "ل", "اآ", "ت", "ن٫", "م٬", "ك:", "؛\"", "ـ", "ظ'", "ط", "ذئ", "دء", "زأ", "رإ", "وؤ", "،>", ".<", "/؟", " "]
   }
 };
 var _default = layouts;
@@ -8204,14 +8208,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.replaceAccents = replaceAccents;
 var accents = [["áàâäåãąą́āą̄", "a"], ["éèêëẽęę́ēę̄ė", "e"], ["íìîïĩįį́īį̄", "i"], ["óòôöøõóōǫǫ́ǭ", "o"], ["úùûüŭũúūů", "u"], ["ñń", "n"], ["çĉć", "c"], ["æ", "ae"], ["œ", "oe"], ["ẅ", "w"], ["ĝğg̃", "g"], ["ĥ", "h"], ["ĵ", "j"], ["ń", "n"], ["ŝś", "s"], ["żź", "z"], ["ÿỹ", "y"], ["ł", "l"], ["أإآ", "ا"], ["َ", ""], ["ُ", ""], ["ِ", ""], ["ْ", ""], ["ً", ""], ["ٌ", ""], ["ٍ", ""], ["ّ", ""]];
 
-function replaceAccents(word) {
+function replaceAccents(word, accentsOverride) {
   var newWord = word;
-  if (!accents) return newWord;
+  if (!accents && !accentsOverride) return newWord;
   var regex;
+  var list = accentsOverride || accents;
 
-  for (var i = 0; i < accents.length; i++) {
-    regex = new RegExp("[".concat(accents[i][0], "]"), "gi");
-    newWord = newWord.replace(regex, accents[i][1]);
+  for (var i = 0; i < list.length; i++) {
+    regex = new RegExp("[".concat(list[i][0], "]"), "gi");
+    newWord = newWord.replace(regex, list[i][1]);
   }
 
   return newWord;
@@ -11873,14 +11878,14 @@ var SimplePopup = /*#__PURE__*/function () {
       if (this.inputs.length > 0) {
         if (this.type === "number") {
           this.inputs.forEach(function (input) {
-            el.find(".inputs").append("\n        <input type=\"number\" min=\"1\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n        "));
+            el.find(".inputs").append("\n        <input type=\"number\" min=\"1\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" class=\"").concat(input.hidden ? "hidden" : "", "\" ").concat(input.hidden ? "" : "required", " autocomplete=\"off\">\n        "));
           });
         } else if (this.type === "text") {
           this.inputs.forEach(function (input) {
             if (input.type) {
-              el.find(".inputs").append("\n            <input type=\"".concat(input.type, "\" val=\"").concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n            "));
+              el.find(".inputs").append("\n            <input type=\"".concat(input.type, "\" val=\"").concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" class=\"").concat(input.hidden ? "hidden" : "", "\" ").concat(input.hidden ? "" : "required", " autocomplete=\"off\">\n            "));
             } else {
-              el.find(".inputs").append("\n            <input type=\"text\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" required autocomplete=\"off\">\n            "));
+              el.find(".inputs").append("\n            <input type=\"text\" val=\"".concat(input.initVal, "\" placeholder=\"").concat(input.placeholder, "\" class=\"").concat(input.hidden ? "hidden" : "", "\" ").concat(input.hidden ? "" : "required", " autocomplete=\"off\">\n            "));
             }
           });
         }
@@ -11976,6 +11981,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.initErrorSound = initErrorSound;
 exports.init = init;
 exports.playClick = playClick;
 exports.playError = playError;
@@ -11984,10 +11990,15 @@ var _config = _interopRequireDefault(require("./config"));
 
 var _howler = require("howler");
 
-var errorSound = new _howler.Howl({
-  src: ["sound/error.wav"]
-});
+var errorSound = null;
 var clickSounds = null;
+
+function initErrorSound() {
+  if (errorSound !== null) return;
+  errorSound = new _howler.Howl({
+    src: ["../sound/error.wav"]
+  });
+}
 
 function init() {
   if (clickSounds !== null) return;
@@ -12117,6 +12128,7 @@ function playClick() {
 
 function playError() {
   if (!_config["default"].playSoundOnError) return;
+  if (errorSound === null) initErrorSound();
   errorSound.seek(0);
   errorSound.play();
 }
@@ -12959,7 +12971,7 @@ function _init() {
 
           case 45:
             if (UpdateConfig["default"].lazyMode === true && !language.noLazyMode) {
-              randomWord = LazyMode.replaceAccents(randomWord);
+              randomWord = LazyMode.replaceAccents(randomWord, language.accents);
             }
 
             randomWord = randomWord.replace(/ +/gm, " ");
@@ -13183,7 +13195,7 @@ function _init() {
 
           case 118:
             if (UpdateConfig["default"].lazyMode === true && !language.noLazyMode) {
-              w[_i2] = LazyMode.replaceAccents(w[_i2]);
+              w[_i2] = LazyMode.replaceAccents(w[_i2], language.accents);
             }
 
             words.push(w[_i2]);
@@ -16821,12 +16833,13 @@ function swapElements(el1, el2, totalDuration) {
 
 function changePage(page) {
   var norestart = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  console.log("change");
 
   if (pageTransition) {
+    console.log("change page ".concat(page, " stopped"));
     return;
   }
 
+  console.log("change page ".concat(page));
   var activePage = $(".page.active");
   $(".page").removeClass("active");
   $("#wordsInput").focusout();
@@ -16903,7 +16916,7 @@ $(".merchBanner .fas").click(function (event) {
 $(".scrollToTopButton").click(function (event) {
   window.scrollTo({
     top: 0,
-    behavior: 'smooth'
+    behavior: "smooth"
   });
 });
 $(document).on("click", "#bottom .leftright .right .current-theme", function (e) {
