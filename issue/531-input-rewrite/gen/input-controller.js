@@ -334,7 +334,8 @@ function handleSpace() {
   if (
     Config.mode == "time" ||
     Config.mode == "words" ||
-    Config.mode == "custom"
+    Config.mode == "custom" ||
+    Config.mode == "quote"
   ) {
     TestLogic.addWord();
   }
@@ -573,26 +574,28 @@ function handleChar(char, charIndex) {
     }
   }
 
-  let activeWordTopBeforeJump = document.querySelector("#words .word.active")
-    .offsetTop;
-  TestUI.updateWordElement();
-  let newActiveTop = document.querySelector("#words .word.active").offsetTop;
-  //stop the word jump by slicing off the last character, update word again
-  if (
-    activeWordTopBeforeJump < newActiveTop &&
-    !TestUI.lineTransition &&
-    TestLogic.input.current.length > 1
-  ) {
-    if (Config.mode == "zen") {
-      let currentTop = Math.floor(
-        document.querySelectorAll("#words .word")[
-          TestUI.currentWordElementIndex - 1
-        ].offsetTop
-      );
-      if (!Config.showAllLines) TestUI.lineJump(currentTop);
-    } else {
-      TestLogic.input.current = TestLogic.input.current.slice(0, -1);
-      TestUI.updateWordElement();
+  if (!Config.hideExtraLetters) {
+    let activeWordTopBeforeJump = document.querySelector("#words .word.active")
+      .offsetTop;
+    TestUI.updateWordElement();
+    let newActiveTop = document.querySelector("#words .word.active").offsetTop;
+    //stop the word jump by slicing off the last character, update word again
+    if (
+      activeWordTopBeforeJump < newActiveTop &&
+      !TestUI.lineTransition &&
+      TestLogic.input.current.length > 1
+    ) {
+      if (Config.mode == "zen") {
+        let currentTop = Math.floor(
+          document.querySelectorAll("#words .word")[
+            TestUI.currentWordElementIndex - 1
+          ].offsetTop
+        );
+        if (!Config.showAllLines) TestUI.lineJump(currentTop);
+      } else {
+        TestLogic.input.current = TestLogic.input.current.slice(0, -1);
+        TestUI.updateWordElement();
+      }
     }
   }
 

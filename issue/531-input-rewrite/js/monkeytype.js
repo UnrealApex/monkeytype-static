@@ -183,7 +183,7 @@ function updatePosition() {
 
 function _updatePosition() {
   _updatePosition = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-    var caret, inputLen, currentLetterIndex, activeWordEmpty, currentWordNodeList, currentLetter, currentLanguage, isLanguageLeftToRight, currentLetterPosLeft, currentLetterPosTop, letterHeight, newTop, newLeft, smoothlinescroll, browserHeight, middlePos, contentHeight;
+    var caret, inputLen, currentLetterIndex, activeWordEmpty, currentWordNodeList, currentLetter, currentLanguage, isLanguageLeftToRight, currentLetterPosLeft, currentLetterPosTop, letterHeight, newTop, newLeft, smoothlinescroll, browserHeight, middlePos, contentHeight, newscrolltop;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -271,9 +271,15 @@ function _updatePosition() {
               contentHeight = document.body.scrollHeight;
 
               if (newTop >= middlePos && contentHeight > browserHeight) {
+                newscrolltop = newTop - middlePos / 2; // console.log('---------');
+                // console.log(newTop);
+                // console.log(middlePos);
+                // console.log(browserHeight);
+                // console.log(contentHeight);
+
                 window.scrollTo({
                   left: 0,
-                  top: newTop - middlePos,
+                  top: newscrolltop,
                   behavior: "smooth"
                 });
               }
@@ -7192,7 +7198,7 @@ function handleSpace() {
     TimerProgress.update(TestTimer.time);
   }
 
-  if (UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom") {
+  if (UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom" || UpdateConfig["default"].mode == "quote") {
     TestLogic.addWord();
   }
 }
@@ -7379,17 +7385,19 @@ function handleChar(_char2, charIndex) {
     }
   }
 
-  var activeWordTopBeforeJump = document.querySelector("#words .word.active").offsetTop;
-  TestUI.updateWordElement();
-  var newActiveTop = document.querySelector("#words .word.active").offsetTop; //stop the word jump by slicing off the last character, update word again
+  if (!UpdateConfig["default"].hideExtraLetters) {
+    var activeWordTopBeforeJump = document.querySelector("#words .word.active").offsetTop;
+    TestUI.updateWordElement();
+    var newActiveTop = document.querySelector("#words .word.active").offsetTop; //stop the word jump by slicing off the last character, update word again
 
-  if (activeWordTopBeforeJump < newActiveTop && !TestUI.lineTransition && TestLogic.input.current.length > 1) {
-    if (UpdateConfig["default"].mode == "zen") {
-      var currentTop = Math.floor(document.querySelectorAll("#words .word")[TestUI.currentWordElementIndex - 1].offsetTop);
-      if (!UpdateConfig["default"].showAllLines) TestUI.lineJump(currentTop);
-    } else {
-      TestLogic.input.current = TestLogic.input.current.slice(0, -1);
-      TestUI.updateWordElement();
+    if (activeWordTopBeforeJump < newActiveTop && !TestUI.lineTransition && TestLogic.input.current.length > 1) {
+      if (UpdateConfig["default"].mode == "zen") {
+        var currentTop = Math.floor(document.querySelectorAll("#words .word")[TestUI.currentWordElementIndex - 1].offsetTop);
+        if (!UpdateConfig["default"].showAllLines) TestUI.lineJump(currentTop);
+      } else {
+        TestLogic.input.current = TestLogic.input.current.slice(0, -1);
+        TestUI.updateWordElement();
+      }
     }
   } //simulate space press in nospace funbox
 
@@ -8165,7 +8173,7 @@ var layouts = {
   },
   boo: {
     keymapShowTopRow: false,
-    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "jJ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "pP", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "zZ", "bB", "hH", "mM", "kK", "qQ", " "]
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "[{", "]}", ",<", ".>", "uU", "cC", "vV", "qQ", "fF", "dD", "lL", "yY", "?/", "=+", "\\|", "aA", "oO", "eE", "sS", "gG", "bB", "nN", "tT", "rR", "iI", "-_", "\\|", ";:", "xX", "'\"", "wW", "zZ", "pP", "hH", "mM", "kK", "jJ", " "]
   },
   APT: {
     keymapShowTopRow: false,
@@ -9157,7 +9165,7 @@ function _getReleasesFromGitHub() {
       while (1) {
         switch (_context12.prev = _context12.next) {
           case 0:
-            $.getJSON("releases.json", function (data) {
+            return _context12.abrupt("return", $.getJSON("releases.json", function (data) {
               $("#bottom .version .text").text(data[0].name);
               $("#bottom .version").css("opacity", 1);
               $("#versionHistory .releases").empty();
@@ -9166,7 +9174,7 @@ function _getReleasesFromGitHub() {
                   $("#versionHistory .releases").append("\n          <div class=\"release\">\n            <div class=\"title\">".concat(release.name, "</div>\n            <div class=\"date\">").concat(moment(release.published_at).format("DD MMM YYYY"), "</div>\n            <div class=\"body\">").concat(release.body.replace(/\r\n/g, "<br>"), "</div>\n          </div>\n        "));
                 }
               });
-            });
+            }));
 
           case 1:
           case "end":
@@ -12850,15 +12858,12 @@ function _init() {
               UpdateConfig.setLazyMode(false);
             }
 
-            if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
-              _context2.next = 71;
-              break;
-            }
-
             wordsBound = 100;
 
             if (UpdateConfig["default"].showAllLines) {
-              if (UpdateConfig["default"].mode === "custom") {
+              if (UpdateConfig["default"].mode === "quote") {
+                wordsBound = 100;
+              } else if (UpdateConfig["default"].mode === "custom") {
                 if (CustomText.isWordRandom) {
                   wordsBound = CustomText.word;
                 } else if (CustomText.isTimeRandom) {
@@ -12901,6 +12906,11 @@ function _init() {
 
             if (UpdateConfig["default"].funbox === "plus_two") {
               wordsBound = 3;
+            }
+
+            if (!(UpdateConfig["default"].mode == "time" || UpdateConfig["default"].mode == "words" || UpdateConfig["default"].mode == "custom")) {
+              _context2.next = 71;
+              break;
             }
 
             wordList = language.words;
@@ -13071,12 +13081,12 @@ function _init() {
             break;
 
           case 69:
-            _context2.next = 123;
+            _context2.next = 125;
             break;
 
           case 71:
             if (!(UpdateConfig["default"].mode == "quote")) {
-              _context2.next = 123;
+              _context2.next = 125;
               break;
             }
 
@@ -13166,14 +13176,16 @@ function _init() {
             rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
             rq.text = rq.text.replace(/…/g, "...");
             rq.text = rq.text.trim();
+            rq.textSplit = rq.text.split(" ");
             rq.language = UpdateConfig["default"].language.replace(/_\d*k$/g, "");
             setRandomQuote(rq);
-            w = randomQuote.text.trim().split(" ");
+            w = randomQuote.textSplit;
+            wordsBound = Math.min(wordsBound, w.length);
             _i2 = 0;
 
-          case 111:
-            if (!(_i2 < w.length)) {
-              _context2.next = 123;
+          case 113:
+            if (!(_i2 < wordsBound)) {
+              _context2.next = 125;
               break;
             }
 
@@ -13182,30 +13194,30 @@ function _init() {
             }
 
             if (!(UpdateConfig["default"].britishEnglish && UpdateConfig["default"].language.replace(/_\d*k$/g, "") === "english")) {
-              _context2.next = 118;
+              _context2.next = 120;
               break;
             }
 
-            _context2.next = 116;
+            _context2.next = 118;
             return BritishEnglish.replace(w[_i2]);
 
-          case 116:
+          case 118:
             _britishWord = _context2.sent;
             if (_britishWord) w[_i2] = _britishWord;
 
-          case 118:
+          case 120:
             if (UpdateConfig["default"].lazyMode === true && !language.noLazyMode) {
               w[_i2] = LazyMode.replaceAccents(w[_i2], language.accents);
             }
 
             words.push(w[_i2]);
 
-          case 120:
+          case 122:
             _i2++;
-            _context2.next = 111;
+            _context2.next = 113;
             break;
 
-          case 123:
+          case 125:
             //handle right-to-left languages
             if (language.leftToRight) {
               TestUI.arrangeCharactersLeftToRight();
@@ -13230,17 +13242,17 @@ function _init() {
 
 
             if (!$(".pageTest").hasClass("active")) {
-              _context2.next = 128;
+              _context2.next = 130;
               break;
             }
 
-            _context2.next = 128;
+            _context2.next = 130;
             return Funbox.activate();
 
-          case 128:
+          case 130:
             TestUI.showWords(); // }
 
-          case 129:
+          case 131:
           case "end":
             return _context2.stop();
         }
@@ -13543,7 +13555,7 @@ function _addWord() {
             if (UpdateConfig["default"].funbox === "plus_one") bound = 1;
             if (UpdateConfig["default"].funbox === "plus_two") bound = 2;
 
-            if (!(words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length)) {
+            if (!(words.length - input.history.length > bound || UpdateConfig["default"].mode === "words" && words.length >= UpdateConfig["default"].words && UpdateConfig["default"].words > 0 || UpdateConfig["default"].mode === "custom" && CustomText.isWordRandom && words.length >= CustomText.word && CustomText.word != 0 || UpdateConfig["default"].mode === "custom" && !CustomText.isWordRandom && words.length >= CustomText.text.length || UpdateConfig["default"].mode === "quote" && words.length >= randomQuote.textSplit.length)) {
               _context3.next = 5;
               break;
             }
@@ -13588,6 +13600,10 @@ function _addWord() {
               randomWord = wordset.randomWord();
             } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
               randomWord = CustomText.text[words.length];
+            }
+
+            if (UpdateConfig["default"].mode === "quote") {
+              randomWord = randomQuote.textSplit[words.length];
             } else {
               while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
                 randomWord = wordset.randomWord();
@@ -13599,18 +13615,18 @@ function _addWord() {
             }
 
             if (!(UpdateConfig["default"].britishEnglish && UpdateConfig["default"].language.replace(/_\d*k$/g, "") === "english")) {
-              _context3.next = 29;
+              _context3.next = 30;
               break;
             }
 
-            _context3.next = 27;
+            _context3.next = 28;
             return BritishEnglish.replace(randomWord);
 
-          case 27:
+          case 28:
             britishWord = _context3.sent;
             if (britishWord) randomWord = britishWord;
 
-          case 29:
+          case 30:
             if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
               randomcaseword = "";
 
@@ -13648,7 +13664,7 @@ function _addWord() {
             words.push(randomWord);
             TestUI.addWord(randomWord);
 
-          case 34:
+          case 35:
           case "end":
             return _context3.stop();
         }
@@ -13987,6 +14003,10 @@ function _finish() {
               lang = UpdateConfig["default"].language.replace(/_\d*k$/g, "");
             }
 
+            $(".pageTest #result #rateQuoteButton .icon").removeClass("fas").addClass("far");
+            $(".pageTest #result #rateQuoteButton .rating").text("");
+            $(".pageTest #result #rateQuoteButton").addClass("hidden");
+
             if (difficultyFailed) {
               Notifications.add("Test failed - ".concat(failReason), 0, 1);
             } else if (afkDetected) {
@@ -14164,10 +14184,10 @@ function _finish() {
               $("#result .stats .source").addClass("hidden");
             }
 
-            _context4.next = 99;
+            _context4.next = 102;
             return ThemeColors.get("sub");
 
-          case 99:
+          case 102:
             fc = _context4.sent;
 
             if (UpdateConfig["default"].funbox !== "none") {
@@ -14239,7 +14259,7 @@ function _finish() {
               Keymap.hide();
             });
 
-          case 107:
+          case 110:
           case "end":
             return _context4.stop();
         }
@@ -14368,7 +14388,7 @@ var keypressTimings = {
 exports.keypressTimings = keypressTimings;
 
 function getStats() {
-  return {
+  var ret = {
     start: start,
     end: end,
     wpmHistory: wpmHistory,
@@ -14383,6 +14403,28 @@ function getStats() {
     accuracy: accuracy,
     keypressTimings: keypressTimings
   };
+
+  try {
+    ret.keySpacingStats = {
+      average: keypressTimings.spacing.array.reduce(function (previous, current) {
+        return current += previous;
+      }) / keypressTimings.spacing.array.length,
+      sd: Misc.stdDev(keypressTimings.spacing.array)
+    };
+  } catch (e) {//
+  }
+
+  try {
+    ret.keyDurationStats = {
+      average: keypressTimings.duration.array.reduce(function (previous, current) {
+        return current += previous;
+      }) / keypressTimings.duration.array.length,
+      sd: Misc.stdDev(keypressTimings.duration.array)
+    };
+  } catch (e) {//
+  }
+
+  return ret;
 }
 
 function restart() {
@@ -16630,65 +16672,41 @@ function update() {
       $("#miniTimerAndLiveWpm .time").html(_displayTime);
     }
   } else if (_config["default"].mode === "words" || _config["default"].mode === "custom" || _config["default"].mode === "quote") {
+    var outof = TestLogic.words.length;
+
+    if (_config["default"].mode === "words") {
+      outof = _config["default"].words;
+    }
+
+    if (_config["default"].mode === "custom") {
+      if (CustomText.isWordRandom) {
+        outof = CustomText.word;
+      } else {
+        outof = CustomText.text.length;
+      }
+    }
+
+    if (_config["default"].mode === "quote") {
+      outof = TestLogic.randomQuote.textSplit.length;
+    }
+
     if (_config["default"].timerStyle === "bar") {
-      var outof = TestLogic.words.length;
-
-      if (_config["default"].mode === "words") {
-        outof = _config["default"].words;
-      }
-
-      if (_config["default"].mode === "custom") {
-        if (CustomText.isWordRandom) {
-          outof = CustomText.word;
-        } else {
-          outof = CustomText.text.length;
-        }
-      }
-
       var _percent = Math.floor((TestLogic.words.currentIndex + 1) / outof * 100);
 
       $("#timer").stop(true, true).animate({
         width: _percent + "vw"
       }, 250);
     } else if (_config["default"].timerStyle === "text") {
-      var _outof = TestLogic.words.length;
-
-      if (_config["default"].mode === "words") {
-        _outof = _config["default"].words;
-      }
-
-      if (_config["default"].mode === "custom") {
-        if (CustomText.isWordRandom) {
-          _outof = CustomText.word;
-        } else {
-          _outof = CustomText.text.length;
-        }
-      }
-
-      if (_outof === 0) {
+      if (outof === 0) {
         $("#timerNumber").html("<div>" + "".concat(TestLogic.input.history.length) + "</div>");
       } else {
-        $("#timerNumber").html("<div>" + "".concat(TestLogic.input.history.length, "/").concat(_outof) + "</div>");
+        $("#timerNumber").html("<div>" + "".concat(TestLogic.input.history.length, "/").concat(outof) + "</div>");
       }
     } else if (_config["default"].timerStyle === "mini") {
-      var _outof2 = TestLogic.words.length;
-
-      if (_config["default"].mode === "words") {
-        _outof2 = _config["default"].words;
-      }
-
-      if (_config["default"].mode === "custom") {
-        if (CustomText.isWordRandom) {
-          _outof2 = CustomText.word;
-        } else {
-          _outof2 = CustomText.text.length;
-        }
-      }
-
       if (_config["default"].words === 0) {
         $("#miniTimerAndLiveWpm .time").html("".concat(TestLogic.input.history.length));
       } else {
-        $("#miniTimerAndLiveWpm .time").html("".concat(TestLogic.input.history.length, "/").concat(_outof2));
+        $("#miniTimerAndLiveWpm .time").html("".concat(TestLogic.input.history.length, "/").concat(outof));
       }
     }
   } else if (_config["default"].mode == "zen") {

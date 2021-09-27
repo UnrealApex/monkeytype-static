@@ -461,71 +461,74 @@ export async function init() {
     UpdateConfig.setLazyMode(false);
   }
 
+  let wordsBound = 100;
+  if (Config.showAllLines) {
+    if (Config.mode === "quote") {
+      wordsBound = 100;
+    } else if (Config.mode === "custom") {
+      if (CustomText.isWordRandom) {
+        wordsBound = CustomText.word;
+      } else if (CustomText.isTimeRandom) {
+        wordsBound = 100;
+      } else {
+        wordsBound = CustomText.text.length;
+      }
+    } else if (Config.mode != "time") {
+      wordsBound = Config.words;
+    }
+  } else {
+    if (Config.mode === "words" && Config.words < wordsBound) {
+      wordsBound = Config.words;
+    }
+    if (
+      Config.mode == "custom" &&
+      CustomText.isWordRandom &&
+      CustomText.word < wordsBound
+    ) {
+      wordsBound = CustomText.word;
+    }
+    if (
+      Config.mode == "custom" &&
+      CustomText.isTimeRandom &&
+      CustomText.time < wordsBound
+    ) {
+      wordsBound = 100;
+    }
+    if (
+      Config.mode == "custom" &&
+      !CustomText.isWordRandom &&
+      CustomText.text.length < wordsBound
+    ) {
+      wordsBound = CustomText.text.length;
+    }
+  }
+
+  if (
+    (Config.mode === "custom" &&
+      CustomText.isWordRandom &&
+      CustomText.word == 0) ||
+    (Config.mode === "custom" &&
+      CustomText.isTimeRandom &&
+      CustomText.time == 0)
+  ) {
+    wordsBound = 100;
+  }
+
+  if (Config.mode === "words" && Config.words === 0) {
+    wordsBound = 100;
+  }
+  if (Config.funbox === "plus_one") {
+    wordsBound = 2;
+  }
+  if (Config.funbox === "plus_two") {
+    wordsBound = 3;
+  }
+
   if (
     Config.mode == "time" ||
     Config.mode == "words" ||
     Config.mode == "custom"
   ) {
-    let wordsBound = 100;
-    if (Config.showAllLines) {
-      if (Config.mode === "custom") {
-        if (CustomText.isWordRandom) {
-          wordsBound = CustomText.word;
-        } else if (CustomText.isTimeRandom) {
-          wordsBound = 100;
-        } else {
-          wordsBound = CustomText.text.length;
-        }
-      } else if (Config.mode != "time") {
-        wordsBound = Config.words;
-      }
-    } else {
-      if (Config.mode === "words" && Config.words < wordsBound) {
-        wordsBound = Config.words;
-      }
-      if (
-        Config.mode == "custom" &&
-        CustomText.isWordRandom &&
-        CustomText.word < wordsBound
-      ) {
-        wordsBound = CustomText.word;
-      }
-      if (
-        Config.mode == "custom" &&
-        CustomText.isTimeRandom &&
-        CustomText.time < wordsBound
-      ) {
-        wordsBound = 100;
-      }
-      if (
-        Config.mode == "custom" &&
-        !CustomText.isWordRandom &&
-        CustomText.text.length < wordsBound
-      ) {
-        wordsBound = CustomText.text.length;
-      }
-    }
-
-    if (
-      (Config.mode === "custom" &&
-        CustomText.isWordRandom &&
-        CustomText.word == 0) ||
-      (Config.mode === "custom" &&
-        CustomText.isTimeRandom &&
-        CustomText.time == 0)
-    ) {
-      wordsBound = 100;
-    }
-
-    if (Config.mode === "words" && Config.words === 0) {
-      wordsBound = 100;
-    }
-    if (Config.funbox === "plus_one") {
-      wordsBound = 2;
-    }
-    if (Config.funbox === "plus_two") {
-      wordsBound = 3;
-    }
     let wordList = language.words;
     if (Config.mode == "custom") {
       wordList = CustomText.text;
@@ -727,12 +730,16 @@ export async function init() {
     rq.text = rq.text.replace(/( *(\r\n|\r|\n) *)/g, "\n ");
     rq.text = rq.text.replace(/…/g, "...");
     rq.text = rq.text.trim();
+    rq.textSplit = rq.text.split(" ");
     rq.language = Config.language.replace(/_\d*k$/g, "");
 
     setRandomQuote(rq);
 
-    let w = randomQuote.text.trim().split(" ");
-    for (let i = 0; i < w.length; i++) {
+    let w = randomQuote.textSplit;
+
+    wordsBound = Math.min(wordsBound, w.length);
+
+    for (let i = 0; i < wordsBound; i++) {
       if (/\t/g.test(w[i])) {
         setHasTab(true);
       }
@@ -1078,7 +1085,8 @@ export async function addWord() {
       CustomText.word != 0) ||
     (Config.mode === "custom" &&
       !CustomText.isWordRandom &&
-      words.length >= CustomText.text.length)
+      words.length >= CustomText.text.length) ||
+    (Config.mode === "quote" && words.length >= randomQuote.textSplit.length)
   )
     return;
   const language =
@@ -1112,6 +1120,9 @@ export async function addWord() {
     !CustomText.isTimeRandom
   ) {
     randomWord = CustomText.text[words.length];
+  }
+  if (Config.mode === "quote") {
+    randomWord = randomQuote.textSplit[words.length];
   } else {
     while (
       previousWordStripped == randomWord ||
@@ -1507,6 +1518,12 @@ export async function finish(difficultyFailed = false) {
     quoteLength = randomQuote.group;
     lang = Config.language.replace(/_\d*k$/g, "");
   }
+
+  $(".pageTest #result #rateQuoteButton .icon")
+    .removeClass("fas")
+    .addClass("far");
+  $(".pageTest #result #rateQuoteButton .rating").text("");
+  $(".pageTest #result #rateQuoteButton").addClass("hidden");
 
   if (difficultyFailed) {
     Notifications.add(`Test failed - ${failReason}`, 0, 1);

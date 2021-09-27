@@ -363,7 +363,7 @@ export function median(arr) {
 }
 
 export async function getReleasesFromGitHub() {
-  $.getJSON("releases.json", (data) => {
+  return $.getJSON("releases.json", (data) => {
       $("#bottom .version .text").text(data[0].name);
       $("#bottom .version").css("opacity", 1);
       $("#versionHistory .releases").empty();
