@@ -400,7 +400,7 @@ function verify(result) {
           var accMode = Object.keys(requirementValue)[0];
 
           if (accMode == "exact") {
-            if (Math.round(result.acc) != requirementValue.exact) {
+            if (result.acc != requirementValue.exact) {
               requirementsMet = false;
               failReasons.push("Accuracy not ".concat(requirementValue.exact));
             }
@@ -13700,9 +13700,7 @@ function _addWord() {
               randomWord = wordset.randomWord();
             } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
               randomWord = CustomText.text[words.length];
-            }
-
-            if (UpdateConfig["default"].mode === "quote") {
+            } else if (UpdateConfig["default"].mode === "quote") {
               randomWord = randomQuote.textSplit[words.length];
             } else {
               while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
@@ -13715,18 +13713,18 @@ function _addWord() {
             }
 
             if (!(UpdateConfig["default"].britishEnglish && UpdateConfig["default"].language.replace(/_\d*k$/g, "") === "english")) {
-              _context3.next = 30;
+              _context3.next = 29;
               break;
             }
 
-            _context3.next = 28;
+            _context3.next = 27;
             return BritishEnglish.replace(randomWord);
 
-          case 28:
+          case 27:
             britishWord = _context3.sent;
             if (britishWord) randomWord = britishWord;
 
-          case 30:
+          case 29:
             if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
               randomcaseword = "";
 
@@ -13764,7 +13762,7 @@ function _addWord() {
             words.push(randomWord);
             TestUI.addWord(randomWord);
 
-          case 35:
+          case 34:
           case "end":
             return _context3.stop();
         }

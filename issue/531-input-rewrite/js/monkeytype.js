@@ -401,7 +401,7 @@ function verify(result) {
           var accMode = Object.keys(requirementValue)[0];
 
           if (accMode == "exact") {
-            if (Math.round(result.acc) != requirementValue.exact) {
+            if (result.acc != requirementValue.exact) {
               requirementsMet = false;
               failReasons.push("Accuracy not ".concat(requirementValue.exact));
             }
@@ -6953,6 +6953,7 @@ var MonkeyPower = _interopRequireWildcard(require("./monkey-power"));
 var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
 
 var dontInsertSpace = false;
+var correctShiftUsed = true;
 
 function handleTab(event) {
   if (TestUI.resultCalculating) {
@@ -7204,9 +7205,7 @@ function handleSpace() {
 }
 
 function isCharCorrect(_char, charIndex) {
-  if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char) === false) {
-    return false;
-  }
+  if (!correctShiftUsed) return false;
 
   if (UpdateConfig["default"].mode == "zen") {
     return true;
@@ -7322,10 +7321,7 @@ function handleChar(_char2, charIndex) {
     }
   }
 
-  if (UpdateConfig["default"].oppositeShiftMode === "on" && ShiftTracker.isUsingOppositeShift(_char2) === false) {
-    return;
-  } //update current corrected version. if its empty then add the current char. if its not then replace the last character with the currently pressed one / add it
-
+  if (!correctShiftUsed) return; //update current corrected version. if its empty then add the current char. if its not then replace the last character with the currently pressed one / add it
 
   if (TestLogic.corrected.current === "") {
     TestLogic.corrected.current += resultingWord;
@@ -7477,6 +7473,10 @@ $(document).keydown(function (event) {
   if (event.key === "Dead" && !Misc.trailingComposeChars.test(TestLogic.input.current)) {
     Sound.playClick(UpdateConfig["default"].playSoundOnClick);
     $(document.querySelector("#words .word.active").querySelectorAll("letter")[TestLogic.input.current.length]).toggleClass("dead");
+  }
+
+  if (UpdateConfig["default"].oppositeShiftMode === "on") {
+    correctShiftUsed = ShiftTracker.isUsingOppositeShift(event) !== false;
   }
 
   if (UpdateConfig["default"].layout !== "default") {
@@ -11791,14 +11791,14 @@ function reset() {
   exports.rightState = rightState = false;
 }
 
-var leftSideChars = ["Q", "W", "E", "R", "T", "A", "S", "D", "F", "G", "Z", "X", "C", "V", "`", "1", "2", "3", "4", "5"];
-var rightSideChars = ["U", "I", "O", "P", "H", "J", "K", "L", "N", "M", "7", "8", "9", "0", "\\", "[", "]", ";", "'", ",", ".", "/"];
+var leftSideKeys = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyZ", "KeyX", "KeyC", "KeyV", "Backquote", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5"];
+var rightSideKeys = ["KeyU", "KeyI", "KeyO", "KeyP", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyN", "KeyM", "Digit7", "Digit8", "Digit9", "Digit0", "Backslash", "BracketLeft", "BracketRight", "Semicolon", "Quote", "Comma", "Period", "Slash"];
 
-function isUsingOppositeShift(_char) {
+function isUsingOppositeShift(event) {
   if (!leftState && !rightState) return null;
-  if (!rightSideChars.includes(_char) && !leftSideChars.includes(_char)) return null;
+  if (!rightSideKeys.includes(event.code) && !leftSideKeys.includes(event.code)) return null;
 
-  if (leftState && rightSideChars.includes(_char) || rightState && leftSideChars.includes(_char)) {
+  if (leftState && rightSideKeys.includes(event.code) || rightState && leftSideKeys.includes(event.code)) {
     return true;
   } else {
     return false;
@@ -13600,9 +13600,7 @@ function _addWord() {
               randomWord = wordset.randomWord();
             } else if (UpdateConfig["default"].mode == "custom" && !CustomText.isWordRandom && !CustomText.isTimeRandom) {
               randomWord = CustomText.text[words.length];
-            }
-
-            if (UpdateConfig["default"].mode === "quote") {
+            } else if (UpdateConfig["default"].mode === "quote") {
               randomWord = randomQuote.textSplit[words.length];
             } else {
               while (previousWordStripped == randomWord || previousWord2Stripped == randomWord || randomWord.indexOf(" ") > -1 || !UpdateConfig["default"].punctuation && randomWord == "I") {
@@ -13615,18 +13613,18 @@ function _addWord() {
             }
 
             if (!(UpdateConfig["default"].britishEnglish && UpdateConfig["default"].language.replace(/_\d*k$/g, "") === "english")) {
-              _context3.next = 30;
+              _context3.next = 29;
               break;
             }
 
-            _context3.next = 28;
+            _context3.next = 27;
             return BritishEnglish.replace(randomWord);
 
-          case 28:
+          case 27:
             britishWord = _context3.sent;
             if (britishWord) randomWord = britishWord;
 
-          case 30:
+          case 29:
             if (UpdateConfig["default"].funbox === "rAnDoMcAsE") {
               randomcaseword = "";
 
@@ -13664,7 +13662,7 @@ function _addWord() {
             words.push(randomWord);
             TestUI.addWord(randomWord);
 
-          case 35:
+          case 34:
           case "end":
             return _context3.stop();
         }
