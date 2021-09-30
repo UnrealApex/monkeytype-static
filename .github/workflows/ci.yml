@@ -3,6 +3,10 @@ name: Lint and auto-format PRs
 permissions:
   contents: none
 
+
+
+
+
 on:
   pull_request:
     types: [opened, synchronize]
