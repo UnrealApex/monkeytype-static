@@ -889,6 +889,7 @@ export function restart(
   $("#showWordHistoryButton").removeClass("loaded");
   TestUI.focusWords();
   Funbox.resetMemoryTimer();
+  $("#wordsInput").val(" ");
 
   TestUI.reset();
 
@@ -1498,15 +1499,9 @@ export async function finish(difficultyFailed = false) {
 
   ChartController.result.data.datasets[2].data = errorsArray;
 
-  let kps = TestStats.keypressPerSecond.slice(
-    Math.max(TestStats.keypressPerSecond.length - 5, 0)
-  );
+  let kps = TestStats.keypressPerSecond.slice(-5);
 
-  kps = kps.map((a) => a.count + a.mod);
-
-  kps = kps.reduce((a, b) => a + b, 0);
-
-  let afkDetected = kps === 0 ? true : false;
+  let afkDetected = kps.every((second) => second.afk);
 
   if (bailout) afkDetected = false;
 
