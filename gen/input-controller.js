@@ -28,79 +28,6 @@ import * as WeakSpot from "./weak-spot";
 let dontInsertSpace = false;
 let correctShiftUsed = true;
 
-function handleTab(event) {
-  if (TestUI.resultCalculating) {
-    event.preventDefault();
-  }
-  if ($("#customTextPopup .textarea").is(":focus")) {
-    event.preventDefault();
-
-    let area = $("#customTextPopup .textarea")[0];
-
-    var start = area.selectionStart;
-    var end = area.selectionEnd;
-
-    // set textarea value to: text before caret + tab + text after caret
-    area.value =
-      area.value.substring(0, start) + "\t" + area.value.substring(end);
-
-    // put caret at right position again
-    area.selectionStart = area.selectionEnd = start + 1;
-
-    return;
-  } else if (
-    !TestUI.resultCalculating &&
-    $("#commandLineWrapper").hasClass("hidden") &&
-    $("#simplePopupWrapper").hasClass("hidden") &&
-    !$(".page.pageLogin").hasClass("active")
-  ) {
-    if ($(".pageTest").hasClass("active")) {
-      if (Config.quickTab) {
-        if (
-          TestUI.resultVisible ||
-          !(
-            (Config.mode == "zen" && !event.shiftKey) ||
-            (TestLogic.hasTab && !event.shiftKey)
-          )
-        ) {
-          if (event.shiftKey) {
-            ManualRestart.set();
-          } else {
-            ManualRestart.reset();
-          }
-          event.preventDefault();
-          if (
-            TestLogic.active &&
-            Config.repeatQuotes === "typing" &&
-            Config.mode === "quote"
-          ) {
-            TestLogic.restart(true, false, event);
-          } else {
-            TestLogic.restart(false, false, event);
-          }
-        } else {
-          event.preventDefault();
-          handleChar("\t", TestLogic.input.current.length);
-        }
-      } else if (!TestUI.resultVisible) {
-        if (
-          (TestLogic.hasTab && event.shiftKey) ||
-          (!TestLogic.hasTab && Config.mode !== "zen") ||
-          (Config.mode === "zen" && event.shiftKey)
-        ) {
-          event.preventDefault();
-          $("#restartTestButton").focus();
-        } else {
-          event.preventDefault();
-          handleChar("\t", TestLogic.input.current.length);
-        }
-      }
-    } else if (Config.quickTab) {
-      UI.changePage("test");
-    }
-  }
-}
-
 function backspaceToPrevious() {
   if (!TestLogic.active) return;
 
@@ -433,10 +360,6 @@ function handleChar(char, charIndex) {
     return;
   }
 
-  if (TestLogic.input.current === "") {
-    TestStats.setBurstStart(performance.now());
-  }
-
   Focus.set(true);
   Caret.stopAnimation();
 
@@ -444,6 +367,15 @@ function handleChar(char, charIndex) {
 
   if (thisCharCorrect && Config.mode !== "zen") {
     char = TestLogic.words.getCurrent().charAt(charIndex);
+  }
+
+  if (!thisCharCorrect && char === "\n") {
+    if (TestLogic.input.current === "") return;
+    char = " ";
+  }
+
+  if (TestLogic.input.current === "") {
+    TestStats.setBurstStart(performance.now());
   }
 
   const resultingWord =
@@ -570,7 +502,6 @@ function handleChar(char, charIndex) {
 
   let activeWordTopBeforeJump = document.querySelector("#words .word.active")
     .offsetTop;
-  TestUI.updateWordElement();
 
   if (!Config.hideExtraLetters) {
     let newActiveTop = document.querySelector("#words .word.active").offsetTop;
@@ -589,10 +520,11 @@ function handleChar(char, charIndex) {
         if (!Config.showAllLines) TestUI.lineJump(currentTop);
       } else {
         TestLogic.input.current = TestLogic.input.current.slice(0, -1);
-        TestUI.updateWordElement();
       }
     }
   }
+
+  TestUI.updateWordElement();
 
   //simulate space press in nospace funbox
   if (
@@ -608,6 +540,79 @@ function handleChar(char, charIndex) {
   }
 
   $("#wordsInput").val(" " + TestLogic.input.current);
+}
+
+function handleTab(event) {
+  if (TestUI.resultCalculating) {
+    event.preventDefault();
+  }
+  if ($("#customTextPopup .textarea").is(":focus")) {
+    event.preventDefault();
+
+    let area = $("#customTextPopup .textarea")[0];
+
+    var start = area.selectionStart;
+    var end = area.selectionEnd;
+
+    // set textarea value to: text before caret + tab + text after caret
+    area.value =
+      area.value.substring(0, start) + "\t" + area.value.substring(end);
+
+    // put caret at right position again
+    area.selectionStart = area.selectionEnd = start + 1;
+
+    return;
+  } else if (
+    !TestUI.resultCalculating &&
+    $("#commandLineWrapper").hasClass("hidden") &&
+    $("#simplePopupWrapper").hasClass("hidden") &&
+    !$(".page.pageLogin").hasClass("active")
+  ) {
+    if ($(".pageTest").hasClass("active")) {
+      if (Config.quickTab) {
+        if (
+          TestUI.resultVisible ||
+          !(
+            (Config.mode == "zen" && !event.shiftKey) ||
+            (TestLogic.hasTab && !event.shiftKey)
+          )
+        ) {
+          if (event.shiftKey) {
+            ManualRestart.set();
+          } else {
+            ManualRestart.reset();
+          }
+          event.preventDefault();
+          if (
+            TestLogic.active &&
+            Config.repeatQuotes === "typing" &&
+            Config.mode === "quote"
+          ) {
+            TestLogic.restart(true, false, event);
+          } else {
+            TestLogic.restart(false, false, event);
+          }
+        } else {
+          event.preventDefault();
+          handleChar("\t", TestLogic.input.current.length);
+        }
+      } else if (!TestUI.resultVisible) {
+        if (
+          (TestLogic.hasTab && event.shiftKey) ||
+          (!TestLogic.hasTab && Config.mode !== "zen") ||
+          (Config.mode === "zen" && event.shiftKey)
+        ) {
+          event.preventDefault();
+          $("#restartTestButton").focus();
+        } else {
+          event.preventDefault();
+          handleChar("\t", TestLogic.input.current.length);
+        }
+      }
+    } else if (Config.quickTab) {
+      UI.changePage("test");
+    }
+  }
 }
 
 $(document).keydown((event) => {
