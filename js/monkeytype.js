@@ -7251,6 +7251,10 @@ function handleChar(_char2, charIndex) {
     } else {
       return;
     }
+  }
+
+  if (TestLogic.words.getCurrent()[charIndex] !== "\n" && _char2 === "\n") {
+    return;
   } //start the test
 
 
