@@ -63,16 +63,6 @@ function backspaceToPrevious() {
   TestUI.updateActiveElement(true);
   Funbox.toggleScript(TestLogic.words.getCurrent());
 
-  if (Config.keymapMode === "next" && Config.mode !== "zen") {
-    Keymap.highlightKey(
-      TestLogic.words
-        .getCurrent()
-        .charAt(TestLogic.input.current.length)
-        .toString()
-        .toUpperCase()
-    );
-  }
-
   Caret.updatePosition();
   Replay.addReplayEvent("backWord");
 }
@@ -242,14 +232,6 @@ function handleSpace() {
 
   if (Config.keymapMode === "react") {
     Keymap.flashKey("Space", true);
-  } else if (Config.keymapMode === "next" && Config.mode !== "zen") {
-    Keymap.highlightKey(
-      TestLogic.words
-        .getCurrent()
-        .charAt(TestLogic.input.current.length)
-        .toString()
-        .toUpperCase()
-    );
   }
   if (
     Config.mode === "words" ||
@@ -355,7 +337,11 @@ function handleChar(char, charIndex) {
     }
   }
 
-  if (TestLogic.words.getCurrent()[charIndex] !== "\n" && char === "\n") {
+  if (
+    Config.mode !== "zen" &&
+    TestLogic.words.getCurrent()[charIndex] !== "\n" &&
+    char === "\n"
+  ) {
     return;
   }
 
@@ -475,14 +461,6 @@ function handleChar(char, charIndex) {
   //keymap
   if (Config.keymapMode === "react") {
     Keymap.flashKey(char, thisCharCorrect);
-  } else if (Config.keymapMode === "next" && Config.mode !== "zen") {
-    Keymap.highlightKey(
-      TestLogic.words
-        .getCurrent()
-        .charAt(TestLogic.input.current.length)
-        .toString()
-        .toUpperCase()
-    );
   }
 
   if (Config.mode != "zen") {
@@ -506,6 +484,7 @@ function handleChar(char, charIndex) {
 
   let activeWordTopBeforeJump = document.querySelector("#words .word.active")
     .offsetTop;
+  TestUI.updateWordElement();
 
   if (!Config.hideExtraLetters) {
     let newActiveTop = document.querySelector("#words .word.active").offsetTop;
@@ -524,11 +503,10 @@ function handleChar(char, charIndex) {
         if (!Config.showAllLines) TestUI.lineJump(currentTop);
       } else {
         TestLogic.input.current = TestLogic.input.current.slice(0, -1);
+        TestUI.updateWordElement();
       }
     }
   }
-
-  TestUI.updateWordElement();
 
   //simulate space press in nospace funbox
   if (
@@ -784,6 +762,16 @@ $("#wordsInput").on("input", (event) => {
 
   let acc = Misc.roundTo2(TestStats.calculateAccuracy());
   LiveAcc.update(acc);
+
+  if (Config.keymapMode === "next" && Config.mode !== "zen") {
+    Keymap.highlightKey(
+      TestLogic.words
+        .getCurrent()
+        .charAt(TestLogic.input.current.length)
+        .toString()
+        .toUpperCase()
+    );
+  }
 
   // force caret at end of input
   // doing it on next cycle because Chromium on Android won't let me edit

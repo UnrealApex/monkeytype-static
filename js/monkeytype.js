@@ -7010,11 +7010,6 @@ function backspaceToPrevious() {
   TestUI.setCurrentWordElementIndex(TestUI.currentWordElementIndex - 1);
   TestUI.updateActiveElement(true);
   Funbox.toggleScript(TestLogic.words.getCurrent());
-
-  if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
-  }
-
   Caret.updatePosition();
   Replay.addReplayEvent("backWord");
 }
@@ -7170,8 +7165,6 @@ function handleSpace() {
 
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey("Space", true);
-  } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
   }
 
   if (UpdateConfig["default"].mode === "words" || UpdateConfig["default"].mode === "custom" || UpdateConfig["default"].mode === "quote" || UpdateConfig["default"].mode === "zen") {
@@ -7253,7 +7246,7 @@ function handleChar(_char2, charIndex) {
     }
   }
 
-  if (TestLogic.words.getCurrent()[charIndex] !== "\n" && _char2 === "\n") {
+  if (UpdateConfig["default"].mode !== "zen" && TestLogic.words.getCurrent()[charIndex] !== "\n" && _char2 === "\n") {
     return;
   } //start the test
 
@@ -7351,8 +7344,6 @@ function handleChar(_char2, charIndex) {
 
   if (UpdateConfig["default"].keymapMode === "react") {
     Keymap.flashKey(_char2, thisCharCorrect);
-  } else if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
   }
 
   if (UpdateConfig["default"].mode != "zen") {
@@ -7370,6 +7361,7 @@ function handleChar(_char2, charIndex) {
   }
 
   var activeWordTopBeforeJump = document.querySelector("#words .word.active").offsetTop;
+  TestUI.updateWordElement();
 
   if (!UpdateConfig["default"].hideExtraLetters) {
     var newActiveTop = document.querySelector("#words .word.active").offsetTop; //stop the word jump by slicing off the last character, update word again
@@ -7380,11 +7372,11 @@ function handleChar(_char2, charIndex) {
         if (!UpdateConfig["default"].showAllLines) TestUI.lineJump(currentTop);
       } else {
         TestLogic.input.current = TestLogic.input.current.slice(0, -1);
+        TestUI.updateWordElement();
       }
     }
-  }
+  } //simulate space press in nospace funbox
 
-  TestUI.updateWordElement(); //simulate space press in nospace funbox
 
   if (UpdateConfig["default"].funbox === "nospace" && TestLogic.input.current.length === TestLogic.words.getCurrent().length || _char2 === "\n" && thisCharCorrect) {
     handleSpace();
@@ -7593,9 +7585,14 @@ $("#wordsInput").on("input", function (event) {
 
   event.target.value = " " + TestLogic.input.current;
   var acc = Misc.roundTo2(TestStats.calculateAccuracy());
-  LiveAcc.update(acc); // force caret at end of input
+  LiveAcc.update(acc);
+
+  if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
+    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
+  } // force caret at end of input
   // doing it on next cycle because Chromium on Android won't let me edit
   // the selection inside the input event
+
 
   setTimeout(function () {
     if (event.target.selectionStart !== event.target.value.length && (!Misc.trailingComposeChars.test(event.target.value) || event.target.selectionStart < event.target.value.search(Misc.trailingComposeChars))) {
@@ -16045,7 +16042,7 @@ $("#wordsInput").on("focusout", function () {
   Caret.hide();
 });
 $(document).on("keypress", "#restartTestButton", function (event) {
-  if (event.keyCode == 13) {
+  if (event.key == "Enter") {
     ManualRestart.reset();
 
     if (TestLogic.active && UpdateConfig["default"].repeatQuotes === "typing" && UpdateConfig["default"].mode === "quote") {

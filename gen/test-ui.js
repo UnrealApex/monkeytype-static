@@ -293,7 +293,7 @@ export function updateWordElement(showError = !Config.blindMode) {
     if (
       input.search(Misc.trailingComposeChars) < currentWord.length &&
       currentWord.slice(0, inputWithoutComposeLength) ===
-      input.slice(0, inputWithoutComposeLength)
+        input.slice(0, inputWithoutComposeLength)
     ) {
       correctSoFar = true;
     }
@@ -972,7 +972,7 @@ $("#wordsInput").on("focusout", () => {
 });
 
 $(document).on("keypress", "#restartTestButton", (event) => {
-  if (event.keyCode == 13) {
+  if (event.key == "Enter") {
     ManualRestart.reset();
     if (
       TestLogic.active &&
