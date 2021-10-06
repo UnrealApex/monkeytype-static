@@ -28,6 +28,30 @@ import * as WeakSpot from "./weak-spot";
 let dontInsertSpace = false;
 let correctShiftUsed = true;
 
+function setWordsInput(value) {
+  // Only change #wordsInput if it's not already the wanted value
+  // Avoids Safari triggering unneeded events, causing issues with
+  // dead keys.
+  if (value !== $("#wordsInput").val()) {
+    $("#wordsInput").val(value);
+  }
+}
+
+function updateUI() {
+  let acc = Misc.roundTo2(TestStats.calculateAccuracy());
+  LiveAcc.update(acc);
+
+  if (Config.keymapMode === "next" && Config.mode !== "zen") {
+    Keymap.highlightKey(
+      TestLogic.words
+        .getCurrent()
+        .charAt(TestLogic.input.current.length)
+        .toString()
+        .toUpperCase()
+    );
+  }
+}
+
 function backspaceToPrevious() {
   if (!TestLogic.active) return;
 
@@ -375,7 +399,7 @@ function handleChar(char, charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
-    $("#wordsInput").val(" " + TestLogic.input.current);
+    setWordsInput(" " + TestLogic.input.current);
     TestUI.updateWordElement();
     Caret.updatePosition();
     return;
@@ -448,7 +472,7 @@ function handleChar(char, charIndex) {
       charIndex < TestLogic.words.getCurrent().length + 20)
   ) {
     TestLogic.input.current = resultingWord;
-    $("#wordsInput").val(" " + TestLogic.input.current);
+    setWordsInput(" " + TestLogic.input.current);
   }
 
   if (!thisCharCorrect && Config.difficulty == "master") {
@@ -521,7 +545,7 @@ function handleChar(char, charIndex) {
     Caret.updatePosition();
   }
 
-  $("#wordsInput").val(" " + TestLogic.input.current);
+  setWordsInput(" " + TestLogic.input.current);
 }
 
 function handleTab(event) {
@@ -616,7 +640,7 @@ $(document).keydown((event) => {
     !TestUI.resultVisible &&
     (wordsFocused || event.key !== "Enter");
 
-  if (allowTyping && !wordsFocused) {
+  if (allowTyping && !wordsFocused && !$("#restartTestButton").is(":focus")) {
     TestUI.focusWords();
     if (Config.showOutOfFocusWarning) {
       event.preventDefault();
@@ -660,7 +684,7 @@ $(document).keydown((event) => {
   if (event.key === "Backspace" && TestLogic.input.current.length === 0) {
     backspaceToPrevious();
     if (TestLogic.input.current)
-      $("#wordsInput").val(" " + TestLogic.input.current + " ");
+      setWordsInput(" " + TestLogic.input.current + " ");
   }
 
   if (event.key === "Enter") {
@@ -700,6 +724,7 @@ $(document).keydown((event) => {
     if (char !== null) {
       event.preventDefault();
       handleChar(char, TestLogic.input.current.length);
+      updateUI();
     }
   }
 });
@@ -758,20 +783,8 @@ $("#wordsInput").on("input", (event) => {
     }
   }
 
-  event.target.value = " " + TestLogic.input.current;
-
-  let acc = Misc.roundTo2(TestStats.calculateAccuracy());
-  LiveAcc.update(acc);
-
-  if (Config.keymapMode === "next" && Config.mode !== "zen") {
-    Keymap.highlightKey(
-      TestLogic.words
-        .getCurrent()
-        .charAt(TestLogic.input.current.length)
-        .toString()
-        .toUpperCase()
-    );
-  }
+  setWordsInput(" " + TestLogic.input.current);
+  updateUI();
 
   // force caret at end of input
   // doing it on next cycle because Chromium on Android won't let me edit

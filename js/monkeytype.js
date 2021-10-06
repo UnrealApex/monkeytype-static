@@ -6986,6 +6986,24 @@ var WeakSpot = _interopRequireWildcard(require("./weak-spot"));
 var dontInsertSpace = false;
 var correctShiftUsed = true;
 
+function setWordsInput(value) {
+  // Only change #wordsInput if it's not already the wanted value
+  // Avoids Safari triggering unneeded events, causing issues with
+  // dead keys.
+  if (value !== $("#wordsInput").val()) {
+    $("#wordsInput").val(value);
+  }
+}
+
+function updateUI() {
+  var acc = Misc.roundTo2(TestStats.calculateAccuracy());
+  LiveAcc.update(acc);
+
+  if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
+    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
+  }
+}
+
 function backspaceToPrevious() {
   if (!TestLogic.active) return;
   if (TestLogic.input.history.length == 0 || TestUI.currentWordElementIndex == 0) return;
@@ -7276,7 +7294,7 @@ function handleChar(_char2, charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
-    $("#wordsInput").val(" " + TestLogic.input.current);
+    setWordsInput(" " + TestLogic.input.current);
     TestUI.updateWordElement();
     Caret.updatePosition();
     return;
@@ -7331,7 +7349,7 @@ function handleChar(_char2, charIndex) {
 
   if (UpdateConfig["default"].mode === "zen" && charIndex < 30 || UpdateConfig["default"].mode !== "zen" && charIndex < TestLogic.words.getCurrent().length + 20) {
     TestLogic.input.current = resultingWord;
-    $("#wordsInput").val(" " + TestLogic.input.current);
+    setWordsInput(" " + TestLogic.input.current);
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
@@ -7386,7 +7404,7 @@ function handleChar(_char2, charIndex) {
     Caret.updatePosition();
   }
 
-  $("#wordsInput").val(" " + TestLogic.input.current);
+  setWordsInput(" " + TestLogic.input.current);
 }
 
 function handleTab(event) {
@@ -7450,7 +7468,7 @@ $(document).keydown(function (event) {
   var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
   var allowTyping = pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && (wordsFocused || event.key !== "Enter");
 
-  if (allowTyping && !wordsFocused) {
+  if (allowTyping && !wordsFocused && !$("#restartTestButton").is(":focus")) {
     TestUI.focusWords();
 
     if (UpdateConfig["default"].showOutOfFocusWarning) {
@@ -7487,7 +7505,7 @@ $(document).keydown(function (event) {
 
   if (event.key === "Backspace" && TestLogic.input.current.length === 0) {
     backspaceToPrevious();
-    if (TestLogic.input.current) $("#wordsInput").val(" " + TestLogic.input.current + " ");
+    if (TestLogic.input.current) setWordsInput(" " + TestLogic.input.current + " ");
   }
 
   if (event.key === "Enter") {
@@ -7517,6 +7535,7 @@ $(document).keydown(function (event) {
     if (_char3 !== null) {
       event.preventDefault();
       handleChar(_char3, TestLogic.input.current.length);
+      updateUI();
     }
   }
 });
@@ -7583,16 +7602,10 @@ $("#wordsInput").on("input", function (event) {
     }
   }
 
-  event.target.value = " " + TestLogic.input.current;
-  var acc = Misc.roundTo2(TestStats.calculateAccuracy());
-  LiveAcc.update(acc);
-
-  if (UpdateConfig["default"].keymapMode === "next" && UpdateConfig["default"].mode !== "zen") {
-    Keymap.highlightKey(TestLogic.words.getCurrent().charAt(TestLogic.input.current.length).toString().toUpperCase());
-  } // force caret at end of input
+  setWordsInput(" " + TestLogic.input.current);
+  updateUI(); // force caret at end of input
   // doing it on next cycle because Chromium on Android won't let me edit
   // the selection inside the input event
-
 
   setTimeout(function () {
     if (event.target.selectionStart !== event.target.value.length && (!Misc.trailingComposeChars.test(event.target.value) || event.target.selectionStart < event.target.value.search(Misc.trailingComposeChars))) {
@@ -8181,6 +8194,10 @@ var layouts = {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "pP", "oO", "uU", "jJ", "kK", "dD", "lL", "cC", "wW", "[{", "]}", "\\|", "iI", "nN", "eE", "aA", ",;", "mM", "hH", "tT", "sS", "rR", "'\"", "\\|", "qQ", "zZ", "/<", ".>", ":?", "bB", "fF", "gG", "vV", "xX", " "]
   },
+  MTGAP_ISEA: {
+    keymapShowTopRow: false,
+    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "cC", "oO", "uU", "jJ", "kK", "lL", "dD", "pP", "wW", "qQ", "zZ", "\\|", "iI", "sS", "eE", "aA", ",;", "bB", "hH", "tT", "nN", "rR", "'\"", "\\|", "[{", "]}", "/<", ".>", ":?", "mM", "fF", "gG", "vV", "xX", " "]
+  },
   soul: {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "wW", "lL", "dD", "pP", "kK", "mM", "uU", "yY", ";:", "[{", "]}", "\\|", "aA", "sS", "rR", "tT", "gG", "fF", "nN", "eE", "iI", "oO", "'\"", "\\|", "zZ", "xX", "cC", "vV", "jJ", "bB", "hH", ",<", ".>", "/?", " "]
@@ -8256,7 +8273,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.replaceAccents = replaceAccents;
-var accents = [["áàâäåãąą́āą̄", "a"], ["éèêëẽęę́ēę̄ėě", "e"], ["íìîïĩįį́īį̄", "i"], ["óòôöøõóōǫǫ́ǭ", "o"], ["úùûüŭũúūů", "u"], ["ñńň", "n"], ["çĉčć", "c"], ["ř", "r"], ["ď", "d"], ["ť", "t"], ["æ", "ae"], ["œ", "oe"], ["ẅ", "w"], ["ĝğg̃", "g"], ["ĥ", "h"], ["ĵ", "j"], ["ń", "n"], ["ŝśš", "s"], ["żźž", "z"], ["ÿỹýÿŷ", "y"], ["ł", "l"], ["أإآ", "ا"], ["َ", ""], ["ُ", ""], ["ِ", ""], ["ْ", ""], ["ً", ""], ["ٌ", ""], ["ٍ", ""], ["ّ", ""]];
+var accents = [["áàâäåãąą́āą̄", "a"], ["éèêëẽęę́ēę̄ėě", "e"], ["íìîïĩįį́īį̄", "i"], ["óòôöøõóōǫǫ́ǭ", "o"], ["úùûüŭũúūů", "u"], ["ńň", "n"], ["çĉčć", "c"], ["ř", "r"], ["ď", "d"], ["ť", "t"], ["æ", "ae"], ["œ", "oe"], ["ẅ", "w"], ["ĝğg̃", "g"], ["ĥ", "h"], ["ĵ", "j"], ["ń", "n"], ["ŝśš", "s"], ["żźž", "z"], ["ÿỹýÿŷ", "y"], ["ł", "l"], ["أإآ", "ا"], ["َ", ""], ["ُ", ""], ["ِ", ""], ["ْ", ""], ["ً", ""], ["ٌ", ""], ["ٍ", ""], ["ّ", ""]];
 
 function replaceAccents(word, accentsOverride) {
   var newWord = word;
