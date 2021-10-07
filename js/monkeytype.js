@@ -7294,7 +7294,6 @@ function handleChar(_char2, charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
-    setWordsInput(" " + TestLogic.input.current);
     TestUI.updateWordElement();
     Caret.updatePosition();
     return;
@@ -7349,7 +7348,6 @@ function handleChar(_char2, charIndex) {
 
   if (UpdateConfig["default"].mode === "zen" && charIndex < 30 || UpdateConfig["default"].mode !== "zen" && charIndex < TestLogic.words.getCurrent().length + 20) {
     TestLogic.input.current = resultingWord;
-    setWordsInput(" " + TestLogic.input.current);
   }
 
   if (!thisCharCorrect && UpdateConfig["default"].difficulty == "master") {
@@ -7403,8 +7401,6 @@ function handleChar(_char2, charIndex) {
   if (_char2 !== "\n") {
     Caret.updatePosition();
   }
-
-  setWordsInput(" " + TestLogic.input.current);
 }
 
 function handleTab(event) {
@@ -7442,6 +7438,7 @@ function handleTab(event) {
         } else {
           event.preventDefault();
           handleChar("\t", TestLogic.input.current.length);
+          setWordsInput(" " + TestLogic.input.current);
         }
       } else if (!TestUI.resultVisible) {
         if (TestLogic.hasTab && event.shiftKey || !TestLogic.hasTab && UpdateConfig["default"].mode !== "zen" || UpdateConfig["default"].mode === "zen" && event.shiftKey) {
@@ -7450,6 +7447,7 @@ function handleTab(event) {
         } else {
           event.preventDefault();
           handleChar("\t", TestLogic.input.current.length);
+          setWordsInput(" " + TestLogic.input.current);
         }
       }
     } else if (UpdateConfig["default"].quickTab) {
@@ -7516,6 +7514,7 @@ $(document).keydown(function (event) {
       TestLogic.finish();
     } else {
       handleChar("\n", TestLogic.input.current.length);
+      setWordsInput(" " + TestLogic.input.current);
     }
   } //show dead keys
 
@@ -7537,6 +7536,8 @@ $(document).keydown(function (event) {
       handleChar(_char3, TestLogic.input.current.length);
       updateUI();
     }
+
+    setWordsInput(" " + TestLogic.input.current);
   }
 });
 $("#wordsInput").keyup(function (event) {
@@ -8193,10 +8194,6 @@ var layouts = {
   MTGAP: {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "pP", "oO", "uU", "jJ", "kK", "dD", "lL", "cC", "wW", "[{", "]}", "\\|", "iI", "nN", "eE", "aA", ",;", "mM", "hH", "tT", "sS", "rR", "'\"", "\\|", "qQ", "zZ", "/<", ".>", ":?", "bB", "fF", "gG", "vV", "xX", " "]
-  },
-  MTGAP_ISEA: {
-    keymapShowTopRow: false,
-    keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "cC", "oO", "uU", "jJ", "kK", "lL", "dD", "pP", "wW", "qQ", "zZ", "\\|", "iI", "sS", "eE", "aA", ",;", "bB", "hH", "tT", "nN", "rR", "'\"", "\\|", "[{", "]}", "/<", ".>", ":?", "mM", "fF", "gG", "vV", "xX", " "]
   },
   soul: {
     keymapShowTopRow: false,

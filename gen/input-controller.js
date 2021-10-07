@@ -399,7 +399,6 @@ function handleChar(char, charIndex) {
 
   if (!thisCharCorrect && Misc.trailingComposeChars.test(resultingWord)) {
     TestLogic.input.current = resultingWord;
-    setWordsInput(" " + TestLogic.input.current);
     TestUI.updateWordElement();
     Caret.updatePosition();
     return;
@@ -472,7 +471,6 @@ function handleChar(char, charIndex) {
       charIndex < TestLogic.words.getCurrent().length + 20)
   ) {
     TestLogic.input.current = resultingWord;
-    setWordsInput(" " + TestLogic.input.current);
   }
 
   if (!thisCharCorrect && Config.difficulty == "master") {
@@ -545,7 +543,6 @@ function handleChar(char, charIndex) {
     Caret.updatePosition();
   }
 
-  setWordsInput(" " + TestLogic.input.current);
 }
 
 function handleTab(event) {
@@ -601,6 +598,7 @@ function handleTab(event) {
         } else {
           event.preventDefault();
           handleChar("\t", TestLogic.input.current.length);
+          setWordsInput(" " + TestLogic.input.current);
         }
       } else if (!TestUI.resultVisible) {
         if (
@@ -613,6 +611,7 @@ function handleTab(event) {
         } else {
           event.preventDefault();
           handleChar("\t", TestLogic.input.current.length);
+          setWordsInput(" " + TestLogic.input.current);
         }
       }
     } else if (Config.quickTab) {
@@ -699,6 +698,7 @@ $(document).keydown((event) => {
       TestLogic.finish();
     } else {
       handleChar("\n", TestLogic.input.current.length);
+      setWordsInput(" " + TestLogic.input.current);
     }
   }
 
@@ -726,6 +726,7 @@ $(document).keydown((event) => {
       handleChar(char, TestLogic.input.current.length);
       updateUI();
     }
+    setWordsInput(" " + TestLogic.input.current);
   }
 });
 
