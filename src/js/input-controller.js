@@ -545,80 +545,66 @@ function handleChar(char, charIndex) {
 
 }
 
-function handleTab(event) {
+function focusRestartOrRestart(event) {
   if (TestUI.resultCalculating) {
     event.preventDefault();
   }
-  if ($("#customTextPopup .textarea").is(":focus")) {
-    event.preventDefault();
 
-    let area = $("#customTextPopup .textarea")[0];
-
-    var start = area.selectionStart;
-    var end = area.selectionEnd;
-
-    // set textarea value to: text before caret + tab + text after caret
-    area.value =
-      area.value.substring(0, start) + "\t" + area.value.substring(end);
-
-    // put caret at right position again
-    area.selectionStart = area.selectionEnd = start + 1;
-
-    return;
-  } else if (
+  if (!(
     !TestUI.resultCalculating &&
     $("#commandLineWrapper").hasClass("hidden") &&
     $("#simplePopupWrapper").hasClass("hidden") &&
-    !$(".page.pageLogin").hasClass("active")
-  ) {
-    if ($(".pageTest").hasClass("active")) {
-      if (Config.quickTab) {
-        if (
-          TestUI.resultVisible ||
-          !(
-            (Config.mode == "zen" && !event.shiftKey) ||
-            (TestLogic.hasTab && !event.shiftKey)
-          )
-        ) {
-          if (event.shiftKey) {
-            ManualRestart.set();
-          } else {
-            ManualRestart.reset();
-          }
-          event.preventDefault();
-          if (
-            TestLogic.active &&
-            Config.repeatQuotes === "typing" &&
-            Config.mode === "quote"
-          ) {
-            TestLogic.restart(true, false, event);
-          } else {
-            TestLogic.restart(false, false, event);
-          }
-        } else {
-          event.preventDefault();
-          handleChar("\t", TestLogic.input.current.length);
-          setWordsInput(" " + TestLogic.input.current);
-        }
-      } else if (!TestUI.resultVisible) {
-        if (
-          (TestLogic.hasTab && event.shiftKey) ||
-          (!TestLogic.hasTab && Config.mode !== "zen") ||
-          (Config.mode === "zen" && event.shiftKey)
-        ) {
-          event.preventDefault();
-          $("#restartTestButton").focus();
-        } else {
-          event.preventDefault();
-          handleChar("\t", TestLogic.input.current.length);
-          setWordsInput(" " + TestLogic.input.current);
-        }
-      }
-    } else if (Config.quickTab) {
-      UI.changePage("test");
+    !$(".page.pageLogin").hasClass("active"))
+  ) return;
+
+  if ($(".pageTest").hasClass("active")) {
+    if (!TestUI.resultVisible) {
+      event.preventDefault();
     }
+
+    if (Config.quickTab) {
+      if (event.key === "Tab") {
+        if (event.shiftKey) {
+          ManualRestart.set();
+        } else {
+          ManualRestart.reset();
+        }
+      } else {
+        ManualRestart.set();
+      }
+      if (
+        TestLogic.active &&
+        Config.repeatQuotes === "typing" &&
+        Config.mode === "quote"
+      ) {
+        TestLogic.restart(true, false, event);
+      } else {
+        TestLogic.restart(false, false, event);
+      }
+    } else if (!TestUI.resultVisible) {
+      $("#restartTestButton").focus();
+    }
+  } else if (Config.quickTab) {
+    UI.changePage("test");
   }
 }
+
+$("#customTextPopup .textarea").keydown((event) => {
+  if (event.key !== "Tab") return;
+
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  let area = event.target;
+  var start = area.selectionStart;
+  var end = area.selectionEnd;
+
+  // set textarea value to: text before caret + tab + text after caret
+  area.value =
+    area.value.substring(0, start) + "\t" + area.value.substring(end);
+
+  // put caret at right position again
+  area.selectionStart = area.selectionEnd = start + 1;
+})
 
 $(document).keydown((event) => {
   //autofocus
@@ -646,12 +632,14 @@ $(document).keydown((event) => {
     }
   }
 
-  //tab
-  if (
-    (event.key == "Tab" && !Config.swapEscAndTab) ||
-    (event.key == "Escape" && Config.swapEscAndTab)
-  ) {
-    handleTab(event);
+  //tab/esc
+  if (event.key === "Tab" && (TestLogic.hasTab || Config.mode === "zen") && !event.shiftKey) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    handleChar("\t", TestLogic.input.current.length);
+    setWordsInput(" " + TestLogic.input.current);
+  } else if ((event.key === "Tab" && !Config.swapEscAndTab) || (event.key === "Escape" && Config.swapEscAndTab)) {
+    focusRestartOrRestart(event);
   }
 
   if (!allowTyping) return;
