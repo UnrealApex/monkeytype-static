@@ -1024,7 +1024,7 @@ function canBailOut() {
 }
 
 var commandsLayouts = {
-  title: "Layout...",
+  title: "Layout emulator...",
   configKey: "layout",
   list: [{
     id: "couldnotload",
@@ -1037,7 +1037,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
   Object.keys(_layouts["default"]).forEach(function (layout) {
     commandsLayouts.list.push({
       id: "changeLayout" + Misc.capitalizeFirstLetter(layout),
-      display: layout.replace(/_/g, " "),
+      display: layout === "default" ? "off" : layout.replace(/_/g, " "),
       configValue: layout,
       exec: function exec() {
         // UpdateConfig.setSavedLayout(layout);
@@ -1062,7 +1062,7 @@ if (Object.keys(_layouts["default"]).length > 0) {
   commandsKeymapLayouts.list = [];
   commandsKeymapLayouts.list.push({
     id: "changeKeymapLayoutOverrideSync",
-    display: "override sync",
+    display: "emulator sync",
     configValue: "overrideSync",
     exec: function exec() {
       UpdateConfig.setKeymapLayout("overrideSync");
@@ -3182,7 +3182,7 @@ var defaultCommands = {
     subgroup: commandsFunbox
   }, {
     id: "changeLayout",
-    display: "Layout...",
+    display: "Layout emulator...",
     icon: "fa-keyboard",
     subgroup: commandsLayouts
   }, {
@@ -3760,7 +3760,6 @@ function restoreOldCommandLine() {
 $("#commandLine input").keyup(function (e) {
   commandLineMouseMode = false;
   $("#commandLineWrapper #commandLine .suggestions .entry").removeClass("activeMouse");
-  console.log(e);
   if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Enter" || e.key === "Tab" || e.code == "AltLeft" || e.key.length > 1 && e.key !== "Backspace" && e.key !== "Delete") return;
   updateSuggested();
 });
@@ -7528,7 +7527,7 @@ $(document).keydown(function (event) {
     correctShiftUsed = ShiftTracker.isUsingOppositeShift(event) !== false;
   }
 
-  if (UpdateConfig["default"].layout !== "default") {
+  if (UpdateConfig["default"].layout !== "default" && !(event.ctrlKey || event.altKey && window.navigator.platform.search("Linux") > -1)) {
     var _char3 = LayoutEmulator.getCharFromEvent(event);
 
     if (_char3 !== null) {
@@ -7578,7 +7577,14 @@ $("#wordsInput").on("input", function (event) {
 
   TestStats.setKeypressNotAfk();
   var realInputValue = event.target.value.normalize();
-  var inputValue = realInputValue.slice(1);
+  var inputValue = realInputValue.slice(1); // input will be modified even with the preventDefault() in
+  // beforeinput/keydown if it's part of a compose sequence. this undoes
+  // the effects of that and takes the input out of compose mode.
+
+  if (UpdateConfig["default"].layout !== "default" && inputValue.length >= TestLogic.input.current.length) {
+    setWordsInput(" " + TestLogic.input.current);
+    return;
+  }
 
   if (realInputValue.length === 0 && TestLogic.input.current.length === 0) {
     // fallback for when no Backspace keydown event (mobile)
@@ -11645,10 +11651,10 @@ function _fillSettingsPage() {
             });
             layoutEl = $(".pageSettings .section.layout .buttons").empty();
             Object.keys(_layouts["default"]).forEach(function (layout) {
-              layoutEl.append("<div class=\"layout button\" layout='".concat(layout, "'>").concat(layout.replace(/_/g, " "), "</div>"));
+              layoutEl.append("<div class=\"layout button\" layout='".concat(layout, "'>").concat(layout === "default" ? "off" : layout.replace(/_/g, " "), "</div>"));
             });
             keymapEl = $(".pageSettings .section.keymapLayout .buttons").empty();
-            keymapEl.append("<div class=\"layout button\" keymapLayout='overrideSync'>override sync</div>");
+            keymapEl.append("<div class=\"layout button\" keymapLayout='overrideSync'>emulator sync</div>");
             Object.keys(_layouts["default"]).forEach(function (layout) {
               if (layout.toString() != "default") {
                 keymapEl.append("<div class=\"layout button\" keymapLayout='".concat(layout, "'>").concat(layout.replace(/_/g, " "), "</div>"));
