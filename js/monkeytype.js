@@ -11421,6 +11421,7 @@ var SettingsGroup = /*#__PURE__*/function () {
       } else {
         var value = target.attr(configName);
         var params = target.attr("params");
+        if (!value && !params) return;
 
         _this.setValue(value, params);
       }
