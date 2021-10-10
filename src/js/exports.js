@@ -11,7 +11,7 @@ global.config = Config;
 // global.addnotif = Notifications.add;
 global.linkToGoogle = AccountController.linkWithGoogle;
 global.linkToEmail = AccountController.linkWithEmail;
-
+console.log(' everything is wrong') ;
 global.filters = ResultFilters.getFilters();
 
 global.glarsesMode = toggleGlarses;
