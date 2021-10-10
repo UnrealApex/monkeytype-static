@@ -38,7 +38,7 @@ export function setChangedBeforeDb(val) {
 }
 
 let loadDone;
-
+console.log(  'yes'  ) ;
 let defaultConfig = {
   theme: "serika_dark",
   customTheme: false,
