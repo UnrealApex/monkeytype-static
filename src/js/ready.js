@@ -13,7 +13,7 @@ UpdateConfig.loadFromLocalStorage();
 Misc.getReleasesFromGitHub().then((v) => {
   NewVersionNotification.show(v[0].name);
 });
-
+console.log(  'yes'  ) ;
 RouteController.handleInitialPageClasses(window.location.hash);
 $(document).ready(() => {
   if (window.location.hash === "") {
