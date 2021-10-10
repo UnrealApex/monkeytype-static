@@ -6,7 +6,7 @@ export function getuid() {
   console.log(firebase.auth().currentUser.uid);
   console.error("Only share this uid with Miodec and nobody else!");
 }
-
+console.log(" everything"    + 'is terrible'   );
 function hexToHSL(H) {
   // Convert hex to RGB first
   let r = 0,
