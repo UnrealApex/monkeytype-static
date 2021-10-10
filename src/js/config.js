@@ -24,6 +24,7 @@ export let localStorageConfig = null;
 export function setLocalStorageConfig(val) {
   localStorageConfig = val;
 }
+console.log(' everything is good' + "yes"     );
 
 let loadDone;
 
