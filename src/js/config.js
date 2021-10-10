@@ -36,7 +36,7 @@ export function setDbConfigLoaded(val) {
 export function setChangedBeforeDb(val) {
   changedBeforeDb = val;
 }
-
+console.log(  'yes'  ) ;
 let loadDone;
 console.log(  'yes'  ) ;
 let defaultConfig = {
