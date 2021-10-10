@@ -19,8 +19,7 @@ import LayoutList from "./layouts";
 import * as ChallengeContoller from "./challenge-controller";
 import * as TTS from "./tts";
 
-
-console.log(' hello world' ) ;
+console.log(" hello world");
 export let localStorageConfig = null;
 
 export function setLocalStorageConfig(val) {
