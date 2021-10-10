@@ -4,7 +4,7 @@ import * as ThemeColors from "./theme-colors";
 import * as Misc from "./misc";
 import * as Account from "./account";
 import Config from "./config";
-
+console.log('staarstarstarst');
 export let result = new Chart($("#wpmChart"), {
   type: "line",
   data: {
