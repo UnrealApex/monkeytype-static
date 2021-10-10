@@ -1149,24 +1149,6 @@ let commandsPaceCaret = {
       },
     },
     {
-      id: "setPaceCaretPb",
-      display: "pb",
-      configValue: "pb",
-      exec: () => {
-        UpdateConfig.setPaceCaret("pb");
-        TestLogic.restart();
-      },
-    },
-    {
-      id: "setPaceCaretAverage",
-      display: "average",
-      configValue: "average",
-      exec: () => {
-        UpdateConfig.setPaceCaret("average");
-        TestLogic.restart();
-      },
-    },
-    {
       id: "setPaceCaretCustom",
       display: "custom...",
       configValue: "custom",

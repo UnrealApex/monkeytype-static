@@ -39,9 +39,7 @@ export async function init() {
     mode2 = TestLogic.randomQuote.id;
   }
   let wpm;
-  if (Config.paceCaret === "pb") {
-  } else if (Config.paceCaret === "average") {
-  } else if (Config.paceCaret === "custom") {
+  if (Config.paceCaret === "custom") {
     wpm = Config.paceCaretCustomSpeed;
   } else if (TestLogic.isPaceRepeat == true) {
     wpm = TestLogic.lastTestWpm;

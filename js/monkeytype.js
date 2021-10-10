@@ -1967,22 +1967,6 @@ var commandsPaceCaret = {
       TestLogic.restart();
     }
   }, {
-    id: "setPaceCaretPb",
-    display: "pb",
-    configValue: "pb",
-    exec: function exec() {
-      UpdateConfig.setPaceCaret("pb");
-      TestLogic.restart();
-    }
-  }, {
-    id: "setPaceCaretAverage",
-    display: "average",
-    configValue: "average",
-    exec: function exec() {
-      UpdateConfig.setPaceCaret("average");
-      TestLogic.restart();
-    }
-  }, {
     id: "setPaceCaretCustom",
     display: "custom...",
     configValue: "custom",
@@ -8202,6 +8186,10 @@ var layouts = {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "yY", "pP", "oO", "uU", "jJ", "kK", "dD", "lL", "cC", "wW", "[{", "]}", "\\|", "iI", "nN", "eE", "aA", ",;", "mM", "hH", "tT", "sS", "rR", "'\"", "\\|", "qQ", "zZ", "/<", ".>", ":?", "bB", "fF", "gG", "vV", "xX", " "]
   },
+  ina: {
+    keymapShowTopRow: true,
+    keys: ["`~", "1[", "2]", "3#", "4$", "5%", "6^", "7&", "8*", "9{", "0}", "qQ", "xX", "!+", "pP", "uU", "oO", "-_", "cC", "hH", "lL", "dD", "jJ", "zZ", "vV", "\\|", "iI", "nN", "eE", "aA", ",;", "mM", "tT", "kK", "rR", "sS", "'\"", "\\|", "=(", "@)", ":<", ".>", "?/", "gG", "bB", "yY", "wW", "fF", " "]
+  },
   soul: {
     keymapShowTopRow: false,
     keys: ["`~", "1!", "2@", "3#", "4$", "5%", "6^", "7&", "8*", "9(", "0)", "-_", "=+", "qQ", "wW", "lL", "dD", "pP", "kK", "mM", "uU", "yY", ";:", "[{", "]}", "\\|", "aA", "sS", "rR", "tT", "gG", "fF", "nN", "eE", "iI", "oO", "'\"", "\\|", "zZ", "xX", "cC", "vV", "jJ", "bB", "hH", ",<", ".>", "/?", " "]
@@ -10246,7 +10234,7 @@ function _init() {
               mode2 = TestLogic.randomQuote.id;
             }
 
-            if (_config["default"].paceCaret === "pb") {} else if (_config["default"].paceCaret === "average") {} else if (_config["default"].paceCaret === "custom") {
+            if (_config["default"].paceCaret === "custom") {
               wpm = _config["default"].paceCaretCustomSpeed;
             } else if (TestLogic.isPaceRepeat == true) {
               wpm = TestLogic.lastTestWpm;
@@ -15630,7 +15618,7 @@ function updateModesNotice() {
       speed = " (".concat(Math.round(PaceCaret.settings.wpm), " wpm)");
     } catch (_unused) {}
 
-    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsPaceCaret\"><i class=\"fas fa-tachometer-alt\"></i>".concat(UpdateConfig["default"].paceCaret === "average" ? "average" : UpdateConfig["default"].paceCaret === "pb" ? "pb" : "custom", " pace").concat(speed, "</div>"));
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsPaceCaret\"><i class=\"fas fa-tachometer-alt\"></i>custom pace".concat(speed, "</div>"));
   }
 
   if (UpdateConfig["default"].minWpm !== "off") {
@@ -15662,7 +15650,7 @@ function updateModesNotice() {
   }
 
   if (UpdateConfig["default"].layout !== "default") {
-    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsLayouts\"><i class=\"fas fa-keyboard\"></i>".concat(UpdateConfig["default"].layout, "</div>"));
+    $(".pageTest #testModesNotice").append("<div class=\"text-button\" commands=\"commandsLayouts\"><i class=\"fas fa-keyboard\"></i>emulating ".concat(UpdateConfig["default"].layout.replace(/_/g, " "), "</div>"));
   }
 
   if (UpdateConfig["default"].oppositeShiftMode === "on") {

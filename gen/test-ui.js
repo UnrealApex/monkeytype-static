@@ -544,13 +544,7 @@ export function updateModesNotice() {
       speed = ` (${Math.round(PaceCaret.settings.wpm)} wpm)`;
     } catch {}
     $(".pageTest #testModesNotice").append(
-      `<div class="text-button" commands="commandsPaceCaret"><i class="fas fa-tachometer-alt"></i>${
-        Config.paceCaret === "average"
-          ? "average"
-          : Config.paceCaret === "pb"
-          ? "pb"
-          : "custom"
-      } pace${speed}</div>`
+      `<div class="text-button" commands="commandsPaceCaret"><i class="fas fa-tachometer-alt"></i>custom pace${speed}</div>`
     );
   }
 
@@ -602,7 +596,10 @@ export function updateModesNotice() {
 
   if (Config.layout !== "default") {
     $(".pageTest #testModesNotice").append(
-      `<div class="text-button" commands="commandsLayouts"><i class="fas fa-keyboard"></i>${Config.layout}</div>`
+      `<div class="text-button" commands="commandsLayouts"><i class="fas fa-keyboard"></i>emulating ${Config.layout.replace(
+        /_/g,
+        " "
+      )}</div>`
     );
   }
 
