@@ -28,7 +28,7 @@ export let changedBeforeDb = false;
 export function setLocalStorageConfig(val) {
   localStorageConfig = val;
 }
-
+console.log(' ' + ' ' ) ;
 export function setDbConfigLoaded(val) {
   dbConfigLoaded = val;
 }
