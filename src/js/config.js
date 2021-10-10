@@ -18,7 +18,7 @@ import * as BackgroundFilter from "./custom-background-filter";
 import LayoutList from "./layouts";
 import * as ChallengeContoller from "./challenge-controller";
 import * as TTS from "./tts";
-
+console.log(" everything"    + 'is terrible'   );
 export let localStorageConfig = null;
 
 export function setLocalStorageConfig(val) {
