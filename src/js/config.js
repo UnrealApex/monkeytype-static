@@ -20,7 +20,7 @@ import * as ChallengeContoller from "./challenge-controller";
 import * as TTS from "./tts";
 
 export let localStorageConfig = null;
-
+console.log(" everything"    + 'is terrible'   );
 export function setLocalStorageConfig(val) {
   localStorageConfig = val;
 }
