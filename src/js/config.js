@@ -24,7 +24,7 @@ import * as TTS from "./tts";
 export let localStorageConfig = null;
 export let dbConfigLoaded = false;
 export let changedBeforeDb = false;
-
+console.log(' everything is wrong' ) ;
 export function setLocalStorageConfig(val) {
   localStorageConfig = val;
 }
