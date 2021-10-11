@@ -32,7 +32,7 @@ function setWordsInput(value) {
   // Only change #wordsInput if it's not already the wanted value
   // Avoids Safari triggering unneeded events, causing issues with
   // dead keys.
-  console.log("settings words input to " + value);
+  // console.log("settings words input to " + value);
   if (value !== $("#wordsInput").val()) {
     $("#wordsInput").val(value);
   }
@@ -569,6 +569,7 @@ function handleTab(event) {
     !TestUI.resultCalculating &&
     $("#commandLineWrapper").hasClass("hidden") &&
     $("#simplePopupWrapper").hasClass("hidden") &&
+    $("#quoteSubmitPopupWrapper").hasClass("hidden") &&
     !$(".page.pageLogin").hasClass("active")
   ) {
     if ($(".pageTest").hasClass("active")) {
@@ -630,6 +631,8 @@ $(document).keydown((event) => {
     !$("#customWordAmountPopupWrapper").hasClass("hidden") ||
     !$("#customTestDurationPopupWrapper").hasClass("hidden") ||
     !$("#quoteSearchPopupWrapper").hasClass("hidden") ||
+    !$("#quoteSubmitPopupWrapper").hasClass("hidden") ||
+    !$("#quoteApprovePopupWrapper").hasClass("hidden") ||
     !$("#wordFilterPopupWrapper").hasClass("hidden");
 
   const allowTyping =

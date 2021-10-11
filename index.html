@@ -98,7 +98,7 @@
       <i class="fas closeButton fa-times"></i>
     </div>
 
-    <div id="simplePopupWrapper" class="hidden">
+    <div id="simplePopupWrapper" class="popupWrapper hidden">
       <div id="simplePopup" popupId=""></div>
     </div>
 
@@ -115,7 +115,6 @@
         <div class="button both" tabindex="1">Practice both</div>
       </div>
     </div>
-
     <div id="settingsImportWrapper" class="hidden">
       <div id="settingsImport" action="">
         <input type="text" />
@@ -129,7 +128,7 @@
         <div class="button">ok</div>
       </div>
     </div>
-    <div id="customTextPopupWrapper" class="hidden">
+    <div id="customTextPopupWrapper" class="popupWrapper hidden">
       <div id="customTextPopup" action="">
         <div class="wordfilter button">
           <i class="fas fa-filter"></i>
@@ -178,7 +177,7 @@
         <div class="button apply">ok</div>
       </div>
     </div>
-    <div id="wordFilterPopupWrapper" class="hidden">
+    <div id="wordFilterPopupWrapper" class="popupWrapper hidden">
       <div id="wordFilterPopup">
         <div class="group">
           <div class="title">language</div>
@@ -221,7 +220,7 @@
         <div class="button">add</div>
       </div>
     </div>
-    <div id="customWordAmountPopupWrapper" class="hidden">
+    <div id="customWordAmountPopupWrapper" class="popupWrapper hidden">
       <div id="customWordAmountPopup">
         <div class="title">Word amount</div>
         <input type="number" value="1" min="1" max="10000" />
@@ -232,7 +231,7 @@
         <div class="button">ok</div>
       </div>
     </div>
-    <div id="customTestDurationPopupWrapper" class="hidden">
+    <div id="customTestDurationPopupWrapper" class="popupWrapper hidden">
       <div id="customTestDurationPopup">
         <div class="title">Test duration</div>
         <div class="preview"></div>
@@ -244,9 +243,11 @@
         <div class="button">ok</div>
       </div>
     </div>
-    <div id="quoteSearchPopupWrapper" class="hidden">
+    <div id="quoteSearchPopupWrapper" class="popupWrapper hidden">
       <div id="quoteSearchPopup" mode="">
-        <div class="title">Quote Search</div>
+        <div id="quoteSearchTop">
+          <div class="title">Quote Search</div>
+        </div>
         <input
           id="searchBox"
           class="searchBox"
@@ -256,19 +257,6 @@
         />
         <div id="extraResults">No search results</div>
         <div id="quoteSearchResults" class="quoteSearchResults"></div>
-      </div>
-    </div>
-    <div id="tagsWrapper" class="wrapper hidden">
-      <div id="tagsEdit" action="" tagid="">
-        <div class="title"></div>
-        <input type="text" />
-        <div class="button"><i class="fas fa-plus"></i></div>
-      </div>
-    </div>
-    <div id="resultEditTagsPanelWrapper" class="hidden">
-      <div id="resultEditTagsPanel" resultid="">
-        <div class="buttons"></div>
-        <div class="button confirmButton"><i class="fas fa-check"></i></div>
       </div>
     </div>
     <div id="versionHistoryWrapper" class="hidden">
@@ -809,10 +797,6 @@
                 <div class="group testType">
                   <div class="top">test type</div>
                   <div class="bottom">-</div>
-                  <div class="tags hidden" style="margin-top: 0.5rem">
-                    <div class="top">tags</div>
-                    <div class="bottom">-</div>
-                  </div>
                 </div>
                 <!-- <div class="group infoAndTags"> -->
                 <div class="group info">

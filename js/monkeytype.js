@@ -6973,8 +6973,7 @@ function setWordsInput(value) {
   // Only change #wordsInput if it's not already the wanted value
   // Avoids Safari triggering unneeded events, causing issues with
   // dead keys.
-  console.log("settings words input to " + value);
-
+  // console.log("settings words input to " + value);
   if (value !== $("#wordsInput").val()) {
     $("#wordsInput").val(value);
   }
@@ -7403,7 +7402,7 @@ function handleTab(event) {
 
     area.selectionStart = area.selectionEnd = start + 1;
     return;
-  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden") && !$(".page.pageLogin").hasClass("active")) {
+  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden") && $("#quoteSubmitPopupWrapper").hasClass("hidden") && !$(".page.pageLogin").hasClass("active")) {
     if ($(".pageTest").hasClass("active")) {
       if (UpdateConfig["default"].quickTab) {
         if (TestUI.resultVisible || !(UpdateConfig["default"].mode == "zen" && !event.shiftKey || TestLogic.hasTab && !event.shiftKey)) {
@@ -7448,7 +7447,7 @@ $(document).keydown(function (event) {
   var wordsFocused = $("#wordsInput").is(":focus");
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
-  var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
+  var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#quoteSubmitPopupWrapper").hasClass("hidden") || !$("#quoteApprovePopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
   var allowTyping = pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && (wordsFocused || event.key !== "Enter");
 
   if (allowTyping && !wordsFocused && !$("#restartTestButton").is(":focus")) {
@@ -10835,6 +10834,8 @@ function _show() {
           case 0:
             if ($("#quoteSearchPopupWrapper").hasClass("hidden")) {
               $("#quoteSearchPopup input").val("");
+              $("#quoteSearchPopup #gotoSubmitQuoteButton").removeClass("hidden");
+              $("#quoteSearchPopup #goToApproveQuotes").addClass("hidden");
               $("#quoteSearchPopupWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
                 opacity: 1
               }, 100, function (e) {
@@ -10854,10 +10855,12 @@ function _show() {
 }
 
 function hide() {
+  var noAnim = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
   if (!$("#quoteSearchPopupWrapper").hasClass("hidden")) {
     $("#quoteSearchPopupWrapper").stop(true, true).css("opacity", 1).animate({
       opacity: 0
-    }, 100, function (e) {
+    }, noAnim ? 0 : 100, function (e) {
       $("#quoteSearchPopupWrapper").addClass("hidden");
     });
   }
@@ -10891,7 +10894,7 @@ $("#quoteSearchPopupWrapper").click(function (e) {
     hide();
   }
 });
-$(document).on("click", "#quoteSearchResults .searchResult", function (e) {
+$(document).on("click", "#quoteSearchPopup #quoteSearchResults .searchResult", function (e) {
   exports.selectedId = selectedId = parseInt($(e.currentTarget).attr("id"));
   apply(selectedId);
 }); // $("#quoteSearchPopup input").keypress((e) => {

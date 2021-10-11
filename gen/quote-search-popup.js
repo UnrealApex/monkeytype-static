@@ -72,6 +72,11 @@ async function updateResults(searchText) {
 export async function show() {
   if ($("#quoteSearchPopupWrapper").hasClass("hidden")) {
     $("#quoteSearchPopup input").val("");
+
+    $("#quoteSearchPopup #gotoSubmitQuoteButton").removeClass("hidden");
+
+    $("#quoteSearchPopup #goToApproveQuotes").addClass("hidden");
+
     $("#quoteSearchPopupWrapper")
       .stop(true, true)
       .css("opacity", 0)
@@ -83,7 +88,7 @@ export async function show() {
   }
 }
 
-export function hide() {
+export function hide(noAnim = false) {
   if (!$("#quoteSearchPopupWrapper").hasClass("hidden")) {
     $("#quoteSearchPopupWrapper")
       .stop(true, true)
@@ -92,7 +97,7 @@ export function hide() {
         {
           opacity: 0,
         },
-        100,
+        noAnim ? 0 : 100,
         (e) => {
           $("#quoteSearchPopupWrapper").addClass("hidden");
         }
@@ -131,10 +136,14 @@ $("#quoteSearchPopupWrapper").click((e) => {
   }
 });
 
-$(document).on("click", "#quoteSearchResults .searchResult", (e) => {
-  selectedId = parseInt($(e.currentTarget).attr("id"));
-  apply(selectedId);
-});
+$(document).on(
+  "click",
+  "#quoteSearchPopup #quoteSearchResults .searchResult",
+  (e) => {
+    selectedId = parseInt($(e.currentTarget).attr("id"));
+    apply(selectedId);
+  }
+);
 
 // $("#quoteSearchPopup input").keypress((e) => {
 //   if (e.keyCode == 13) {
