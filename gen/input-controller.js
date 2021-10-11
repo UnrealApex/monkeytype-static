@@ -568,9 +568,7 @@ function handleTab(event) {
   } else if (
     !TestUI.resultCalculating &&
     $("#commandLineWrapper").hasClass("hidden") &&
-    $("#simplePopupWrapper").hasClass("hidden") &&
-    $("#quoteSubmitPopupWrapper").hasClass("hidden") &&
-    !$(".page.pageLogin").hasClass("active")
+    $("#simplePopupWrapper").hasClass("hidden")
   ) {
     if ($(".pageTest").hasClass("active")) {
       if (Config.quickTab) {
@@ -631,8 +629,6 @@ $(document).keydown((event) => {
     !$("#customWordAmountPopupWrapper").hasClass("hidden") ||
     !$("#customTestDurationPopupWrapper").hasClass("hidden") ||
     !$("#quoteSearchPopupWrapper").hasClass("hidden") ||
-    !$("#quoteSubmitPopupWrapper").hasClass("hidden") ||
-    !$("#quoteApprovePopupWrapper").hasClass("hidden") ||
     !$("#wordFilterPopupWrapper").hasClass("hidden");
 
   const allowTyping =
