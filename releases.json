@@ -1,5 +1,58 @@
 [
   {
+    "url": "https://api.github.com/repos/Miodec/monkeytype/releases/51109085",
+    "assets_url": "https://api.github.com/repos/Miodec/monkeytype/releases/51109085/assets",
+    "upload_url": "https://uploads.github.com/repos/Miodec/monkeytype/releases/51109085/assets{?name,label}",
+    "html_url": "https://github.com/Miodec/monkeytype/releases/tag/v1.12.1",
+    "id": 51109085,
+    "author": {
+      "login": "Miodec",
+      "id": 13181393,
+      "node_id": "MDQ6VXNlcjEzMTgxMzkz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13181393?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/Miodec",
+      "html_url": "https://github.com/Miodec",
+      "followers_url": "https://api.github.com/users/Miodec/followers",
+      "following_url": "https://api.github.com/users/Miodec/following{/other_user}",
+      "gists_url": "https://api.github.com/users/Miodec/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/Miodec/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/Miodec/subscriptions",
+      "organizations_url": "https://api.github.com/users/Miodec/orgs",
+      "repos_url": "https://api.github.com/users/Miodec/repos",
+      "events_url": "https://api.github.com/users/Miodec/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/Miodec/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "node_id": "RE_kwDOD7wS784DC9zd",
+    "tag_name": "v1.12.1",
+    "target_commitish": "master",
+    "name": "v1.12.1",
+    "draft": false,
+    "prerelease": false,
+    "created_at": "2021-10-10T22:44:29Z",
+    "published_at": "2021-10-10T22:58:22Z",
+    "assets": [
+
+    ],
+    "tarball_url": "https://api.github.com/repos/Miodec/monkeytype/tarball/v1.12.1",
+    "zipball_url": "https://api.github.com/repos/Miodec/monkeytype/zipball/v1.12.1",
+    "body": "New features:\r\n- Submit a quote. You can now submit quotes directly from the website. Open the Quote Search popup and there you will find a new button that leads to a form. Be sure to read the guidelines. Misusing this feature will cause you to lose access to it.\r\n\r\nLanguages:\r\n- Added German 250k. Thanks Meimersdorfer.\r\n- Added Georgian. Thanks D-T-666.\r\n- Added Estonian (including 1k and 10k versions). Thanks usrme.\r\n- Updated English 5k to a better list. Thanks Azirine.\r\n\r\nBug fixes:\r\n- Fixed a lot of floating points appearing on the account page.\r\n- Fixed tab characters not working correctly.\r\n- Fixed bar timer color not working.\r\n- Fixed words jumping to the next line causing issues with scrolling.\r\n- Fixed keymap sometimes not highlighting keys.\r\n- Fixed various issues regarding input. Thanks SeerLite.\r\n- Fixed backspace deleting two characters when layout emulator is enabled.\r\n- Fixed some settings groups resetting when pressing a save button.\r\n\r\nOther changes and improvements:\r\n- Updated result styling on smaller widths.\r\n- Showing decimal places, even if wpm is round when always show decimal places is enabled.\r\n- Quote search popup now works better on smaller widths. Thanks CrumblyLiquid.\r\n- TTS funbox will now correctly speak in different languages (as long as they are on the BCP47 list).\r\n- Fixed some lint warnings.\r\n- Divided the SCSS into smaller, more readable files.",
+    "reactions": {
+      "url": "https://api.github.com/repos/Miodec/monkeytype/releases/51109085/reactions",
+      "total_count": 2,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 1,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 1,
+      "eyes": 0
+    }
+  },
+  {
     "url": "https://api.github.com/repos/Miodec/monkeytype/releases/50554259",
     "assets_url": "https://api.github.com/repos/Miodec/monkeytype/releases/50554259/assets",
     "upload_url": "https://uploads.github.com/repos/Miodec/monkeytype/releases/50554259/assets{?name,label}",
@@ -41,14 +94,14 @@
     "body": "New features:\r\n- Input rewrite. Finally after a long time coming, SeerLite comes in clutch and the input rewrite is here. This should fix most issues related to input like dead keys, accents -  especially the Linux issues AND allows Android input (all though due to some limitations out of our control we could not disable autocorrect at this time, so it might cause some funny behavior - report anything you find). There are still some things to do to make it perfect, but this is a great start. Massive shoutout to SeerLite again. \r\n- Top % display. You can now check on the leaderboard how you compare to the rest of the users on the site.\r\n- Show all PBs. Below the personal bests tables, you will now find buttons to show all your personal bests including different configs.\r\n\r\nLanguages:\r\n- Typo fixes.\r\n- Added diacritics back to Arabic 10k (they can be removed with lazy mode). Thanks ZER0-X.\r\n\r\nQuotes:\r\n- Fixed typos and grammatical errors.\r\n- Added more Arabic and Turkish quotes. Thanks HasanTheSyrian.\r\n- Fixed Indonesian quotes not loading.\r\n\r\nLayouts:\r\n- Updated APT and Boo. Thanks Apsu.\r\n- Added Arabic. Thanks Mustafa-Asaad-iq.\r\n- Added Arabic Mac. Thanks AliQ80.\r\n\r\nFonts:\r\n- Added JetBrains Mono. THanks luehmann.\r\n\r\nThemes:\r\n- Added Soaring Skies. Thanks Hakata-jpn.\r\n- Added Sewing Tin. Thanks minicap-cat.\r\n- Added Chaos Theory. Thanks mTopy.\r\n\r\nSounds:\r\n- All sounds now have appropriate names instead of just numbers.\r\n- Added osu and hitmaker sounds.\r\n\r\nBug fixes:\r\n- Fixed a bug that would cause the website to freeze when trying to practise missed and slow words, but no words were found.\r\n- Fixed broken new line characters in custom mode.\r\n- Fixed leaderboards extending past the bottom edge of the screen.\r\n- Initialising sounds only when needed. This should fix a weird issue where Bluetooth headphones would not go to sleep automatically when the website was in focus.\r\n- Fixed name change not working correctly when user was signed in with Google.\r\n- Fixed quote rating icon not updating after submitting a rating.\r\n- Fixed total ratings and average score numbers not updating correctly after submitting a quote rating.\r\n- Fixed plus one and plus two funboxes not working with quotes.\r\n\r\nOther changes and improvements:\r\n- Updated Apple touch icons to feature the new logo.\r\n- Fixed up some animations taking too long.\r\n- Updated Always Show CPM to work across the whole website including charts.\r\n- Personal Bests will no longer be saved when the test was stopped early with the Bail Out feature.\r\n- Updated the British English word pairs. Thanks Banzobotic.\r\n- Added more accents to lazy mode.\r\n- Various grammatical and structural changes to contributing and readme files. Thanks UnrealApex, Rishav-mngo.\r\n- Added more username filters.\r\n- Added more logs to the backend code.\r\n- Cleaned up lint warnings. Removed old code.",
     "reactions": {
       "url": "https://api.github.com/repos/Miodec/monkeytype/releases/50554259/reactions",
-      "total_count": 2,
+      "total_count": 9,
       "+1": 0,
       "-1": 0,
       "laugh": 0,
-      "hooray": 1,
+      "hooray": 3,
       "confused": 0,
-      "heart": 1,
-      "rocket": 0,
+      "heart": 4,
+      "rocket": 2,
       "eyes": 0
     }
   },
@@ -494,10 +547,10 @@
     "body": "New features:\r\n- Added min burst. This setting works similarly to min wpm and min accuracy where the test will fail if you fail to meet the criteria. Burst is how fast you type a single word from the first keystroke to the last. This means that burst is measured in raw wpm and does not include the pause between words. You can pick between fixed mode and flex mode. With flex mode, longer words automatically lower the threshold a bit.\r\n\r\nLanguages:\r\n- Added Ukrainian with 1k, 10k and 50k options.\r\n- Updated Urdu and added Urdu 1k. Thanks BalkoBalkho.\r\n- Updated Czech 10k. Thanks CrumblyLiquid.\r\n- Added Pinyin. Thanks KobeCofini.\r\n\r\nQuotes:\r\n- Added 82 French quotes. Thanks precondition.\r\n\r\nThemes:\r\n- Added Ez Mode. Thanks kraiztmatte.\r\n\r\nBug fixes:\r\n- Fixed a bug where words added in random custom mode would not be randomized.\r\n- Fixed a bug that would cause Firefox to not load the first page.\r\n- Fixed a bug where the caret would sometimes move up when moving to the next word.\r\n- Fixed a bug where the opposite shift would get stuck in a state of 'both shifts pressed' and would result in the user not being able to type on one half of the keyboard.\r\n- Fixed failed tests having unwanted afk time.\r\n\r\nOther changes and improvements:\r\n- Funboxes plus one and plus two will contribute towards your personal best (since it doesn't affect word generation or speed calculation and some users have those funboxes are good for accessibility).\r\n- Removed some leftover console logs.\r\n- When hide extra letters is enabled, an error underline will be shown under the word if the input length is greater than the word length.\r\n- Updated the tags section design on the settings page to match the design of the presets section.\r\n- Removed the underscore from the language name when displayed on the result screen.\r\n- Added fail reason to the result screen.\r\n- Updated the design of the min wpm, min acc, and pace caret settings sections.\r\n- You can now view the burst speed of any word on the result screen by hovering over that word in the result history.",
     "reactions": {
       "url": "https://api.github.com/repos/Miodec/monkeytype/releases/45444846/reactions",
-      "total_count": 2,
+      "total_count": 3,
       "+1": 0,
       "-1": 0,
-      "laugh": 2,
+      "laugh": 3,
       "hooray": 0,
       "confused": 0,
       "heart": 0,
@@ -1319,46 +1372,5 @@
     "tarball_url": "https://api.github.com/repos/Miodec/monkeytype/tarball/v1.7.4",
     "zipball_url": "https://api.github.com/repos/Miodec/monkeytype/zipball/v1.7.4",
     "body": "New features:\r\n- Added Zen mode. In this mode you can type whatever you want, kind of like a notepad.\r\n\r\nLanguages:\r\n- Fixed some words in Serbian. Thanks bool3max.\r\n- Added French 2k and 10k. Thanks iwa.\r\n\r\nThemes:\r\n- Added Copper. Thanks fatboycarney.\r\n\r\nQuotes:\r\n- Fixed various quote typos.\r\n\r\nBug fixes:\r\n- Fixed nospace not working due to new event trust checking.\r\n- Fixed a 'NaN' error when saving to the database. \r\n- Fixed some special keys being inserted as text.\r\n- Fixed a bug where the timer would not start when the test is started during a page transition.\r\n- Fixed a bug where the tags section would show the test modes text when the test was invalid.\r\n\r\nOther changes and improvements:\r\n- En and Em dashes now can be interchanged with the standard dash and will be considered correct.\r\n- With quick tab enabled, you can override the 'quick restart disabled' warning with `shift + tab`.\r\n- Monkey easter egg now goes insane if you type fast, and is also saved to the config.\r\n- Backend storage optimization."
-  },
-  {
-    "url": "https://api.github.com/repos/Miodec/monkeytype/releases/37257333",
-    "assets_url": "https://api.github.com/repos/Miodec/monkeytype/releases/37257333/assets",
-    "upload_url": "https://uploads.github.com/repos/Miodec/monkeytype/releases/37257333/assets{?name,label}",
-    "html_url": "https://github.com/Miodec/monkeytype/releases/tag/v1.7.3",
-    "id": 37257333,
-    "author": {
-      "login": "Miodec",
-      "id": 13181393,
-      "node_id": "MDQ6VXNlcjEzMTgxMzkz",
-      "avatar_url": "https://avatars.githubusercontent.com/u/13181393?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/Miodec",
-      "html_url": "https://github.com/Miodec",
-      "followers_url": "https://api.github.com/users/Miodec/followers",
-      "following_url": "https://api.github.com/users/Miodec/following{/other_user}",
-      "gists_url": "https://api.github.com/users/Miodec/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/Miodec/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/Miodec/subscriptions",
-      "organizations_url": "https://api.github.com/users/Miodec/orgs",
-      "repos_url": "https://api.github.com/users/Miodec/repos",
-      "events_url": "https://api.github.com/users/Miodec/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/Miodec/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "node_id": "MDc6UmVsZWFzZTM3MjU3MzMz",
-    "tag_name": "v1.7.3",
-    "target_commitish": "master",
-    "name": "v1.7.3",
-    "draft": false,
-    "prerelease": false,
-    "created_at": "2021-02-02T19:42:32Z",
-    "published_at": "2021-02-02T19:43:10Z",
-    "assets": [
-
-    ],
-    "tarball_url": "https://api.github.com/repos/Miodec/monkeytype/tarball/v1.7.3",
-    "zipball_url": "https://api.github.com/repos/Miodec/monkeytype/zipball/v1.7.3",
-    "body": "New features:\r\n- Added Sign In with Google.\r\n- Moved the optional ads to a different ad provider. Now they should pretty much work 100% of the time.\r\n\r\nLanguages:\r\n- Added Serbian. Thanks bool3max.\r\n\r\nLayouts:\r\n- Fixed a small issue in the Typehack layout.\r\n\r\nQuotes:\r\n- Added more quotes suggested by Discord users. Thanks everyone!\r\n\r\nBug fixes:\r\n- Fixed blind mode highlighting all letters when making a mistake with stop on letter enabled.\r\n- Fixed a bug where closing the command line would change the theme.\r\n- Fixed custom theme being cleared when closing the command line.\r\n- Fixed lag when typing caused by theme repeatedly applying.\r\n\r\nOther changes and improvements:\r\n- You can no longer select text in the notifications.\r\n- Added additional checks to make sure keypress events are not generated with a script. Thanks EmNudge and SeerLite.\r\n- Making sure bigger languages (1k, 2k...) are always shown above the words before starting the test.\r\n- Removed the phasing animation from the block outline caret. Thanks SeerLite."
   }
 ]
