@@ -73,6 +73,10 @@ export async function show() {
   if ($("#quoteSearchPopupWrapper").hasClass("hidden")) {
     $("#quoteSearchPopup input").val("");
 
+    $("#quoteSearchPopup #gotoSubmitQuoteButton").removeClass("hidden");
+
+    $("#quoteSearchPopup #goToApproveQuotes").addClass("hidden");
+
     $("#quoteSearchPopupWrapper")
       .stop(true, true)
       .css("opacity", 0)

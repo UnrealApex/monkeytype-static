@@ -1525,6 +1525,12 @@ export async function finish(difficultyFailed = false) {
     lang = Config.language.replace(/_\d*k$/g, "");
   }
 
+  $(".pageTest #result #rateQuoteButton .icon")
+    .removeClass("fas")
+    .addClass("far");
+  $(".pageTest #result #rateQuoteButton .rating").text("");
+  $(".pageTest #result #rateQuoteButton").addClass("hidden");
+
   if (difficultyFailed) {
     Notifications.add(`Test failed - ${failReason}`, 0, 1);
   } else if (afkDetected) {
