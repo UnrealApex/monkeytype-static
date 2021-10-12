@@ -7403,7 +7403,7 @@ function handleTab(event) {
 
     area.selectionStart = area.selectionEnd = start + 1;
     return;
-  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden") && $("#quoteSubmitPopupWrapper").hasClass("hidden") && !$(".page.pageLogin").hasClass("active")) {
+  } else if (!TestUI.resultCalculating && $("#commandLineWrapper").hasClass("hidden") && $("#simplePopupWrapper").hasClass("hidden")) {
     if ($(".pageTest").hasClass("active")) {
       if (UpdateConfig["default"].quickTab) {
         if (TestUI.resultVisible || !(UpdateConfig["default"].mode == "zen" && !event.shiftKey || TestLogic.hasTab && !event.shiftKey)) {
@@ -7448,7 +7448,7 @@ $(document).keydown(function (event) {
   var wordsFocused = $("#wordsInput").is(":focus");
   var pageTestActive = !$(".pageTest").hasClass("hidden");
   var commandLineVisible = !$("#commandLineWrapper").hasClass("hidden");
-  var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#quoteSubmitPopupWrapper").hasClass("hidden") || !$("#quoteApprovePopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
+  var modePopupVisible = !$("#customTextPopupWrapper").hasClass("hidden") || !$("#customWordAmountPopupWrapper").hasClass("hidden") || !$("#customTestDurationPopupWrapper").hasClass("hidden") || !$("#quoteSearchPopupWrapper").hasClass("hidden") || !$("#wordFilterPopupWrapper").hasClass("hidden");
   var allowTyping = pageTestActive && !commandLineVisible && !modePopupVisible && !TestUI.resultVisible && (wordsFocused || event.key !== "Enter");
 
   if (allowTyping && !wordsFocused && !$("#restartTestButton").is(":focus")) {
@@ -10835,8 +10835,6 @@ function _show() {
           case 0:
             if ($("#quoteSearchPopupWrapper").hasClass("hidden")) {
               $("#quoteSearchPopup input").val("");
-              $("#quoteSearchPopup #gotoSubmitQuoteButton").removeClass("hidden");
-              $("#quoteSearchPopup #goToApproveQuotes").addClass("hidden");
               $("#quoteSearchPopupWrapper").stop(true, true).css("opacity", 0).removeClass("hidden").animate({
                 opacity: 1
               }, 100, function (e) {
@@ -14150,10 +14148,6 @@ function _finish() {
               lang = UpdateConfig["default"].language.replace(/_\d*k$/g, "");
             }
 
-            $(".pageTest #result #rateQuoteButton .icon").removeClass("fas").addClass("far");
-            $(".pageTest #result #rateQuoteButton .rating").text("");
-            $(".pageTest #result #rateQuoteButton").addClass("hidden");
-
             if (difficultyFailed) {
               Notifications.add("Test failed - ".concat(failReason), 0, 1);
             } else if (afkDetected) {
@@ -14331,10 +14325,10 @@ function _finish() {
               $("#result .stats .source").addClass("hidden");
             }
 
-            _context4.next = 103;
+            _context4.next = 100;
             return ThemeColors.get("sub");
 
-          case 103:
+          case 100:
             fc = _context4.sent;
 
             if (UpdateConfig["default"].funbox !== "none") {
@@ -14407,7 +14401,7 @@ function _finish() {
               Keymap.hide();
             });
 
-          case 111:
+          case 108:
           case "end":
             return _context4.stop();
         }
