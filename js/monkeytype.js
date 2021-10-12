@@ -4949,7 +4949,7 @@ function setShowTimerProgress(timer, nosave) {
 
   config.showTimerProgress = timer;
 
-  if (config.showTimerProgress) {
+  if (config.showTimerProgress && TestLogic.active) {
     TimerProgress.show();
   } else {
     TimerProgress.hide();
@@ -5097,6 +5097,7 @@ function setTimerStyle(style, nosave) {
   }
 
   config.timerStyle = style;
+  TimerProgress.updateStyle();
   if (!nosave) saveToLocalStorage();
 }
 
@@ -16023,7 +16024,7 @@ $(document).on("mouseenter", "#resultWordsHistory .words .word", function (e) {
   if (resultVisible) {
     var input = $(e.currentTarget).attr("input");
     var burst = $(e.currentTarget).attr("burst");
-    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">\n          <div class=\"text\">\n          ".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "\n          </div>\n          <div class=\"speed\">\n          ").concat(burst, "wpm\n          </div>\n          </div>"));
+    if (input != undefined) $(e.currentTarget).append("<div class=\"wordInputAfter\">\n          <div class=\"text\">\n          ".concat(input.replace(/\t/g, "_").replace(/\n/g, "_").replace(/</g, "&lt").replace(/>/g, "&gt"), "\n          </div>\n          <div class=\"speed\">\n          ").concat(Math.round(UpdateConfig["default"].alwaysShowCPM ? burst * 5 : burst)).concat(UpdateConfig["default"].alwaysShowCPM ? "cpm" : "wpm", "\n          </div>\n          </div>"));
   }
 });
 $(document).on("click", "#testModesNotice .text-button", function (event) {
@@ -16720,6 +16721,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.show = show;
 exports.hide = hide;
 exports.restart = restart;
+exports.updateStyle = updateStyle;
 exports.update = update;
 
 var _config = _interopRequireDefault(require("./config"));
@@ -16778,6 +16780,14 @@ function restart() {
       }, 0);
     }
   }
+}
+
+function updateStyle() {
+  hide();
+  update();
+  setTimeout(function () {
+    show();
+  }, 125);
 }
 
 function update() {
