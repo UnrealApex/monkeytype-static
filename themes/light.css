@@ -12,9 +12,9 @@
 
 
 :root {
-  --bg-color: #eee;
-  --main-color: #111;
-  --caret-color: #111;
+  --bg-color: #fff;
+  --main-color: #000;
+  --caret-color: #000;
   --sub-color: #eee;
   --text-color: #444;
   --error-color: #da3333;
