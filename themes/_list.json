@@ -1,8 +1,8 @@
 [
   {
     "name": "light",
-    "bgColor": "#eee",
-    "textColor": "#111"
+    "bgColor": "#fff",
+    "textColor": "#000"
   },
   {
     "name": "dark",
